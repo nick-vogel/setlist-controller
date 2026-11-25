@@ -217,7 +217,7 @@ async function planEdit(recipe: SetRecipe, action: EditAction): Promise<{ ok: tr
     const warnings =
       replacement.folder === songs[target.position - 1]!.folder
         ? [`Song ${target.position} is rebuilt from ${replacement.folder} in the library, so its locators and clip gains start as the library has them.`]
-        : padKeyWarnings(nextTransitions, nextSongs, target.position);
+        : padKeyWarnings(nextTransitions, nextSongs, target.position, true);
     return { ok: true, songs: nextSongs, transitions: nextTransitions, untouched, boundary: before(target.position), warnings };
   }
 
@@ -275,11 +275,20 @@ async function planEdit(recipe: SetRecipe, action: EditAction): Promise<{ ok: tr
   };
 }
 
-function padKeyWarnings(transitions: Partial<Record<number, Transition>>, songs: { title: string }[], position: number): string[] {
+function padKeyWarnings(transitions: Partial<Record<number, Transition>>, songs: { title: string }[], position: number, swap = false): string[] {
+  const warnings: string[] = [];
   const pad = transitions[position - 1];
-  if (pad?.type !== 'pad' || pad.key === undefined) return [];
-  const next = songs[position - 1];
-  return [`The pad after song ${position - 1} keeps its own key, ${pad.key}, and now ${next === undefined ? 'ends the set' : `leads into ${next.title}`}.`];
+  if (pad?.type === 'pad' && pad.key !== undefined) {
+    const next = songs[position - 1];
+    warnings.push(`The pad after song ${position - 1} keeps its own key, ${pad.key}, and now ${next === undefined ? 'ends the set' : `leads into ${next.title}`}.`);
+  }
+  if (swap && position === songs.length) {
+    const trailing = transitions[position];
+    if (trailing?.type === 'pad' && trailing.key !== undefined) {
+      warnings.push(`The pad after song ${position} keeps its own key, ${trailing.key}, and now follows ${songs[position - 1]!.title}.`);
+    }
+  }
+  return warnings;
 }
 
 function before(position: number): Set<number> {

@@ -381,6 +381,22 @@ describe('build-set edit (--swap, --add, --drop)', () => {
     }
   }, 30_000);
 
+  it('swapping the last song before an explicit-key pad that ends the set says the pad keeps its key', async () => {
+    const workspace = await createWorkspace();
+    await addPadTrack(workspace);
+    await addPad(workspace, 'A', 120);
+    const built = await run(['goodness', 'trust', '--pad', '2=A', '--date', DATE, ...buildPaths(workspace)]);
+    expect(built.code).toBe(0);
+    const folder = projectFolder(workspace);
+
+    const swapped = await run(['edit', folder, '--swap', '2', 'great are']);
+
+    expect(swapped.stderr).toBe('');
+    expect(swapped.code).toBe(0);
+    expect(swapped.stdout.split('\n')).toContain('The pad after song 2 keeps its own key, A, and now follows Great Are You Lord.');
+    expect((await readRecipeJson(folder)).transitions).toEqual({ 2: { type: 'pad', key: 'A' } });
+  }, 20_000);
+
   it('drops a song by position or name, removes its audio, and drops a dangling overlap if the last song is dropped', async () => {
     const workspace = await createWorkspace();
     const built = await run(['grace', 'great are', 'goodness', '--overlap', '1', '--overlap', '2', '--date', DATE, ...buildPaths(workspace)]);
