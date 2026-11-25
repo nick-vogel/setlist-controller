@@ -135,9 +135,15 @@ describe('pnpm check:private', () => {
     expect(check(['--stdin'], { input: 'Fix the cue lights' }).status).toBe(0);
   });
 
-  it.for([[['--', '--stdin']], [['--', '--range', 'HEAD~1..HEAD']], [['--rang', 'HEAD~1..HEAD']], [['--stdin', '--range', 'HEAD~1..HEAD']], [['--range', '']]])(
-    'refuses %j with exit 2 and checks nothing, even with no terms file',
-    async ([args]) => {
+  it.for([
+    { args: ['--', '--stdin'] },
+    { args: ['--', '--range', 'HEAD~1..HEAD'] },
+    { args: ['--rang', 'HEAD~1..HEAD'] },
+    { args: ['--stdin', '--range', 'HEAD~1..HEAD'] },
+    { args: ['--range', ''] },
+  ])(
+    'refuses $args with exit 2 and checks nothing, even with no terms file',
+    async ({ args }) => {
       await scratch();
       await commit('notes.md', 'clean\n');
       const result = check(args, { terms: join(dir, 'no-such-terms.txt') });
