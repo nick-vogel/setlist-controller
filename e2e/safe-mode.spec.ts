@@ -103,10 +103,9 @@ test('Safe Mode guards cross-song jumps on Setlist and Timeline while playing, w
   const song2Chorus = page.locator('.timeline-section[data-song="2"][data-section="1"]');
   await expect(song2Chorus).toHaveAttribute('aria-disabled', 'true');
   await song2Chorus.click({ force: true });
-  await page.waitForTimeout(150);
-  expect(e2e.rig.received(JUMP)).toEqual([]);
 
-  // Same-song jump inside Song 1 still works while Safe Mode is ON.
+  // Same-song jump inside Song 1 still works while Safe Mode is ON, and Live holds it alone, so the
+  // Song 2 tap before it sent nothing.
   await page.getByRole('button', { name: 'Follow' }).click();
   const song1Verse = page.locator('.timeline-section[data-song="1"][data-section="1"]');
   await song1Verse.click();

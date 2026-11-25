@@ -11,7 +11,7 @@ import { SafeModeToggle } from '../web/src/SafeModeToggle.tsx';
 import { TimelinePauseButton } from '../web/src/TimelinePauseButton.tsx';
 import { readStylesheet, type Element } from './css.ts';
 import { fakeTarget, type FakeTarget } from './fake-target.ts';
-import { loaded, startRig, type Rig } from './harness.ts';
+import { loaded, startRig, type Client, type Rig } from './harness.ts';
 
 let rig: Rig | undefined;
 
@@ -37,6 +37,16 @@ const START = '/live/song/start_playing';
 const STOP = '/live/song/stop_playing';
 
 const at = (beats: number) => (snapshot: Snapshot) => loaded(snapshot) && snapshot.position === beats;
+
+// The controller publishes a refused command's snapshot, if any, before the barrier's on the same
+// socket, so the barrier's proves what the refusal left. Live's inbox fills over UDP later and cannot
+// prove an absence.
+async function barrier(client: Client) {
+  const from = client.received.length;
+  const toggle = client.received.at(-1)?.endToggles[2] === 'stop' ? 'continue' : 'stop';
+  client.send({ kind: 'set-end-toggle', song: 2, toggle });
+  return client.snapshot((s) => s.endToggles[2] === toggle && client.received.indexOf(s) >= from);
+}
 
 describe('safe mode (server rig)', () => {
   it('starts enabled on every server start, toggles from leader and producer, rejects viewers, and never persists across restarts', async () => {
@@ -103,12 +113,11 @@ describe('safe mode (server rig)', () => {
     // Cross-song jump and cross-song play-from-start are refused.
     leader.send({ kind: 'jump', song: 2, section: 0 });
     leader.send({ kind: 'play-from-start', song: 2 });
-    await leader.flush();
+    expect((await barrier(leader)).jump).toBeNull();
 
     expect(rig.received(JUMP)).toEqual([]);
     expect(rig.received(CONTINUE)).toEqual([]);
     expect(rig.received(START)).toEqual([]);
-    expect(viewer.received.at(-1)?.jump).toBeNull();
 
     // Same-song jump still works while Safe Mode is on.
     leader.send({ kind: 'jump', song: 1, section: 2 });
@@ -165,7 +174,7 @@ describe('safe mode (server rig)', () => {
 
     leader.send({ kind: 'jump', song: 2, section: 0 });
     leader.send({ kind: 'play-from-start', song: 2 });
-    await leader.flush();
+    expect((await barrier(leader)).jump).toBeNull();
     expect(rig.received(JUMP)).toEqual([]);
 
     // Stop Live and start a count-in to Song 1 Verse.
@@ -178,9 +187,8 @@ describe('safe mode (server rig)', () => {
     const jumpsAfterCountIn = rig.received(JUMP).length;
     // Cross-song tap during count-in is refused; same-song retarget to Intro succeeds.
     leader.send({ kind: 'jump', song: 2, section: 0 });
-    await leader.flush();
+    expect((await barrier(leader)).jump).toEqual({ song: 1, section: 2 });
     expect(rig.received(JUMP)).toHaveLength(jumpsAfterCountIn);
-    expect(leader.received.at(-1)?.jump).toEqual({ song: 1, section: 2 });
 
     leader.send({ kind: 'jump', song: 1, section: 1 });
     expect((await leader.snapshot((s) => s.jump?.song === 1 && s.jump.section === 1)).countIn).toBe(true);
@@ -201,7 +209,7 @@ describe('safe mode (server rig)', () => {
     await viewer.snapshot((s) => s.playing && s.now?.song === 2);
     const jumpsBefore = rig.received(JUMP).length;
     leader.send({ kind: 'jump', song: 1, section: 1 });
-    await leader.flush();
+    expect((await barrier(leader)).jump).toBeNull();
     expect(rig.received(JUMP)).toHaveLength(jumpsBefore);
 
     // Turn Safe Mode off -> cross-song jump while playing now queues and lands in Song 1.
