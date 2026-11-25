@@ -1,26 +1,21 @@
-import { stageStatus, type StageStatusInput } from './stage-status.ts';
+import { stageStatus, type StageSnapshot } from './stage-status.ts';
 
-// Compact one-line stage status bar: always pinned at the top of the leader page while scrolling,
-// and self-contained so configurable performance layouts can also expose it as an optional module
-// on producer and viewer pages.
-export function StageStatusLine({
-  connected,
-  live,
-  set,
-  playing,
-  now,
-  jump,
-  countIn,
-  sticky = true,
-}: StageStatusInput & { sticky?: boolean }) {
-  const status = stageStatus({ connected, live, set, playing, now, jump, countIn });
+// The stage status line: one line pinned to the top of the leader page while it scrolls. On the
+// leader page it also says the server is out of reach, in the Reconnecting banner's colours, in
+// place of the banner, which would cover it. Not sticky, it is the module that the configurable
+// layout (setlist-controller#7) puts on the producer and view-only pages.
+export function StageStatusLine({ snapshot, connected, sticky = true }: { snapshot: StageSnapshot; connected: boolean; sticky?: boolean }) {
+  const status = stageStatus(snapshot, connected);
   const classes = ['stage-status', sticky && 'sticky', `stage-status-${status.kind}`].filter(Boolean).join(' ');
 
   return (
     <section className={classes} aria-label="Stage status">
-      {status.kind === 'disconnected' && (
-        <span className="stage-status-state stage-status-state-disconnected">{status.label}</span>
+      {status.kind === 'server-lost' && (
+        <span className="stage-status-message" role="status">
+          {status.label}
+        </span>
       )}
+      {status.kind === 'live-lost' && <span className="stage-status-message">{status.label}</span>}
       {status.kind === 'empty' && <span className="stage-status-message">{status.label}</span>}
       {status.kind === 'between' && (
         <>

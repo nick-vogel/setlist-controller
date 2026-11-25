@@ -5,7 +5,7 @@ import { describe, expect, it } from 'vitest';
 import type { Role } from '../src/shared/routes.ts';
 import type { ProducerSnapshot, SetList, Snapshot } from '../src/shared/snapshot.ts';
 import { Page } from '../web/src/App.tsx';
-import { stageStatus, type StageStatusInput } from '../web/src/stage-status.ts';
+import { stageStatus, type StageSnapshot } from '../web/src/stage-status.ts';
 import { StageStatusLine } from '../web/src/StageStatusLine.tsx';
 import { readStylesheet, type Element } from './css.ts';
 
@@ -46,24 +46,31 @@ const ON_COUNT_OFF: Snapshot['now'] = { song: 1, section: 0, next: 1, bar: 1, ba
 const ON_LAST: Snapshot['now'] = { song: 1, section: 3, next: 'end', bar: 1, bars: 4, fraction: 0 };
 const ON_LAST_NO_END: Snapshot['now'] = { song: 2, section: 1, next: 'end', bar: 1, bars: null, fraction: null };
 
-const input = (changes: Partial<StageStatusInput> = {}): StageStatusInput => ({
-  connected: true,
-  live: 'connected',
-  set: SET,
-  playing: true,
-  now: ON_VERSE,
-  jump: null,
-  countIn: false,
-  ...changes,
-});
+type Changes = Partial<StageSnapshot> & { connected?: boolean };
+const input = ({ connected = true, ...changes }: Changes = {}): [StageSnapshot, boolean] => [
+  {
+    live: 'connected',
+    set: SET,
+    playing: true,
+    now: ON_VERSE,
+    jump: null,
+    countIn: false,
+    ...changes,
+  },
+  connected,
+];
+const status = (changes: Changes = {}) => stageStatus(...input(changes));
 
 // The text a page shows, without its markup.
 const text = (markup: string) => markup.replace(/<[^>]*>/g, ' ').replace(/\s+/g, ' ').trim();
-const line = (changes: Partial<StageStatusInput> = {}) => text(renderToStaticMarkup(createElement(StageStatusLine, input(changes))));
+const line = (changes: Changes = {}) => {
+  const [snapshot, connected] = input(changes);
+  return text(renderToStaticMarkup(createElement(StageStatusLine, { snapshot, connected })));
+};
 
 describe('the stage status', () => {
   it('names the song, the section and the next section while Live plays', () => {
-    expect(stageStatus(input())).toEqual({
+    expect(status()).toEqual({
       kind: 'active',
       song: 'Build My Life',
       section: 'Verse',
@@ -74,7 +81,7 @@ describe('the stage status', () => {
   });
 
   it('says Live is stopped while it is', () => {
-    expect(stageStatus(input({ playing: false }))).toMatchObject({ kind: 'active', transport: { kind: 'stopped', label: 'Stopped' } });
+    expect(status({ playing: false })).toMatchObject({ kind: 'active', transport: { kind: 'stopped', label: 'Stopped' } });
     expect(line({ playing: false })).toBe('Stopped Build My Life · Verse Next Chorus');
   });
 
@@ -84,19 +91,19 @@ describe('the stage status', () => {
   });
 
   it("names a count-in's target, and the section after the target as Next", () => {
-    const status = stageStatus(input({ now: ON_COUNT_OFF, jump: { song: 1, section: 2 }, countIn: true }));
-    expect(status).toEqual({
+    const found = status({ now: ON_COUNT_OFF, jump: { song: 1, section: 2 }, countIn: true });
+    expect(found).toEqual({
       kind: 'active',
       song: 'Build My Life',
       section: 'Count Off',
       next: 'Chorus',
-      transport: { kind: 'count-in', target: 'Verse', label: 'Count in to Verse' },
+      transport: { kind: 'count-in', label: 'Count in to Verse' },
     });
   });
 
   it("names End after a song's last section, and nothing when the song has no End", () => {
-    expect(stageStatus(input({ now: ON_LAST }))).toMatchObject({ next: 'End' });
-    expect(stageStatus(input({ now: ON_LAST_NO_END }))).toMatchObject({ song: 'Song 2', section: 'Bridge', next: null });
+    expect(status({ now: ON_LAST })).toMatchObject({ next: 'End' });
+    expect(status({ now: ON_LAST_NO_END })).toMatchObject({ song: 'Song 2', section: 'Bridge', next: null });
     expect(line({ now: ON_LAST_NO_END })).toBe('Playing Song 2 · Bridge');
   });
 
@@ -105,10 +112,10 @@ describe('the stage status', () => {
     expect(line({ now: null, jump: { song: 2, section: 0 } })).toBe('Jumping to Opening Between songs');
   });
 
-  it('says the server or Live is out of reach before anything else', () => {
-    expect(line({ connected: false, live: 'not-connected' })).toBe('Server disconnected');
+  it('says the server or Live is out of reach before anything else, the server first', () => {
+    expect(line({ connected: false, live: 'not-connected' })).toBe('Reconnecting to the server.');
+    expect(line({ connected: false })).toBe('Reconnecting to the server.');
     expect(line({ live: 'not-connected' })).toBe('Live not connected');
-    expect(stageStatus(input({ connected: false })).kind).toBe('disconnected');
   });
 
   it('says there is no set yet, or no songs in it', () => {
@@ -133,12 +140,12 @@ const SNAPSHOT: Snapshot = {
 };
 const PRODUCER_SNAPSHOT: ProducerSnapshot = { ...SNAPSHOT, connections: [], connectionProblems: [] };
 
-const page = (role: Role, changes: Partial<Snapshot> = {}, extra: { leaderView?: 'setlist' | 'timeline' } = {}) =>
+const page = (role: Role, changes: Partial<Snapshot> = {}, extra: { leaderView?: 'setlist' | 'timeline' } = {}, connected = true) =>
   renderToStaticMarkup(
     createElement(Page, {
       role,
       snapshot: role === 'producer' ? { ...PRODUCER_SNAPSHOT, ...changes } : { ...SNAPSHOT, ...changes },
-      connected: true,
+      connected,
       send: () => {},
       ...extra,
     }),
@@ -163,9 +170,19 @@ describe('the pages that pin the stage status line', () => {
     expect(page('viewer')).not.toMatch(STATUS_LINE);
   });
 
-  it('takes the class of its state, so the stylesheet can mark it', () => {
-    expect(page('leader')).toContain('class="stage-status sticky stage-status-active"');
-    expect(page('leader', { live: 'not-connected' })).toContain('class="stage-status sticky stage-status-disconnected"');
+  // The banner is fixed over the top of the page, where the line is pinned, so on the leader page it
+  // would cover the line. The line says it once, in its place.
+  it('says the server is out of reach in the line on the leader page, and in the banner on every other page', () => {
+    const count = (markup: string) => text(markup).split('Reconnecting to the server.').length - 1;
+    for (const extra of [{}, { leaderView: 'timeline' as const }]) {
+      const markup = page('leader', {}, extra, false);
+      expect(count(markup)).toBe(1);
+      expect(markup).toMatch(/<section class="stage-status[^"]*" aria-label="Stage status"><span class="stage-status-message" role="status">Reconnecting to the server.<\/span><\/section>/);
+    }
+    expect(count(page('leader', { set: null, now: null }, {}, false))).toBe(1);
+    for (const role of ['producer', 'viewer'] as const) {
+      expect(page(role, {}, {}, false)).toMatch(/<p class="server-lost" role="status">Reconnecting to the server.<\/p>/);
+    }
   });
 });
 
@@ -186,6 +203,13 @@ describe("the stage status line's stylesheet", () => {
     for (const part of ['stage-status-song', 'stage-status-section', 'stage-status-next', 'stage-status-message']) {
       expect(stylesheet.value(onLeader(bar, { tag: 'span', classes: [part] }), 'text-overflow')).toBe('ellipsis');
     }
+  });
+
+  it("says the server is out of reach in the Reconnecting banner's colours", () => {
+    const banner = onLeader({ tag: 'p', classes: ['server-lost'] });
+    const lost: Element = { tag: 'section', classes: ['stage-status', 'sticky', 'stage-status-server-lost'] };
+    expect(stylesheet.value(onLeader(lost), 'background')).toBe(stylesheet.value(banner, 'background'));
+    expect(stylesheet.value(onLeader(lost, { tag: 'span', classes: ['stage-status-message'] }), 'color')).toBe(stylesheet.value(banner, 'color'));
   });
 
   it('sits under the reconnecting banner, which is fixed over the top of the page', () => {

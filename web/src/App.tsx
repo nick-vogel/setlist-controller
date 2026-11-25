@@ -232,25 +232,18 @@ export function Page({
   // After the pickers, on the view-only page only.
   const autoLockTip = role === 'viewer' && tip && <AutoLockTip onShown={onTipShown} />;
 
-  const stageStatusBar = role === 'leader' && (
-    <StageStatusLine
-      connected={connected}
-      live={snapshot.live}
-      set={snapshot.set}
-      playing={snapshot.playing}
-      now={snapshot.now}
-      jump={snapshot.jump}
-      countIn={snapshot.countIn}
-    />
-  );
+  // The leader page opens on the stage status line, which also says the server is out of reach.
+  // Every other page shows the Reconnecting banner for that.
+  const stageStatusLine = role === 'leader' && <StageStatusLine snapshot={snapshot} connected={connected} />;
+  const reconnecting = !connected && role !== 'leader' && <Reconnecting />;
 
   if (!snapshot.set || snapshot.set.songs.length === 0) {
     return (
       <main>
         {picker}
         {autoLockTip}
-        {!connected && <Reconnecting />}
-        {stageStatusBar}
+        {reconnecting}
+        {stageStatusLine}
         {snapshot.live === 'not-connected' ? (
           <LiveNotConnected />
         ) : (
@@ -282,7 +275,7 @@ export function Page({
         <ViewPicker view={view} onView={onView} />
         <FontSizePicker fontSize={fontSize} onFontSize={onFontSize} />
         {autoLockTip}
-        {!connected && <Reconnecting />}
+        {reconnecting}
         {live === 'not-connected' && <LiveNotConnected />}
         <ChartView
           set={snapshot.set}
@@ -305,8 +298,7 @@ export function Page({
   if (role === 'leader' && leaderView === 'timeline') {
     return (
       <main className="timeline-page">
-        {!connected && <Reconnecting />}
-        {stageStatusBar}
+        {stageStatusLine}
         <TimelineView
           set={snapshot.set}
           snapshot={snapshot}
@@ -323,8 +315,8 @@ export function Page({
     <main>
       {picker}
       {autoLockTip}
-      {!connected && <Reconnecting />}
-      {stageStatusBar}
+      {reconnecting}
+      {stageStatusLine}
       {role === 'leader' && (
         <div className="leader-mode-bar">
           <LeaderViewSwitcher leaderView={leaderView} onLeaderView={onLeaderView} />

@@ -1,4 +1,4 @@
-import { expect, test, type Page } from '@playwright/test';
+import { expect, test, type Locator, type Page } from '@playwright/test';
 import type { CuePoint } from '../src/fake-live/fake-live.ts';
 import { SILENT_BEFORE_LOST_MS } from '../src/server/live-bridge.ts';
 import { loaded } from '../test/harness.ts';
@@ -34,6 +34,20 @@ const CHORUS = 2;
 const BAR_MS = 2000;
 
 const statusLine = (page: Page) => page.getByRole('region', { name: 'Stage status' });
+
+// Whether the line or the timeline is what shows at a point on the screen, or at an element's centre.
+async function topmostAt(page: Page, point: { x: number; y: number }): Promise<string | null> {
+  return page.evaluate(({ x, y }) => {
+    const hit = document.elementFromPoint(x, y)?.closest('.stage-status, .timeline-viewport');
+    return hit ? (hit.classList.contains('stage-status') ? 'stage-status' : 'timeline-viewport') : null;
+  }, point);
+}
+
+async function topmostAtCentre(page: Page, locator: Locator): Promise<string | null> {
+  const box = await locator.boundingBox();
+  if (!box) throw new Error('The element has no box');
+  return topmostAt(page, { x: box.x + box.width / 2, y: box.y + box.height / 2 });
+}
 
 // The line is at the top of the screen, whole, and one line of text tall.
 async function expectPinned(page: Page) {
@@ -115,7 +129,9 @@ test('the status line says Live is not connected, and that the playhead is betwe
   await e2e.rig.stopLive();
   e2e.rig.clock.advance(SILENT_BEFORE_LOST_MS);
   await expect(statusLine(page)).toHaveText('Live not connected');
-  await expect(statusLine(page)).toHaveClass(/\bstage-status-disconnected\b/);
+  // In the Live not connected panel's warning colours.
+  await expect(statusLine(page)).toHaveCSS('background-color', 'rgb(42, 18, 21)');
+  await expect(statusLine(page).locator('.stage-status-message')).toHaveCSS('color', 'rgb(255, 99, 105)');
 });
 
 test('the status line says the server is out of reach while the page reconnects', async ({ page }) => {
@@ -124,6 +140,43 @@ test('the status line says the server is out of reach while the page reconnects'
   await page.goto(e2e.leaderUrl);
   await expect(statusLine(page).locator('.stage-status-section')).toHaveText('Verse');
 
+  // Scrolled down the setlist, where the Reconnecting banner of the other pages would cover the line.
+  await page.getByRole('heading', { name: `Song Number ${SONGS}` }).scrollIntoViewIfNeeded();
+  await expect.poll(() => page.evaluate(() => window.scrollY)).toBeGreaterThan(0);
+
   proxied.proxy.drop();
-  await expect(statusLine(page)).toHaveText('Server disconnected');
+  await expect(statusLine(page)).toHaveText('Reconnecting to the server.');
+  // The line says it once, in the banner's colours, and nothing covers it.
+  await expect(page.getByText('Reconnecting to the server.')).toHaveCount(1);
+  await expect(statusLine(page)).toHaveCSS('background-color', 'rgb(42, 31, 5)');
+  await expect(statusLine(page).getByRole('status')).toHaveCSS('color', 'rgb(240, 180, 41)');
+  await expectPinned(page);
+  expect(await topmostAtCentre(page, statusLine(page))).toBe('stage-status');
+});
+
+test("the status line stays over the timeline's playhead as the leader page scrolls under it", async ({ page }) => {
+  e2e = await startE2eRig({ playing: true, position: 20 }, SET);
+  await page.goto(e2e.leaderUrl);
+  await page.getByRole('group', { name: 'Leader view' }).getByRole('button', { name: 'Timeline' }).click();
+  const viewport = page.locator('.timeline-viewport');
+  await expect(viewport).toBeVisible();
+
+  // Room below the timeline, so the page scrolls on an iPad's screen too. The playhead takes no
+  // pointer events, so here it takes them, for the hit test to find it where it paints.
+  await page.addStyleTag({ content: 'main.timeline-page { padding-bottom: 150vh; } .timeline-playhead { pointer-events: auto; }' });
+  const playhead = page.locator('.timeline-playhead');
+  await expect(playhead).toBeVisible();
+
+  // Scrolled until the top of the playhead, which runs the timeline's height, is under the line.
+  const top = await viewport.evaluate((element) => element.getBoundingClientRect().top + window.scrollY);
+  await page.evaluate((y) => window.scrollTo(0, y), top + 4);
+  await expectPinned(page);
+  const line = await statusLine(page).boundingBox();
+  const under = await playhead.boundingBox();
+  if (!line || !under) throw new Error('The line or the playhead has no box');
+  const point = { x: under.x + under.width / 2, y: line.y + line.height / 2 };
+  expect(under.y < point.y && under.y + under.height > point.y).toBe(true);
+
+  // What the leader sees there is the line, not the playhead's red line over it.
+  expect(await topmostAt(page, point)).toBe('stage-status');
 });

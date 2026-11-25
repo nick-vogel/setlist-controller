@@ -1,4 +1,5 @@
 import { sectionAt, songTitle, type SetList, type Snapshot } from '../../src/shared/snapshot.ts';
+import { jumpTargetName, nextSectionName } from './section-names.ts';
 
 // Where the set is: the current song and section, the next section, the bar, and a progress bar
 // through the current section, the jump the leader asked for while it waits for the downbeat, a
@@ -28,8 +29,7 @@ export function NowPlaying({
 
   const song = now && set.songs.find((candidate) => candidate.number === now.song);
   const section = now && song?.sections[now.section];
-  // End is not a section, so a jump to it is named apart.
-  const target = jump && (jump.section === 'end' ? 'End' : sectionAt(set, jump)?.name);
+  const target = jumpTargetName(set, jump);
   // The line keeps its place while no jump waits, so the leader's tap targets under it never move. A
   // count-in's target waits as a jump does, and the line says the Count Off playing leads into it.
   const jumpLine = <p className="now-jump">{target ? `${countIn ? 'Count in to' : 'Jumping to'} ${target}.` : '\u00a0'}</p>;
@@ -47,14 +47,7 @@ export function NowPlaying({
     );
   }
 
-  const next =
-    countIn && jump && jump.section !== 'end'
-      ? nextAfter(set, jump.song, jump.section)
-      : now.next !== 'end'
-        ? (song.sections[now.next]?.name ?? 'End')
-        : song.end === null
-          ? null
-          : 'End';
+  const next = nextSectionName(set, song, now, jump, countIn);
 
   return (
     <section className="now-playing" aria-label="Now playing">
@@ -79,14 +72,6 @@ export function NowPlaying({
       {loopLine}
     </section>
   );
-}
-
-// The name of the section after that one in its song, End after the song's last section when the
-// song has an End, or null when it has none.
-function nextAfter(set: SetList, songNumber: number, section: number): string | null {
-  const song = set.songs.find((candidate) => candidate.number === songNumber);
-  if (!song) return null;
-  return song.sections[section + 1]?.name ?? (song.end === null ? null : 'End');
 }
 
 // Its own panel, in a warning colour with a border, so it never reads as a stopped song or the grey

@@ -45,9 +45,10 @@ body {
   background: #2f6fd6;
 }
 
-/* Compact one-line sticky stage status bar on the leader page, and available inline as a module on
-   other pages. Strictly one line tall with ellipsis overflow so it never covers controls on a phone,
-   and under .server-lost (z-index 2) when the server connection drops. */
+/* The stage status line: one line pinned to the top of the leader page while it scrolls. Nothing in
+   it wraps and a long name is cut short, so it stays one line tall on a phone. Without .sticky it is
+   the inline module the configurable layout (setlist-controller#7) puts on the other pages. Under
+   the Reconnecting banner (z-index 2), which the leader page does not show. */
 .stage-status {
   display: flex;
   flex-wrap: nowrap;
@@ -75,10 +76,29 @@ body {
   border-radius: 0;
 }
 
-.stage-status-disconnected {
+/* The server out of reach, in the Reconnecting banner's colours, since on the leader page the line
+   says it in place of the banner. */
+.stage-status-server-lost {
+  border-color: #f0b429;
+  border-bottom-color: #f0b429;
+  background: #2a1f05;
+}
+
+.stage-status-server-lost .stage-status-message {
+  color: #f0b429;
+  font-weight: 600;
+}
+
+/* Live out of reach, in the Live not connected panel's colours. */
+.stage-status-live-lost {
   border-color: #e5484d;
   border-bottom-color: #e5484d;
   background: #2a1215;
+}
+
+.stage-status-live-lost .stage-status-message {
+  color: #ff6369;
+  font-weight: 700;
 }
 
 .stage-status-state {
@@ -116,14 +136,6 @@ body {
   border-color: #f0b429;
   background: #2a1f05;
   color: #f0b429;
-}
-
-.stage-status-state-disconnected {
-  border-color: transparent;
-  padding-left: 0;
-  background: transparent;
-  color: #ff6369;
-  font-size: 0.875rem;
 }
 
 .stage-status-song {
