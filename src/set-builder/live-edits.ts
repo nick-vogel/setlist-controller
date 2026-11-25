@@ -40,7 +40,6 @@ const END = 'End';
 const PAD_OUT = 'Pad Out';
 const EPS = 1e-4;
 
-// Extracts Live edits from an existing built `.als` document before re-materialization.
 export function extractLiveEdits(document: AlsDocument): LiveEdits {
   const liveSet = child(document.root, 'LiveSet');
   const trackVolumesById = new Map<string, string>();
@@ -73,7 +72,6 @@ export function extractLiveEdits(document: AlsDocument): LiveEdits {
 export function applyLiveEdits(document: AlsDocument, edits: LiveEdits, carry: LocatorCarry): void {
   const liveSet = child(document.root, 'LiveSet');
 
-  // 1. Track mixer volumes.
   for (const track of childElements(child(liveSet, 'Tracks'))) {
     const id = track.attributes.Id;
     const byId = id === undefined ? undefined : edits.trackVolumesById.get(`${track.name}:${id}`);
@@ -89,7 +87,7 @@ export function applyLiveEdits(document: AlsDocument, edits: LiveEdits, carry: L
     if (mainManual) mainManual.attributes.Value = edits.mainVolume;
   }
 
-  // 2. Per-song clip SampleVolume on untouched songs, found by the new build's own locators.
+  // Per-song clip SampleVolume on untouched songs, found by the new build's own locators.
   const built = sortedLocators(liveSet);
   applyClipVolumes(liveSet, built, edits.clipVolumes, carry.untouched);
 

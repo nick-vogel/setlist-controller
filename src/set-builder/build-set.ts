@@ -238,9 +238,11 @@ function checkTransitions({ songs, transitions = {} }: CheckOptions): void {
 }
 
 // A build that replaces writes the new project into a hidden folder beside the old one, and only once it is whole puts
-// it in the old folder's place and removes the old folder whole. Nothing of the old set (its audio, a file added by hand,
-// Live's Backup folder) is left among the new one, and a build that fails part way through writing, such as on a WAV
-// the library holds but cannot read, removes what it wrote and leaves the old set as it was.
+// it in the old folder's place and removes the old folder. The new set is in place by then, so a file that cannot be
+// removed leaves the hidden folder behind rather than failing the build. For a full --replace build, nothing of the old
+// set (its audio, a file added by hand, Live's Backup folder) is left among the new one; an edit opts in to carryOver
+// inside writeProject to clone untouched entries and the replaced .als across. A build that fails part way through
+// writing, such as on a WAV the library holds but cannot read, removes what it wrote and leaves the old set as it was.
 async function replaceFolder(folder: string, writeProject: (into: string) => Promise<void>): Promise<void> {
   const work = await mkdtemp(join(dirname(folder), `.${basename(folder)} replacing `));
   const next = join(work, 'new');
