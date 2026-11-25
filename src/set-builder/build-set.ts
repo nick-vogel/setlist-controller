@@ -248,7 +248,7 @@ async function replaceFolder(folder: string, writeProject: (into: string) => Pro
     await mkdir(next);
     await writeProject(next);
   } catch (error) {
-    await rm(work, { recursive: true, force: true });
+    await rm(work, { recursive: true, force: true }).catch(() => undefined);
     throw error;
   }
   if (existsSync(folder)) await rename(folder, join(work, 'old'));

@@ -1,4 +1,4 @@
-import { spawn, type ChildProcessWithoutNullStreams } from 'node:child_process';
+import { spawn, spawnSync, type ChildProcessWithoutNullStreams } from 'node:child_process';
 import { existsSync } from 'node:fs';
 import { chmod, cp, mkdir, readdir, readFile, rm, writeFile } from 'node:fs/promises';
 import { join } from 'node:path';
@@ -818,6 +818,24 @@ describe('validation errors and atomic failure safety', () => {
     expect(edited.stderr).toMatch(/EACCES|permission denied/i);
     expect(await snapshotFolder(folder)).toEqual(folderBefore);
     expect(await readdir(workspace.outputRoot)).toEqual([`${DATE} Sunday`]);
+  }, 20_000);
+
+  it('an edit that cannot keep the replaced set in a read-only Backup fails with that error and leaves the set as it was', async () => {
+    const workspace = await createWorkspace();
+    const built = await run(['grace', 'goodness', '--date', DATE, ...buildPaths(workspace)]);
+    expect(built.code).toBe(0);
+    const folder = projectFolder(workspace);
+    await mkdir(join(folder, 'Backup'));
+    await writeFile(join(folder, 'Backup', `${DATE} Sunday [2026-11-28 101500].als`), 'a backup Live saved');
+    await chmod(join(folder, 'Backup'), 0o555);
+    const folderBefore = await snapshotFolder(folder);
+
+    const edited = await run(['edit', folder, '--add', 'trust']).finally(() => spawnSync('chmod', ['-R', 'u+w', workspace.outputRoot]));
+
+    expect(edited.code).toBe(1);
+    expect(edited.stderr.trim().split('\n')).toHaveLength(1);
+    expect(edited.stderr).toMatch(/EACCES.*before edit/);
+    expect(await snapshotFolder(folder)).toEqual(folderBefore);
   }, 20_000);
 
   it('keeps a second replaced set from the same second under the next second, and never overwrites the first', async () => {
