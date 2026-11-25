@@ -30,6 +30,7 @@ Carried forward from `pre-pr-review-1.md` (no decision overturned):
 - **State reset on a prop change in a component:** guarded adjust-during-render shape (`if (wasEnabled !== enabled) { setWasEnabled(enabled); setHolding(false); }`), avoiding `setState` in an effect body (`react-hooks/set-state-in-effect`). Precedent: `web/src/App.tsx:395`.
 - **Logic shared by server and pages:** pure helper `activeSong(countIn, jump, now)` in `src/shared/safe-mode.ts`, mirroring `src/shared/count-in.ts`.
 - **Proving a refused command sent nothing:** accepted end-toggle barrier on song 2 waited for among snapshots received after it was sent (`received.indexOf(s) >= from`) in rig tests, and WebSocket `framesent` recording plus a subsequent accepted jump in Playwright tests.
+- **Direct test of a pure shared helper (added by remediation 2026-11-25):** a plain `describe('<helper>')` block in the feature's own test file, calling the helper with written-out inputs and asserting literal expected values. `src/shared/count-in.ts` has no direct test to mirror, so `activeSong` set the shape in `test/safe-mode.test.ts`.
 
 ## Prior-review closure
 All 7 Confirmed findings from `docs/reviews/setlist-controller-2/pre-pr-review-1.md` are resolved:
@@ -118,3 +119,18 @@ Tests added or modified: 12 rig and markup tests in `test/safe-mode.test.ts`, 4 
 
 ## Verdict
 **Ready to merge as-is (or with Finding 1 as an optional follow-up).** There are 0 CRITICAL, 0 HIGH, and 0 MEDIUM findings, and all 7 findings from `pre-pr-review-1.md` are cleanly closed. The single confirmed LOW finding (`activeSong`'s count-in branch unit test) does not gate the PR.
+
+## Remediation, 2026-11-25
+Base of the round: HEAD `dfcdf89`. Final HEAD of the fix: `b5e5103`. Scope: the one Confirmed finding, LOW, taken on because the invocation asked for it. Review 1's Approach decisions and Dismissed list, and Nick's Q1 and Q2 decisions, untouched. No production code changed.
+
+| Finding | Commit | Proof | Comments added | Verify verdict |
+| --- | --- | --- | --- | --- |
+| 1 (LOW) | `b5e5103` nothing tested activeSong's count-in branch where the held jump's song differs from now | red→green: `pnpm vitest run test/safe-mode.test.ts --maxWorkers=2 -t activeSong` red with `src/shared/safe-mode.ts:7` changed to `now?.song ?? null` (`expected 1 to be 2`), green restored; whole file 13 of 13 (the 12 existing plus the new one) | 0 | proved by execution |
+
+After the round: `pnpm lint` exit 0, `pnpm typecheck` exit 0, `pnpm test --maxWorkers=2` 104 of 104 files (3,339 passed, 4 skipped), `pnpm check:private --range origin/main..HEAD` exit 0. Playwright not run: the change is a unit test only, with no web code touched.
+
+### Known regressions, deferred
+- None.
+
+### Rework briefs
+- None. No verify agent ran (a LOW fix proved by execution), so there was nothing to rework.
