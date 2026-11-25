@@ -2,7 +2,7 @@ import { existsSync } from 'node:fs';
 import { mkdir, mkdtemp, rename, rm } from 'node:fs/promises';
 import { basename, dirname, join } from 'node:path';
 import { child, readAls, valueOf, writeAls, type AlsDocument } from './als.ts';
-import { audioCopies, audioProblems, copyAudio, copyPads, copyProjectInfo } from './audio.ts';
+import { audioCopies, audioProblems, carryOver, copyAudio, copyPads, copyProjectInfo, keepReplacedSet } from './audio.ts';
 import { introProblems, overlapProblems, padProblems, padTrackProblems, stemProblems, templateProblems } from './checks.ts';
 import { matchSongs, padsFolder, type SongMatch } from './library.ts';
 import { timeSignature } from './meter.ts';
@@ -59,6 +59,9 @@ export type BuildOptions = CheckOptions & {
   outputRoot: string;
   // Replace the set folder for the date when it already exists. Without it, an existing folder stops the build.
   replace?: boolean;
+  // With replace, an edit's own: every top-level entry of the old set folder the new project does not hold is carried
+  // into it, and the replaced .als is kept in its Backup folder, so an edit loses nothing of the set it did not write.
+  carryOver?: boolean;
   // Optional metadata recorded into set-recipe.json alongside the built set.
   recipe?: RecipeExtras;
   // Optional preserved Live edits (locator flags, track mixer volumes, clip volumes) to reapply onto
@@ -138,6 +141,10 @@ export async function buildSet(options: BuildOptions): Promise<BuildResult> {
     await copyPads(into, Object.values(padFiles));
     await writeAls(join(into, `${name}.als`), set);
     await writeRecipe(join(into, SET_RECIPE_FILE), recipe);
+    if (options.carryOver === true && existsSync(folder)) {
+      await carryOver(folder, into);
+      await keepReplacedSet(setPath, into, name);
+    }
   };
   await mkdir(options.outputRoot, { recursive: true });
   if (options.replace) {

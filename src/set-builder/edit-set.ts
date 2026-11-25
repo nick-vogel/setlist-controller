@@ -119,6 +119,7 @@ export async function editSet(options: EditOptions): Promise<EditResult> {
     date: recipe.date,
     outputRoot,
     replace: true,
+    carryOver: true,
     transitions: planned.transitions,
     pads: recipe.pads,
     recipe: {

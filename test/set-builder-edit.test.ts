@@ -5,6 +5,7 @@ import { join } from 'node:path';
 import { gzipSync } from 'node:zlib';
 import { afterEach, describe, expect, it } from 'vitest';
 import { parseSet } from '../src/server/set-parser.ts';
+import { keepReplacedSet } from '../src/set-builder/audio.ts';
 import { buildSet } from '../src/set-builder/build-set.ts';
 import { editSet } from '../src/set-builder/edit-set.ts';
 import { recipePath, SET_RECIPE_FILE, type SetRecipe } from '../src/set-builder/recipe.ts';
@@ -553,6 +554,88 @@ describe('Eos lighting cue regeneration on build-set edit', () => {
 });
 
 describe('validation errors and atomic failure safety', () => {
+  it('an edit keeps everything of the old set it does not write, and the replaced set in Backup', async () => {
+    const workspace = await createWorkspace();
+    const built = await run(['grace', 'goodness', '--date', DATE, ...buildPaths(workspace)]);
+    expect(built.code).toBe(0);
+    const folder = projectFolder(workspace);
+    const liveBackup = join(folder, 'Backup', `${DATE} Sunday [2026-11-28 101500].als`);
+    const take = join(folder, 'Samples', 'Recorded', 'take 1.wav');
+    await mkdir(join(folder, 'Backup'), { recursive: true });
+    await writeFile(liveBackup, 'a backup Live saved');
+    await mkdir(join(folder, 'Samples', 'Recorded'), { recursive: true });
+    await writeFile(take, 'a take recorded in rehearsal');
+    const setBefore = await readFile(setPath(workspace));
+
+    const edited = await run(['edit', folder, '--add', 'trust']);
+
+    expect(edited.stderr).toBe('');
+    expect(edited.code).toBe(0);
+    expect(await readFile(liveBackup, 'utf8')).toBe('a backup Live saved');
+    expect(await readFile(take, 'utf8')).toBe('a take recorded in rehearsal');
+    const kept = (await readdir(join(folder, 'Backup'))).filter((entry) => entry.startsWith(`${DATE} Sunday (before edit `) && entry.endsWith(').als'));
+    expect(kept).toHaveLength(1);
+    expect(await readFile(join(folder, 'Backup', kept[0]!))).toEqual(setBefore);
+    expect((await readRecipeJson(folder)).songs.map((song) => song.folder)).toEqual([GRACE, GOODNESS, TRUST]);
+  }, 20_000);
+
+  it('an edit that cannot carry the old set across fails and leaves the set as it was', async () => {
+    const workspace = await createWorkspace();
+    const built = await run(['grace', 'goodness', '--date', DATE, ...buildPaths(workspace)]);
+    expect(built.code).toBe(0);
+    const folder = projectFolder(workspace);
+    const samples = join(folder, 'Samples');
+    await mkdir(join(samples, 'Recorded'), { recursive: true });
+    await writeFile(join(samples, 'Recorded', 'take 1.wav'), 'a take recorded in rehearsal');
+    const folderBefore = await snapshotFolder(folder);
+
+    await chmod(samples, 0o000);
+    const edited = await run(['edit', folder, '--add', 'trust']).finally(() => chmod(samples, 0o755));
+
+    expect(edited.code).toBe(1);
+    expect(edited.stderr).toMatch(/EACCES|permission denied/i);
+    expect(await snapshotFolder(folder)).toEqual(folderBefore);
+    expect(await readdir(workspace.outputRoot)).toEqual([`${DATE} Sunday`]);
+  }, 20_000);
+
+  it('keeps a second replaced set from the same second under the next second, and never overwrites the first', async () => {
+    const workspace = await createWorkspace();
+    const project = join(workspace.dir, 'project');
+    const als = join(workspace.dir, 'old.als');
+    await mkdir(project);
+    await writeFile(als, 'the set before the first edit');
+    const second = new Date(2026, 10, 29, 10, 15, 0, 900);
+    const clock = [second, second, new Date(2026, 10, 29, 10, 15, 1, 0)];
+
+    await keepReplacedSet(als, project, `${DATE} Sunday`, () => clock.shift()!);
+    await writeFile(als, 'the set before the second edit');
+    await keepReplacedSet(als, project, `${DATE} Sunday`, () => clock.shift()!);
+
+    expect(clock).toEqual([]);
+    expect((await readdir(join(project, 'Backup'))).toSorted()).toEqual([
+      `${DATE} Sunday (before edit 2026-11-29 10-15-00).als`,
+      `${DATE} Sunday (before edit 2026-11-29 10-15-01).als`,
+    ]);
+    expect(await readFile(join(project, 'Backup', `${DATE} Sunday (before edit 2026-11-29 10-15-00).als`), 'utf8')).toBe('the set before the first edit');
+    expect(await readFile(join(project, 'Backup', `${DATE} Sunday (before edit 2026-11-29 10-15-01).als`), 'utf8')).toBe('the set before the second edit');
+  });
+
+  it('keeping the replaced set throws what the disk throws when Backup cannot be written, without trying again', async () => {
+    const workspace = await createWorkspace();
+    const project = join(workspace.dir, 'project');
+    const als = join(workspace.dir, 'old.als');
+    await mkdir(join(project, 'Backup'), { recursive: true });
+    await writeFile(als, 'the set before the edit');
+    let reads = 0;
+
+    await chmod(join(project, 'Backup'), 0o555);
+    const kept = keepReplacedSet(als, project, `${DATE} Sunday`, () => (reads++, new Date(2026, 10, 29, 10, 15, 0))).finally(() => chmod(join(project, 'Backup'), 0o755));
+
+    await expect(kept).rejects.toMatchObject({ code: 'EACCES' });
+    expect(reads).toBe(1);
+    expect(await readdir(join(project, 'Backup'))).toEqual([]);
+  });
+
   it('an edit of a copied set folder is refused and changes neither folder', async () => {
     const workspace = await createWorkspace();
     const built = await run(['grace', 'goodness', 'trust', '--date', DATE, ...buildPaths(workspace)]);
