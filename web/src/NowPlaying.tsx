@@ -1,11 +1,13 @@
 import { sectionAt, songTitle, type SetList, type Snapshot } from '../../src/shared/snapshot.ts';
+import { formatSeconds, timeLeft, type TimeLeft } from './durations.ts';
 import { jumpTargetName, nextSectionName } from './section-names.ts';
 
 // Where the set is: the current song and section, the next section, the bar, and a progress bar
 // through the current section, the jump the leader asked for while it waits for the downbeat, a
 // song's End and a count-in's target included, and the loop while one is on. During a count-in the
 // Next line names the section after the target, in the target's song, since the band comes in on the
-// target and not on the section after the Count Off playing.
+// target and not on the section after the Count Off playing. Under the section, the time left in
+// the song and in the set, gaps included, when the page knows them (durations.ts).
 // Every page shows it, and while Live is not connected it says so in place of all of that. With Live
 // connected and no set yet, it shows nothing.
 
@@ -16,6 +18,8 @@ export function NowPlaying({
   jump,
   countIn,
   loop,
+  timings,
+  position,
 }: {
   live: Snapshot['live'];
   set: SetList | null;
@@ -23,6 +27,8 @@ export function NowPlaying({
   jump: Snapshot['jump'];
   countIn: Snapshot['countIn'];
   loop: Snapshot['loop'];
+  timings: Snapshot['songTimings'];
+  position: Snapshot['position'];
 }) {
   if (live === 'not-connected') return <LiveNotConnected />;
   if (!set) return null;
@@ -36,11 +42,14 @@ export function NowPlaying({
   // The same for the loop. A brace set by hand at the laptop may match no section.
   const looped = loop?.section && sectionAt(set, loop.section);
   const loopLine = <p className="now-loop">{looped ? `Looping ${looped.name}.` : loop ? 'Loop on.' : '\u00a0'}</p>;
+  // The same for the time left, which is not known for a set the build did not time until Live plays in it.
+  const timeLine = <p className="now-time-left">{timeLeftText(timeLeft(set, timings, now, position, loop)) || '\u00a0'}</p>;
 
   if (!now || !song || !section) {
     return (
       <section className="now-playing" aria-label="Now playing">
         <p className="between">Between songs.</p>
+        {timeLine}
         {jumpLine}
         {loopLine}
       </section>
@@ -59,6 +68,7 @@ export function NowPlaying({
       <div className="progress" aria-hidden="true">
         {now.fraction !== null && <div className="progress-fill" style={{ width: `${now.fraction * 100}%` }} />}
       </div>
+      {timeLine}
       <p className="now-next">
         {next === null ? (
           '\u00a0'
@@ -72,6 +82,17 @@ export function NowPlaying({
       {loopLine}
     </section>
   );
+}
+
+// "3:12 left in song · 38:40 left in set", each part only when it is known, "at least" before a set
+// time that is a minimum, and "~" before each while a loop is on.
+function timeLeftText({ song, set, approximate }: TimeLeft): string {
+  const about = approximate ? '~' : '';
+  const parts = [
+    song !== null && `${about}${formatSeconds(song)} left in song`,
+    set !== null && `${set.atLeast ? 'at least ' : ''}${about}${formatSeconds(set.seconds)} left in set`,
+  ];
+  return parts.filter(Boolean).join(' \u00b7 ');
 }
 
 // Its own panel, in a warning colour with a border, so it never reads as a stopped song or the grey

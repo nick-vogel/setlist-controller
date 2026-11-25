@@ -215,10 +215,23 @@ body {
 /* Each line's own class, not `.now-playing p`, which would outrank the margins set below. */
 .between,
 .now-song,
+.now-time-left,
 .now-next,
 .now-jump,
 .now-loop {
   margin: 0;
+}
+
+/* The time left in the song and the set, under the progress bar. One line, so its height never
+   changes as the numbers do. */
+.now-time-left {
+  margin-top: 0.5rem;
+  font-size: 1.125rem;
+  font-variant-numeric: tabular-nums;
+  color: #ccc;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .between {
@@ -1013,6 +1026,20 @@ body {
   margin: 0 0 0.5rem;
   font-size: 1rem;
   color: #aaa;
+}
+
+/* How long a song plays, under its title, and the whole set, over the setlist. */
+.song-duration,
+.set-duration {
+  margin: 0 0 0.5rem;
+  font-size: 1rem;
+  font-variant-numeric: tabular-nums;
+  color: #aaa;
+}
+
+.set-duration {
+  margin-top: 1rem;
+  font-size: 1.125rem;
 }
 
 /* The setup screen's Connections section: what the server made of the connections config file, then
