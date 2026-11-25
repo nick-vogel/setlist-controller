@@ -194,3 +194,26 @@ Tests added: 8 (`test/hub-coalescing.test.ts`) · green against `$BASE` (`a9da50
 - **Finding 1 (MEDIUM):** fix the stop/fade-cancel snapshot wait at `test/hub-coalescing.test.ts:374` so `flushes immediately...` stops flaking with `expected 19 to be 18` on CI.
 
 Findings 2 (LOW, mid-window revert sync in `src/server/hub.ts`) and 3 (LOW, comment hygiene) are small, low-risk fixes that can be remediated in the same `/pr-review-remediate` pass or tracked as follow-ups.
+
+## Remediation, 2026-11-25
+Scope: all three Confirmed findings, the LOWs included at Nick's request. Review 1's Approach decisions and Dismissed list held; Finding 2 is the case review 1's "a new client during a held window" and "a value reverting while a flush is pending" dismissals did not combine (a client that received the held snapshot, then a revert), and it changes neither dismissed behaviour. Base: `05204c3`; HEAD after the round: the commit that adds this section.
+
+| Finding | Commit | Proof | Comments added | Verify verdict |
+| --- | --- | --- | --- | --- |
+| 1 (MEDIUM) | `30bd968` finding 1: step 7 of the significant-change test races Stop against the fade-cancel snapshot | red→green: `bash docs/reviews/setlist-controller-16/repro/stop-fade-race.sh` red on run 1 at `05204c3` (`expected 19 to be 18`), then 3 of 3 passing; `pnpm vitest run test/hub-coalescing.test.ts test/fade-out.test.ts --maxWorkers=2` 8/8 and 47/47 | 0 | fixed |
+| 2 (LOW) | `6828805` finding 2: a client that got a held position stays on it when the position reverts | red→green: the two tests in `describe('a client that received a held position')` (converted from `repro/mid-window-revert.sh`) red on the unfixed hub (`expected 12 to be 10`, both), then green; the repro passes 2 of 2; `pnpm vitest run test/hub-coalescing.test.ts test/reconnect.test.ts test/server-connection.test.ts test/connections.test.ts --maxWorkers=2` 63/63 | 0 | fixed |
+| 3 (LOW, comment hygiene) | `c650de8` finding 3: comment hygiene | read against the code: `hub.ts` header (power is in `nonPositionKey`'s `rest`), `test/hub-coalescing.test.ts` resume comment (matches the assertions below it) and the paused-socket comment in the significant-change test | rewritten only | n/a (prose) |
+
+Verify pass: one `pr-review-finder` disprove agent over `30bd968` and `6828805` returned "fixed" for both with no introduced defect. Its differential run loaded `6828805^:src/server/hub.ts` beside HEAD's on a manual clock with held send callbacks: a producer-only change with every viewer in sync, a producer-only change during a held window, duplicate reports with no pending flush, a revert with no diverged client, a slow socket in flight during a revert, and a mid-window connect followed by the trailing flush were identical frame for frame; only the two intended cases (a mid-window slow viewer and a mid-window producer, each after a revert) differed, and both now converge. Not observed by execution: that duplicate reports with no pending flush skip the client loop, which rests on reading the `if (stopFlush)` gate.
+
+Round checks at `c650de8` (the last code commit; the closure commit adds only this section): `pnpm lint` pass, `pnpm typecheck` pass, `pnpm test --maxWorkers=2` 104/104 files (3336 passed, 4 skipped), `pnpm test:e2e` 160/160, `bash docs/reviews/setlist-controller-16/repro/linux-ci.sh` 10/10 in each of 3 runs (`tcp_wmem` max 4194304, `tcp_rmem` max 6291456), `pnpm check:private` tree and `--range origin/main..HEAD` exit 0, rerun at the closure commit.
+
+### Known regressions, deferred
+None.
+
+### Rework briefs
+None (no rework pass was needed).
+
+### Approach decisions added by this remediation
+- **Stop-wait predicate (`test/hub-coalescing.test.ts` step 7):** applied as recorded above, waiting for `!snapshot.playing && snapshot.fade === null`.
+- **Mid-window revert sync (`src/server/hub.ts`):** applied as recorded above. `broadcast()` hands every client to `deliver()` and relies on its `lastSent` comparison instead of a per-role filter; the early return in `publish()` walks the clients only when `stopFlush` was pending, since `latest !== broadcasted` holds only then. The tests drive a real `startHub` on a `manualClock` with real sockets (`node:http` `createServer`), the first direct hub tests in the suite, because a revert in the same publish as a producer-only change cannot be produced through the rig.
