@@ -76,6 +76,7 @@ describe('loop on', () => {
 
     leader.send({ kind: 'loop' });
     // The jump comes after the loop, so once Live has it, any loop message would be there too.
+    leader.send({ kind: 'set-safe-mode', enabled: false });
     leader.send({ kind: 'jump', song: 2, section: 0 });
     await vi.waitFor(() => expect(rig?.received(JUMP)).toHaveLength(1));
 
@@ -113,7 +114,7 @@ describe('loop on', () => {
 
     leader.send({ kind: 'next' });
     leader.send({ kind: 'loop' });
-    leader.send({ kind: 'jump', song: 2, section: 0 });
+    leader.send({ kind: 'jump', song: 1, section: 0 });
     await vi.waitFor(() => expect(rig?.received(JUMP)).toHaveLength(2));
 
     expect(rig.received(JUMP)[0]?.args).toEqual([3]);

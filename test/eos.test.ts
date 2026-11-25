@@ -226,6 +226,7 @@ async function lightsRig({
     },
     // The leader's jump, once the fake Live holds it.
     async jump(song: number, section: number) {
+      leader.send({ kind: 'set-safe-mode', enabled: false });
       const sent = started.received(JUMP).length;
       leader.send({ kind: 'jump', song, section });
       await vi.waitFor(() => expect(started.received(JUMP)).toHaveLength(sent + 1));
@@ -351,6 +352,7 @@ describe('the lights armed', () => {
     await read();
     await arm();
 
+    await lead({ kind: 'set-safe-mode', enabled: false }, (snapshot) => !snapshot.safeMode);
     await lead({ kind: 'play-from-start', song: 2 }, (snapshot) => snapshot.jump?.song === 2);
     await vi.waitFor(() => expect(rig!.received(JUMP)).toHaveLength(1));
     // The bar line is beat 36, so Live lands on song 2's Count Off, 64, and plays on three beats.
@@ -513,6 +515,7 @@ describe('the lights armed', () => {
     // Play from start of song 2: the bar line is beat 36, so Live lands on its Count Off at 64 and
     // plays on three beats. Then a jump to its Verse 1 before the Count Off plays out: the bar line
     // is beat 68, so Live lands on 72 and plays on three beats.
+    await lead({ kind: 'set-safe-mode', enabled: false }, (snapshot) => !snapshot.safeMode);
     await lead({ kind: 'play-from-start', song: 2 }, (snapshot) => snapshot.jump?.song === 2);
     await vi.waitFor(() => expect(rig!.received(JUMP)).toHaveLength(1));
     await play(5, 67);

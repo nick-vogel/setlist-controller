@@ -7,8 +7,10 @@ import type { LeaderView } from './device-settings.ts';
 import { FadeOutButton } from './FadeOutButton.tsx';
 import { LeaderViewSwitcher } from './LeaderViewSwitcher.tsx';
 import { LiveNotConnected } from './NowPlaying.tsx';
+import { SafeModeToggle } from './SafeModeToggle.tsx';
 import { sectionControlState, sectionState } from './section-state.ts';
 import { buildTimeline, PEEK_IDLE_MS } from './timeline-model.ts';
+import { TimelinePauseButton } from './TimelinePauseButton.tsx';
 
 // Pixels of horizontal pointer travel before a gesture becomes a drag rather than a tap.
 const DRAG_THRESHOLD_PX = 8;
@@ -31,8 +33,9 @@ export function TimelineView({
   onLeaderView(view: LeaderView): void;
   send(command: Command): void;
 }) {
-  const { live, playing, position, now, jump, countIn, loop, fade, songMeters } = snapshot;
+  const { live, playing, position, now, jump, countIn, loop, fade, songMeters, safeMode } = snapshot;
   const liveReady = connected && live === 'connected';
+  const activeSong = countIn && jump ? jump.song : now?.song ?? null;
   const playheadSong = set.songs.find((song) => song.number === now?.song);
   const playheadSection = now && playheadSong?.sections[now.section];
 
@@ -269,7 +272,10 @@ export function TimelineView({
             </div>
           </section>
         )}
-        <LeaderViewSwitcher leaderView={leaderView} onLeaderView={onLeaderView} />
+        <div className="timeline-top-controls">
+          <SafeModeToggle safeMode={safeMode} available={connected} send={send} />
+          <LeaderViewSwitcher leaderView={leaderView} onLeaderView={onLeaderView} />
+        </div>
       </header>
 
       <nav className="timeline-song-tabs" aria-label="Songs">
@@ -360,6 +366,7 @@ export function TimelineView({
                     song?.sections[block.section],
                   );
                   const heldInSong = countIn && jump !== null && jump.song === block.song;
+                  const safeGuarded = safeMode && playing && block.song !== activeSong;
                   const enabled = liveReady && (!heldInSong || (song !== undefined && countInLandsOn(song, block.section)));
                   const isCountInTarget = countIn && waiting;
                   const title = song ? songTitle(song) : `Song ${block.song}`;
@@ -372,6 +379,7 @@ export function TimelineView({
                         block.kind,
                         classes,
                         isCountInTarget && 'count-in-target',
+                        safeGuarded && 'safe-guarded',
                         !enabled && 'unavailable',
                       ]
                         .filter(Boolean)
@@ -383,9 +391,12 @@ export function TimelineView({
                       data-beats-per-bar={block.beatsPerBar}
                       style={{ left: block.left, width: block.width }}
                       aria-pressed={waiting}
+                      aria-disabled={safeGuarded || undefined}
                       aria-label={`${block.name}, ${title}`}
                       disabled={!enabled}
-                      onClick={() => send({ kind: 'jump', ...address })}
+                      onClick={() => {
+                        if (!safeGuarded) send({ kind: 'jump', ...address });
+                      }}
                     >
                       <span className="timeline-waveform-layer" aria-hidden="true" />
                       <span className="timeline-bar-grid" aria-hidden="true">
@@ -443,14 +454,7 @@ export function TimelineView({
       </div>
 
       <section className="timeline-transport" aria-label="Timeline transport">
-        <button
-          type="button"
-          className={['timeline-pause', !canPause && 'unavailable'].filter(Boolean).join(' ')}
-          disabled={!canPause}
-          onClick={() => send({ kind: 'stop' })}
-        >
-          Pause
-        </button>
+        <TimelinePauseButton available={canPause} safeMode={safeMode} send={send} />
         <button
           type="button"
           className={['section-control', !(liveReady && canPrevious) && 'unavailable'].filter(Boolean).join(' ')}

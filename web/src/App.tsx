@@ -45,6 +45,7 @@ import { LiveNotConnected, NowPlaying, Reconnecting } from './NowPlaying.tsx';
 import { PartPicker } from './PartPicker.tsx';
 import { PlayFromStartButton } from './PlayFromStartButton.tsx';
 import { RefreshButton } from './RefreshButton.tsx';
+import { SafeModeToggle } from './SafeModeToggle.tsx';
 import { SectionControls } from './SectionControls.tsx';
 import { sectionState } from './section-state.ts';
 import { connectToServer, type ServerConnection } from './server-connection.ts';
@@ -237,6 +238,11 @@ export function Page({
         {picker}
         {autoLockTip}
         {!connected && <Reconnecting />}
+        {controls(role) && (
+          <div className="leader-mode-bar">
+            <SafeModeToggle safeMode={snapshot.safeMode} available={connected} send={send} />
+          </div>
+        )}
         {snapshot.live === 'not-connected' ? (
           <LiveNotConnected />
         ) : (
@@ -247,9 +253,11 @@ export function Page({
     );
   }
 
-  const { live, playing, now, jump, countIn, endToggles, loop, fade } = snapshot;
+  const { live, playing, now, jump, countIn, endToggles, loop, fade, safeMode } = snapshot;
   const liveReady = connected && live === 'connected';
   const controlsLive = controls(role);
+  // The song currently playing, or the held count-in's song, matching the server's Safe Mode guard.
+  const activeSong = countIn && jump ? jump.song : now?.song ?? null;
   // The song the playhead is in, for the transport row's Count in and Play from start: none on an End
   // or between songs.
   const playheadSong = snapshot.set.songs.find((song) => song.number === now?.song);
@@ -309,9 +317,10 @@ export function Page({
       {picker}
       {autoLockTip}
       {!connected && <Reconnecting />}
-      {role === 'leader' && (
+      {controlsLive && (
         <div className="leader-mode-bar">
-          <LeaderViewSwitcher leaderView={leaderView} onLeaderView={onLeaderView} />
+          <SafeModeToggle safeMode={safeMode} available={connected} send={send} />
+          {role === 'leader' && <LeaderViewSwitcher leaderView={leaderView} onLeaderView={onLeaderView} />}
         </div>
       )}
       <NowPlaying live={live} set={snapshot.set} now={now} jump={jump} countIn={countIn} loop={loop} />
@@ -343,6 +352,8 @@ export function Page({
             available={connected}
             playable={liveReady}
             playing={playing}
+            safeMode={safeMode}
+            activeSong={activeSong}
             now={now}
             send={send}
           />

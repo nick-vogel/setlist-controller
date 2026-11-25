@@ -14,6 +14,8 @@ export type Command =
   | { kind: 'stop' }
   // Set what happens at a song's End.
   | { kind: 'set-end-toggle'; song: number; toggle: EndToggle }
+  // Turn server-wide Safe Mode on or off.
+  | { kind: 'set-safe-mode'; enabled: boolean }
   // Loop the current section, or release the loop when one is on.
   | { kind: 'loop' }
   // Jump to the next section in the current song, or to its End from its last section.
@@ -36,7 +38,7 @@ export function parseCommand(data: unknown): Command | null {
     return null;
   }
   if (typeof value !== 'object' || value === null) return null;
-  const { kind, song, section, toggle } = value as Record<string, unknown>;
+  const { kind, song, section, toggle, enabled } = value as Record<string, unknown>;
   // A count-in names a section, never a song's End, which is not one.
   if ((kind === 'jump' || kind === 'count-in') && Number.isInteger(song) && Number.isInteger(section)) {
     return { kind, song: song as number, section: section as number };
@@ -49,6 +51,9 @@ export function parseCommand(data: unknown): Command | null {
   }
   if (kind === 'set-end-toggle' && Number.isInteger(song) && END_TOGGLES.includes(toggle as EndToggle)) {
     return { kind, song: song as number, toggle: toggle as EndToggle };
+  }
+  if (kind === 'set-safe-mode' && typeof enabled === 'boolean') {
+    return { kind, enabled };
   }
   return null;
 }

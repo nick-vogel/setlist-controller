@@ -265,6 +265,7 @@ export async function startServer(options: ServerOptions): Promise<Server> {
   // at once, before Live reports the loop, so no slide past the section's end goes for a vamp that
   // stays in it.
   const command = (command: Command) => {
+    if (controller.refuses(command)) return;
     cues.command(command);
     if (CANCELS_SCHEDULE.has(command.kind)) connections.cancel();
     controller.command(command);

@@ -122,6 +122,7 @@ async function atemRig(
     },
     // The leader's jump, once the producer sees it waiting and the fake Live holds it.
     async jump(song: number, section: number) {
+      leader.send({ kind: 'set-safe-mode', enabled: false });
       const seen = next((snapshot) => snapshot.jump?.song === song && snapshot.jump.section === section);
       const sent = started.received(JUMP).length;
       leader.send({ kind: 'jump', song, section });

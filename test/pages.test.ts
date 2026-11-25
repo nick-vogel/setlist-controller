@@ -506,6 +506,7 @@ const SNAPSHOT: Snapshot = {
   endToggles: { 1: 'stop' },
   fade: null,
   loop: null,
+  safeMode: true,
   chartRevision: 1,
   songMeters: { 1: 4 },
 };

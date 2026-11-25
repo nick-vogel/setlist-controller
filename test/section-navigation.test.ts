@@ -207,6 +207,7 @@ describe('next', () => {
 
     rig.live.advance(4 * BEAT_MS);
     expect((await viewer.snapshot(at(65))).playing).toBe(true);
+    leader.send({ kind: 'set-safe-mode', enabled: false });
     leader.send({ kind: 'jump', song: 1, section: VERSE });
     await liveHasJumps(2);
     expect(rig.received(STOP)).toEqual([]);

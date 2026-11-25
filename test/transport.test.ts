@@ -162,6 +162,7 @@ describe('play song from start', () => {
     rig.live.setPlaying(true);
     await leader.snapshot((snapshot) => playing(snapshot) && leader.received.indexOf(snapshot) >= from);
 
+    leader.send({ kind: 'set-safe-mode', enabled: false });
     leader.send({ kind: 'play-from-start', song: 2 });
 
     expect((await viewer.snapshot((snapshot) => snapshot.jump !== null)).jump).toEqual({ song: 2, section: 0 });
@@ -182,6 +183,7 @@ describe('play song from start', () => {
     await vi.waitFor(() => expect(rig?.live.lost).toEqual([{ address: STOP, args: [], types: '' }]));
     await rig.advanceConnected(LOOP_REPORT_MS);
 
+    leader.send({ kind: 'set-safe-mode', enabled: false });
     leader.send({ kind: 'play-from-start', song: 2 });
 
     expect((await viewer.snapshot((snapshot) => snapshot.jump !== null)).jump).toEqual({ song: 2, section: 0 });
@@ -195,6 +197,7 @@ describe('play song from start', () => {
     const leader = await rig.connectLeader();
     await leader.snapshot(at(21));
 
+    leader.send({ kind: 'set-safe-mode', enabled: false });
     leader.send({ kind: 'play-from-start', song: 2 });
 
     expect((await viewer.snapshot((snapshot) => snapshot.jump !== null)).jump).toEqual({ song: 2, section: 0 });
@@ -249,6 +252,7 @@ describe('auto-stop at End', () => {
   // Once Live holds a later command from the leader, it would hold any stop the server sent before it.
   async function barrier(leader: Client) {
     const count = rig?.received(JUMP).length ?? 0;
+    leader.send({ kind: 'set-safe-mode', enabled: false });
     leader.send({ kind: 'jump', song: 2, section: 0 });
     await vi.waitFor(() => expect(rig?.received(JUMP)).toHaveLength(count + 1));
   }
@@ -356,6 +360,7 @@ describe('auto-stop at End', () => {
     const leader = await rig.connectLeader();
     await leader.snapshot(at(29));
 
+    leader.send({ kind: 'set-safe-mode', enabled: false });
     leader.send({ kind: 'play-from-start', song: 2 });
     await viewer.snapshot((snapshot) => snapshot.jump !== null);
     await vi.waitFor(() => expect(rig?.received(CONTINUE)).toHaveLength(1));
@@ -481,7 +486,7 @@ describe('stop', () => {
     const viewer = await rig.connectViewer();
     const leader = await rig.connectLeader();
     await leader.snapshot(at(21));
-    leader.send({ kind: 'jump', song: 2, section: 0 });
+    leader.send({ kind: 'jump', song: 1, section: 0 });
     await viewer.snapshot((snapshot) => snapshot.jump !== null);
 
     leader.send({ kind: 'stop' });
@@ -501,7 +506,7 @@ describe('stop', () => {
     viewer.send({ kind: 'stop' });
     await viewer.flush();
     // The leader's command comes after the viewer's, so once Live has it, the viewer's would be there too.
-    leader.send({ kind: 'jump', song: 2, section: 0 });
+    leader.send({ kind: 'jump', song: 1, section: 0 });
     await vi.waitFor(() => expect(rig?.received(JUMP)).toHaveLength(1));
 
     expect(rig.received(STOP)).toEqual([]);

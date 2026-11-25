@@ -517,6 +517,7 @@ describe('a song with no Count Off', () => {
     await fadeOut('fading', 'paused', 'fade-out');
     await play(2, 14);
 
+    await lead({ kind: 'set-safe-mode', enabled: false }, (snapshot) => !snapshot.safeMode);
     await lead({ kind: 'play-from-start', song: 2 }, (snapshot) => snapshot.jump?.song === 2);
     await liveHas(JUMP, 1);
     const armed = sees('fading', 'armed');
