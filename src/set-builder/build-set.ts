@@ -9,6 +9,8 @@ import { timeSignature } from './meter.ts';
 import { isKey, readPads, type Pad, type PadsReading } from './pads.ts';
 import { mainEvents, readSong, type Song, type SongReading } from './song.ts';
 import { sharedTargetNames, templateTargets, type Target } from './template.ts';
+import type { SongDurations } from '../shared/set-manifest.ts';
+import { setDurations } from './set-durations.ts';
 import { placeSongs, type PlacedSong } from './timeline.ts';
 import { writeSet } from './write-set.ts';
 
@@ -72,7 +74,8 @@ export type SongSummary = {
   transition?: SummaryTransition;
 };
 
-export type BuildResult = { ok: true; setPath: string; songs: SongSummary[] } | { ok: false; problems: string[] };
+// A built set's songs as the summary shows them, and how long each plays, in set order, for the set manifest.
+export type BuildResult = { ok: true; setPath: string; songs: SongSummary[]; durations: SongDurations[] } | { ok: false; problems: string[] };
 
 const WEEKDAYS = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
 
@@ -129,7 +132,7 @@ export async function buildSet(options: BuildOptions): Promise<BuildResult> {
       throw error;
     }
   }
-  return { ok: true, setPath, songs: placed.map((song) => summary(song, padsRead)) };
+  return { ok: true, setPath, songs: placed.map((song) => summary(song, padsRead)), durations: setDurations(set) };
 }
 
 // Every problem the build would stop on but a set folder that already exists, which --plan --list reports as its own

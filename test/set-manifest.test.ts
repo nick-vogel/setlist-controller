@@ -49,8 +49,26 @@ describe('reading the set manifest', () => {
       text: JSON.stringify({ songs: [{ title: 'Made Up Song', stemsKey: 'G', meter: '6/8' }] }),
       songs: [{ title: 'Made Up Song', stemsKey: 'G', meter: '6/8' }],
     },
+    {
+      what: "each song's durations, the last song's gap null",
+      text: JSON.stringify({ songs: [{ title: 'Made Up Song', stemsKey: 'G', durations: { sections: [{ beats: 8, seconds: 4 }], gap: null }, extra: 1 }] }),
+      songs: [{ title: 'Made Up Song', stemsKey: 'G', durations: { sections: [{ beats: 8, seconds: 4 }], gap: null } }],
+    },
   ])('reads $what', ({ text, songs }) => {
     expect(parseSetManifest(text)).toEqual({ manifest: { songs } });
+  });
+
+  // The song's chart and meter still serve, and the server times it by Live's tempo.
+  it.each([
+    { what: 'durations that are not an object', durations: 3 },
+    { what: 'no sections list', durations: { gap: null } },
+    { what: 'a section with no seconds', durations: { sections: [{ beats: 8 }], gap: null } },
+    { what: 'a negative length', durations: { sections: [{ beats: 8, seconds: -1 }], gap: null } },
+    { what: 'a gap that is left out', durations: { sections: [{ beats: 8, seconds: 4 }] } },
+    { what: 'a gap that is not a span', durations: { sections: [], gap: 12 } },
+  ])('drops only the durations with $what', ({ durations }) => {
+    const text = JSON.stringify({ songs: [{ title: 'Made Up Song', stemsKey: 'G', meter: '6/8', durations }] });
+    expect(parseSetManifest(text)).toEqual({ manifest: { songs: [{ title: 'Made Up Song', stemsKey: 'G', meter: '6/8' }] } });
   });
 
   it.each([

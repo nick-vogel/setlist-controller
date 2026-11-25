@@ -472,7 +472,7 @@ async function build(): Promise<void> {
       const manifest = setManifestPath();
       // The set is built either way, so its summary prints; a manifest left unwritten would keep last week's charts on
       // this week's set, so it is one line on stderr and exit 1.
-      const written = await writeSetManifest(manifest, buildManifest(result.songs, planSongs)).then(() => undefined, oneLine);
+      const written = await writeSetManifest(manifest, buildManifest(result.songs, planSongs, result.durations)).then(() => undefined, oneLine);
       console.log(summary(date, result.songs, warnings, result.setPath));
       await weeklyShow(date, lights);
       if (written !== undefined) {

@@ -17,7 +17,17 @@ export type ManifestSong = {
   // The key the chart is typed in, and the chart text, as Planning Center holds them.
   chartKey?: string;
   chartText?: string;
+  // How long the song plays, as the build placed it in the set: absent from a manifest the build did not write.
+  durations?: SongDurations;
 };
+
+// A stretch of the built set: its length in beats, which the server checks against Live's locators, and in seconds
+// through the set's tempo map.
+export type Span = { beats: number; seconds: number };
+
+// Each section of a song, from one locator to the next and the last to the song's End, in locator order, and the gap
+// from the song's End to the next song's first locator, or null after the last song.
+export type SongDurations = { sections: Span[]; gap: Span | null };
 
 export type SetManifest = { songs: ManifestSong[] };
 
@@ -37,7 +47,20 @@ export function parseSetManifest(text: string): { manifest: SetManifest } | { pr
   }
   const songs = isObject(value) ? value.songs : undefined;
   if (!Array.isArray(songs) || !songs.every(isManifestSong)) return { problem: NOT_READABLE };
-  return { manifest: { songs: songs.map(({ title, stemsKey, meter, chartKey, chartText }) => ({ title, stemsKey, ...(meter === undefined ? {} : { meter }), ...(chartKey === undefined ? {} : { chartKey }), ...(chartText === undefined ? {} : { chartText }) })) } };
+  return {
+    manifest: {
+      songs: songs.map(({ title, stemsKey, meter, chartKey, chartText, durations }) => ({
+        title,
+        stemsKey,
+        ...(meter === undefined ? {} : { meter }),
+        ...(chartKey === undefined ? {} : { chartKey }),
+        ...(chartText === undefined ? {} : { chartText }),
+        // Durations the server cannot read are dropped alone: the song's chart and meter still serve, and its times fall
+        // back to Live's tempo.
+        ...(isDurations(durations) ? { durations: { sections: durations.sections.map(span), gap: durations.gap === null ? null : span(durations.gap) } } : {}),
+      })),
+    },
+  };
 }
 
 // The manifest song holding the chart for the set's song of this title: the first whose title matches
@@ -78,6 +101,22 @@ function isManifestSong(value: unknown): value is ManifestSong {
     (chartKey === undefined || typeof chartKey === 'string') &&
     (chartText === undefined || typeof chartText === 'string')
   );
+}
+
+function isDurations(value: unknown): value is SongDurations {
+  return isObject(value) && Array.isArray(value.sections) && value.sections.every(isSpan) && (value.gap === null || isSpan(value.gap));
+}
+
+function isSpan(value: unknown): value is Span {
+  return isObject(value) && isLength(value.beats) && isLength(value.seconds);
+}
+
+function isLength(value: unknown): value is number {
+  return typeof value === 'number' && Number.isFinite(value) && value >= 0;
+}
+
+function span({ beats, seconds }: Span): Span {
+  return { beats, seconds };
 }
 
 function isObject(value: unknown): value is Record<string, unknown> {
