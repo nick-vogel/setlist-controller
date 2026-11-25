@@ -2,7 +2,7 @@ import { mkdir, mkdtemp, readFile, rm } from 'node:fs/promises';
 import { join, resolve } from 'node:path';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import type { CuePoint } from '../src/fake-live/fake-live.ts';
-import { manualClock } from '../src/server/clock.ts';
+import { manualClock, type ManualClock } from '../src/server/clock.ts';
 import { POSITION_BROADCAST_MS } from '../src/server/hub.ts';
 import { SILENT_BEFORE_LOST_MS } from '../src/server/live-bridge.ts';
 import { producerSocketPath, SOCKET_PATHS } from '../src/shared/routes.ts';
@@ -32,8 +32,8 @@ async function newLogDir(): Promise<string> {
   return logDir;
 }
 
-// A realistic multi-song set (~5 KB encoded snapshot), with a long first section (beats 0..1024)
-// so tests can stream hundreds of intra-section position updates without crossing section boundaries.
+// A realistic multi-song set, with a long first section (beats 0..1024) so tests can stream thousands
+// of quarter-beat position updates without crossing a section boundary.
 function largeSet(): CuePoint[] {
   const cues: CuePoint[] = [
     { name: '1 - Intro (A Long Opening Section Title For Realistic Payload Size)', time: 0 },
@@ -68,6 +68,24 @@ const SET: CuePoint[] = [
 const near = (a: number | null, b: number) => a !== null && Math.abs(a - b) < 1e-3;
 const at = (beats: number) => (snapshot: Snapshot) => loaded(snapshot) && near(snapshot.position, beats);
 
+// Past the sum of Linux's TCP buffer maxima (tcp_wmem 4 MiB plus tcp_rmem 6 MiB, read with sysctl in
+// the node:24 image on 2026-11-25), so a paused reader backs the hub up on every OS.
+const STREAM_BYTES = 16 * 1024 * 1024;
+
+type Watcher = { snapshot(matches: (snapshot: Snapshot) => boolean): Promise<Snapshot> };
+
+async function streamPastKernelBuffers(live: Rig['live'], hubClock: ManualClock, healthy: Watcher): Promise<number> {
+  let streamed = 0;
+  let updates = 0;
+  while (streamed < STREAM_BYTES) {
+    updates += 1;
+    hubClock.advance(POSITION_BROADCAST_MS);
+    live.setPosition(updates / 4);
+    streamed += JSON.stringify(await healthy.snapshot(at(updates / 4))).length;
+  }
+  return updates;
+}
+
 describe('per-socket slow-link coalescing', () => {
   it('coalesces snapshots for a paused slow socket instead of draining a stale backlog, and never delays a healthy sibling', async () => {
     const hubClock = manualClock();
@@ -84,38 +102,30 @@ describe('per-socket slow-link coalescing', () => {
       const healthyBefore = healthy.received.length;
       proxy.pause();
 
-      // Stream 400 distinct ~5 KB broadcasts (~2 MB total), well past the OS loopback TCP buffer,
-      // advancing hubClock and awaiting healthy on each step so every single update is actually
-      // broadcast by the hub (proving per-socket backpressure coalescing, not the 20 Hz rate cap).
-      const totalUpdates = 400;
-      for (let i = 1; i <= totalUpdates; i += 1) {
-        hubClock.advance(POSITION_BROADCAST_MS);
-        rig.live.setPosition(i);
-        await healthy.snapshot(at(i));
-      }
+      const totalUpdates = await streamPastKernelBuffers(rig.live, hubClock, healthy);
 
       // The healthy sibling received every single broadcast immediately while slow was paused.
       const healthyDelivered = healthy.received.length - healthyBefore;
       expect(healthyDelivered).toBe(totalUpdates);
-      expect(healthy.received.at(-1)?.position).toBeCloseTo(totalUpdates, 3);
+      expect(healthy.received.at(-1)?.position).toBeCloseTo(totalUpdates / 4, 3);
       expect(slow.received.length).toBe(beforePause);
 
       // Resume the slow TCP link: it drains what was already in the kernel pipe and jumps straight
       // to the newest snapshot without draining hundreds of stale queued frames.
       proxy.resume();
-      await slow.snapshot(at(totalUpdates));
+      await slow.snapshot(at(totalUpdates / 4));
       await slow.flush();
 
       const deliveredWhilePaused = slow.received.length - beforePause;
-      expect(slow.received.at(-1)?.position).toBeCloseTo(totalUpdates, 3);
-      // Today's uncoalesced hub queues all 400 frames onto the socket and drains every single one.
-      // With per-socket latest-only coalescing, the slow client receives only what fit in the TCP
-      // pipe before backpressure engaged plus the single newest snapshot on drain.
-      expect(deliveredWhilePaused).toBeLessThan(healthyDelivered / 2);
+      expect(slow.received.at(-1)?.position).toBeCloseTo(totalUpdates / 4, 3);
+      // An uncoalesced hub queues every streamed frame. A coalescing one delivers what fit in the
+      // kernel buffers before backpressure engaged, then skips to the newest snapshot.
+      expect(deliveredWhilePaused).toBeLessThan(totalUpdates);
+      expect(slow.received.at(-2)?.position).toBeLessThan(totalUpdates / 4 - 0.25);
     } finally {
       slow.close();
     }
-  }, 15_000);
+  }, 30_000);
 
   it('converges a paused slow producer socket to the newest producer snapshot including connections', async () => {
     const hubClock = manualClock();
@@ -135,16 +145,11 @@ describe('per-socket slow-link coalescing', () => {
       const healthyBefore = healthyProducer.received.length;
       proxy.pause();
 
-      const totalUpdates = 400;
-      for (let i = 1; i <= totalUpdates; i += 1) {
-        hubClock.advance(POSITION_BROADCAST_MS);
-        rig.live.setPosition(i);
-        await healthyProducer.snapshot(at(i));
-      }
+      const totalUpdates = await streamPastKernelBuffers(rig.live, hubClock, healthyProducer);
       expect(healthyProducer.received.length - healthyBefore).toBe(totalUpdates);
 
       // Trigger a producer-only state change while the slow producer socket is backed up.
-      await healthyViewer.snapshot(at(totalUpdates));
+      await healthyViewer.snapshot(at(totalUpdates / 4));
       const viewerCountBeforeArm = healthyViewer.received.length;
       healthyProducer.send({ kind: 'arm', target: 'propresenter' });
       await healthyProducer.snapshot((snapshot) => snapshot.connections[0]?.arm === 'armed');
@@ -152,17 +157,18 @@ describe('per-socket slow-link coalescing', () => {
       expect(healthyViewer.received.length).toBe(viewerCountBeforeArm);
 
       proxy.resume();
-      await slowProducer.snapshot((snapshot) => at(totalUpdates)(snapshot) && snapshot.connections[0]?.arm === 'armed');
+      await slowProducer.snapshot((snapshot) => at(totalUpdates / 4)(snapshot) && snapshot.connections[0]?.arm === 'armed');
       await slowProducer.flush();
 
       const latest = slowProducer.received.at(-1)!;
-      expect(latest.position).toBeCloseTo(totalUpdates, 3);
+      expect(latest.position).toBeCloseTo(totalUpdates / 4, 3);
       expect(latest.connections[0]?.arm).toBe('armed');
-      expect(slowProducer.received.length - beforePause).toBeLessThan(totalUpdates / 2);
+      expect(slowProducer.received.length - beforePause).toBeLessThan(totalUpdates);
+      expect(slowProducer.received.at(-2)?.position).toBeLessThan(totalUpdates / 4 - 0.25);
     } finally {
       slowProducer.close();
     }
-  }, 15_000);
+  }, 30_000);
 
   it('delivers significant state changes immediately to healthy siblings while a slow socket is paused', async () => {
     const hubClock = manualClock();
