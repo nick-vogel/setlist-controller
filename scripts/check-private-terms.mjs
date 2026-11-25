@@ -14,6 +14,20 @@ import { execFileSync } from 'node:child_process';
 import { existsSync, readFileSync } from 'node:fs';
 import { homedir } from 'node:os';
 import { join } from 'node:path';
+import { parseArgs } from 'node:util';
+
+const refuse = (problem) => {
+  console.error(`check:private: ${problem}`);
+  process.exit(2);
+};
+let values;
+try {
+  ({ values } = parseArgs({ options: { stdin: { type: 'boolean', default: false }, range: { type: 'string' } } }));
+} catch (error) {
+  refuse(error instanceof Error ? error.message : String(error));
+}
+if (values.stdin && values.range !== undefined) refuse('pass --stdin or --range, not both');
+if (values.range === '') refuse('--range needs a range, such as origin/main..HEAD');
 
 const termsFile = process.env.PRIVATE_TERMS_FILE || join(homedir(), '.config/setlist-controller/private-terms.txt');
 if (!existsSync(termsFile)) {
@@ -38,13 +52,10 @@ const scan = (where, text) => {
   for (const { number, pattern } of terms) if (pattern.test(text)) found.push(`${where} holds the term on line ${number} of ${termsFile}`);
 };
 
-const args = process.argv.slice(2);
-if (args[0] === '--stdin') {
+if (values.stdin) {
   scan('stdin', readFileSync(0, 'utf8'));
-} else if (args[0] === '--range') {
-  const range = args[1];
-  if (!range) throw new Error('--range needs a range, such as origin/main..HEAD');
-  for (const sha of git('rev-list', range).split('\n').filter(Boolean)) {
+} else if (values.range !== undefined) {
+  for (const sha of git('rev-list', values.range).split('\n').filter(Boolean)) {
     const short = sha.slice(0, 7);
     scan(`commit ${short}'s message`, git('show', '-s', '--format=%B', sha));
     scan(`commit ${short}'s author and committer`, git('show', '-s', '--format=%an <%ae>%n%cn <%ce>', sha));

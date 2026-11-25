@@ -94,6 +94,27 @@ describe('pnpm check:private', () => {
     expect(check(['--stdin'], { input: 'Fix the cue lights' }).status).toBe(0);
   });
 
+  it.for([[['--', '--stdin']], [['--', '--range', 'HEAD~1..HEAD']], [['--rang', 'HEAD~1..HEAD']], [['--stdin', '--range', 'HEAD~1..HEAD']], [['--range', '']]])(
+    'refuses %j with exit 2 and checks nothing, even with no terms file',
+    async ([args]) => {
+      await scratch();
+      await commit('notes.md', 'clean\n');
+      const result = check(args, { terms: join(dir, 'no-such-terms.txt') });
+      expect(result.status).toBe(2);
+      expect(result.stderr).toMatch(/^check:private: /);
+      expect(result.stderr).not.toContain('no private terms file');
+    },
+  );
+
+  it('reads --range=<range> as --range <range>', async () => {
+    const first = await scratch();
+    await commit('notes.md', 'retired-host-01\n');
+    await commit('notes.md', 'clean\n');
+    const result = check([`--range=${first}..HEAD`]);
+    expect(result.status).toBe(1);
+    expect(result.stderr).toContain('notes.md holds the term on line 5');
+  });
+
   it('skips with a note, exit 0, where no terms file exists, as in a contributor clone', async () => {
     await scratch();
     await commit('notes.md', 'Example Fellowship\n');
