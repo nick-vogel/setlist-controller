@@ -70,6 +70,12 @@ test('Safe Mode guards cross-song jumps on Setlist and Timeline while playing, w
   const watcher = await e2e.rig.connectViewer();
   await watcher.snapshot((s) => loaded(s) && s.playing && s.position === 4);
 
+  const sentKinds: string[] = [];
+  page.on('websocket', (socket) =>
+    socket.on('framesent', ({ payload }) => {
+      if (typeof payload === 'string') sentKinds.push((JSON.parse(payload) as { kind: string }).kind);
+    }),
+  );
   await page.goto(e2e.leaderUrl);
 
   // Setlist view with Safe Mode ON: Song 1 Play from start enabled, Song 2 Play from start disabled,
@@ -102,6 +108,7 @@ test('Safe Mode guards cross-song jumps on Setlist and Timeline while playing, w
   await page.getByRole('navigation', { name: 'Songs' }).getByRole('button', { name: /Goodness of God/ }).click();
   const song2Chorus = page.locator('.timeline-section[data-song="2"][data-section="1"]');
   await expect(song2Chorus).toHaveAttribute('aria-disabled', 'true');
+  const sentBeforeTap = sentKinds.length;
   await song2Chorus.click({ force: true });
 
   // Same-song jump inside Song 1 still works while Safe Mode is ON, and Live holds it alone, so the
@@ -110,6 +117,7 @@ test('Safe Mode guards cross-song jumps on Setlist and Timeline while playing, w
   const song1Verse = page.locator('.timeline-section[data-song="1"][data-section="1"]');
   await song1Verse.click();
   await expect.poll(() => e2e?.rig.received(JUMP).map((m) => m.args)).toEqual([[SONG_1_VERSE_CUE]]);
+  expect(sentKinds.slice(sentBeforeTap).filter((kind) => kind === 'jump')).toEqual(['jump']);
 
   // Turn Safe Mode OFF -> cross-song tap on Song 2 Chorus now jumps.
   await toggle.click();
@@ -134,13 +142,15 @@ test('Timeline Pause requires a one-second press-and-hold while Safe Mode is ON,
   await expect(holdPause).toBeVisible();
   await holdPause.hover();
 
-  // Short press does not stop Live.
-  await page.mouse.down();
-  await page.waitForTimeout(300);
-  await page.mouse.up();
-  await page.waitForTimeout(1100);
-  expect(e2e.rig.received(STOP)).toEqual([]);
-  expect(watcher.received.at(-1)?.playing).toBe(true);
+  // A short press, and one just short of the second, do not stop Live.
+  for (const pressMs of [300, 900]) {
+    await page.mouse.down();
+    await page.waitForTimeout(pressMs);
+    await page.mouse.up();
+    await page.waitForTimeout(1100);
+    expect(e2e.rig.received(STOP), `${pressMs} ms press`).toEqual([]);
+    expect(watcher.received.at(-1)?.playing).toBe(true);
+  }
 
   // Full 1-second hold stops Live.
   await page.mouse.down();

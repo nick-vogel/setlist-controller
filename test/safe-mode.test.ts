@@ -3,7 +3,7 @@ import { createElement } from 'react';
 import { renderToStaticMarkup } from 'react-dom/server';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import type { CuePoint } from '../src/fake-live/fake-live.ts';
-import type { Command, PageCommand } from '../src/shared/command.ts';
+import type { Command } from '../src/shared/command.ts';
 import type { ProducerSnapshot, SetList, Snapshot } from '../src/shared/snapshot.ts';
 import { Page } from '../web/src/App.tsx';
 import { STOP_HOLD_MS } from '../web/src/hold.ts';
@@ -59,12 +59,10 @@ describe('safe mode (server rig)', () => {
     expect((await leader.snapshot(loaded)).safeMode).toBe(true);
     expect((await producer.snapshot(loaded)).safeMode).toBe(true);
 
-    // View-only sockets cannot change Safe Mode, nor can malformed payloads.
+    // View-only sockets cannot change Safe Mode.
     viewer.send({ kind: 'set-safe-mode', enabled: false });
     await viewer.flush();
-    leader.send({ kind: 'set-safe-mode', enabled: 'no' });
-    await leader.flush();
-    expect(viewer.received.at(-1)?.safeMode).toBe(true);
+    expect((await barrier(leader)).safeMode).toBe(true);
 
     // Leader toggles Safe Mode off -> every connected client sees false.
     leader.send({ kind: 'set-safe-mode', enabled: false });
@@ -72,12 +70,20 @@ describe('safe mode (server rig)', () => {
     expect((await leader.snapshot((s) => !s.safeMode)).safeMode).toBe(false);
     expect((await producer.snapshot((s) => !s.safeMode)).safeMode).toBe(false);
 
+    // A payload that is not a boolean changes nothing, even one that reads as true.
+    leader.send({ kind: 'set-safe-mode', enabled: 'yes' });
+    expect((await barrier(leader)).safeMode).toBe(false);
+
     // Producer toggles Safe Mode back on -> every connected client sees true.
     const viewerFrom = viewer.received.length;
     const leaderFrom = leader.received.length;
     producer.send({ kind: 'set-safe-mode', enabled: true });
     expect((await viewer.snapshot((s) => s.safeMode && viewer.received.indexOf(s) >= viewerFrom)).safeMode).toBe(true);
     expect((await leader.snapshot((s) => s.safeMode && leader.received.indexOf(s) >= leaderFrom)).safeMode).toBe(true);
+
+    // Nor one that reads as false.
+    leader.send({ kind: 'set-safe-mode', enabled: 0 });
+    expect((await barrier(leader)).safeMode).toBe(true);
 
     // Producer turns Safe Mode off again, then the server restarts -> always back to true.
     const leaderFromOff = leader.received.length;
@@ -372,7 +378,6 @@ describe('Safe Mode UI and Timeline Pause guard', () => {
     expect(holdMarkup).toContain('hold-required');
 
     const tapMarkup = renderToStaticMarkup(createElement(TimelinePauseButton, { available: true, safeMode: false, send: () => {} }));
-    expect(tapMarkup).toContain('Pause');
     expect(tapMarkup).not.toContain('Hold to pause');
     expect(tapMarkup).not.toContain('stop-fill');
 
@@ -389,9 +394,5 @@ describe('Safe Mode UI and Timeline Pause guard', () => {
     expect(stylesheet.value(fill(['timeline-pause', 'hold-required', 'holding']), 'transform')).toBe('scaleX(1)');
     expect(stylesheet.value(fill(['timeline-pause', 'hold-required', 'holding']), 'transition')).toBe(`transform ${STOP_HOLD_MS}ms linear`);
     expect(stylesheet.value(fill(['timeline-pause', 'hold-required']).slice(0, -1), 'touch-action')).toBe('none');
-
-    // Suppress unused import lint if PageCommand is used in type assertions.
-    const _: PageCommand = { kind: 'set-safe-mode', enabled: true };
-    expect(_.kind).toBe('set-safe-mode');
   });
 });

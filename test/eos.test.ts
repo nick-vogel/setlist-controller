@@ -226,7 +226,7 @@ async function lightsRig({
     },
     // The leader's jump, once the fake Live holds it.
     async jump(song: number, section: number) {
-      leader.send({ kind: 'set-safe-mode', enabled: false });
+      if (producer.received.at(-1)?.now?.song !== song) leader.send({ kind: 'set-safe-mode', enabled: false });
       const sent = started.received(JUMP).length;
       leader.send({ kind: 'jump', song, section });
       await vi.waitFor(() => expect(started.received(JUMP)).toHaveLength(sent + 1));
