@@ -276,9 +276,6 @@ if (isEdit) {
   await build();
 }
 
-// The edit subcommand: modifies an already-built set using its saved set-recipe.json, preserving
-// Live locator flags and track mixer volumes on untouched songs, and regenerating all recorded
-// outputs (the .als, audio/pad copies, set-manifest.json, and Eos lighting cues when --lights was used).
 async function edit(args: string[]): Promise<void> {
   const { folder, action } = await parseEditArgs(args);
   let result: Awaited<ReturnType<typeof editSet>>;

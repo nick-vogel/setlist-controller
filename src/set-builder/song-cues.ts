@@ -9,8 +9,11 @@ import { SONG_NUMBER } from './lights-config.ts';
 //
 // Song n's cue is the first cue of the list, in list order, that no earlier song took, whose label is the song cue
 // label for n, "Song 1" for "Song {n}", under the shared name rule; with none, the first cue no earlier song took whose
-// label is the song's title under that rule, as a run before this one left it. A cue is one song's, so a set that holds
-// one title twice gives its two songs two cues on a second run.
+// label is the title the song at the same position had when the cues were last labelled (`previousTitles`); with none,
+// the first cue no earlier song took whose label is the song's title under that rule, as a run before this one left it.
+// A cue is one song's, so a set that holds one title twice gives its two songs two cues on a second run. With
+// `previousTitles` longer than the set, each cue still labelled with a title past the new end goes back to its `Song N`
+// label (`reset`).
 //
 // A song owns its chain (setlist-controller#508). A cue runs on when it has a follow or a hang: Eos then fires, by
 // itself, the cue its link names, or with no link the next cue of the list (test/fixtures/eos/README.md, "Follows and

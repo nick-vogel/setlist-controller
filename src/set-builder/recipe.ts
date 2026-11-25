@@ -11,7 +11,6 @@ import { writeJsonAtomic } from './set-manifest.ts';
 
 export const SET_RECIPE_FILE = 'set-recipe.json';
 
-// Default path to config/stem-map.json in this repository.
 export const DEFAULT_STEM_MAP_PATH = resolve(import.meta.dirname, '../../config/stem-map.json');
 
 export type RecipeSong = {
@@ -74,8 +73,8 @@ export function recipePath(folder: string): string {
 }
 
 // Builds the recipe saved beside the built `.als`. Transitions keep only non-gap entries, matching
-// BuildOptions['transitions']. When `stemMapPath` is not provided (e.g. a programmatic buildSet
-// call in tests), the inline `stemMap` is stored so the recipe stays self-contained.
+// BuildOptions['transitions']. When `stemMapPath` is not provided (a buildSet call that names no
+// stem map file), the inline `stemMap` is stored so the recipe stays self-contained.
 export function buildRecipe({
   date,
   library,
@@ -132,7 +131,6 @@ export async function writeRecipe(path: string, recipe: SetRecipe): Promise<void
   await writeJsonAtomic(path, recipe);
 }
 
-// Reads and validates `<folder>/set-recipe.json`.
 export async function readRecipe(folder: string): Promise<{ ok: true; recipe: SetRecipe } | { ok: false; problem: string }> {
   const path = recipePath(folder);
   if (!existsSync(path)) {
@@ -308,6 +306,9 @@ export async function readStemMapFile(path = DEFAULT_STEM_MAP_PATH): Promise<Ste
   return stemMapShape(value, isDefault ? undefined : path);
 }
 
+// The parsed stem map, once its top level is a plain object and each group's value is a list of stem names. A top level
+// that is anything else throws one line that names the file and says what the top level is instead; then a group whose
+// value is not a list of strings throws one line that names the file and every such group, in map order.
 export function stemMapShape(value: unknown, displayName?: string): StemMap {
   if (typeof value !== 'object' || value === null || Array.isArray(value)) {
     throw new Error(

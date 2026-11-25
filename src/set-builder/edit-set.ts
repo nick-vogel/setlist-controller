@@ -11,7 +11,7 @@ import { readRecipe, readStemMapFile, updateRecipe, type RecipeSong, type Recipe
 import { buildManifest, writeSetManifest } from './set-manifest.ts';
 import { songTitle } from './song.ts';
 
-// `build-set edit`: modifies a single song in an already-built set (--swap, --add, --drop) using
+// `build-set edit`: changes one song of an already-built set (swaps, adds or drops it) using
 // its saved `set-recipe.json`, carrying every untouched song's locators, track mixer volumes and
 // clip gains from the existing `.als` into the new one, and regenerating every target
 // recorded in the recipe (`.als` + APFS-cloned audio/pads, `set-manifest.json`, and Eos lighting
@@ -244,7 +244,6 @@ async function planEdit(recipe: SetRecipe, action: EditAction): Promise<{ ok: tr
     return { ok: true, songs: nextSongs, transitions: nextTransitions, untouched, boundary: before(at), warnings: padKeyWarnings(nextTransitions, nextSongs, at) };
   }
 
-  // Drop.
   const target = resolveRecipeSong(songs, action.song);
   if (!target.ok) return { ok: false, problems: [target.problem] };
   if (songs.length <= 1) {

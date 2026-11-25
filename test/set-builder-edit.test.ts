@@ -426,7 +426,7 @@ describe('preserving Live edits across build-set edit', () => {
     // - Song 3 (Grace): +LOOP on Bridge, a flag before the title on its Count Off, and +LOOP:1 on its Outro
     // - Song 1: a section renamed with no flag in it, and a locator added in Live
     // - Track mixer volumes on GroupTrack (KEYS), AudioTrack slot (Drums 1), single tracks (GUIDE, PAD), and MainTrack
-    // - Clip SampleVolume on Song 1's Piano clip and Song 2's Piano clip
+    // - Clip SampleVolume on Song 1's Piano clip
     await mutateAlsXml(setPath(workspace), (xml) => {
       let next = xml;
       next = renameLocator(next, '1 - Verse 1', '1 - Verse 1 +SKIP');

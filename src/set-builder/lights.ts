@@ -194,8 +194,8 @@ async function writeSongCues(
     }
     return left;
   };
-  // Each song's cue, by the rules of song-cues.ts: the cue with the song cue label for the song, or the one a run before
-  // this one labelled with its title, or, for a song past the last that has one, a copy to make of that song's cue,
+  // Each song's cue, by the rules of song-cues.ts: the cue with the song cue label for the song, or the one labelled with
+  // the previous title at its position, or the one a run before this one labelled with its title, or, for a song past the last that has one, a copy to make of that song's cue,
   // with the number it takes. Every song's cue is found before anything is written, so a set with a song that can have
   // none leaves the show as it was.
   const cues = await eos.cues(cueList);

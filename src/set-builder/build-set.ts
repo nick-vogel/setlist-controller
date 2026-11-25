@@ -135,7 +135,8 @@ export async function buildSet(options: BuildOptions): Promise<BuildResult> {
     extras: options.recipe,
   });
   // Nothing is written until every song is read and placed. The project folder must be new, so a build never
-  // writes into one that exists, and the set is written last, once every file it refers to is in place.
+  // writes into one that exists, and the set is written once every file it refers to is in place, then the recipe beside
+  // it, then, for an edit (carryOver), what the old set folder holds that the new project does not.
   const writeProject = async (into: string) => {
     await copyProjectInfo(options.library, songs, into);
     await copyAudio(options.library, into, copies);
