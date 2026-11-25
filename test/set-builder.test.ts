@@ -1053,7 +1053,7 @@ describe("copying each song's audio into the project", () => {
     await build(workspace, TRUST, GOODNESS);
 
     const project = projectFolder(workspace);
-    expect((await readdir(project)).toSorted()).toEqual([`${DATE} Sunday.als`, PROJECT_INFO, 'Songs']);
+    expect((await readdir(project)).toSorted()).toEqual([`${DATE} Sunday.als`, PROJECT_INFO, 'Songs', 'set-recipe.json']);
     const trust = join(workspace.library, TRUST, PROJECT_INFO);
     const files = await readdir(trust);
     expect(files).toHaveLength(2);
@@ -1285,7 +1285,7 @@ describe('a set folder that already exists', () => {
       expect(path.startsWith(`${projectFolder(workspace)}/`), path).toBe(true);
       expect(existsSync(path)).toBe(true);
     }
-    expect((await readdir(projectFolder(workspace))).toSorted()).toEqual([`${DATE} Sunday.als`, PROJECT_INFO, 'Songs']);
+    expect((await readdir(projectFolder(workspace))).toSorted()).toEqual([`${DATE} Sunday.als`, PROJECT_INFO, 'Songs', 'set-recipe.json']);
     expect(await readdir(join(projectFolder(workspace), 'Songs'))).toEqual(['This Is Amazing Grace']);
     // Nothing the replacing build worked in is left beside the set folder.
     expect(await readdir(workspace.outputRoot)).toEqual([`${DATE} Sunday`]);

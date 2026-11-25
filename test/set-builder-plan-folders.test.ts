@@ -109,7 +109,9 @@ function expectBuilt(result: { code: number | null; stdout: string; stderr: stri
   expect(result.stdout.split('\n')[1]).toMatch(new RegExp(`^1\\. ${first}  bar 1  `));
 }
 
-describe('pnpm build-set --plan, a key in the plan', () => {
+// Each test here spawns pnpm build-set, which a loaded CI runner can take past vitest's 5 s default, so every describe
+// gives its tests 30 s, as set-builder-lights.test.ts does. A build that hangs still fails, at 30 s.
+describe('pnpm build-set --plan, a key in the plan', { timeout: 30_000 }, () => {
   it('finds a folder in C# for a song planned in Db', async () => {
     const workspace = await createWorkspace();
     await copySongAs(workspace, GRACE, 'This Is Amazing Grace-The Ascension-C#-98.00bpm');
@@ -133,7 +135,7 @@ describe('pnpm build-set --plan, a key in the plan', () => {
   });
 });
 
-describe('pnpm build-set --plan, a song title', () => {
+describe('pnpm build-set --plan, a song title', { timeout: 30_000 }, () => {
   it('stops on a song with no folder of its title, naming the song and the library folder', async () => {
     const workspace = await createWorkspace();
     const fake = await planningCenterEditing();
@@ -158,7 +160,7 @@ describe('pnpm build-set --plan, a song title', () => {
   });
 });
 
-describe('pnpm build-set --plan, a key the library does not have', () => {
+describe('pnpm build-set --plan, a key the library does not have', { timeout: 30_000 }, () => {
   it('stops on a song planned in a key the library does not have it in, naming the planned key and the keys it has', async () => {
     const workspace = await createWorkspace();
     await copySongAs(workspace, GOODNESS, FALL_LIKE_RAIN);
@@ -179,7 +181,7 @@ describe('pnpm build-set --plan, a key the library does not have', () => {
   });
 });
 
-describe('pnpm build-set --plan, no key in the plan', () => {
+describe('pnpm build-set --plan, no key in the plan', { timeout: 30_000 }, () => {
   it('never picks a folder for a song with no key in the plan, even the title\'s one folder, and names the keys the library has', async () => {
     const workspace = await createWorkspace();
     await copySongAs(workspace, GOODNESS, FALL_LIKE_RAIN);
@@ -191,7 +193,7 @@ describe('pnpm build-set --plan, no key in the plan', () => {
   });
 });
 
-describe('pnpm build-set --plan, a folder whose name writes no key', () => {
+describe('pnpm build-set --plan, a folder whose name writes no key', { timeout: 30_000 }, () => {
   it.each([
     {
       name: 'names the title\'s one folder by its folder name for a song planned in a key',
@@ -229,7 +231,7 @@ describe('pnpm build-set --plan, a folder whose name writes no key', () => {
   });
 });
 
-describe('pnpm build-set --plan, two folders in the key', () => {
+describe('pnpm build-set --plan, two folders in the key', { timeout: 30_000 }, () => {
   it('stops on a song with two folders of its title in the planned key, naming both', async () => {
     const workspace = await createWorkspace();
     await copySongAs(workspace, GOODNESS, FALL_LIKE_RAIN);
@@ -254,7 +256,7 @@ describe('pnpm build-set --plan, two folders in the key', () => {
   });
 });
 
-describe('pnpm build-set --plan, every problem at once', () => {
+describe('pnpm build-set --plan, every problem at once', { timeout: 30_000 }, () => {
   it('reports every song\'s problem, in plan order, before it exits 1, and builds nothing', async () => {
     const workspace = await createWorkspace();
     const fake = await planningCenterEditing({ 'Great Are You Lord': { key: 'E' } });
@@ -276,7 +278,7 @@ describe('pnpm build-set --plan, every problem at once', () => {
   });
 });
 
-describe('pnpm build-set --plan, a plan key that is not a note name', () => {
+describe('pnpm build-set --plan, a plan key that is not a note name', { timeout: 30_000 }, () => {
   it('reads a plan key in lower case as its note name, e as E', async () => {
     const workspace = await createWorkspace();
     await copySongAs(workspace, GOODNESS, FALL_LIKE_RAIN);
