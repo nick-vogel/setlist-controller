@@ -12,6 +12,7 @@
     "dev:server": "node src/server/main.ts --lateness-log dist/dev-cue-lateness.log",
     "dev:web": "vite",
     "lint": "eslint .",
+    "check:private": "node scripts/check-private-terms.mjs",
     "typecheck": "tsc",
     "test": "vitest run",
     "test:e2e": "pnpm build && playwright test",
