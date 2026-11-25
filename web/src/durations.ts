@@ -49,7 +49,7 @@ export function timeLeft(set: SetList, timings: Timings, { now, position, jump, 
     const landed = jump.section === 'end' ? 0 : playedFrom(song, timing, jump.section, 1);
     const lead = countIn && now ? restOfSection(set, timings, now.song, now.section, position) : 0;
     const left = landed === null || lead === null ? null : lead + landed;
-    return { song: left, set: combine(left, afterSong(set, timings, index)), approximate };
+    return { song: left, set: setLeft(set, timings, index, left), approximate };
   }
   if (now) {
     const index = set.songs.findIndex((song) => song.number === now.song);
@@ -58,7 +58,7 @@ export function timeLeft(set: SetList, timings: Timings, { now, position, jump, 
     const rest = restOfSection(set, timings, now.song, now.section, position);
     const later = playedAfter(song, timings[song.number], now.section);
     const left = rest === null || later === null ? null : rest + later;
-    return { song: left, set: combine(left, afterSong(set, timings, index)), approximate };
+    return { song: left, set: setLeft(set, timings, index, left), approximate };
   }
   const index = set.songs.findIndex((song) => songStart(song) > position);
   if (index === -1) return nothing;
@@ -113,10 +113,11 @@ function restOfSection(set: SetList, timings: Timings, songNumber: number, index
   return seconds * ahead(position, section.time, section.end);
 }
 
-// The seconds of the set after the song at `index` ends: the gap after it, and every later song with its own gap.
-function afterSong(set: SetList, timings: Timings, index: number): Total | null {
-  if (index === set.songs.length - 1) return { seconds: 0, atLeast: false };
-  return combine(timings[set.songs[index]!.number]?.gap ?? null, sumFrom(set, timings, index + 1));
+// The seconds left of the set from the song at `index`, `left` of it still to play: then the gap after it, and every later
+// song with its own gap.
+function setLeft(set: SetList, timings: Timings, index: number, left: number | null): Total | null {
+  if (index === set.songs.length - 1) return left === null ? null : { seconds: left, atLeast: false };
+  return combine(left, combine(timings[set.songs[index]!.number]?.gap ?? null, sumFrom(set, timings, index + 1)));
 }
 
 // The seconds of the songs from `index` on, each with the gap after it but the last, each part rounded by `round`.

@@ -114,6 +114,18 @@ describe('the time left at the playhead', () => {
     expect(found).toEqual({ song: 3 + 10, set: { seconds: 13 + 59, atLeast: false }, approximate: false });
   });
 
+  it('knows nothing of the set when the playhead is in an untimed last song, or a jump waits for one', () => {
+    const untimedLast = { 1: TIMINGS[1]!, 2: TIMINGS[2]! };
+    expect(timeLeft(SET, untimedLast, playhead(at(3, 0), 70, null))).toEqual({ song: null, set: null, approximate: false });
+    expect(timeLeft(SET, untimedLast, playhead(at(1, 1), 12, null, { song: 3, section: 0 }))).toEqual({ song: null, set: null, approximate: false });
+    expect(timeLeft(SET, {}, playhead(at(3, 0), 70, null))).toEqual({ song: null, set: null, approximate: false });
+  });
+
+  it("counts nothing left of the set for a jump to the last song's End, timed or not", () => {
+    const untimedLast = { 1: TIMINGS[1]!, 2: TIMINGS[2]! };
+    expect(timeLeft(SET, untimedLast, playhead(at(3, 0), 70, null, { song: 3, section: 'end' }))).toEqual({ song: 0, set: { seconds: 0, atLeast: false }, approximate: false });
+  });
+
   it('knows nothing before Live reports the position', () => {
     expect(timeLeft(SET, TIMINGS, playhead(null, null, null))).toEqual({ song: null, set: null, approximate: false });
   });
