@@ -268,8 +268,8 @@ export function Page({
       <DevicesPanel devices={snapshot.devices} producer={{ self: clientId, connected, send }} />
     </>
   );
-  // The name field: after the part picker on the view-only page, under the Devices panel on the
-  // producer page, and last on the leader's Setlist page.
+  // The name field: after the pickers and the Auto-Lock tip on the view-only page, under the Devices
+  // panel on the producer page, and last on the leader's Setlist page.
   const nameField = <DeviceNameField name={deviceName} placeholder={defaultDeviceName(role, part)} onName={onDeviceName} />;
 
   // The playback Mac's battery warning, at the top of the leader's and producer's pages, never the
@@ -289,8 +289,8 @@ export function Page({
       <main>
         {powerBanner}
         {picker}
-        {role === 'viewer' && nameField}
         {autoLockTip}
+        {role === 'viewer' && nameField}
         {reconnecting}
         {stageStatusLine}
         {controls(role) && (
@@ -331,8 +331,8 @@ export function Page({
         {shownDisplay === 'chords-over-lyrics' && <ChordNamesPicker chordNames={chordNames} onChordNames={onChordNames} />}
         <ViewPicker view={view} onView={onView} />
         <FontSizePicker fontSize={fontSize} onFontSize={onFontSize} />
-        {nameField}
         {autoLockTip}
+        {nameField}
         {reconnecting}
         {live === 'not-connected' && <LiveNotConnected />}
         <ChartView
@@ -374,8 +374,8 @@ export function Page({
     <main>
       {powerBanner}
       {picker}
-      {role === 'viewer' && nameField}
       {autoLockTip}
+      {role === 'viewer' && nameField}
       {reconnecting}
       {stageStatusLine}
       {controlsLive && (
