@@ -150,7 +150,9 @@ async function phase0Workspace(): Promise<Workspace> {
   return workspace;
 }
 
-describe('pnpm build-set --plan, tempo and meter warnings in the summary', () => {
+// Each test here spawns pnpm build-set, which a loaded CI runner can take past vitest's 5 s default, so every describe
+// gives its tests 30 s, as set-builder-lights.test.ts does. A build that hangs still fails, at 30 s.
+describe('pnpm build-set --plan, tempo and meter warnings in the summary', { timeout: 30_000 }, () => {
   it('warns that WELCOME HOME is planned at another BPM than its folder and Yes And Amen in another meter than its song, after the song lines, and builds, exit 0', async () => {
     const workspace = await phase0Workspace();
     const fake = await planningCenter();
@@ -190,7 +192,7 @@ describe('pnpm build-set --plan, tempo and meter warnings in the summary', () =>
   });
 });
 
-describe('pnpm build-set --plan, a BPM of 0 in the plan', () => {
+describe('pnpm build-set --plan, a BPM of 0 in the plan', { timeout: 30_000 }, () => {
   it('gives no warning for a BPM of 0, the same as for no BPM, since 0 is never a tempo', async () => {
     const workspace = await phase0Workspace();
     const items = await recorded(PHASE_0_ITEMS);
@@ -255,7 +257,7 @@ async function expectListingAndBuildStop(workspace: Workspace, problem: string) 
   expect(await snapshotFolder(workspace.outputRoot)).toBeUndefined();
 }
 
-describe('pnpm build-set --plan --list', () => {
+describe('pnpm build-set --plan --list', { timeout: 30_000 }, () => {
   it('lists the Phase 0 plan: each song with its key, its folder and the transition after it with its source, each non-song item from the first song on with what it means, then the warnings, exit 0, and writes nothing', async () => {
     const workspace = await phase0Workspace();
     const fake = await planningCenter();
@@ -713,7 +715,7 @@ async function list20261022(): Promise<{ code: number | null; stdout: string; st
 
 const warnings = (stdout: string) => stdout.split('\n').filter((line) => line.startsWith('Warning: '));
 
-describe('pnpm build-set --plan --list, the forms recorded from the real Planning Center on 2026-10-22', () => {
+describe('pnpm build-set --plan --list, the forms recorded from the real Planning Center on 2026-10-22', { timeout: 30_000 }, () => {
   it('reads the key change Planning Center writes as G-A as G, the key the song starts in, and finds its G folder', async () => {
     const result = await list20261022();
 

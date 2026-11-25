@@ -123,7 +123,9 @@ function scratchReplace(args: string[], sets: string): { args: string[]; date: s
   return { args: args.map((arg, index) => (index === at + 1 ? join(sets, name) : arg)), date };
 }
 
-describe('the build-set skill\'s worked examples', () => {
+// Each test here spawns pnpm build-set, which a loaded CI runner can take past vitest's 5 s default, so every describe
+// gives its tests 30 s, as set-builder-lights.test.ts does. A build that hangs still fails, at 30 s.
+describe('the build-set skill\'s worked examples', { timeout: 30_000 }, () => {
   let dir: string;
   let fake: PlanningCenter;
   let tokenFile: string;

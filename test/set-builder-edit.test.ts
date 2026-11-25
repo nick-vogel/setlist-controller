@@ -153,7 +153,9 @@ function mainTrackVolume(root: Awaited<ReturnType<typeof readSet>>): string {
   return value(root, 'LiveSet', 'MainTrack', 'DeviceChain', 'Mixer', 'Volume', 'Manual');
 }
 
-describe('set-recipe.json generation', () => {
+// Each test here spawns pnpm build-set, which a loaded CI runner can take past vitest's 5 s default, so every describe
+// gives its tests 30 s, as set-builder-lights.test.ts does. A build that hangs still fails, at 30 s.
+describe('set-recipe.json generation', { timeout: 30_000 }, () => {
   it('saves a valid set-recipe.json beside the built .als for programmatic buildSet calls', async () => {
     const workspace = await createWorkspace();
     const stemMap = await readStemMap();
@@ -281,7 +283,7 @@ describe('set-recipe.json generation', () => {
   }, 20_000);
 });
 
-describe('build-set edit (--swap, --add, --drop)', () => {
+describe('build-set edit (--swap, --add, --drop)', { timeout: 30_000 }, () => {
   it('swaps a song by position or name, updates audio, pad key, manifest, and recipe', async () => {
     const workspace = await createWorkspace();
     await addPadTrack(workspace);
@@ -425,7 +427,7 @@ describe('build-set edit (--swap, --add, --drop)', () => {
   }, 20_000);
 });
 
-describe('preserving Live edits across build-set edit', () => {
+describe('preserving Live edits across build-set edit', { timeout: 30_000 }, () => {
   it('carries every untouched song\'s locators as Live has them, and its volumes and clip gains, across --swap, --add, and --drop', async () => {
     const workspace = await createWorkspace();
     await addPadTrack(workspace);
@@ -552,7 +554,7 @@ describe('preserving Live edits across build-set edit', () => {
   }, 20_000);
 });
 
-describe('swapping a song for itself', () => {
+describe('swapping a song for itself', { timeout: 30_000 }, () => {
   it('swapping a song for its own folder rebuilds it from the library and says so', async () => {
     const workspace = await createWorkspace();
     const built = await run(['goodness', 'trust', 'grace', '--date', DATE, ...buildPaths(workspace)]);
@@ -570,7 +572,7 @@ describe('swapping a song for itself', () => {
   }, 20_000);
 });
 
-describe('the song before the edited position', () => {
+describe('the song before the edited position', { timeout: 30_000 }, () => {
   it('a song added after a pad that ended the set leaves no Pad Out from the old set inside the new Pad section', async () => {
     const workspace = await createWorkspace();
     await addPadTrack(workspace);
@@ -659,7 +661,7 @@ describe('the song before the edited position', () => {
   }, 20_000);
 });
 
-describe('Eos lighting cue regeneration on build-set edit', () => {
+describe('Eos lighting cue regeneration on build-set edit', { timeout: 30_000 }, () => {
   it('records --lights settings in set-recipe.json and regenerates Eos cues automatically on --swap, --add, and --drop', async () => {
     const workspace = await createWorkspace();
     const THREE_PICTURES = '2026-11-15';
@@ -785,7 +787,7 @@ describe('Eos lighting cue regeneration on build-set edit', () => {
   }, 45_000);
 });
 
-describe('recording the lights in the recipe', () => {
+describe('recording the lights in the recipe', { timeout: 30_000 }, () => {
   const fastEnv = { EOS_TIMEOUT_MS: '10000', EOS_SETTLE_MS: '0', PROPRESENTER_TIMEOUT_MS: '2000', PROPRESENTER_AGAIN_MS: '0' };
   const THREE_PICTURES = '2026-11-15';
 
@@ -892,7 +894,7 @@ describe('recording the lights in the recipe', () => {
   }, 45_000);
 });
 
-describe('validation errors and atomic failure safety', () => {
+describe('validation errors and atomic failure safety', { timeout: 30_000 }, () => {
   it('an edit keeps everything of the old set it does not write, and the replaced set in Backup', async () => {
     const workspace = await createWorkspace();
     const built = await run(['grace', 'goodness', '--date', DATE, ...buildPaths(workspace)]);
@@ -1168,7 +1170,7 @@ describe('validation errors and atomic failure safety', () => {
   });
 });
 
-describe('server manifest-watch rig integration with build-set edit', () => {
+describe('server manifest-watch rig integration with build-set edit', { timeout: 30_000 }, () => {
   const revision = (wanted: number) =>
     Object.defineProperty((snapshot: Snapshot) => snapshot.chartRevision === wanted, 'name', { value: `chart revision ${wanted}` });
   const charts = (activeRig: Rig) => readSetup<SetCharts>(activeRig.server.httpPort, CHARTS_API, 'the charts');

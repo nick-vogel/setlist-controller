@@ -174,7 +174,9 @@ const paths = (workspace: Workspace) => ['--library', workspace.library, '--temp
 // A listing's library, and its output root in the workspace, so it never looks in the real ~/Music/Ableton/Sets.
 const listPaths = (workspace: Workspace) => ['--library', workspace.library, '--output-root', workspace.outputRoot];
 
-describe('pnpm build-set --plan', () => {
+// Each test here spawns pnpm build-set, which a loaded CI runner can take past vitest's 5 s default, so every describe
+// gives its tests 30 s, as set-builder-lights.test.ts does. A build that hangs still fails, at 30 s.
+describe('pnpm build-set --plan', { timeout: 30_000 }, () => {
   it('takes no song name: a song named with --plan is a usage problem, exit 2, and asks Planning Center nothing', async () => {
     const workspace = await createWorkspace();
     const fake = await planningCenter();
@@ -365,7 +367,7 @@ async function planRecord(id: string, sortDate: string, title: string | null): P
 
 const requestKeys = (fake: PlanningCenter) => fake.requests.map(({ path }) => requestKey(path));
 
-describe('pnpm build-set --plan, finding the plan', () => {
+describe('pnpm build-set --plan, finding the plan', { timeout: 30_000 }, () => {
   it.each([
     ['--service-type', 'Service'],
     ['--plan-id', '90897397'],
@@ -744,7 +746,7 @@ describe('pnpm build-set --plan, finding the plan', () => {
   });
 });
 
-describe('pnpm build-set --plan, a plan with no songs', () => {
+describe('pnpm build-set --plan, a plan with no songs', { timeout: 30_000 }, () => {
   // The recorded November 1 plan with every song item taken out: a plan made from its template before the songs are added.
   async function planWithNoSongs(): Promise<PlanningCenter> {
     const body = await recorded(NOVEMBER_1_ITEMS);
@@ -791,7 +793,7 @@ const ends = (line: string | undefined) => {
   return [fields[0], fields.at(-1)];
 };
 
-describe('pnpm build-set --plan, transitions from the plan', () => {
+describe('pnpm build-set --plan, transitions from the plan', { timeout: 30_000 }, () => {
   it('builds the Phase 0 plan with an overlap after WELCOME HOME, from its "Overlap" note, and a pad after Yes And Amen, from the "Prayer" after it, as the typed command does', async () => {
     const workspace = await phase0Workspace();
     const fake = await planningCenter();
@@ -1018,7 +1020,7 @@ function expectNoTokenValue(result: { stdout: string; stderr: string }): void {
   }
 }
 
-describe('pnpm build-set --plan, the token file and PCO_ENV', () => {
+describe('pnpm build-set --plan, the token file and PCO_ENV', { timeout: 30_000 }, () => {
   const listArgs = (workspace: Workspace) => ['--plan', '--list', '--date', NOVEMBER_1, ...listPaths(workspace)];
 
   it('lists the plan with an absolute PCO_ENV and a plain token file', async () => {
