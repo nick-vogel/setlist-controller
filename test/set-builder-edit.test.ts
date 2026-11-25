@@ -636,6 +636,24 @@ describe('validation errors and atomic failure safety', () => {
     expect(await readdir(join(project, 'Backup'))).toEqual([]);
   });
 
+  it('an edit whose recorded template has moved fails with one line and leaves the set as it was', async () => {
+    const workspace = await createWorkspace();
+    const built = await run(['grace', 'goodness', 'trust', '--date', DATE, ...buildPaths(workspace)]);
+    expect(built.code).toBe(0);
+    const folder = projectFolder(workspace);
+    const moved = join(workspace.dir, 'moved', 'template.als');
+    const recipe = await readRecipeJson(folder);
+    await writeFile(recipePath(folder), JSON.stringify({ ...recipe, template: moved }, null, 2));
+    const folderBefore = await snapshotFolder(folder);
+
+    const edited = await run(['edit', folder, '--drop', '3']);
+
+    expect(edited.code).toBe(1);
+    expect(edited.stderr).toContain(moved);
+    expect(edited.stderr.trim().split('\n')).toHaveLength(1);
+    expect(await snapshotFolder(folder)).toEqual(folderBefore);
+  }, 20_000);
+
   it('an edit of a copied set folder is refused and changes neither folder', async () => {
     const workspace = await createWorkspace();
     const built = await run(['grace', 'goodness', 'trust', '--date', DATE, ...buildPaths(workspace)]);

@@ -281,13 +281,20 @@ if (isEdit) {
 // outputs (the .als, audio/pad copies, set-manifest.json, and Eos lighting cues when --lights was used).
 async function edit(args: string[]): Promise<void> {
   const { folder, action } = await parseEditArgs(args);
-  const result = await editSet({
-    folder,
-    action,
-    limits: eosLimits(),
-    proPresenterTimeoutMs: proPresenterTimeout(),
-    proPresenterAgainMs: proPresenterAgain(),
-  });
+  let result: Awaited<ReturnType<typeof editSet>>;
+  try {
+    result = await editSet({
+      folder,
+      action,
+      limits: eosLimits(),
+      proPresenterTimeoutMs: proPresenterTimeout(),
+      proPresenterAgainMs: proPresenterAgain(),
+    });
+  } catch (error) {
+    console.error(error instanceof Error ? error.message : String(error));
+    process.exitCode = 1;
+    return;
+  }
   if (!result.ok) {
     fail(result.problems);
     return;
