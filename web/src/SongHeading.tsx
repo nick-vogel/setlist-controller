@@ -23,8 +23,8 @@ export function SongHeading({
   playable,
   playing,
   now,
-  safeMode = true,
-  activeSong = now?.song ?? null,
+  safeMode,
+  activeSong,
   send,
 }: {
   song: Song;
@@ -34,8 +34,8 @@ export function SongHeading({
   playable: boolean;
   playing: boolean;
   now: NowPlaying | null;
-  safeMode?: boolean;
-  activeSong?: number | null;
+  safeMode: boolean;
+  activeSong: number | null;
   send(command: Command): void;
 }) {
   const title = songTitle(song);

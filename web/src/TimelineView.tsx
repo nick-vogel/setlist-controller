@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState, type CSSProperties, type MouseEvent, type PointerEvent } from 'react';
 import type { Command } from '../../src/shared/command.ts';
 import { countInLandsOn } from '../../src/shared/count-in.ts';
+import { activeSong } from '../../src/shared/safe-mode.ts';
 import { sectionAt, songTitle, type SetList, type Snapshot } from '../../src/shared/snapshot.ts';
 import { CountInButton } from './CountInButton.tsx';
 import type { LeaderView } from './device-settings.ts';
@@ -35,7 +36,7 @@ export function TimelineView({
 }) {
   const { live, playing, position, now, jump, countIn, loop, fade, songMeters, safeMode } = snapshot;
   const liveReady = connected && live === 'connected';
-  const activeSong = countIn && jump ? jump.song : now?.song ?? null;
+  const guardedSong = activeSong(countIn, jump, now);
   const playheadSong = set.songs.find((song) => song.number === now?.song);
   const playheadSection = now && playheadSong?.sections[now.section];
 
@@ -366,7 +367,7 @@ export function TimelineView({
                     song?.sections[block.section],
                   );
                   const heldInSong = countIn && jump !== null && jump.song === block.song;
-                  const safeGuarded = safeMode && playing && block.song !== activeSong;
+                  const safeGuarded = safeMode && playing && block.song !== guardedSong;
                   const enabled = liveReady && (!heldInSong || (song !== undefined && countInLandsOn(song, block.section)));
                   const isCountInTarget = countIn && waiting;
                   const title = song ? songTitle(song) : `Song ${block.song}`;

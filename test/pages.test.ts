@@ -4,6 +4,7 @@ import { renderToStaticMarkup } from 'react-dom/server';
 import { describe, expect, it } from 'vitest';
 import type { Command, PageCommand } from '../src/shared/command.ts';
 import { controls, leaderPagePath, leaderSocketPath, pageRole, producerPagePath, producerSocketPath, type Role } from '../src/shared/routes.ts';
+import { activeSong } from '../src/shared/safe-mode.ts';
 import type { SetCharts } from '../src/shared/set-manifest.ts';
 import type { ConnectionsStatus, PedalStatus } from '../src/shared/setup.ts';
 import type { Connection, ProducerSnapshot, SetList, Snapshot } from '../src/shared/snapshot.ts';
@@ -822,7 +823,7 @@ describe('the song heading', () => {
   const heading = (role: 'leader' | 'viewer', end: number | null) =>
     text(
       renderToStaticMarkup(
-        createElement(SongHeading, { song: { ...song, end }, toggle: 'stop', role, available: true, playable: true, playing: false, now: PLAYING, send: () => {} }),
+        createElement(SongHeading, { song: { ...song, end }, toggle: 'stop', role, available: true, playable: true, playing: false, now: PLAYING, safeMode: true, activeSong: 1, send: () => {} }),
       ),
     );
 
@@ -855,7 +856,10 @@ describe('the Count in button', () => {
     now: ON_BRIDGE,
     send: (() => {}) as (command: Command) => void,
   };
-  const heading = (changes: Partial<typeof props> = {}) => renderToStaticMarkup(createElement(SongHeading, { ...props, ...changes }));
+  const heading = (changes: Partial<typeof props> = {}) => {
+    const shown = { ...props, ...changes };
+    return renderToStaticMarkup(createElement(SongHeading, { ...shown, safeMode: true, activeSong: activeSong(false, null, shown.now) }));
+  };
   // The Count in button's attributes and its text, or undefined when the heading has none.
   const countInButton = (markup: string) => {
     const found = [...markup.matchAll(/<button([^>]*)>(.*?)<\/button>/g)].find(([, attributes = '']) => /class="count-in/.test(attributes));
@@ -907,7 +911,7 @@ describe('the Count in button', () => {
       if (typeof type === 'function') return buttonsIn((type as (props: unknown) => unknown)(props));
       return type === 'button' ? [node as { props: { className?: string; onClick?: () => void } }] : buttonsIn(props?.children);
     };
-    const element = createElement(SongHeading, { ...props, send: (command: Command) => sent.push(command) });
+    const element = createElement(SongHeading, { ...props, safeMode: true, activeSong: 1, send: (command: Command) => sent.push(command) });
 
     buttonsIn(element).find((button) => button.props.className === 'count-in')?.props.onClick?.();
 
@@ -1110,7 +1114,7 @@ describe('the top Play from start', () => {
   it("sends the same command from a song heading's Play from start, for that heading's song", () => {
     const sent: Command[] = [];
     // Song 2's heading, with the playhead in song 1.
-    const heading = SongHeading({ song: COUNT_IN_SET.songs[1]!, toggle: 'stop', role: 'leader', available: true, playable: true, playing: false, now: onSection(1, 3), send: (command) => sent.push(command) });
+    const heading = SongHeading({ song: COUNT_IN_SET.songs[1]!, toggle: 'stop', role: 'leader', available: true, playable: true, playing: false, now: onSection(1, 3), safeMode: true, activeSong: 1, send: (command) => sent.push(command) });
     type Node = { type: unknown; props: { children?: unknown } };
     const find = (node: unknown): Node | undefined => {
       if (!node || typeof node !== 'object') return undefined;

@@ -2,6 +2,7 @@ import { useCallback, useEffect, useRef, useState, type CSSProperties } from 're
 import { nameKey } from '../../src/shared/match-name.ts';
 import type { PageCommand } from '../../src/shared/command.ts';
 import { CHARTS_API, controls, isSetupPage, pageRole, type Role } from '../../src/shared/routes.ts';
+import { activeSong } from '../../src/shared/safe-mode.ts';
 import type { SetCharts } from '../../src/shared/set-manifest.ts';
 import type { ProducerSnapshot, Snapshot } from '../../src/shared/snapshot.ts';
 import { AutoLockTip } from './AutoLockTip.tsx';
@@ -256,8 +257,6 @@ export function Page({
   const { live, playing, now, jump, countIn, endToggles, loop, fade, safeMode } = snapshot;
   const liveReady = connected && live === 'connected';
   const controlsLive = controls(role);
-  // The song currently playing, or the held count-in's song, matching the server's Safe Mode guard.
-  const activeSong = countIn && jump ? jump.song : now?.song ?? null;
   // The song the playhead is in, for the transport row's Count in and Play from start: none on an End
   // or between songs.
   const playheadSong = snapshot.set.songs.find((song) => song.number === now?.song);
@@ -353,7 +352,7 @@ export function Page({
             playable={liveReady}
             playing={playing}
             safeMode={safeMode}
-            activeSong={activeSong}
+            activeSong={activeSong(countIn, jump, now)}
             now={now}
             send={send}
           />

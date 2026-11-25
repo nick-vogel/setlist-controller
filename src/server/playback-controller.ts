@@ -1,5 +1,6 @@
 import type { Command } from '../shared/command.ts';
 import { COUNT_OFF, countInFor, isPad } from '../shared/count-in.ts';
+import { activeSong } from '../shared/safe-mode.ts';
 import {
   sameSection,
   sectionAt,
@@ -300,18 +301,15 @@ export function startPlaybackController(
     safeMode,
   });
 
-  // The song currently playing, or the held count-in's song while a count-in runs. Null before the
-  // first song, in a gap between songs, or while position is unknown.
-  const activeSong = () => (countIn && waitingJump ? waitingJump.song : now(position)?.song ?? null);
-
   // Whether Safe Mode refuses this command while Live plays: any jump or Play from start aimed at
   // another song is blocked while safeMode is true and Live is playing. Play from start after a
   // Stop whose report has not arrived yet starts Live from stopped rather than jumping while
   // playing, so stopWait clears the guard for it.
   const refuses = (command: Command): boolean => {
     if (!safeMode || !playing) return false;
-    if (command.kind === 'jump') return command.song !== activeSong();
-    if (command.kind === 'play-from-start') return stopWait === null && command.song !== activeSong();
+    const song = activeSong(countIn !== null, waitingJump, now(position));
+    if (command.kind === 'jump') return command.song !== song;
+    if (command.kind === 'play-from-start') return stopWait === null && command.song !== song;
     return false;
   };
 
