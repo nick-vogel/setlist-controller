@@ -4,7 +4,7 @@ import { chmod, readFile, writeFile } from 'node:fs/promises';
 import { join } from 'node:path';
 import { afterEach, describe, expect, it } from 'vitest';
 import { CHARTS_API } from '../src/shared/routes.ts';
-import { parseSetManifest, SET_MANIFEST_FILE, type SetCharts, type SetManifest } from '../src/shared/set-manifest.ts';
+import { parseSetManifest, SET_MANIFEST_FILE, type ManifestSong, type SetCharts, type SetManifest } from '../src/shared/set-manifest.ts';
 import { readSetup, startRig, type Rig } from './harness.ts';
 import { madeUpChart, readFixtures, requestKey, startPlanningCenter, type PlanningCenter } from './planning-center-fake.ts';
 import { addPad, addPadTrack, copySongAs, createWorkspace, GOODNESS, GRACE, GREAT_ARE, noTemplateLine, projectFolder, REPO_ROOT, removeWorkspaces, setPath, type Workspace } from './set-builder-harness.ts';
@@ -110,8 +110,21 @@ async function phase0Workspace(): Promise<Workspace & { manifest: string }> {
 const paths = (workspace: Workspace) => ['--library', workspace.library, '--template', workspace.template, '--output-root', workspace.outputRoot, '--show-folder', workspace.showFolder];
 const listPaths = (workspace: Workspace) => ['--library', workspace.library, '--output-root', workspace.outputRoot];
 
+// The manifest a build wrote, each song checked for the durations every build gives it and then shown without them. This
+// is the one check that the command itself, not buildSet alone, writes them to the file; test/set-builder-durations.test.ts
+// checks their values.
 async function readManifest(path: string): Promise<SetManifest> {
-  return JSON.parse(await readFile(path, 'utf8')) as SetManifest;
+  const manifest = JSON.parse(await readFile(path, 'utf8')) as SetManifest;
+  for (const song of manifest.songs) expect(song.durations?.sections.length, song.title).toBeGreaterThan(0);
+  return { songs: untimed(manifest.songs) };
+}
+
+function untimed(songs: ManifestSong[]): ManifestSong[] {
+  return songs.map((song) => {
+    const copy = { ...song };
+    delete copy.durations;
+    return copy;
+  });
 }
 
 // A manifest song with the fake's made-up chart for its arrangement.
@@ -275,9 +288,13 @@ describe('a manifest the build writes, read by the server', { timeout: 30_000 },
     const result = await run(['--plan', '--date', PHASE_0, ...paths(workspace), '--set-manifest', workspace.manifest], fake, await tokenFile(workspace));
     expect(result.code).toBe(0);
 
-    expect(parseSetManifest(await readFile(workspace.manifest, 'utf8'))).toEqual({ manifest: { songs: PHASE_0_SONGS } });
+    const parsed = parseSetManifest(await readFile(workspace.manifest, 'utf8'));
+    if (!('manifest' in parsed)) throw new Error(parsed.problem);
+    expect(parsed.manifest.songs.every((song) => song.durations !== undefined)).toBe(true);
+    expect(untimed(parsed.manifest.songs)).toEqual(PHASE_0_SONGS);
     rig = await startRig(SET, {}, { setManifest: workspace.manifest });
-    expect((await readSetup<SetCharts>(rig.server.httpPort, CHARTS_API, 'the charts')).songs).toEqual(PHASE_0_SONGS);
+    const served = (await readSetup<SetCharts>(rig.server.httpPort, CHARTS_API, 'the charts')).songs;
+    expect(served).toEqual(parsed.manifest.songs);
   });
 });
 

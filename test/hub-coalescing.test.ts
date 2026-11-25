@@ -412,6 +412,7 @@ describe('a client that received a held position', () => {
     fade: null,
     chartRevision: 1,
     songMeters: { 1: 4 },
+    songTimings: {},
     safeMode: true,
     power: UNKNOWN_POWER,
   });

@@ -38,6 +38,7 @@ import {
   type View,
 } from './device-settings.ts';
 import { DisplayPicker } from './DisplayPicker.tsx';
+import { formatSeconds, setSeconds, songSeconds } from './durations.ts';
 import { FadeOutButton } from './FadeOutButton.tsx';
 import { FontSizePicker } from './FontSizePicker.tsx';
 import { JumpTargets } from './JumpTargets.tsx';
@@ -272,6 +273,8 @@ export function Page({
   // The song the playhead is in, for the transport row's Count in and Play from start: none on an End
   // or between songs.
   const playheadSong = snapshot.set.songs.find((song) => song.number === now?.song);
+  // How long the whole set plays, gaps included, over the setlist.
+  const setTotal = setSeconds(snapshot.set, snapshot.songTimings);
 
   if (picker && part !== null) {
     // The chart text's scale, set on the page so the strip and the songs both take it. Medium sets
@@ -337,7 +340,7 @@ export function Page({
           {role === 'leader' && <LeaderViewSwitcher leaderView={leaderView} onLeaderView={onLeaderView} />}
         </div>
       )}
-      <NowPlaying live={live} set={snapshot.set} now={now} jump={jump} countIn={countIn} loop={loop} />
+      <NowPlaying live={live} set={snapshot.set} now={now} jump={jump} countIn={countIn} loop={loop} timings={snapshot.songTimings} position={snapshot.position} />
       {controlsLive && (
         <section className="transport" aria-label="Transport">
           <StopButton available={liveReady} send={send} />
@@ -356,6 +359,7 @@ export function Page({
         </section>
       )}
       {connections}
+      {setTotal && <p className="set-duration">{`Set ${setTotal.atLeast ? 'at least ' : ''}${formatSeconds(setTotal.seconds)}`}</p>}
       {snapshot.set.songs.map((song) => (
         <section className="song" key={song.number}>
           {/* The server holds a toggle for every song in the set. */}
@@ -369,6 +373,7 @@ export function Page({
             safeMode={safeMode}
             activeSong={activeSong(countIn, jump, now)}
             now={now}
+            seconds={songSeconds(song, snapshot.songTimings[song.number])}
             send={send}
           />
           <ol className="sections">

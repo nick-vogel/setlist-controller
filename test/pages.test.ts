@@ -135,7 +135,7 @@ const nowPlaying = (
   live: Snapshot['live'] = 'connected',
   loop: Snapshot['loop'] = null,
   countIn = false,
-) => renderToStaticMarkup(createElement(NowPlaying, { live, set: SET, now, jump, countIn, loop }));
+) => renderToStaticMarkup(createElement(NowPlaying, { live, set: SET, now, jump, countIn, loop, timings: {}, position: null }));
 // The text a page shows, without its markup.
 const text = (markup: string) => markup.replace(/<[^>]*>/g, ' ').replace(/\s+/g, ' ').trim();
 // A pre-service check's problem lines, and the names under its Cannot match:, as the markup holds them.
@@ -181,7 +181,7 @@ describe('the now-playing block', () => {
   });
 
   it('shows no Next on the last section of a song with no End, and keeps the line in its place', () => {
-    const markup = renderToStaticMarkup(createElement(NowPlaying, { live: 'connected', set: NO_END_SET, now: NO_END_LAST, jump: null, countIn: false, loop: null }));
+    const markup = renderToStaticMarkup(createElement(NowPlaying, { live: 'connected', set: NO_END_SET, now: NO_END_LAST, jump: null, countIn: false, loop: null, timings: {}, position: null }));
     expect(text(markup)).not.toContain('Next');
     expect(text(nowPlaying(PLAYING, null))).toContain('Next');
     expect(markup).toContain('class="now-next"');
@@ -191,7 +191,7 @@ describe('the now-playing block', () => {
   // the section after the target, in the target's song.
   it("names the section after a count-in's target on the Next line, and the one after the playhead for a tap", () => {
     const markup = (set: SetList, section: number, countIn: boolean) =>
-      renderToStaticMarkup(createElement(NowPlaying, { live: 'connected', set, now: onSection(1, 0), jump: { song: 1, section }, countIn, loop: null }));
+      renderToStaticMarkup(createElement(NowPlaying, { live: 'connected', set, now: onSection(1, 0), jump: { song: 1, section }, countIn, loop: null, timings: {}, position: null }));
     const nextLine = (set: SetList, section: number, countIn: boolean) => text(/<p class="now-next">(.*?)<\/p>/.exec(markup(set, section, countIn))?.[1] ?? 'missing');
     expect(nextLine(COUNT_IN_SET, 1, true)).toBe('Next Verse');
     expect(nextLine(COUNT_IN_SET, 2, true)).toBe('Next Bridge');
@@ -510,6 +510,7 @@ const SNAPSHOT: Snapshot = {
   safeMode: true,
   chartRevision: 1,
   songMeters: { 1: 4 },
+  songTimings: {},
   power: { source: 'ac', percent: 100 },
 };
 const setup = (snapshot: Snapshot | null) => text(renderToStaticMarkup(createElement(Setup, { snapshot, connected: true })));
@@ -824,7 +825,7 @@ describe('the song heading', () => {
   const heading = (role: 'leader' | 'viewer', end: number | null) =>
     text(
       renderToStaticMarkup(
-        createElement(SongHeading, { song: { ...song, end }, toggle: 'stop', role, available: true, playable: true, playing: false, now: PLAYING, safeMode: true, activeSong: 1, send: () => {} }),
+        createElement(SongHeading, { song: { ...song, end }, toggle: 'stop', role, available: true, playable: true, playing: false, now: PLAYING, seconds: null, safeMode: true, activeSong: 1, send: () => {} }),
       ),
     );
 
@@ -855,6 +856,7 @@ describe('the Count in button', () => {
     playable: true,
     playing: false,
     now: ON_BRIDGE,
+    seconds: null as number | null,
     send: (() => {}) as (command: Command) => void,
   };
   const heading = (changes: Partial<typeof props> = {}) => {
@@ -912,7 +914,7 @@ describe('the Count in button', () => {
       if (typeof type === 'function') return buttonsIn((type as (props: unknown) => unknown)(props));
       return type === 'button' ? [node as { props: { className?: string; onClick?: () => void } }] : buttonsIn(props?.children);
     };
-    const element = createElement(SongHeading, { ...props, safeMode: true, activeSong: 1, send: (command: Command) => sent.push(command) });
+    const element = createElement(SongHeading, { ...props, seconds: null, safeMode: true, activeSong: 1, send: (command: Command) => sent.push(command) });
 
     buttonsIn(element).find((button) => button.props.className === 'count-in')?.props.onClick?.();
 
@@ -1115,7 +1117,7 @@ describe('the top Play from start', () => {
   it("sends the same command from a song heading's Play from start, for that heading's song", () => {
     const sent: Command[] = [];
     // Song 2's heading, with the playhead in song 1.
-    const heading = SongHeading({ song: COUNT_IN_SET.songs[1]!, toggle: 'stop', role: 'leader', available: true, playable: true, playing: false, now: onSection(1, 3), safeMode: true, activeSong: 1, send: (command) => sent.push(command) });
+    const heading = SongHeading({ song: COUNT_IN_SET.songs[1]!, toggle: 'stop', role: 'leader', available: true, playable: true, playing: false, now: onSection(1, 3), seconds: null, safeMode: true, activeSong: 1, send: (command) => sent.push(command) });
     type Node = { type: unknown; props: { children?: unknown } };
     const find = (node: unknown): Node | undefined => {
       if (!node || typeof node !== 'object') return undefined;

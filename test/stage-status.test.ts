@@ -137,6 +137,7 @@ const SNAPSHOT: Snapshot = {
   loop: null,
   chartRevision: 1,
   songMeters: { 1: 4, 2: 4 },
+  songTimings: {},
   power: { source: 'ac', percent: 100 },
   safeMode: true,
 };

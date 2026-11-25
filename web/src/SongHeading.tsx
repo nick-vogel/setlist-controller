@@ -2,12 +2,13 @@ import type { Command } from '../../src/shared/command.ts';
 import { controls, type Role } from '../../src/shared/routes.ts';
 import { END_TOGGLES, songTitle, type EndToggle, type NowPlaying, type Song } from '../../src/shared/snapshot.ts';
 import { CountInButton } from './CountInButton.tsx';
+import { formatSeconds } from './durations.ts';
 import { PlayFromStartButton } from './PlayFromStartButton.tsx';
 
 // A song's heading in the setlist: its title and what happens at its End, on every page. The leader
 // page can also play the song from its start, count in to the section the playhead is in, and change
 // its end toggle. A song with no End locator never stops on its own, so it shows that in place of a
-// toggle.
+// toggle. Under the title, how long the song plays, when the page knows (durations.ts).
 
 const TOGGLE_LABELS: Record<EndToggle, string> = {
   stop: 'Stop at end',
@@ -23,6 +24,7 @@ export function SongHeading({
   playable,
   playing,
   now,
+  seconds,
   safeMode,
   activeSong,
   send,
@@ -34,17 +36,20 @@ export function SongHeading({
   playable: boolean;
   playing: boolean;
   now: NowPlaying | null;
+  seconds: number | null;
   safeMode: boolean;
   activeSong: number | null;
   send(command: Command): void;
 }) {
   const title = songTitle(song);
+  const duration = seconds !== null && <p className="song-duration">{formatSeconds(seconds)}</p>;
   const canPlayFromStart = playable && (!safeMode || !playing || song.number === activeSong);
 
   if (!controls(role)) {
     return (
       <header className="song-heading">
         <h2>{title}</h2>
+        {duration}
         <p className="end-toggle-text">{song.end === null ? NO_END : TOGGLE_LABELS[toggle]}</p>
       </header>
     );
@@ -53,6 +58,7 @@ export function SongHeading({
   return (
     <header className="song-heading">
       <h2>{title}</h2>
+      {duration}
       <div className="song-controls">
         <PlayFromStartButton song={song} playable={canPlayFromStart} send={send} />
         <CountInButton song={song} now={now} playable={playable} playing={playing} send={send} />

@@ -202,6 +202,7 @@ const snapshotOn = (power: PowerState): ProducerSnapshot => ({
   fade: null,
   chartRevision: 1,
   songMeters: { 1: 4 },
+  songTimings: {},
   power,
   connections: [],
   connectionProblems: [],
