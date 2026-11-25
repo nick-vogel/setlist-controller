@@ -1,5 +1,6 @@
 import { afterEach, describe, expect, it } from 'vitest';
 import type { CuePoint } from '../src/fake-live/fake-live.ts';
+import { SILENT_BEFORE_LOST_MS } from '../src/server/live-bridge.ts';
 import { parseSet } from '../src/server/set-parser.ts';
 import { createSongTimer } from '../src/server/song-timings.ts';
 import type { ManifestSong } from '../src/shared/set-manifest.ts';
@@ -82,6 +83,30 @@ describe("each song's timing in the snapshot", () => {
       1: { sections: [5, 10], gap: null, source: 'tempo' },
       2: { sections: [8, 8], gap: null, source: 'tempo' },
     });
+  });
+
+  // Live reports the playhead and that it plays before its tempo, each time its listeners start again.
+  it.each([
+    { what: 'Live comes back after it was lost', back: async (found: Rig) => {
+      await found.stopLive();
+      found.clock.advance(SILENT_BEFORE_LOST_MS);
+      await found.startLive({ playing: true, position: 40, tempo: 70 });
+      // The next probe finds Live again.
+      found.clock.advance(1000);
+    } },
+    { what: 'AbletonOSC reloads', back: async (found: Rig) => {
+      await found.stopLive();
+      await found.startLive({ playing: true, position: 40, tempo: 70, startup: true });
+    } },
+  ])("times a song Live plays after $what by the tempo Live reports then, not the one before", async ({ back }) => {
+    rig = await startRig(SET, { playing: true, position: 10, tempo: 140 }, {});
+    const leader = await rig.connectLeader();
+    await leader.snapshot((found: Snapshot) => loaded(found) && found.songTimings[1] !== undefined);
+
+    await back(rig);
+    const snapshot = await leader.snapshot((found: Snapshot) => found.songTimings[2] !== undefined);
+    // 16 beats and 16 at 70 BPM.
+    expect(snapshot.songTimings[2]).toEqual({ sections: [expect.closeTo(960 / 70, 9), expect.closeTo(960 / 70, 9)], gap: null, source: 'tempo' });
   });
 
   it('gives no timing by tempo while Live is stopped', async () => {

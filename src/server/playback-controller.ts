@@ -668,6 +668,7 @@ export function startPlaybackController(
             playing = false;
             position = null;
             anchor = null;
+            tempoReported = false;
             liveLoop.on = false;
             wrapFrom = null;
             dropMeter();
@@ -740,14 +741,15 @@ export function startPlaybackController(
           if (stops && countIn) clearJump();
           break;
         }
-        case 'tempo':
-          // Song time is in beats, so the tempo moves the playhead but never changes the bar count,
-          // and the snapshot stays the same. It is kept only to tell a late tap.
+        case 'tempo': {
+          const first = !tempoReported;
           if (event.bpm > 0) {
             tempo = event.bpm;
             tempoReported = true;
           }
+          if (first && tempoReported && playing) break;
           return;
+        }
         // The fade's reads, which change nothing on any page.
         case 'track-data':
         case 'track-volume':
@@ -755,6 +757,7 @@ export function startPlaybackController(
         // The listener reports that follow carry Live's new state, so the announcement itself changes
         // nothing on any page.
         case 'startup':
+          tempoReported = false;
           return unchanged();
         case 'signature-numerator':
           if (!(event.numerator > 0)) return;
