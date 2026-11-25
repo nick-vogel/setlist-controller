@@ -1,27 +1,36 @@
 import { timingSafeEqual } from 'node:crypto';
 import type { IncomingMessage, Server as HttpServer } from 'node:http';
 import { WebSocket, WebSocketServer } from 'ws';
-import { parseCommand, parseConnectionCommand, type Command, type ConnectionCommand } from '../shared/command.ts';
+import { parseCommand, parseConnectionCommand, parseDeviceCommand, type Command, type ConnectionCommand } from '../shared/command.ts';
+import { parseHello, RELOAD, type Device } from '../shared/devices.ts';
 import { HEARTBEAT, HEARTBEAT_MS } from '../shared/heartbeat.ts';
 import { controls, leaderSocketPath, producerSocketPath, SOCKET_PATHS, type Role } from '../shared/routes.ts';
 import type { ConnectionsPart, ProducerSnapshot, Snapshot } from '../shared/snapshot.ts';
 import { realClock, type Clock } from './clock.ts';
+import { createDeviceRegistry } from './devices.ts';
 
 // Sends the full snapshot on connect and on every change, pacing position-only changes (below). The
 // snapshot is small, so no diffs. Viewers and leaders get the playback snapshot; producers get it plus
-// the connections part. Each role's snapshot goes out only when it changed, so a change to the
-// connections alone reaches no viewer.
+// the connections part and the devices. Each role's snapshot goes out only when it changed, so a change
+// to the connections or the devices alone reaches no viewer.
 //
 // Two protections keep stage browsers on slow or congested Wi-Fi current:
 // 1. Per-socket latest-only coalescing: while a socket still has a send in flight, no further
-//    snapshots are queued onto it; the socket is marked dirty and gets the single newest encoded
-//    snapshot for its role as soon as that send completes. One slow socket never delays healthy
+//    snapshots are queued onto it; it gets the single newest encoded snapshot for its role, if it
+//    has not had it, as soon as that send completes. One slow socket never delays healthy
 //    sibling sockets.
 // 2. ~20 Hz cap on position-only broadcasts: pure intra-section position ticks are paced to
 //    POSITION_BROADCAST_MS on the server's clock with a trailing flush timer so the final resting
 //    position is never dropped. Any significant state change (connection, playing/stopped, set,
 //    section boundary, waiting jump, count-in, end toggles, loop, fade, chart revision, song meters,
-//    power, or producer connections) cancels the timer and flushes immediately.
+//    power, producer connections, or devices) cancels the timer and flushes immediately.
+//
+// A frame for one socket alone, such as a reload, cannot be coalesced: each waits its turn on that
+// socket, ahead of the next snapshot, so it is never dropped and never queues a snapshot behind it.
+//
+// Every socket may introduce itself with a hello (devices.ts), the view-only one included, and the
+// hub keeps the devices that did in its registry. The socket's role goes in the registry, never one
+// the hello claims.
 //
 // Between snapshots it sends every idle client a heartbeat (see heartbeat.ts), so a page can tell a
 // dead socket from a quiet one. The heartbeat runs on real time, not the server's clock: a page's
@@ -32,13 +41,16 @@ import { realClock, type Clock } from './clock.ts';
 // secret: no secret, a wrong one, the other role's secret, or the secret in a query string is
 // refused, as is any other path. A refused page cannot send a command, and no view-only socket sits
 // under a page that draws the leader's controls. Only a producer socket's messages are read as a
-// connection command too, so a leader's Arm, Disarm, Fire again or button run is dropped.
+// connection or device command too, so a leader's Arm, Disarm, Fire again, button run, Reload or Clear
+// offline is dropped.
 
 // Minimum interval between position-only broadcasts on the server's clock (~20 Hz).
 export const POSITION_BROADCAST_MS = 50;
 
 export type Hub = {
   publish(snapshot: Snapshot, connections: ConnectionsPart): void;
+  // Every device in the registry, as the producer's snapshot carries it.
+  devices(): Device[];
   close(): Promise<void>;
 };
 
@@ -49,7 +61,8 @@ type Encoded = { playback: string; producer: string };
 type ClientState = {
   role: Role;
   inFlight: boolean;
-  dirty: boolean;
+  // Frames for this socket alone, sent in order ahead of the next snapshot.
+  frames: string[];
   lastSent: string | null;
 };
 
@@ -66,9 +79,12 @@ export function startHub(
   // ws answers a request this refuses with a 400 and no upgrade.
   sockets.shouldHandle = (request) => roleOf(request) !== null;
 
+  const devices = createDeviceRegistry<WebSocket>();
+  // The newest published state, which a change to the devices encodes again.
+  let published = initial;
   // The newest published snapshots, and the last ones broadcast across connected sockets.
-  let latest = encode(initial.snapshot, initial.connections);
-  let latestKey = nonPositionKey(initial.snapshot, initial.connections);
+  let latest = encode(initial.snapshot, initial.connections, devices.list());
+  let latestKey = nonPositionKey(initial.snapshot, initial.connections, devices.list());
   let broadcasted = latest;
   let broadcastedKey = latestKey;
   let lastPlaybackBroadcastAt = -Infinity;
@@ -83,26 +99,41 @@ export function startHub(
     stopFlush = null;
   };
 
+  // Sends the socket its next frame, else the newest snapshot for its role when it has not had it,
+  // once nothing is in flight on it. Each send's callback delivers again, so a socket that was busy
+  // gets the one newest snapshot when it is free.
   const deliver = (socket: WebSocket, state: ClientState) => {
-    if (closed || socket.readyState !== WebSocket.OPEN) return;
-    const payload = forRole(latest, state.role);
-    if (payload === state.lastSent) {
-      state.dirty = false;
-      return;
+    if (closed || socket.readyState !== WebSocket.OPEN || state.inFlight) return;
+    let payload = state.frames.shift();
+    if (payload === undefined) {
+      payload = forRole(latest, state.role);
+      if (payload === state.lastSent) return;
+      state.lastSent = payload;
     }
-    if (state.inFlight) {
-      state.dirty = true;
-      return;
-    }
-    state.dirty = false;
+    send(socket, state, payload);
+  };
+
+  const send = (socket: WebSocket, state: ClientState, payload: string) => {
     state.inFlight = true;
-    state.lastSent = payload;
     socket.send(payload, (error) => {
       state.inFlight = false;
       if (closed || error || socket.readyState !== WebSocket.OPEN) return;
-      if (state.dirty) deliver(socket, state);
+      deliver(socket, state);
     });
   };
+
+  // Sends a frame to every open socket of the device with this client ID. A frame already waiting on
+  // a socket is not queued twice.
+  const sendToDevice = (client: string, frame: string) => {
+    for (const socket of devices.sockets(client)) {
+      const state = clients.get(socket);
+      if (!state) continue;
+      if (!state.frames.includes(frame)) state.frames.push(frame);
+      deliver(socket, state);
+    }
+  };
+
+  const devicesChanged = () => hub.publish(published.snapshot, published.connections);
 
   const broadcast = () => {
     const changedPlayback = latest.playback !== broadcasted.playback;
@@ -119,15 +150,23 @@ export function startHub(
     const state: ClientState = {
       role,
       inFlight: false,
-      dirty: false,
+      frames: [],
       lastSent: null,
     };
     clients.set(socket, state);
-    socket.on('close', () => clients.delete(socket));
+    socket.on('close', () => {
+      clients.delete(socket);
+      if (devices.leave(socket)) devicesChanged();
+    });
     socket.on('error', (error) => console.error('Setlist server: WebSocket client error', error));
     socket.on('message', (data) => {
-      // A view-only connection never controls anything. Its messages are dropped unread, and the
-      // connection stays open so the page keeps its view.
+      const hello = parseHello(data);
+      if (hello) {
+        if (devices.hello(socket, role, hello)) devicesChanged();
+        return;
+      }
+      // A view-only connection never controls anything. Its other messages are dropped unread, and
+      // the connection stays open so the page keeps its view.
       if (!controls(role)) return;
       const command = parseCommand(data);
       if (command) {
@@ -136,7 +175,13 @@ export function startHub(
       }
       if (role !== 'producer') return;
       const connectionCommand = parseConnectionCommand(data);
-      if (connectionCommand) onConnectionCommand(connectionCommand);
+      if (connectionCommand) {
+        onConnectionCommand(connectionCommand);
+        return;
+      }
+      const deviceCommand = parseDeviceCommand(data);
+      if (deviceCommand?.kind === 'reload') sendToDevice(deviceCommand.client, RELOAD);
+      else if (deviceCommand?.kind === 'clear-offline' && devices.clearOffline()) devicesChanged();
     });
     deliver(socket, state);
   });
@@ -146,20 +191,16 @@ export function startHub(
   const stopHeartbeat = realClock.every(HEARTBEAT_MS, () => {
     for (const [socket, state] of clients) {
       if (socket.readyState !== WebSocket.OPEN || state.inFlight) continue;
-      state.inFlight = true;
-      socket.send(HEARTBEAT, (error) => {
-        state.inFlight = false;
-        if (closed || error || socket.readyState !== WebSocket.OPEN) return;
-        if (state.dirty) deliver(socket, state);
-      });
+      send(socket, state, HEARTBEAT);
     }
   });
 
-  return {
+  const hub: Hub = {
     publish(snapshot, connections) {
       if (closed) return;
-      const next = encode(snapshot, connections);
-      const nextKey = nonPositionKey(snapshot, connections);
+      published = { snapshot, connections };
+      const next = encode(snapshot, connections, devices.list());
+      const nextKey = nonPositionKey(snapshot, connections, devices.list());
       latest = next;
       latestKey = nextKey;
 
@@ -198,6 +239,7 @@ export function startHub(
         });
       }
     },
+    devices: () => devices.list(),
     close() {
       closed = true;
       cancelFlush();
@@ -207,20 +249,21 @@ export function startHub(
       return new Promise((resolve, reject) => sockets.close((error) => (error ? reject(error) : resolve())));
     },
   };
+  return hub;
 }
 
-function encode(snapshot: Snapshot, connections: ConnectionsPart): Encoded {
-  const producer: ProducerSnapshot = { ...snapshot, ...connections };
+function encode(snapshot: Snapshot, connections: ConnectionsPart, devices: Device[]): Encoded {
+  const producer: ProducerSnapshot = { ...snapshot, ...connections, devices };
   return { playback: JSON.stringify(snapshot), producer: JSON.stringify(producer) };
 }
 
-// Everything in a snapshot and connections part except intra-section playback progress (position,
-// and now's bar and fraction). Two states with the same key differ only in where the playhead sits
-// inside the same song and section (or both outside any section with a known position).
-function nonPositionKey(snapshot: Snapshot, connections: ConnectionsPart): string {
+// Everything in a snapshot, connections part and devices except intra-section playback progress
+// (position, and now's bar and fraction). Two states with the same key differ only in where the
+// playhead sits inside the same song and section (or both outside any section with a known position).
+function nonPositionKey(snapshot: Snapshot, connections: ConnectionsPart, devices: Device[]): string {
   const { position, now, ...rest } = snapshot;
   const section = now ? { song: now.song, section: now.section, next: now.next, bars: now.bars } : null;
-  return JSON.stringify({ ...rest, known: position !== null, section, connections });
+  return JSON.stringify({ ...rest, known: position !== null, section, connections, devices });
 }
 
 function roleFor(secrets: HubSecrets): (request: IncomingMessage) => Role | null {

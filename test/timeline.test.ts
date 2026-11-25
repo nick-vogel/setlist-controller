@@ -54,6 +54,7 @@ const SNAPSHOT: ProducerSnapshot = {
   power: { source: 'ac', percent: 100 },
   connections: [],
   connectionProblems: [],
+  devices: [],
 };
 
 describe('timeline layout geometry', () => {

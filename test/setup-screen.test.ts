@@ -4,7 +4,7 @@ import type { NetworkInterfaceInfo } from 'node:os';
 import jsqr from 'jsqr';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import type { CuePoint } from '../src/fake-live/fake-live.ts';
-import { SETUP_CONNECTIONS_API, SETUP_PEDAL_API, SETUP_REFRESH_API, SETUP_REFUSED } from '../src/shared/routes.ts';
+import { SETUP_CONNECTIONS_API, SETUP_DEVICES_API, SETUP_PEDAL_API, SETUP_REFRESH_API, SETUP_REFUSED } from '../src/shared/routes.ts';
 import type { SetupInfo } from '../src/shared/setup.ts';
 import { fakeTarget } from './fake-target.ts';
 import { loaded, startRig, type Rig } from './harness.ts';
@@ -198,6 +198,15 @@ describe('the setup screen', () => {
     const answered = await get(rig.server.httpPort, SETUP_CONNECTIONS_API, '127.0.0.1');
     expect(answered.status).toBe(200);
     expect(answered.body).toContain('ProPresenter');
+  });
+
+  it.runIf(process.platform === 'linux')('refuses the devices to any machine but the laptop', async () => {
+    rig = await startRig(SET, {});
+    const phone = await rig.connectViewer();
+    phone.send({ kind: 'hello', client: 'phone', name: 'Keys', battery: null });
+    await rig.devices((devices) => devices.length === 1);
+
+    expect(await get(rig.server.httpPort, SETUP_DEVICES_API, '127.0.0.2')).toEqual({ status: 403, body: `${SETUP_REFUSED}\n` });
   });
 
   it.runIf(process.platform === 'linux')("refuses the setup screen's Refresh to any machine but the laptop", async () => {

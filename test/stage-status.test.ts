@@ -140,7 +140,7 @@ const SNAPSHOT: Snapshot = {
   power: { source: 'ac', percent: 100 },
   safeMode: true,
 };
-const PRODUCER_SNAPSHOT: ProducerSnapshot = { ...SNAPSHOT, connections: [], connectionProblems: [] };
+const PRODUCER_SNAPSHOT: ProducerSnapshot = { ...SNAPSHOT, connections: [], connectionProblems: [], devices: [] };
 
 const page = (role: Role, changes: Partial<Snapshot> = {}, extra: { leaderView?: 'setlist' | 'timeline' } = {}, connected = true) =>
   renderToStaticMarkup(

@@ -143,6 +143,34 @@ describe('per-socket slow-link coalescing', () => {
     }
   }, 30_000);
 
+  it('delivers a reload to a paused slow socket once its link drains, never dropping it for the send in flight', async () => {
+    const hubClock = manualClock();
+    rig = await startRig(largeSet(), { playing: true, position: 0 }, { hubClock });
+    proxy = await startProxy(rig.server.httpPort);
+
+    const slow = await connect(`ws://127.0.0.1:${proxy.port}${SOCKET_PATHS.viewer}`);
+    const healthy = await rig.connectViewer();
+    const panel = await rig.connectProducer();
+    try {
+      await slow.snapshot(at(0));
+      await healthy.snapshot(at(0));
+      slow.send({ kind: 'hello', client: 'slow', name: 'Keys', battery: null });
+      await rig.devices((devices) => devices.length === 1);
+      proxy.pause();
+
+      const totalUpdates = await streamPastKernelBuffers(rig.live, hubClock, healthy);
+      panel.send({ kind: 'reload', client: 'slow' });
+      await panel.flush();
+      expect(slow.reloads).toBe(0);
+
+      proxy.resume();
+      await expect.poll(() => slow.reloads).toBe(1);
+      await slow.snapshot(at(totalUpdates / 4));
+    } finally {
+      slow.close();
+    }
+  }, 30_000);
+
   it('converges a paused slow producer socket to the newest producer snapshot including connections', async () => {
     const hubClock = manualClock();
     const target = fakeTarget({ name: 'propresenter', label: 'ProPresenter' });

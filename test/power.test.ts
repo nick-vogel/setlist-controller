@@ -205,6 +205,7 @@ const snapshotOn = (power: PowerState): ProducerSnapshot => ({
   power,
   connections: [],
   connectionProblems: [],
+  devices: [],
 });
 const banner = (markup: string) => /<p class="power-warning ([a-z]+)" role="alert">([^<]*)<\/p>/.exec(markup)?.slice(1);
 const page = (role: 'viewer' | 'leader' | 'producer', power: PowerState) => banner(renderToStaticMarkup(createElement(Page, { role, snapshot: snapshotOn(power), connected: true, send: () => {} })));
