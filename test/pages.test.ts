@@ -510,6 +510,7 @@ const SNAPSHOT: Snapshot = {
   safeMode: true,
   chartRevision: 1,
   songMeters: { 1: 4 },
+  power: { source: 'ac', percent: 100 },
 };
 const setup = (snapshot: Snapshot | null) => text(renderToStaticMarkup(createElement(Setup, { snapshot, connected: true })));
 // The text of the setup screen's status line alone, apart from the now-playing panel under it.

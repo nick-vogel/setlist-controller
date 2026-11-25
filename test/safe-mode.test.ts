@@ -279,6 +279,7 @@ const BASE_SNAPSHOT: ProducerSnapshot = {
   fade: null,
   chartRevision: 1,
   songMeters: { 1: 4, 2: 4 },
+  power: { source: 'ac', percent: 100 },
   connections: [],
   connectionProblems: [],
 };

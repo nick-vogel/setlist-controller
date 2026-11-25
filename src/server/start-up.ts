@@ -10,12 +10,13 @@ import { DEFAULT_LATENESS_LOG } from './lateness-log.ts';
 import { readLeaderSecret, readProducerSecret } from './leader-secret.ts';
 import { proPresenterKind } from './propresenter.ts';
 import type { MidiInput } from './midi-input.ts';
+import type { PowerSource } from './power.ts';
 import { DEFAULTS, startServer, type Server } from './server.ts';
 
 // What the server's start-up takes from outside: the folder its settings live in, the loaders for the
-// two native packages, and the way to register setlist.local. main.ts hands over the real ones; a test
-// hands over stand-ins, so it loads neither native package, writes nothing under ~/Library and never
-// runs dns-sd.
+// two native packages, the way to register setlist.local, and the playback Mac's power source.
+// main.ts hands over the real ones; a test hands over stand-ins, so it loads neither native package,
+// writes nothing under ~/Library, and never runs dns-sd or pmset.
 export type Natives = {
   // The pedal config, the connections config, the set manifest, the leader secret, the producer secret
   // and ProPresenter's playlist picks live here.
@@ -23,6 +24,7 @@ export type Natives = {
   loadAtemKind: () => Promise<TargetKind>;
   openMidiInput: () => Promise<MidiInput>;
   register: Register;
+  openPowerSource: () => PowerSource;
 };
 
 // Starts the server as main.ts does, from the command line's arguments, and logs where it is. The
@@ -67,6 +69,7 @@ export async function startUp(args: string[], natives: Natives): Promise<{ serve
     latenessLog: { path: values['lateness-log'] },
     leaderSecret,
     producerSecret,
+    powerSource: natives.openPowerSource(),
   });
 
   // The phones and the iPad find the laptop as setlist.local. The register is handed in, so a test

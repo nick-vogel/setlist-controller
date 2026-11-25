@@ -45,6 +45,7 @@ import { LeaderViewSwitcher } from './LeaderViewSwitcher.tsx';
 import { LiveNotConnected, NowPlaying, Reconnecting } from './NowPlaying.tsx';
 import { PartPicker } from './PartPicker.tsx';
 import { PlayFromStartButton } from './PlayFromStartButton.tsx';
+import { PowerWarning } from './PowerWarning.tsx';
 import { RefreshButton } from './RefreshButton.tsx';
 import { SafeModeToggle } from './SafeModeToggle.tsx';
 import { SectionControls } from './SectionControls.tsx';
@@ -229,6 +230,9 @@ export function Page({
     <ConnectionsPanel connections={snapshot.connections} problems={snapshot.connectionProblems} connected={connected} setKnown={snapshot.set !== null} send={send} />
   );
 
+  // The playback Mac's battery warning, at the top of the leader's and producer's pages, never the
+  // band's.
+  const powerBanner = role !== 'viewer' && <PowerWarning power={snapshot.power} />;
   const picker = role === 'viewer' && <PartPicker part={part} onPart={onPart} />;
   // After the pickers, on the view-only page only.
   const autoLockTip = role === 'viewer' && tip && <AutoLockTip onShown={onTipShown} />;
@@ -236,6 +240,7 @@ export function Page({
   if (!snapshot.set || snapshot.set.songs.length === 0) {
     return (
       <main>
+        {powerBanner}
         {picker}
         {autoLockTip}
         {!connected && <Reconnecting />}
@@ -298,6 +303,7 @@ export function Page({
   if (role === 'leader' && leaderView === 'timeline') {
     return (
       <main className="timeline-page">
+        {powerBanner}
         {!connected && <Reconnecting />}
         <TimelineView
           set={snapshot.set}
@@ -313,6 +319,7 @@ export function Page({
 
   return (
     <main>
+      {powerBanner}
       {picker}
       {autoLockTip}
       {!connected && <Reconnecting />}
