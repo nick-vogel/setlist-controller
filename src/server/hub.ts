@@ -21,7 +21,7 @@ import { realClock, type Clock } from './clock.ts';
 //    POSITION_BROADCAST_MS on the server's clock with a trailing flush timer so the final resting
 //    position is never dropped. Any significant state change (connection, playing/stopped, set,
 //    section boundary, waiting jump, count-in, end toggles, loop, fade, chart revision, song meters,
-//    or producer connections) cancels the timer and flushes immediately.
+//    power, or producer connections) cancels the timer and flushes immediately.
 //
 // Between snapshots it sends every idle client a heartbeat (see heartbeat.ts), so a page can tell a
 // dead socket from a quiet one. The heartbeat runs on real time, not the server's clock: a page's

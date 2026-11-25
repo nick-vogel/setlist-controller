@@ -127,8 +127,7 @@ describe('per-socket slow-link coalescing', () => {
       expect(healthy.received.at(-1)?.position).toBeCloseTo(totalUpdates / 4, 3);
       expect(slow.received.length).toBe(beforePause);
 
-      // Resume the slow TCP link: it drains what was already in the kernel pipe and jumps straight
-      // to the newest snapshot without draining hundreds of stale queued frames.
+      // Resume the slow TCP link: it drains what fit in the kernel pipe and jumps to the newest snapshot.
       proxy.resume();
       await slow.snapshot(at(totalUpdates / 4));
       await slow.flush();
@@ -206,7 +205,7 @@ describe('per-socket slow-link coalescing', () => {
         await healthy.snapshot(at(i));
       }
 
-      // While slow is paused and backed up, Stop reaches the healthy leader immediately.
+      // While slow is paused, Stop reaches the healthy leader immediately.
       rig.live.setPlaying(false);
       const stopped = await healthy.snapshot((snapshot) => at(250)(snapshot) && !snapshot.playing);
       expect(stopped.playing).toBe(false);
