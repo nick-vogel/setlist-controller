@@ -2,7 +2,7 @@ import { randomBytes } from 'node:crypto';
 import { request } from 'node:http';
 import WebSocket from 'ws';
 import { startFakeLive, type CuePoint, type FakeLive, type FakeLiveOptions } from '../src/fake-live/fake-live.ts';
-import { manualClock, type ManualClock } from '../src/server/clock.ts';
+import { manualClock, type Clock, type ManualClock } from '../src/server/clock.ts';
 import { PROBE_INTERVAL_MS } from '../src/server/live-bridge.ts';
 import { manualMidiInput, type ManualMidiInput } from '../src/server/midi-input.ts';
 import type { ManualPowerSource } from '../src/server/power.ts';
@@ -97,6 +97,9 @@ export type RigOptions = {
   // The set manifest the server reads and watches, always inside the worktree. None by default, so no
   // song has a chart and no test reads the home folder.
   setManifest?: string;
+  // Times the hub's position-only broadcast pacing (~20 Hz). Defaults to real time, matching
+  // production, while tests of the pacing pass a manual clock they move by hand.
+  hubClock?: Clock;
   // The playback Mac's power source, such as manualPowerSource() (power.ts), which the test sets by
   // hand. Given, the server adds the Playback Mac row after the others. None by default, so the power
   // is not known and no test's rows change.
@@ -106,7 +109,7 @@ export type RigOptions = {
 export async function startRig(
   cuePoints: CuePoint[],
   setup: LiveSetup = {},
-  { liveRunning = true, pedalConfig, targets, connectionsConfig, targetKinds, latenessLog, setManifest, power }: RigOptions = {},
+  { liveRunning = true, pedalConfig, targets, connectionsConfig, targetKinds, latenessLog, setManifest, hubClock, power }: RigOptions = {},
 ): Promise<Rig> {
   let live = await startFakeLive({ cuePoints, ...setup });
   let running = true;
@@ -127,6 +130,7 @@ export async function startRig(
     oscSendPort: live.port,
     oscReceivePort: 0,
     clock,
+    hubClock,
     midiInput: midi,
     pedalConfigPath: pedalConfig,
     targets,
