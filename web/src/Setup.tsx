@@ -5,10 +5,11 @@ import type { Snapshot } from '../../src/shared/snapshot.ts';
 import { NowPlaying, Reconnecting } from './NowPlaying.tsx';
 import { ConnectionsSetup } from './ConnectionsSetup.tsx';
 import { PedalSetup } from './PedalSetup.tsx';
+import { PowerWarning } from './PowerWarning.tsx';
 import { RefreshButton } from './RefreshButton.tsx';
 
 // The operator's check before rehearsal, on the playback laptop: whether Live is connected, where
-// the set is, what is wrong with the locators, the foot pedal, the connections config and what each
+// the set is, the playback Mac's battery warning, what is wrong with the locators, the foot pedal, the connections config and what each
 // connection target cannot match in the set, and the QR codes that bring the iPad and the band's phones onto the right pages.
 
 export function Setup({ snapshot, connected }: { snapshot: Snapshot | null; connected: boolean }) {
@@ -17,6 +18,7 @@ export function Setup({ snapshot, connected }: { snapshot: Snapshot | null; conn
       <h1>Setup</h1>
       {snapshot ? (
         <>
+          <PowerWarning power={snapshot.power} />
           {!connected && <Reconnecting />}
           <p className={`live-status ${snapshot.live}`}>
             {snapshot.live === 'connected' ? 'Live connected' : 'Live not connected'}
