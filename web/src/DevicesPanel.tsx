@@ -1,6 +1,5 @@
 import type { DeviceCommand } from '../../src/shared/command.ts';
-import type { Device } from '../../src/shared/devices.ts';
-import type { Role } from '../../src/shared/routes.ts';
+import { ROLE_LABELS, type Device } from '../../src/shared/devices.ts';
 
 // Every device in the hub's registry, in the order each first said hello: its name, its role, Online
 // or Offline with the time it was last seen, and its battery. On the producer page each other online
@@ -15,7 +14,7 @@ export function DevicesPanel({
   devices: Device[];
   // The producer page's own client ID, its connection and its send. With none, the panel is the setup
   // screen's and has no buttons.
-  producer?: { self: string; connected: boolean; send(command: DeviceCommand): void };
+  producer?: { ownClient: string; connected: boolean; send(command: DeviceCommand): void };
 }) {
   const anyOffline = devices.some((device) => !device.online);
   return (
@@ -31,7 +30,7 @@ export function DevicesPanel({
               <span className="device-role">{ROLE_LABELS[device.role]}</span>
               <span className="device-status">{device.online ? 'Online' : lastSeenLine(device.lastSeen)}</span>
               <span className="device-battery">{device.battery === null ? 'Battery not reported' : `Battery ${device.battery}%`}</span>
-              {producer && device.online && device.client !== producer.self && (
+              {producer && device.online && device.client !== producer.ownClient && (
                 <button
                   type="button"
                   className={producer.connected ? 'connection-button device-reload' : 'connection-button device-reload unavailable'}
@@ -58,8 +57,6 @@ export function DevicesPanel({
     </section>
   );
 }
-
-const ROLE_LABELS: Record<Role, string> = { leader: 'Leader', producer: 'Producer', viewer: 'View only' };
 
 // The hour and minute the device's last socket closed, by the page's own clock and locale.
 function lastSeenLine(lastSeen: number | null): string {

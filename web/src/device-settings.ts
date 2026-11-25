@@ -1,5 +1,5 @@
 import { MAX_CAPO } from '../../src/shared/chart.ts';
-import { isClientId } from '../../src/shared/devices.ts';
+import { isClientId, ROLE_LABELS } from '../../src/shared/devices.ts';
 import { nameKey } from '../../src/shared/match-name.ts';
 import type { Role } from '../../src/shared/routes.ts';
 
@@ -302,7 +302,5 @@ export function storeDeviceName(storage: DeviceStorage | undefined, name: string
 // The name a device goes by until its user types one: the leader's or the producer's role, else the
 // band part picked, else View only.
 export function defaultDeviceName(role: Role, part: Part | null): string {
-  if (role === 'leader') return 'Leader';
-  if (role === 'producer') return 'Producer';
-  return part ?? 'View only';
+  return role === 'viewer' && part !== null ? part : ROLE_LABELS[role];
 }

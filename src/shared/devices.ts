@@ -11,6 +11,9 @@ export function isClientId(value: unknown): value is string {
   return typeof value === 'string' && /^[A-Za-z0-9-]{1,64}$/.test(value);
 }
 
+// Each role as a device's row names it, and as a device with no name typed goes by.
+export const ROLE_LABELS: Record<Role, string> = { leader: 'Leader', producer: 'Producer', viewer: 'View only' };
+
 // The longest device name the hub keeps. A longer one is cut, never refused, so a page always shows.
 export const MAX_DEVICE_NAME = 40;
 

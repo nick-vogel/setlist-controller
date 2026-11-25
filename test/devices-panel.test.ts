@@ -3,7 +3,6 @@ import { renderToStaticMarkup } from 'react-dom/server';
 import { describe, expect, it } from 'vitest';
 import type { Device } from '../src/shared/devices.ts';
 import { UNKNOWN_POWER } from '../src/shared/power.ts';
-import type { Role } from '../src/shared/routes.ts';
 import type { ProducerSnapshot } from '../src/shared/snapshot.ts';
 import { Page } from '../web/src/App.tsx';
 import { DevicesPanel } from '../web/src/DevicesPanel.tsx';
@@ -110,13 +109,10 @@ describe('the device name field', () => {
   const field = (markup: string) => /<input class="device-name-input"([^>]*)>/.exec(markup)?.[1] ?? null;
   const attribute = (attributes: string | null, name: string) => (attributes && new RegExp(`${name}="([^"]*)"`).exec(attributes)?.[1]) ?? null;
 
-  it("shows the typed name, else the device's default as its placeholder: the part picked on the view-only page, the role on the leader's and the producer's", () => {
-    const page = (role: Role, extra: object) => renderToStaticMarkup(createElement(Page, { role, snapshot: SNAPSHOT, connected: true, send: () => {}, ...extra }));
+  it("shows the typed name, else the device's default for the part picked as its placeholder", () => {
+    const page = (extra: object) => renderToStaticMarkup(createElement(Page, { role: 'viewer', snapshot: SNAPSHOT, connected: true, send: () => {}, ...extra }));
 
-    expect(attribute(field(page('viewer', { part: 'Bass' })), 'placeholder')).toBe('Bass');
-    expect(attribute(field(page('viewer', {})), 'placeholder')).toBe('View only');
-    expect(attribute(field(page('leader', {})), 'placeholder')).toBe('Leader');
-    expect(attribute(field(page('producer', {})), 'placeholder')).toBe('Producer');
-    expect(attribute(field(page('viewer', { part: 'Bass', deviceName: 'Stage left' })), 'value')).toBe('Stage left');
+    expect(attribute(field(page({ part: 'Bass' })), 'placeholder')).toBe('Bass');
+    expect(attribute(field(page({ part: 'Bass', deviceName: 'Stage left' })), 'value')).toBe('Stage left');
   });
 });

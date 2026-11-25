@@ -142,7 +142,7 @@ export function App() {
 
   // The Auto-Lock tip, on the view-only page of a device that has not shown it yet. Read once, so it
   // stays for the visit once the device marks it shown.
-  const [tip] = useState(() => role === 'viewer' && !isSetupPage(location.pathname) && !readTipShown(deviceStorage()));
+  const [tip] = useState(() => role === 'viewer' && !setup && !readTipShown(deviceStorage()));
   const onTipShown = useCallback(() => storeTipShown(deviceStorage()), []);
 
   // Every page but the setup screen says hello on each socket, so the producer's Devices panel lists
@@ -261,11 +261,11 @@ export function Page({
 }) {
   // The panel does not wait for a set: the connections are not Live's. A pick does, since it is kept
   // for the set, and the server drops one while it has read none.
-  // Then the Devices panel, and under it the producer's own device name.
+  // Then the Devices panel.
   const connections = role === 'producer' && 'connections' in snapshot && (
     <>
       <ConnectionsPanel connections={snapshot.connections} problems={snapshot.connectionProblems} connected={connected} setKnown={snapshot.set !== null} send={send} />
-      <DevicesPanel devices={snapshot.devices} producer={{ self: clientId, connected, send }} />
+      <DevicesPanel devices={snapshot.devices} producer={{ ownClient: clientId, connected, send }} />
     </>
   );
   // The name field: after the pickers and the Auto-Lock tip on the view-only page, under the Devices
@@ -501,10 +501,10 @@ function useServer(socketPath: string, hello: DeviceHello | null): { snapshot: S
   }, [socketPath]);
 
   // Declared after the connection's effect, so a first hello reaches the connection it made.
-  const helloJson = hello && JSON.stringify(hello);
+  const { client, name, battery } = hello ?? {};
   useEffect(() => {
-    if (helloJson) connection.current?.introduce(JSON.parse(helloJson) as DeviceHello);
-  }, [helloJson, socketPath]);
+    if (client !== undefined && name !== undefined && battery !== undefined) connection.current?.introduce({ kind: 'hello', client, name, battery });
+  }, [client, name, battery, socketPath]);
 
   const send = useCallback((command: PageCommand) => connection.current?.send(command), []);
 
