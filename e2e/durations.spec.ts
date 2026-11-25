@@ -72,6 +72,19 @@ test("the setlist shows each song's duration and the set's, and Now playing the 
   await expectWhole(timeLeft(page));
 });
 
+// A long worship set, its last song not timed and a loop on: the longest line the time left gives in a normal service.
+test('the time left shows whole on one line with a loop on and a song not timed, on the iPad and the phone', async ({ page }) => {
+  const long: ManifestSong[] = [
+    { title: 'Long Song Title Number 1', stemsKey: 'G', durations: { sections: [span(8, 4), span(16, 100), span(16, 92)], gap: span(8, 4) } },
+    { title: 'Long Song Title Number 2', stemsKey: 'D', durations: { sections: [span(8, 4), span(16, 1062), span(16, 1062)], gap: null } },
+  ];
+  e2e = await startE2eRig({ playing: true, position: 8, loop: { on: true, start: 8, length: 16 } }, SET, { setManifest: await writeManifestFile(long) });
+  await page.goto(e2e.leaderUrl);
+
+  await expect(timeLeft(page)).toHaveText('~3:12 left in song · at least ~38:44 left in set');
+  await expectWhole(timeLeft(page));
+});
+
 test("a set the build did not time shows a song's duration once Live plays in it, by Live's tempo, and the set's as a minimum", async ({ page }) => {
   e2e = await startE2eRig({ playing: true, position: 8, tempo: 120 }, SET);
   const watcher = await e2e.rig.connectViewer();

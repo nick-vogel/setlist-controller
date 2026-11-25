@@ -223,10 +223,10 @@ body {
 }
 
 /* The time left in the song and the set, under the progress bar. One line, so its height never
-   changes as the numbers do. */
+   changes as the numbers do, and smaller on a phone, so the longest line still shows whole. */
 .now-time-left {
   margin-top: 0.5rem;
-  font-size: 1.125rem;
+  font-size: clamp(0.875rem, 3.6vw, 1.125rem);
   font-variant-numeric: tabular-nums;
   color: #ccc;
   white-space: nowrap;
