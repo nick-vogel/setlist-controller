@@ -20,10 +20,11 @@ on names real people and a real organization. None of that may land here.
 
 ## Recorded fixtures
 
-A recording from a real Planning Center, ProPresenter or Eos goes through its scrub script before it is committed
-(`scripts/scrub-pco-fixtures.mjs`, `scripts/scrub-propresenter-fixtures.mjs`). The script keeps names it cannot judge,
-so read what it leaves, replace every name above with a stand-in, and record each hand edit in that fixture folder's
-README, so the next recording gets the same edits.
+A recording from a real Planning Center or ProPresenter goes through its scrub script before it is committed
+(`scripts/scrub-pco-fixtures.mjs`, `scripts/scrub-propresenter-fixtures.mjs`). Eos has none, so its recordings are
+edited by hand (`test/fixtures/eos/README.md`). A script keeps names it cannot judge, so read what it leaves, replace
+every name above with a stand-in, and record each hand edit in that fixture folder's README, so the next recording gets
+the same edits.
 
 ## The check
 
