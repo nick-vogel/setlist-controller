@@ -38,11 +38,11 @@ if (range?.startsWith('-')) refuse(`--range ${range} is no range: a range cannot
 let commits = [];
 if (range !== undefined) {
   try {
-    commits = execFileSync('git', ['rev-list', '--end-of-options', range], { encoding: 'utf8', stdio: ['ignore', 'pipe', 'pipe'] })
+    commits = execFileSync('git', ['rev-list', '--end-of-options', range], { encoding: 'utf8', maxBuffer: 1024 * 1024 * 1024, stdio: ['ignore', 'pipe', 'pipe'] })
       .split('\n')
       .filter(Boolean);
   } catch (error) {
-    refuse(`git cannot read --range ${range}: ${String(error.stderr ?? '').trim().split('\n')[0]}`);
+    refuse(`git cannot read --range ${range}: ${((lines) => lines.find((line) => /^(fatal|error):/.test(line)) ?? lines[0])(String(error.stderr ?? '').trim().split('\n')) || error.code}`);
   }
 }
 
