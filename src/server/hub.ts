@@ -14,9 +14,9 @@ import { realClock, type Clock } from './clock.ts';
 //
 // Two protections keep stage browsers on slow or congested Wi-Fi current:
 // 1. Per-socket latest-only coalescing: while a socket still has a send in flight, no further
-//    snapshots are queued onto it; the socket is marked dirty and gets
-//    the single newest encoded snapshot for its role as soon as it drains. One slow socket never
-//    delays healthy sibling sockets.
+//    snapshots are queued onto it; the socket is marked dirty and gets the single newest encoded
+//    snapshot for its role as soon as that send completes. One slow socket never delays healthy
+//    sibling sockets.
 // 2. ~20 Hz cap on position-only broadcasts: pure intra-section position ticks are paced to
 //    POSITION_BROADCAST_MS on the server's clock with a trailing flush timer so the final resting
 //    position is never dropped. Any significant state change (connection, playing/stopped, set,
