@@ -75,6 +75,15 @@ describe('pnpm check:private', () => {
     expect(result.stderr).toContain('notes.md');
   });
 
+  it('reads an added line that starts with "++ " as a line, not as a file header', async () => {
+    const first = await scratch();
+    await commit('notes.md', '++ Example Fellowship\nthe EXF band\n');
+    const result = check(['--range', `${first}..HEAD`]);
+    expect(result.status).toBe(1);
+    expect(result.stderr).toContain(', notes.md holds the term on line 3');
+    expect(result.stderr).toContain(', notes.md holds the term on line 4');
+  });
+
   it('fails a range whose commit message holds a term', async () => {
     const first = await scratch();
     await commit('notes.md', 'clean\n', 'Lights for Example Fellowship');

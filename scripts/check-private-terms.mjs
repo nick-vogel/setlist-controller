@@ -60,9 +60,14 @@ if (values.stdin) {
     scan(`commit ${short}'s message`, git('show', '-s', '--format=%B', sha));
     scan(`commit ${short}'s author and committer`, git('show', '-s', '--format=%an <%ae>%n%cn <%ce>', sha));
     let file = '';
+    let inHunk = false;
     for (const line of git('show', '--format=', '--unified=0', '--no-color', '--no-ext-diff', sha).split('\n')) {
-      if (line.startsWith('+++ ')) file = line.replace(/^\+\+\+ (b\/)?/, '');
-      else if (line.startsWith('+')) scan(`commit ${short}, ${file}`, line.slice(1));
+      if (line.startsWith('diff ')) {
+        file = '';
+        inHunk = false;
+      } else if (/^@{2,} /.test(line)) inHunk = true;
+      else if (!inHunk && line.startsWith('+++ ')) file = line.replace(/^\+\+\+ (b\/)?/, '');
+      else if (inHunk && line.startsWith('+')) scan(`commit ${short}, ${file}`, line.slice(1));
     }
   }
 } else {
