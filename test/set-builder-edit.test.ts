@@ -699,6 +699,82 @@ describe('Eos lighting cue regeneration on build-set edit', () => {
   }, 45_000);
 });
 
+describe('recording the lights in the recipe', () => {
+  const fastEnv = { EOS_TIMEOUT_MS: '10000', EOS_SETTLE_MS: '0', PROPRESENTER_TIMEOUT_MS: '2000', PROPRESENTER_AGAIN_MS: '0' };
+  const THREE_PICTURES = '2026-11-15';
+
+  async function litWorkspace() {
+    const workspace = await createWorkspace();
+    await copySongAs(workspace, GREAT_ARE, 'Yes and Amen-Housefires-D-72.00bpm');
+    await copySongAs(workspace, GOODNESS, 'I Speak Jesus-Here Be Lions-A-63.00bpm');
+    const built = await run(['grace', 'yes and', 'trust', '--date', THREE_PICTURES, ...buildPaths(workspace)]);
+    expect(built.code).toBe(0);
+    const weekly = await addWeeklyShow(workspace, THREE_PICTURES, '2026-11-10 10-00-00', 'weekly-show');
+    const eos = await startFakeEos();
+    fakes.push(eos);
+    const pro = await startFakeProPresenter();
+    fakes.push(pro);
+    pro.serveNovember12();
+    eos.setShow(CHURCH_SHOW);
+    eos.setShowPath(weekly);
+    const connectionsConfig = await writeConnectionsConfig(workspace, eos.port, pro.port);
+    return { workspace, eos, connectionsConfig, folder: projectFolder(workspace, THREE_PICTURES) };
+  }
+
+  it('--lights on a set whose recipe does not parse says the cues will not follow an edit, and exits 1', async () => {
+    const { workspace, eos, connectionsConfig, folder } = await litWorkspace();
+    await writeFile(recipePath(folder), '{ invalid');
+
+    const lit = await run(['--lights', '--date', THREE_PICTURES, ...lightsPaths(workspace, connectionsConfig)], fastEnv);
+
+    expect(lit.code).toBe(1);
+    expect(lit.stderr.trim().split('\n')).toHaveLength(1);
+    expect(lit.stderr).toMatch(/The lights are done, but the set's recipe cannot record them, so build-set edit will not relabel the cues: .*not valid JSON/);
+    expect(lit.stdout).toContain('3. Trust In God  cue 1/22');
+    expect(eos.cues().find((cue) => cue.number === '22')?.label).toBe('Trust In God');
+    expect(await readFile(recipePath(folder), 'utf8')).toBe('{ invalid');
+  }, 45_000);
+
+  it('--lights on a set with no recipe labels the cues and exits 0 with nothing on stderr', async () => {
+    const { workspace, eos, connectionsConfig, folder } = await litWorkspace();
+    await rm(recipePath(folder));
+
+    const lit = await run(['--lights', '--date', THREE_PICTURES, ...lightsPaths(workspace, connectionsConfig)], fastEnv);
+
+    expect(lit.stderr).toBe('');
+    expect(lit.code).toBe(0);
+    expect(eos.cues().find((cue) => cue.number === '22')?.label).toBe('Trust In God');
+    expect(existsSync(recipePath(folder))).toBe(false);
+  }, 45_000);
+
+  it('an edit whose lights step succeeds but whose recipe cannot record it says so, and exits 1', async () => {
+    const { workspace, eos, connectionsConfig, folder } = await litWorkspace();
+    const lit = await run(['--lights', '--date', THREE_PICTURES, ...lightsPaths(workspace, connectionsConfig)], fastEnv);
+    expect(lit.code).toBe(0);
+    await writeFile(eos.showPath()!, 'saved-show-1');
+    const recordedBefore = (await readRecipeJson(folder)).lights?.labelled;
+
+    eos.holdReads();
+    const reads = eos.received.length;
+    const editing = run(['edit', folder, '--swap', '3', 'i speak'], fastEnv);
+    const deadline = Date.now() + 15_000;
+    while (!eos.received.slice(reads).some((message) => message.address.startsWith('/eos/get/cue/'))) {
+      if (Date.now() > deadline) throw new Error('The edit never read the cue list.');
+      await new Promise((resolve) => setTimeout(resolve, 20));
+    }
+    await chmod(folder, 0o555);
+    eos.releaseReads();
+    const edited = await editing.finally(() => chmod(folder, 0o755));
+
+    expect(edited.code).toBe(1);
+    expect(edited.stderr).toMatch(/The lights are done, but the set's recipe cannot record them, so build-set edit will not relabel the cues: .*EACCES/);
+    expect(edited.stdout).toContain('3. I Speak Jesus  cue 1/22');
+    expect(eos.cues().find((cue) => cue.number === '22')?.label).toBe('I Speak Jesus');
+    expect((await readRecipeJson(folder)).songs.map((song) => song.title)).toEqual(['This Is Amazing Grace', 'Yes and Amen', 'I Speak Jesus']);
+    expect((await readRecipeJson(folder)).lights?.labelled).toEqual(recordedBefore);
+  }, 45_000);
+});
+
 describe('validation errors and atomic failure safety', () => {
   it('an edit keeps everything of the old set it does not write, and the replaced set in Backup', async () => {
     const workspace = await createWorkspace();

@@ -156,13 +156,13 @@ export async function readRecipe(folder: string): Promise<{ ok: true; recipe: Se
   return parseRecipe(text, path);
 }
 
-// Updates `<folder>/set-recipe.json` in place (atomically) when the recipe file exists and is valid.
-// Returns true if updated, false if no recipe file exists in `folder`.
+// Updates `<folder>/set-recipe.json` in place (atomically). Returns false when the folder holds no recipe. A recipe that
+// does not parse, or a write that fails, throws.
 export async function updateRecipe(folder: string, update: (recipe: SetRecipe) => SetRecipe): Promise<boolean> {
   const path = recipePath(folder);
   if (!existsSync(path)) return false;
   const reading = await readRecipe(folder);
-  if (!reading.ok) return false;
+  if (!reading.ok) throw new Error(reading.problem);
   await writeRecipe(path, update(reading.recipe));
   return true;
 }

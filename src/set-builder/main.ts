@@ -7,7 +7,7 @@ import { APP_SUPPORT } from '../server/app-support.ts';
 import { SET_MANIFEST_FILE } from '../shared/set-manifest.ts';
 import { valueOf } from './als.ts';
 import { buildSet, setFolder, setName, setProblems, type SongSummary, type StemMap, type SummaryTransition, type Transition } from './build-set.ts';
-import { editSet, EDIT_USAGE, type EditAction } from './edit-set.ts';
+import { editSet, EDIT_USAGE, LIGHTS_UNRECORDED, type EditAction } from './edit-set.ts';
 import { matchSongs, TEMPLATE_FOLDER } from './library.ts';
 import { EOS_LIMITS, type EosLimits } from './eos.ts';
 import { lightsStep } from './lights.ts';
@@ -426,7 +426,10 @@ async function lights(): Promise<void> {
         ...(values.playlist === undefined ? {} : { playlist: values.playlist }),
         labelled: recipe.songs.map((song) => song.title),
       },
-    })).catch(() => {});
+    })).catch((error: unknown) => {
+      console.error(`${LIGHTS_UNRECORDED} ${oneLine(error)}`);
+      process.exitCode = 1;
+    });
   }
 }
 

@@ -17,6 +17,8 @@ import { songTitle } from './song.ts';
 // recorded in the recipe (`.als` + APFS-cloned audio/pads, `set-manifest.json`, and Eos lighting
 // cues when `--lights` was used). Any validation error leaves all existing files untouched.
 
+export const LIGHTS_UNRECORDED = "The lights are done, but the set's recipe cannot record them, so build-set edit will not relabel the cues:";
+
 export const EDIT_USAGE = `Usage:
   pnpm build-set edit [<set folder>] [--date YYYY-MM-DD] [--output-root <folder>] --swap <song> <replacement>
   pnpm build-set edit [<set folder>] [--date YYYY-MM-DD] [--output-root <folder>] --add <song> [--at <pos>]
@@ -168,7 +170,10 @@ export async function editSet(options: EditOptions): Promise<EditResult> {
     lightsProblem = run.problem;
     if (run.problem === undefined) {
       const labelled = built.songs.map((song) => song.title);
-      await updateRecipe(folder, (next) => (next.lights === undefined ? next : { ...next, lights: { ...next.lights, labelled } }));
+      lightsProblem = await updateRecipe(folder, (next) => (next.lights === undefined ? next : { ...next, lights: { ...next.lights, labelled } })).then(
+        () => undefined,
+        (error: unknown) => `${LIGHTS_UNRECORDED} ${oneLine(error)}`,
+      );
     }
   }
 
