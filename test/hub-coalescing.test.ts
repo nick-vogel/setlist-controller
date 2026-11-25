@@ -86,6 +86,20 @@ async function streamPastKernelBuffers(live: Rig['live'], hubClock: ManualClock,
   return updates;
 }
 
+async function ingested(rig: Rig, beats: number): Promise<void> {
+  await vi.waitFor(
+    async () => {
+      const probe = await rig.connectViewer();
+      try {
+        expect((await probe.snapshot(loaded)).position).toBeCloseTo(beats, 3);
+      } finally {
+        probe.close();
+      }
+    },
+    { timeout: 2000 },
+  );
+}
+
 describe('per-socket slow-link coalescing', () => {
   it('coalesces snapshots for a paused slow socket instead of draining a stale backlog, and never delays a healthy sibling', async () => {
     const hubClock = manualClock();
@@ -224,8 +238,7 @@ describe('20 Hz position-only broadcast cap and immediate state flush', () => {
     for (let step = 1; step <= 4; step += 1) {
       hubClock.advance(10);
       rig.live.setPosition(1 + step);
-      // Give Live's UDP datagram time to reach the server before the next step.
-      await new Promise((resolve) => setTimeout(resolve, 10));
+      await ingested(rig, 1 + step);
     }
     await viewer.flush();
     expect(viewer.received.length).toBe(beforeBurst + 1);
@@ -252,8 +265,7 @@ describe('20 Hz position-only broadcast cap and immediate state flush', () => {
     const ticks = 80;
     for (let i = 1; i <= ticks; i += 1) {
       rig.live.setPosition(i * 0.5);
-      // Let the UDP packet be processed before moving hubClock.
-      await new Promise((resolve) => setTimeout(resolve, 2));
+      await ingested(rig, i * 0.5);
       if (i < ticks) hubClock.advance(12.5);
     }
     // Advance past the final trailing window so the resting position flushes.
@@ -280,16 +292,7 @@ describe('20 Hz position-only broadcast cap and immediate state flush', () => {
     // Advance position inside the throttled window: held from existing viewer.
     hubClock.advance(20);
     rig.live.setPosition(4);
-    await vi.waitFor(async () => {
-      // Wait until the server has ingested position 4 by checking a fresh client connect once ready.
-      const probe = await rig!.connectViewer();
-      try {
-        const first = await probe.snapshot(loaded);
-        expect(first.position).toBeCloseTo(4, 3);
-      } finally {
-        probe.close();
-      }
-    });
+    await ingested(rig, 4);
 
     const fresh = await rig.connectViewer();
     const first = await fresh.snapshot(loaded);
@@ -323,7 +326,7 @@ describe('20 Hz position-only broadcast cap and immediate state flush', () => {
       await leader.snapshot(at(openBeat));
       hubClock.advance(10);
       rig!.live.setPosition(heldBeat);
-      await new Promise((resolve) => setTimeout(resolve, 15));
+      await ingested(rig!, heldBeat);
       await leader.flush();
       expect(leader.received.at(-1)?.position).toBeCloseTo(openBeat, 3);
     };
