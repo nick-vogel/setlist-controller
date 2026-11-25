@@ -1,6 +1,6 @@
 import { mkdir, rename, rm, writeFile } from 'node:fs/promises';
 import { basename, dirname, join } from 'node:path';
-import type { ManifestSong, SetManifest } from '../shared/set-manifest.ts';
+import type { ManifestSong, SetManifest, SongDurations } from '../shared/set-manifest.ts';
 import type { SongSummary } from './build-set.ts';
 import { songNoteKey } from './pads.ts';
 import type { PlanSong } from './plan-reader.ts';
@@ -11,17 +11,20 @@ import type { PlanSong } from './plan-reader.ts';
 // puts on the song's Count Off locator, where the server matches a chart by it; its stems key, the note-name key its
 // folder name writes, or null; its starting meter, as the build's summary reports it; and, for a --plan build, the chart
 // key and chart text of the plan song at the same position, when it has chart text. A build by song names, with no plan
-// songs, writes no chart key and no chart text.
-export function buildManifest(songs: SongSummary[], planSongs?: readonly (Pick<PlanSong, 'chartKey' | 'chartText'> | undefined)[]): SetManifest {
+// songs, writes no chart key and no chart text. Each song also carries its durations at the same position, when the build
+// gives them (setDurations).
+export function buildManifest(songs: SongSummary[], planSongs?: readonly (Pick<PlanSong, 'chartKey' | 'chartText'> | undefined)[], durations?: SongDurations[]): SetManifest {
   return {
     songs: songs.map(({ folder, title, meter }, index): ManifestSong => {
       const stems = songNoteKey(folder);
       const plan = planSongs?.[index];
+      const timed = durations?.[index];
       return {
         title,
         stemsKey: stems.ok ? stems.key : null,
         meter,
         ...(plan?.chartText === undefined ? {} : { ...(plan.chartKey === undefined ? {} : { chartKey: plan.chartKey }), chartText: plan.chartText }),
+        ...(timed === undefined ? {} : { durations: timed }),
       };
     }),
   };

@@ -146,7 +146,7 @@ export async function editSet(options: EditOptions): Promise<EditResult> {
 
   let manifestProblem: string | undefined;
   if (recipe.setManifest !== undefined) {
-    const manifest = buildManifest(built.songs, charts);
+    const manifest = buildManifest(built.songs, charts, built.durations);
     const err = await writeSetManifest(recipe.setManifest, manifest).then(() => undefined, oneLine);
     if (err !== undefined) {
       manifestProblem = `The set is updated, but the set manifest ${recipe.setManifest} cannot be written: ${err}. The chart view still shows the last manifest's charts.`;

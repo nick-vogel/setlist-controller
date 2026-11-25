@@ -1,3 +1,4 @@
+import type { Element } from './als.ts';
 import type { Song } from './song.ts';
 
 // Time through a song's own tempo map. Live holds the tempo between two events at different times as a straight ramp
@@ -5,11 +6,21 @@ import type { Song } from './song.ts';
 // one time are an instant step: the first holds the tempo arriving there, and the last holds it going forward. After
 // the last event the tempo holds.
 
-type TempoPoint = { time: number; bpm: number };
+// A tempo event: the beat it is at, and the tempo in BPM it holds there.
+export type TempoPoint = { time: number; bpm: number };
 
 // The seconds the song takes from beat `from` to beat `to` of its own, `from` at or before `to`.
 export function secondsBetween(song: Song, from: number, to: number): number {
-  const points: TempoPoint[] = song.tempo.map((event) => ({ time: Number(event.attributes.Time), bpm: Number(event.attributes.Value) }));
+  return secondsThrough(tempoPoints(song.tempo), from, to);
+}
+
+// The tempo events of a main-track Tempo envelope, a song's or a built set's, as points in time order.
+export function tempoPoints(events: readonly Element[]): TempoPoint[] {
+  return events.map((event) => ({ time: Number(event.attributes.Time), bpm: Number(event.attributes.Value) }));
+}
+
+// The seconds from beat `from` to beat `to`, `from` at or before `to`, through the tempo map these points make.
+export function secondsThrough(points: readonly TempoPoint[], from: number, to: number): number {
   let seconds = 0;
   points.forEach((point, index) => {
     const next = points[index + 1];

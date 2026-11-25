@@ -26,6 +26,7 @@ const SNAPSHOT: ProducerSnapshot = {
   fade: null,
   chartRevision: 1,
   songMeters: { 1: 4 },
+  songTimings: {},
   power: UNKNOWN_POWER,
   connections: [],
   connectionProblems: [],

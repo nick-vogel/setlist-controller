@@ -96,8 +96,18 @@ async function readRecipeJson(folder: string): Promise<SetRecipe> {
   return JSON.parse(await readFile(recipePath(folder), 'utf8')) as SetRecipe;
 }
 
+// The manifest a build or an edit wrote, each song checked for the durations they give it and then shown without them,
+// which test/set-builder-durations.test.ts checks.
 async function readManifestJson(path: string): Promise<SetManifest> {
-  return JSON.parse(await readFile(path, 'utf8')) as SetManifest;
+  const manifest = JSON.parse(await readFile(path, 'utf8')) as SetManifest;
+  for (const song of manifest.songs) expect(song.durations?.sections.length, song.title).toBeGreaterThan(0);
+  return {
+    songs: manifest.songs.map((song) => {
+      const copy = { ...song };
+      delete copy.durations;
+      return copy;
+    }),
+  };
 }
 
 async function mutateAlsXml(alsPath: string, edit: (xml: string) => string): Promise<void> {
