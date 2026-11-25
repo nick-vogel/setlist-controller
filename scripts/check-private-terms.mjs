@@ -59,6 +59,9 @@ if (values.stdin) {
     const short = sha.slice(0, 7);
     scan(`commit ${short}'s message`, git('show', '-s', '--format=%B', sha));
     scan(`commit ${short}'s author and committer`, git('show', '-s', '--format=%an <%ae>%n%cn <%ce>', sha));
+    for (const path of git('diff-tree', '--no-commit-id', '--name-only', '--diff-filter=AMCR', '-r', '-z', '--root', '-c', sha).split('\0').filter(Boolean)) {
+      scan(`commit ${short}, path ${path}`, path);
+    }
     let file = '';
     let inHunk = false;
     for (const line of git('show', '--format=', '--unified=0', '--no-color', '--no-ext-diff', sha).split('\n')) {
@@ -71,6 +74,7 @@ if (values.stdin) {
     }
   }
 } else {
+  for (const file of git('ls-files', '-z').split('\0').filter(Boolean)) scan(`path ${file}`, file);
   for (const file of git('grep', '-I', '--name-only', '-e', '', '--', '.', ':!pnpm-lock.yaml').split('\n').filter(Boolean)) {
     readFileSync(file, 'utf8')
       .split('\n')

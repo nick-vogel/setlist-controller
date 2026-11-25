@@ -32,7 +32,7 @@ async function scratch(email = 'maintainer@users.noreply.github.com') {
   return git('rev-parse', 'HEAD');
 }
 
-async function commit(file: string, text: string, message = 'A change') {
+async function commit(file: string, text: string | Uint8Array, message = 'A change') {
   await writeFile(join(dir, file), text);
   git('add', file);
   git('commit', '-q', '-m', message);
@@ -82,6 +82,38 @@ describe('pnpm check:private', () => {
     expect(result.status).toBe(1);
     expect(result.stderr).toContain(', notes.md holds the term on line 3');
     expect(result.stderr).toContain(', notes.md holds the term on line 4');
+  });
+
+  it('fails a tracked file whose name holds a term, a binary one too', async () => {
+    await scratch();
+    await commit('retired-host-01.png', Uint8Array.from([0x89, 0x50, 0x4e, 0x47, 0, 1, 2]));
+    const result = check([]);
+    expect(result.status).toBe(1);
+    expect(result.stderr).toContain('path retired-host-01.png holds the term on line 5');
+  });
+
+  it('fails a range that adds a file, or renames one, to a name that holds a term', async () => {
+    const first = await scratch();
+    await commit('Example Fellowship.md', 'clean body\n');
+    const added = check(['--range', `${first}..HEAD`]);
+    expect(added.status).toBe(1);
+    expect(added.stderr).toContain(', path Example Fellowship.md holds the term on line 3');
+
+    const before = git('rev-parse', 'HEAD');
+    git('mv', 'README.md', 'retired-host-01.md');
+    git('commit', '-q', '-m', 'Rename');
+    const renamed = check(['--range', `${before}..HEAD`]);
+    expect(renamed.status).toBe(1);
+    expect(renamed.stderr).toContain(', path retired-host-01.md holds the term on line 5');
+  });
+
+  it('passes a range that deletes a file whose name holds a term', async () => {
+    await scratch();
+    await commit('retired-host-01.md', 'clean\n');
+    const before = git('rev-parse', 'HEAD');
+    git('rm', '-q', 'retired-host-01.md');
+    git('commit', '-q', '-m', 'Remove the old note');
+    expect(check(['--range', `${before}..HEAD`]).status).toBe(0);
   });
 
   it('fails a range whose commit message holds a term', async () => {
