@@ -422,3 +422,26 @@ Tests added: 56 unit/integration cases + 4 Playwright E2E runs (`test/durations.
 ## Verdict
 
 **Not ready to merge as-is.** Gate before merging PR `#24`: fix **Findings 1–4 (MEDIUM)** (all verified with red-before-green repros in `docs/reviews/setlist-controller-5/repro/review-1-findings.mjs`). **Findings 5–7 (LOW)** are small, clean fixes worth taking in the same remediation pass.
+
+## Remediation — 2026-11-25
+| Finding | Commit | Proof | Comments added | Verify verdict |
+| --- | --- | --- | --- | --- |
+| 1 (MEDIUM) | `e6761ee` an untimed last song showed "at least 0:00 left in set" | red→green: `pnpm exec vitest run test/durations.test.ts` (new cases: untimed last song, a jump to an untimed last song, a jump to the last song's End) | 0 | proved by execution |
+| 3 (MEDIUM) | `fb72b24` a new set kept the last set's tempo timings | red→green: `pnpm exec vitest run test/song-timings.test.ts` (new case: another set with the same beats, then no set) | 0 (one header comment rewritten for the new rule) | fixed (pr-review-finder) |
+| 2 (MEDIUM) | `ad88898` after Live came back, a song was timed at the tempo from before | red→green: `pnpm exec vitest run test/song-timings.test.ts` (new cases: Live lost and back, AbletonOSC reload, each at 140 then 70 BPM); preserve: `test/pre-service-check.test.ts`, `test/live-connection.test.ts`, `test/count-in.test.ts`, `test/fade-out.test.ts` (132 passed) | 0 (one stale comment removed) | fixed (pr-review-finder) |
+| 4 (MEDIUM) | `a91f176` the time left was cut short on a phone | red→green: `pnpm build && pnpm exec playwright test e2e/durations.spec.ts` (new case: the "~ … at least ~ …" line whole on one line; red on chromium-android only, as measured) | 0 | proved by execution |
+| 5 (LOW) | — deferred | — | — | LOW tail, not in scope without Nick's opt-in |
+| 6 (LOW) | — deferred | — | — | LOW tail, not in scope without Nick's opt-in |
+| 7 (LOW) | — deferred | — | — | LOW tail, not in scope without Nick's opt-in |
+
+The proofs ran as tests in the repo's own runners rather than the `repro/review-1-findings.mjs` script; the repro stays for the next round.
+
+Full suites after the round: `pnpm lint` and `pnpm typecheck` clean; `pnpm test:e2e` 176 passed; `pnpm test --maxWorkers=4` 3402 passed, 4 skipped, 1 failed: `test/set-manifest.test.ts > the server and the set manifest > serves no songs once the file is deleted`, a file-watch timing test this branch does not touch (`src/server/set-manifest.ts` is unchanged since `1dae6a4`), which passed 5 of 5 runs of the file alone.
+
+### Known regressions, deferred
+- None.
+
+### Rework briefs
+- None: no verify verdict asked for a rework.
+
+Approach decisions, this round: findings 1 to 4 used the approaches recorded above unchanged. Finding 3's set key makes a moved locator in any song forget every song's tempo timing, not only that song's, as the controller forgets every meter on a changed read.
