@@ -421,7 +421,7 @@ async function lights(): Promise<void> {
         showFolder: showDir,
         connectionsConfig: connConfig,
         ...(values.playlist === undefined ? {} : { playlist: values.playlist }),
-        labelled: recipe.songs.map((song) => song.title),
+        labelled: run.labelled,
       },
     })).catch((error: unknown) => {
       console.error(`${LIGHTS_UNRECORDED} ${oneLine(error)}`);

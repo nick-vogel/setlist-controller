@@ -35,8 +35,9 @@ import { makeWeeklyShow, newestWeeklyShow, noTemplateLine, weeklyShowLines } fro
 // sets an intensity, never sets a channel that is no colour channel, and fires no cue but by going to one.
 
 // What a run of the mode gives the command to print: its lines for stdout, and its one problem line for stderr, with
-// exit 1, when the lights step is not done.
-export type LightsRun = { lines: string[]; problem?: string };
+// exit 1, when the lights step is not done; or, when it is done, the titles it labelled the song cues with, as the built
+// set's Count Off locators name them, in set order.
+export type LightsRun = { lines: string[]; problem: string } | { lines: string[]; problem?: undefined; labelled: string[] };
 
 // What the mode is run with: the date of the set, the output root the set was built under, the show folder, the
 // connections config file, the one the server reads, whose "eos" section names Eos and whose "propresenter" section
@@ -369,7 +370,7 @@ async function writeSongCues(
   const unsaved = (why: string): LightsRun => ({ lines, problem: `${NOT_DONE} the song cues are labelled and coloured in the open show, but ${why}. Save the show by hand in ETCnomad.` });
   if (!live()) return unsaved(`the command line in Eos no longer reads LIVE, it reads "${eos.commandLine()}", so the show is not saved`);
   if (!(await eos.save())) return unsaved('Eos did not say it saved the show');
-  return { lines: [...lines, await eos.showPath()] };
+  return { lines: [...lines, await eos.showPath()], labelled: songs.map((song) => song.title) };
 }
 
 const MONTHS = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];

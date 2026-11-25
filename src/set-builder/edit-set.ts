@@ -169,7 +169,7 @@ export async function editSet(options: EditOptions): Promise<EditResult> {
     lightsLines = run.lines;
     lightsProblem = run.problem;
     if (run.problem === undefined) {
-      const labelled = built.songs.map((song) => song.title);
+      const { labelled } = run;
       lightsProblem = await updateRecipe(folder, (next) => (next.lights === undefined ? next : { ...next, lights: { ...next.lights, labelled } })).then(
         () => undefined,
         (error: unknown) => `${LIGHTS_UNRECORDED} ${oneLine(error)}`,

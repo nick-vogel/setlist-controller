@@ -783,6 +783,37 @@ describe('recording the lights in the recipe', () => {
     return { workspace, eos, connectionsConfig, folder: projectFolder(workspace, THREE_PICTURES) };
   }
 
+  it('lights.labelled records the title written from the Live set so a later edit relabels a renamed Count Off cue', async () => {
+    const { workspace, eos, connectionsConfig, folder } = await litWorkspace();
+    const alsPath = join(folder, `${THREE_PICTURES} Sunday.als`);
+    await mutateAlsXml(alsPath, (xml) =>
+      renameLocator(renameLocator(xml, '1 - Count Off (This Is Amazing Grace)', '1 - Count Off (Amazing Grace)'), '3 - Count Off (Trust In God)', '3 - Count Off (Trust)'),
+    );
+    const songCues = () => eos.cues().filter((cue) => ['1', '11', '22'].includes(cue.number)).map((cue) => cue.label);
+
+    const lit = await run(['--lights', '--date', THREE_PICTURES, ...lightsPaths(workspace, connectionsConfig)], fastEnv);
+    expect(lit.stderr).toBe('');
+    expect(lit.code).toBe(0);
+    expect(songCues()).toEqual(['Amazing Grace', 'Yes and Amen', 'Trust']);
+    expect((await readRecipeJson(folder)).lights?.labelled).toEqual(['Amazing Grace', 'Yes and Amen', 'Trust']);
+    const cueNumbers = eos.cues().map((cue) => cue.number);
+    await writeFile(eos.showPath()!, 'saved-show-1');
+
+    const first = await run(['edit', folder, '--swap', '1', 'i speak'], fastEnv);
+    expect(first.stderr).toBe('');
+    expect(first.code).toBe(0);
+    expect(songCues()).toEqual(['I Speak Jesus', 'Yes and Amen', 'Trust']);
+    expect((await readRecipeJson(folder)).lights?.labelled).toEqual(['I Speak Jesus', 'Yes and Amen', 'Trust']);
+    await writeFile(eos.showPath()!, 'saved-show-2');
+
+    const last = await run(['edit', folder, '--swap', '3', 'goodness'], fastEnv);
+    expect(last.stderr).toBe('');
+    expect(last.code).toBe(0);
+    expect(songCues()).toEqual(['I Speak Jesus', 'Yes and Amen', 'Goodness of God']);
+    expect(eos.cues().map((cue) => cue.number)).toEqual(cueNumbers);
+    expect((await readRecipeJson(folder)).lights?.labelled).toEqual(['I Speak Jesus', 'Yes and Amen', 'Goodness of God']);
+  }, 45_000);
+
   it('--lights on a set whose recipe does not parse says the cues will not follow an edit, and exits 1', async () => {
     const { workspace, eos, connectionsConfig, folder } = await litWorkspace();
     await writeFile(recipePath(folder), '{ invalid');
