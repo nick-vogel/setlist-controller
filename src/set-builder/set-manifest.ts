@@ -27,15 +27,20 @@ export function buildManifest(songs: SongSummary[], planSongs?: readonly (Pick<P
   };
 }
 
-// Writes `manifest` to `path`, replacing the file there, its folder made when missing. The text goes to a hidden file in
-// the same folder first, then takes the path's place in one rename, so the server, which watches the file, reads the old
-// manifest or the new one whole and never half of one. Throws what the file system throws, the hidden file removed.
 export async function writeSetManifest(path: string, manifest: SetManifest): Promise<void> {
+  await writeJsonAtomic(path, manifest);
+}
+
+// Writes `value` as JSON to `path`, replacing the file there, its folder made when missing. The text goes to a hidden
+// file in the same folder first, then takes the path's place in one rename, so a reader (the server, which watches the
+// set manifest; an edit, which reads the set recipe) reads the old file or the new one whole and never half of one.
+// Throws what the file system throws, the hidden file removed.
+export async function writeJsonAtomic(path: string, value: unknown): Promise<void> {
   const folder = dirname(path);
   await mkdir(folder, { recursive: true });
   const partial = join(folder, `.${basename(path)}.${process.pid}.partial`);
   try {
-    await writeFile(partial, `${JSON.stringify(manifest, null, 2)}\n`);
+    await writeFile(partial, `${JSON.stringify(value, null, 2)}\n`);
     await rename(partial, path);
   } catch (error) {
     await rm(partial, { force: true });

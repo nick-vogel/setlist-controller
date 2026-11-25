@@ -1,8 +1,9 @@
 import { existsSync } from 'node:fs';
-import { mkdir, readFile, rename, rm, writeFile } from 'node:fs/promises';
-import { basename, dirname, join, resolve } from 'node:path';
+import { readFile } from 'node:fs/promises';
+import { join, resolve } from 'node:path';
 import { setName, type StemMap, type Transition } from './build-set.ts';
 import { isKey } from './pads.ts';
+import { writeJsonAtomic } from './set-manifest.ts';
 
 // The saved build recipe, `set-recipe.json`, written beside every built `.als` so `build-set edit`
 // knows the exact songs, transitions, library/template/stem-map/pads paths, and optional plan and
@@ -127,18 +128,8 @@ export function buildRecipe({
   };
 }
 
-// Writes a recipe file atomically (write to hidden sibling, then rename into place).
 export async function writeRecipe(path: string, recipe: SetRecipe): Promise<void> {
-  const folder = dirname(path);
-  await mkdir(folder, { recursive: true });
-  const partial = join(folder, `.${basename(path)}.${process.pid}.partial`);
-  try {
-    await writeFile(partial, `${JSON.stringify(recipe, null, 2)}\n`);
-    await rename(partial, path);
-  } catch (error) {
-    await rm(partial, { force: true });
-    throw error;
-  }
+  await writeJsonAtomic(path, recipe);
 }
 
 // Reads and validates `<folder>/set-recipe.json`.
