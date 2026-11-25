@@ -1,6 +1,5 @@
 import { timingSafeEqual } from 'node:crypto';
 import type { IncomingMessage, Server as HttpServer } from 'node:http';
-import type { Socket } from 'node:net';
 import { WebSocket, WebSocketServer } from 'ws';
 import { parseCommand, parseConnectionCommand, type Command, type ConnectionCommand } from '../shared/command.ts';
 import { HEARTBEAT, HEARTBEAT_MS } from '../shared/heartbeat.ts';
@@ -13,8 +12,8 @@ import { realClock, type Clock } from './clock.ts';
 // snapshot goes out only when it changed, so a change to the connections alone reaches no viewer.
 //
 // Two protections keep stage browsers on slow or congested Wi-Fi current:
-// 1. Per-socket latest-only coalescing: while a socket still has a send in flight or buffered bytes
-//    waiting to drain, no further snapshots are queued onto it; the socket is marked dirty and gets
+// 1. Per-socket latest-only coalescing: while a socket still has a send in flight, no further
+//    snapshots are queued onto it; the socket is marked dirty and gets
 //    the single newest encoded snapshot for its role as soon as it drains. One slow socket never
 //    delays healthy sibling sockets.
 // 2. ~20 Hz cap on position-only broadcasts: pure intra-section position ticks are paced to
@@ -37,10 +36,6 @@ import { realClock, type Clock } from './clock.ts';
 // Minimum interval between position-only broadcasts on the server's clock (~20 Hz).
 export const POSITION_BROADCAST_MS = 50;
 
-// Recheck interval when a socket has buffered bytes (such as an automatic pong frame) without a
-// pending send callback or Node's writableNeedDrain flag.
-const DRAIN_RECHECK_MS = 10;
-
 export type Hub = {
   publish(snapshot: Snapshot, connections: ConnectionsPart): void;
   close(): Promise<void>;
@@ -52,11 +47,9 @@ type Encoded = { playback: string; producer: string };
 
 type ClientState = {
   role: Role;
-  tcp: Socket;
   inFlight: boolean;
   dirty: boolean;
   lastSent: string | null;
-  stopWaiting: (() => void) | null;
 };
 
 export function startHub(
@@ -89,27 +82,6 @@ export function startHub(
     stopFlush = null;
   };
 
-  const clearWait = (state: ClientState) => {
-    state.stopWaiting?.();
-    state.stopWaiting = null;
-  };
-
-  const waitForDrain = (socket: WebSocket, state: ClientState) => {
-    if (state.stopWaiting || closed) return;
-    const retry = () => {
-      clearWait(state);
-      if (state.dirty) deliver(socket, state);
-    };
-    if (state.tcp.writableNeedDrain) {
-      state.tcp.once('drain', retry);
-      state.stopWaiting = () => state.tcp.off('drain', retry);
-    } else {
-      const timer = setTimeout(retry, DRAIN_RECHECK_MS);
-      timer.unref();
-      state.stopWaiting = () => clearTimeout(timer);
-    }
-  };
-
   const deliver = (socket: WebSocket, state: ClientState) => {
     if (closed || socket.readyState !== WebSocket.OPEN) return;
     const payload = forRole(latest, state.role);
@@ -117,12 +89,10 @@ export function startHub(
       state.dirty = false;
       return;
     }
-    if (state.inFlight || socket.bufferedAmount > 0) {
+    if (state.inFlight) {
       state.dirty = true;
-      if (!state.inFlight) waitForDrain(socket, state);
       return;
     }
-    clearWait(state);
     state.dirty = false;
     state.inFlight = true;
     state.lastSent = payload;
@@ -149,17 +119,12 @@ export function startHub(
     if (!role) return;
     const state: ClientState = {
       role,
-      tcp: request.socket,
       inFlight: false,
       dirty: false,
       lastSent: null,
-      stopWaiting: null,
     };
     clients.set(socket, state);
-    socket.on('close', () => {
-      clearWait(state);
-      clients.delete(socket);
-    });
+    socket.on('close', () => clients.delete(socket));
     socket.on('error', (error) => console.error('Setlist server: WebSocket client error', error));
     socket.on('message', (data) => {
       // A view-only connection never controls anything. Its messages are dropped unread, and the
@@ -181,7 +146,7 @@ export function startHub(
   sockets.on('error', () => {});
   const stopHeartbeat = realClock.every(HEARTBEAT_MS, () => {
     for (const [socket, state] of clients) {
-      if (socket.readyState !== WebSocket.OPEN || state.inFlight || socket.bufferedAmount > 0) continue;
+      if (socket.readyState !== WebSocket.OPEN || state.inFlight) continue;
       state.inFlight = true;
       socket.send(HEARTBEAT, (error) => {
         state.inFlight = false;
@@ -235,10 +200,7 @@ export function startHub(
       closed = true;
       cancelFlush();
       stopHeartbeat();
-      for (const [socket, state] of clients) {
-        clearWait(state);
-        socket.terminate();
-      }
+      for (const socket of clients.keys()) socket.terminate();
       clients.clear();
       return new Promise((resolve, reject) => sockets.close((error) => (error ? reject(error) : resolve())));
     },
