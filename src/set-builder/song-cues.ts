@@ -40,20 +40,42 @@ import { SONG_NUMBER } from './lights-config.ts';
 // show yet: `copyOf` is the song cue to copy onto that number, and the chain is empty.
 export type SongCue = { song: BuiltSong; cue: string; chain: string[]; copyOf?: SongCue };
 
-// Each song's cue, in set order, and the restore cues, in list order; or why the songs cannot each have a cue and a
-// chain of their own, as a sentence.
-export type SongCues = { songCues: SongCue[]; restore: string[] } | { problem: string };
+// Each song's cue, in set order, the restore cues, in list order, and any trailing cues from an
+// earlier run to re-label back to their template song cue label after a song was dropped; or why
+// the songs cannot each have a cue and a chain of their own, as a sentence.
+export type SongCues = { songCues: SongCue[]; restore: string[]; reset: { cue: string; label: string }[] } | { problem: string };
 
-export function findSongCues(cues: EosCue[], songs: BuiltSong[], { songCueLabel, cueList }: { songCueLabel: string; cueList: number }): SongCues {
+export function findSongCues(
+  cues: EosCue[],
+  songs: BuiltSong[],
+  { songCueLabel, cueList, previousTitles }: { songCueLabel: string; cueList: number; previousTitles?: string[] },
+): SongCues {
   const labelOf = (song: BuiltSong) => songCueLabel.replaceAll(SONG_NUMBER, String(song.position));
   // The place in the list of each song's cue, in set order, undefined for a song with none.
   const taken = new Set<number>();
-  const places = songs.map((song) => {
-    const free = (name: string) => cues.findIndex((cue, at) => !taken.has(at) && nameKey(cue.label) === nameKey(name));
-    const at = free(labelOf(song)) >= 0 ? free(labelOf(song)) : free(song.title);
+  const free = (name: string) => cues.findIndex((cue, at) => !taken.has(at) && nameKey(cue.label) === nameKey(name));
+  const places = songs.map((song, index) => {
+    const byTemplate = free(labelOf(song));
+    const previous = previousTitles?.[index];
+    const byPrevious = byTemplate >= 0 || previous === undefined ? -1 : free(previous);
+    const at = byTemplate >= 0 ? byTemplate : byPrevious >= 0 ? byPrevious : free(song.title);
     if (at >= 0) taken.add(at);
     return at >= 0 ? at : undefined;
   });
+  // Trailing cues previously labelled for songs past the new set length (e.g. after --drop) are
+  // reset back to their template label ("Song N") so no stale song title remains in the cue list.
+  const reset: { cue: string; label: string }[] = [];
+  if (previousTitles !== undefined) {
+    for (let index = songs.length; index < previousTitles.length; index++) {
+      const previous = previousTitles[index];
+      if (previous === undefined) continue;
+      const at = free(previous);
+      if (at >= 0) {
+        taken.add(at);
+        reset.push({ cue: cues[at]!.number, label: songCueLabel.replaceAll(SONG_NUMBER, String(index + 1)) });
+      }
+    }
+  }
   // The extra songs are the ones after the last song that has a cue. A song with no cue before that one, and every
   // song when none has a cue, is missing its cue.
   const lastWithCue = places.findLastIndex((place) => place !== undefined);
@@ -110,7 +132,7 @@ export function findSongCues(cues: EosCue[], songs: BuiltSong[], { songCueLabel,
   // straight after an owned cue. The copies stand between an owned cue and the cue that follows it, so each restore cue
   // is one the show already holds, and the cue after the last copy is the cue that followed the owned cue.
   const restore = cues.flatMap(({ number }, place) => (owner.has(place - 1) && !owner.has(place) ? [number] : []));
-  return { songCues, restore };
+  return { songCues, restore, reset };
 }
 
 // One past the last cue number Eos takes: cues are numbered from 0.001 to 9999.999 (ETC's Eos Family v3.3.10 online

@@ -1,0 +1,250 @@
+import { existsSync } from 'node:fs';
+import { dirname, join, resolve } from 'node:path';
+import { readAls } from './als.ts';
+import { buildSet, setName, type SongSummary, type StemMap, type Transition } from './build-set.ts';
+import { EOS_LIMITS, type EosLimits } from './eos.ts';
+import { matchSongs } from './library.ts';
+import { lightsStep } from './lights.ts';
+import { extractLiveEdits } from './live-edits.ts';
+import { PROPRESENTER_AGAIN_MS, PROPRESENTER_TIMEOUT_MS } from './propresenter.ts';
+import { readRecipe, readStemMapFile, type RecipeSong, type RecipeSongChart, type SetRecipe } from './recipe.ts';
+import { buildManifest, writeSetManifest } from './set-manifest.ts';
+import { songTitle } from './song.ts';
+
+// `build-set edit`: modifies a single song in an already-built set (--swap, --add, --drop) using
+// its saved `set-recipe.json`, carrying forward Live locator flags (+SKIP, +LOOP, >>>) and track
+// mixer volumes from the existing `.als` onto untouched songs, and regenerating every target
+// recorded in the recipe (`.als` + APFS-cloned audio/pads, `set-manifest.json`, and Eos lighting
+// cues when `--lights` was used). Any validation error leaves all existing files untouched.
+
+export const EDIT_USAGE = `Usage:
+  pnpm build-set edit [<set folder>] [--date YYYY-MM-DD] [--output-root <folder>] --swap <song> <replacement>
+  pnpm build-set edit [<set folder>] [--date YYYY-MM-DD] [--output-root <folder>] --add <song> [--at <pos>]
+  pnpm build-set edit [<set folder>] [--date YYYY-MM-DD] [--output-root <folder>] --drop <song>`;
+
+export type EditAction =
+  | { kind: 'swap'; song: string; replacement: string }
+  | { kind: 'add'; song: string; at?: number }
+  | { kind: 'drop'; song: string };
+
+export type EditOptions = {
+  folder: string;
+  action: EditAction;
+  limits?: EosLimits;
+  proPresenterTimeoutMs?: number;
+  proPresenterAgainMs?: number;
+};
+
+export type EditResult =
+  | {
+      ok: true;
+      date: string;
+      setPath: string;
+      songs: SongSummary[];
+      lightsLines: string[];
+      lightsProblem?: string;
+      manifestProblem?: string;
+    }
+  | { ok: false; problems: string[] };
+
+// Resolves a song selector against the built set's current songs: either a 1-based position number
+// or a case-insensitive title / folder name match (exact match wins over substring).
+export function resolveRecipeSong(songs: RecipeSong[], query: string): { ok: true; position: number } | { ok: false; problem: string } {
+  const trimmed = query.trim();
+  if (trimmed === '') return { ok: false, problem: `Song selector cannot be empty. The set's songs are:${listedSongs(songs)}` };
+  if (/^\d+$/.test(trimmed)) {
+    const position = Number(trimmed);
+    if (position < 1 || position > songs.length) {
+      return { ok: false, problem: `Song position ${trimmed} is out of range; the set has ${songs.length} ${songs.length === 1 ? 'song' : 'songs'}:${listedSongs(songs)}` };
+    }
+    return { ok: true, position };
+  }
+  const key = trimmed.toLowerCase();
+  const exact = songs.flatMap((song, index) => (song.title.toLowerCase() === key || song.folder.toLowerCase() === key ? [index + 1] : []));
+  if (exact.length === 1) return { ok: true, position: exact[0]! };
+  const matches = exact.length > 1 ? exact : songs.flatMap((song, index) => (song.title.toLowerCase().includes(key) || song.folder.toLowerCase().includes(key) ? [index + 1] : []));
+  if (matches.length === 0) {
+    return { ok: false, problem: `"${query}" matches no song in this set. The set's songs are:${listedSongs(songs)}` };
+  }
+  if (matches.length > 1) {
+    const named = matches.map((position) => `\n  ${position}. ${songs[position - 1]!.title} (${songs[position - 1]!.folder})`).join('');
+    return { ok: false, problem: `"${query}" matches ${matches.length} songs in this set; name it by position (1-${songs.length}) or more fully:${named}` };
+  }
+  return { ok: true, position: matches[0]! };
+}
+
+export async function editSet(options: EditOptions): Promise<EditResult> {
+  const folder = resolve(options.folder);
+  const reading = await readRecipe(folder);
+  if (!reading.ok) return { ok: false, problems: [reading.problem] };
+  const recipe = reading.recipe;
+
+  const name = setName(recipe.date);
+  const existingAlsPath = join(folder, `${name}.als`);
+  if (!existsSync(existingAlsPath)) {
+    return { ok: false, problems: [`Existing set file ${existingAlsPath} was not found.`] };
+  }
+
+  let liveEdits;
+  try {
+    liveEdits = extractLiveEdits(await readAls(existingAlsPath));
+  } catch (error) {
+    return { ok: false, problems: [`Existing set file ${existingAlsPath} cannot be read: ${oneLine(error)}`] };
+  }
+
+  const planned = await planEdit(recipe, options.action);
+  if (!planned.ok) return { ok: false, problems: planned.problems };
+
+  let stemMap: StemMap;
+  try {
+    stemMap = recipe.stemMapPath !== undefined ? await readStemMapFile(recipe.stemMapPath) : recipe.stemMap!;
+  } catch (error) {
+    return { ok: false, problems: [oneLine(error)] };
+  }
+
+  const outputRoot = dirname(folder);
+  const charts: (RecipeSongChart | undefined)[] = planned.songs.map((song) =>
+    song.chartText === undefined ? undefined : { ...(song.chartKey === undefined ? {} : { chartKey: song.chartKey }), chartText: song.chartText },
+  );
+
+  const built = await buildSet({
+    library: recipe.library,
+    template: recipe.template,
+    stemMap,
+    songs: planned.songs.map((song) => song.folder),
+    date: recipe.date,
+    outputRoot,
+    replace: true,
+    transitions: planned.transitions,
+    pads: recipe.pads,
+    recipe: {
+      ...(recipe.stemMapPath === undefined ? {} : { stemMapPath: recipe.stemMapPath }),
+      ...(recipe.setManifest === undefined ? {} : { setManifest: recipe.setManifest }),
+      ...(recipe.showFolder === undefined ? {} : { showFolder: recipe.showFolder }),
+      ...(recipe.plan === undefined ? {} : { plan: recipe.plan }),
+      ...(recipe.lights === undefined ? {} : { lights: recipe.lights }),
+      charts,
+    },
+    liveEdits: { edits: liveEdits, untouched: planned.untouched },
+  });
+
+  if (!built.ok) return { ok: false, problems: built.problems };
+
+  let manifestProblem: string | undefined;
+  if (recipe.setManifest !== undefined) {
+    const manifest = buildManifest(built.songs, charts);
+    const err = await writeSetManifest(recipe.setManifest, manifest).then(() => undefined, oneLine);
+    if (err !== undefined) {
+      manifestProblem = `The set is updated, but the set manifest ${recipe.setManifest} cannot be written: ${err}. The chart view still shows the last manifest's charts.`;
+    }
+  }
+
+  let lightsLines: string[] = [];
+  let lightsProblem: string | undefined;
+  if (recipe.lights !== undefined) {
+    const run = await lightsStep({
+      date: recipe.date,
+      outputRoot,
+      showFolder: recipe.lights.showFolder,
+      connectionsConfig: recipe.lights.connectionsConfig,
+      limits: options.limits ?? EOS_LIMITS,
+      proPresenterTimeoutMs: options.proPresenterTimeoutMs ?? PROPRESENTER_TIMEOUT_MS,
+      proPresenterAgainMs: options.proPresenterAgainMs ?? PROPRESENTER_AGAIN_MS,
+      playlist: recipe.lights.playlist,
+      previousTitles: recipe.songs.map((song) => song.title),
+    });
+    lightsLines = run.lines;
+    lightsProblem = run.problem;
+  }
+
+  return {
+    ok: true,
+    date: recipe.date,
+    setPath: built.setPath,
+    songs: built.songs,
+    lightsLines,
+    ...(lightsProblem === undefined ? {} : { lightsProblem }),
+    ...(manifestProblem === undefined ? {} : { manifestProblem }),
+  };
+}
+
+type PlannedEdit = {
+  songs: RecipeSong[];
+  transitions: Partial<Record<number, Transition>>;
+  // Maps each untouched song's NEW 1-based song number to its OLD 1-based song number.
+  untouched: Map<number, number>;
+};
+
+async function planEdit(recipe: SetRecipe, action: EditAction): Promise<{ ok: true } & PlannedEdit | { ok: false; problems: string[] }> {
+  const { songs, transitions } = recipe;
+
+  if (action.kind === 'swap') {
+    const target = resolveRecipeSong(songs, action.song);
+    if (!target.ok) return { ok: false, problems: [target.problem] };
+    const matched = await matchSongs({ library: recipe.library, pads: recipe.pads }, [action.replacement]);
+    if (!matched.ok) return { ok: false, problems: matched.problems };
+    const [replacement] = matched.matches;
+    if (!replacement || !replacement.ok) return { ok: false, problems: [replacement?.problem ?? `"${action.replacement}" matched no song.`] };
+    const nextSongs = songs.map((song, index) => (index + 1 === target.position ? { folder: replacement.folder, title: songTitle(replacement.folder) } : song));
+    const untouched = new Map<number, number>();
+    for (let position = 1; position <= songs.length; position++) {
+      if (position !== target.position) untouched.set(position, position);
+    }
+    return { ok: true, songs: nextSongs, transitions: { ...transitions }, untouched };
+  }
+
+  if (action.kind === 'add') {
+    const at = action.at ?? songs.length + 1;
+    if (!Number.isInteger(at) || at < 1 || at > songs.length + 1) {
+      return { ok: false, problems: [`--at must be a whole number from 1 to ${songs.length + 1}, not "${at}".`] };
+    }
+    const matched = await matchSongs({ library: recipe.library, pads: recipe.pads }, [action.song]);
+    if (!matched.ok) return { ok: false, problems: matched.problems };
+    const [added] = matched.matches;
+    if (!added || !added.ok) return { ok: false, problems: [added?.problem ?? `"${action.song}" matched no song.`] };
+    const nextSongs = [...songs.slice(0, at - 1), { folder: added.folder, title: songTitle(added.folder) }, ...songs.slice(at - 1)];
+    const nextTransitions: Partial<Record<number, Transition>> = {};
+    for (const [key, transition] of Object.entries(transitions)) {
+      if (transition === undefined) continue;
+      const position = Number(key);
+      nextTransitions[position >= at ? position + 1 : position] = transition;
+    }
+    const untouched = new Map<number, number>();
+    for (let oldPos = 1; oldPos <= songs.length; oldPos++) {
+      untouched.set(oldPos >= at ? oldPos + 1 : oldPos, oldPos);
+    }
+    return { ok: true, songs: nextSongs, transitions: nextTransitions, untouched };
+  }
+
+  // Drop.
+  const target = resolveRecipeSong(songs, action.song);
+  if (!target.ok) return { ok: false, problems: [target.problem] };
+  if (songs.length <= 1) {
+    return { ok: false, problems: [`Cannot drop "${songs[0]!.title}" because it is the only song in the set.`] };
+  }
+  const nextSongs = songs.filter((_, index) => index + 1 !== target.position);
+  const nextTransitions: Partial<Record<number, Transition>> = {};
+  for (const [key, transition] of Object.entries(transitions)) {
+    if (transition === undefined) continue;
+    const position = Number(key);
+    if (position === target.position) continue;
+    const nextPos = position > target.position ? position - 1 : position;
+    // An overlap cannot follow the new last song (only a pad can).
+    if (nextPos === nextSongs.length && transition.type !== 'pad') continue;
+    nextTransitions[nextPos] = transition;
+  }
+  const untouched = new Map<number, number>();
+  for (let oldPos = 1; oldPos <= songs.length; oldPos++) {
+    if (oldPos === target.position) continue;
+    untouched.set(oldPos > target.position ? oldPos - 1 : oldPos, oldPos);
+  }
+  return { ok: true, songs: nextSongs, transitions: nextTransitions, untouched };
+}
+
+function listedSongs(songs: RecipeSong[]): string {
+  return songs.map((song, index) => `\n  ${index + 1}. ${song.title} (${song.folder})`).join('');
+}
+
+function oneLine(error: unknown): string {
+  return (error instanceof Error ? error.message : String(error)).replace(/\s*\n\s*/g, ' ');
+}

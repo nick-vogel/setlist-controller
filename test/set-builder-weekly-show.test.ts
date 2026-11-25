@@ -469,7 +469,7 @@ describe('the usage text and the README, on the weekly show file', () => {
     const usage = await usageText();
 
     const synopsis = usage.split('\n').filter((line) => line.startsWith('  pnpm build-set'));
-    expect(synopsis).toHaveLength(7);
+    expect(synopsis).toHaveLength(8);
     expect(synopsis.filter((line) => line.endsWith(' [--set-manifest <path>] [--show-folder <folder>]')).map((line) => line.split(' [')[0])).toEqual([
       '  pnpm build-set <song>',
       '  pnpm build-set --plan',

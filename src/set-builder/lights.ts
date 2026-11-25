@@ -52,6 +52,9 @@ export type LightsOptions = {
   proPresenterTimeoutMs: number;
   proPresenterAgainMs: number;
   playlist?: string | undefined;
+  // When re-running lights after `build-set edit`, the previous set's song titles in order so
+  // cues already labelled by an earlier `--lights` run can be matched and updated in place.
+  previousTitles?: string[] | undefined;
 };
 
 // Eos's address and the number of the cue list the song cues are in.
@@ -70,7 +73,7 @@ const COLOUR_TOLERANCE = 0.01;
 // The two times that make a cue run on, in the order the mode takes them off a copy.
 const TIMES: EosTime[] = ['Follow', 'Hang'];
 
-export async function lightsStep({ date, outputRoot, showFolder, connectionsConfig, limits, proPresenterTimeoutMs, proPresenterAgainMs, playlist }: LightsOptions): Promise<LightsRun> {
+export async function lightsStep({ date, outputRoot, showFolder, connectionsConfig, limits, proPresenterTimeoutMs, proPresenterAgainMs, playlist, previousTitles }: LightsOptions): Promise<LightsRun> {
   // A lights config that is missing or broken is the mode's one problem line, as it is the build's.
   let config: LightsConfig;
   try {
@@ -112,6 +115,7 @@ export async function lightsStep({ date, outputRoot, showFolder, connectionsConf
       limits,
       againMs: proPresenterAgainMs,
       playlist,
+      previousTitles,
       progress,
     });
   } catch (error) {
@@ -147,6 +151,7 @@ async function writeSongCues(
     limits,
     againMs,
     playlist,
+    previousTitles,
     progress,
   }: {
     date: string;
@@ -157,6 +162,7 @@ async function writeSongCues(
     limits: EosLimits;
     againMs: number;
     playlist: string | undefined;
+    previousTitles: string[] | undefined;
     progress: { written: boolean };
   },
 ): Promise<LightsRun> {
@@ -193,9 +199,9 @@ async function writeSongCues(
   // with the number it takes. Every song's cue is found before anything is written, so a set with a song that can have
   // none leaves the show as it was.
   const cues = await eos.cues(cueList);
-  const found = findSongCues(cues, songs, { songCueLabel, cueList });
+  const found = findSongCues(cues, songs, { songCueLabel, cueList, previousTitles });
   if ('problem' in found) return { lines: [], problem: `${NOT_DONE} ${found.problem}` };
-  const { songCues: labels, restore } = found;
+  const { songCues: labels, restore, reset } = found;
   const copies = labels.flatMap(({ song, cue, copyOf }) => (copyOf === undefined ? [] : [{ song, cue, copyOf }]));
 
   // ProPresenter, read whole before Eos is sent anything but a read: a Go To Cue moves the live look, and none is sent
@@ -286,13 +292,16 @@ async function writeSongCues(
   if (!live()) return notLive();
   progress.written = true;
   for (const { song, cue } of labels) eos.setLabel(cueList, cue, song.title);
+  for (const { cue, label } of reset) eos.setLabel(cueList, cue, label);
   const unlabelled = await leftOf(async () => {
     const read = await eos.cues(cueList);
-    return labels.filter(({ song, cue }) => read.find(({ number }) => number === cue)?.label !== song.title);
+    return [
+      ...labels.filter(({ song, cue }) => read.find(({ number }) => number === cue)?.label !== song.title).map(({ song, cue }) => `cue ${cueList}/${cue} (${song.title})`),
+      ...reset.filter(({ cue, label }) => read.find(({ number }) => number === cue)?.label !== label).map(({ cue, label }) => `cue ${cueList}/${cue} (${label})`),
+    ];
   });
   if (unlabelled.length > 0) {
-    const named = unlabelled.map(({ song, cue }) => `cue ${cueList}/${cue} (${song.title})`);
-    return { lines: [], problem: `${NOT_DONE} Eos did not take the label of ${listed(named, 'and')}, so the show is not saved.${copies.length > 0 ? ` ${CHANGED}` : ''}` };
+    return { lines: [], problem: `${NOT_DONE} Eos did not take the label of ${listed(unlabelled, 'and')}, so the show is not saved.${copies.length > 0 ? ` ${CHANGED}` : ''}` };
   }
 
   // The colours: the mode goes to the cue, sets each colour channel through the parameter address, and records those

@@ -12,7 +12,7 @@ import type { PlanSong } from './plan-reader.ts';
 // folder name writes, or null; its starting meter, as the build's summary reports it; and, for a --plan build, the chart
 // key and chart text of the plan song at the same position, when it has chart text. A build by song names, with no plan
 // songs, writes no chart key and no chart text.
-export function buildManifest(songs: SongSummary[], planSongs?: PlanSong[]): SetManifest {
+export function buildManifest(songs: SongSummary[], planSongs?: readonly (Pick<PlanSong, 'chartKey' | 'chartText'> | undefined)[]): SetManifest {
   return {
     songs: songs.map(({ folder, title, meter }, index): ManifestSong => {
       const stems = songNoteKey(folder);

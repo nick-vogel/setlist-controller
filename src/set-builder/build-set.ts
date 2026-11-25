@@ -6,7 +6,9 @@ import { audioCopies, audioProblems, copyAudio, copyPads, copyProjectInfo } from
 import { introProblems, overlapProblems, padProblems, padTrackProblems, stemProblems, templateProblems } from './checks.ts';
 import { matchSongs, padsFolder, type SongMatch } from './library.ts';
 import { timeSignature } from './meter.ts';
+import { applyLiveEdits, type LiveEdits } from './live-edits.ts';
 import { isKey, readPads, type Pad, type PadsReading } from './pads.ts';
+import { buildRecipe, SET_RECIPE_FILE, writeRecipe, type RecipeExtras } from './recipe.ts';
 import { mainEvents, readSong, type Song, type SongReading } from './song.ts';
 import { sharedTargetNames, templateTargets, type Target } from './template.ts';
 import { placeSongs, type PlacedSong } from './timeline.ts';
@@ -57,6 +59,11 @@ export type BuildOptions = CheckOptions & {
   outputRoot: string;
   // Replace the set folder for the date when it already exists. Without it, an existing folder stops the build.
   replace?: boolean;
+  // Optional metadata recorded into set-recipe.json alongside the built set.
+  recipe?: RecipeExtras;
+  // Optional preserved Live edits (locator flags, track mixer volumes, clip volumes) to reapply onto
+  // untouched songs after materializing the set.
+  liveEdits?: { edits: LiveEdits; untouched: Map<number, number> };
 };
 
 // One song of a built set, as the command's summary shows it.
@@ -108,7 +115,21 @@ export async function buildSet(options: BuildOptions): Promise<BuildResult> {
   const padFiles = Object.fromEntries(Object.entries(padsRead).map(([position, pad]) => [position, pad.file]));
   const placed = placeSongs(songs, transitions);
   writeSet(set, targets, placed, options.stemMap, { projectFolder: folder }, padFiles);
+  if (options.liveEdits !== undefined) {
+    applyLiveEdits(set, options.liveEdits.edits, options.liveEdits.untouched);
+  }
   const copies = audioCopies(songs);
+  const recipe = buildRecipe({
+    date: options.date,
+    library: options.library,
+    template: options.template,
+    outputRoot: options.outputRoot,
+    stemMap: options.stemMap,
+    pads: options.pads,
+    songs: placed.map(({ song }) => ({ folder: song.folder, title: song.title })),
+    transitions,
+    extras: options.recipe,
+  });
   // Nothing is written until every song is read and placed. The project folder must be new, so a build never
   // writes into one that exists, and the set is written last, once every file it refers to is in place.
   const writeProject = async (into: string) => {
@@ -116,6 +137,7 @@ export async function buildSet(options: BuildOptions): Promise<BuildResult> {
     await copyAudio(options.library, into, copies);
     await copyPads(into, Object.values(padFiles));
     await writeAls(join(into, `${name}.als`), set);
+    await writeRecipe(join(into, SET_RECIPE_FILE), recipe);
   };
   await mkdir(options.outputRoot, { recursive: true });
   if (options.replace) {
