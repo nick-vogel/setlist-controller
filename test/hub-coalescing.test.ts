@@ -1,12 +1,15 @@
 import { mkdir, mkdtemp, readFile, rm } from 'node:fs/promises';
+import { createServer } from 'node:http';
+import type { AddressInfo } from 'node:net';
 import { join, resolve } from 'node:path';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import type { CuePoint } from '../src/fake-live/fake-live.ts';
 import { manualClock, type ManualClock } from '../src/server/clock.ts';
-import { POSITION_BROADCAST_MS } from '../src/server/hub.ts';
+import { POSITION_BROADCAST_MS, startHub } from '../src/server/hub.ts';
 import { SILENT_BEFORE_LOST_MS } from '../src/server/live-bridge.ts';
+import { UNKNOWN_POWER } from '../src/shared/power.ts';
 import { producerSocketPath, SOCKET_PATHS } from '../src/shared/routes.ts';
-import type { ProducerSnapshot, Snapshot } from '../src/shared/snapshot.ts';
+import type { ConnectionsPart, ProducerSnapshot, Snapshot } from '../src/shared/snapshot.ts';
 import { fakeTarget } from './fake-target.ts';
 import { connect, loaded, startRig, type Rig } from './harness.ts';
 import { startProxy, type Proxy } from './proxy.ts';
@@ -390,6 +393,90 @@ describe('20 Hz position-only broadcast cap and immediate state flush', () => {
     rig.clock.advance(SILENT_BEFORE_LOST_MS);
     const disconnected = await leader.snapshot((snapshot) => leader.received.indexOf(snapshot) >= beforeDisconnect && snapshot.live === 'not-connected');
     expect(disconnected.live).toBe('not-connected');
+  });
+});
+
+describe('a client that received a held position', () => {
+  const snap = (position: number): Snapshot => ({
+    live: 'connected',
+    set: {
+      songs: [{ number: 1, title: 'Song 1', sections: [{ name: 'Intro', time: 0, end: 64, cue: 0 }], end: 64, endCue: 1 }],
+      warnings: [],
+    },
+    playing: false,
+    position,
+    now: { song: 1, section: 0, next: 'end', bar: Math.floor(position / 4) + 1, bars: 16, fraction: position / 64 },
+    jump: null,
+    countIn: false,
+    endToggles: { 1: 'stop' },
+    loop: null,
+    fade: null,
+    chartRevision: 1,
+    songMeters: { 1: 4 },
+    power: UNKNOWN_POWER,
+  });
+  const noProblems: ConnectionsPart = { connections: [], connectionProblems: [] };
+  const offline: ConnectionsPart = { connections: [], connectionProblems: ['offline'] };
+
+  let stopHub: (() => Promise<void>) | undefined;
+  afterEach(async () => {
+    await stopHub?.();
+    stopHub = undefined;
+  });
+
+  async function heldWindow() {
+    const clock = manualClock();
+    const http = createServer();
+    const hub = startHub(http, { snapshot: snap(0), connections: noProblems }, { leader: 'l', producer: 'p' }, () => {}, () => {}, clock);
+    await new Promise<void>((done) => http.listen(0, '127.0.0.1', done));
+    const base = `ws://127.0.0.1:${(http.address() as AddressInfo).port}`;
+    const clients: { close(): void }[] = [];
+    stopHub = async () => {
+      for (const client of clients) client.close();
+      await hub.close();
+      await new Promise<void>((done) => http.close(() => done()));
+    };
+    const open = async <S extends Snapshot = Snapshot>(path: string) => {
+      const client = await connect<S>(`${base}${path}`);
+      clients.push(client);
+      return client;
+    };
+
+    const existing = await open(SOCKET_PATHS.viewer);
+    const producer = await open<ProducerSnapshot>(producerSocketPath('p'));
+    await existing.snapshot((snapshot) => snapshot.position === 0);
+    await producer.snapshot((snapshot) => snapshot.position === 0);
+    clock.advance(POSITION_BROADCAST_MS);
+    hub.publish(snap(10), noProblems);
+    await existing.snapshot((snapshot) => snapshot.position === 10);
+    const existingCount = existing.received.length;
+
+    clock.advance(10);
+    hub.publish(snap(12), noProblems);
+    const midWindow = await open(SOCKET_PATHS.viewer);
+    await midWindow.snapshot((snapshot) => snapshot.position === 12);
+    clock.advance(10);
+    return { clock, hub, existing, existingCount, producer, midWindow };
+  }
+
+  it('is brought back to the broadcast position when the position reverts to it before the trailing flush', async () => {
+    const { clock, hub, existing, existingCount, midWindow } = await heldWindow();
+    hub.publish(snap(10), noProblems);
+    clock.advance(POSITION_BROADCAST_MS * 2);
+    await existing.flush();
+    await midWindow.flush();
+    expect(existing.received.length).toBe(existingCount);
+    expect(midWindow.received.at(-1)?.position).toBe(10);
+  });
+
+  it('is brought back to the broadcast position when the position reverts alongside a producer-only change', async () => {
+    const { hub, existing, existingCount, producer, midWindow } = await heldWindow();
+    hub.publish(snap(10), offline);
+    await producer.snapshot((snapshot) => snapshot.connectionProblems.length === 1);
+    await existing.flush();
+    await midWindow.flush();
+    expect(existing.received.length).toBe(existingCount);
+    expect(midWindow.received.at(-1)?.position).toBe(10);
   });
 });
 

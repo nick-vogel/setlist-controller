@@ -110,9 +110,7 @@ export function startHub(
     broadcasted = latest;
     broadcastedKey = latestKey;
     if (!changedPlayback && !changedProducer) return;
-    for (const [socket, state] of clients) {
-      if (state.role === 'producer' ? changedProducer : changedPlayback) deliver(socket, state);
-    }
+    for (const [socket, state] of clients) deliver(socket, state);
   };
 
   sockets.on('connection', (socket, request) => {
@@ -167,7 +165,10 @@ export function startHub(
 
       // A listener may report a value that has not changed since the last broadcast.
       if (next.playback === broadcasted.playback && next.producer === broadcasted.producer) {
-        cancelFlush();
+        if (stopFlush) {
+          cancelFlush();
+          for (const [socket, state] of clients) deliver(socket, state);
+        }
         return;
       }
 
