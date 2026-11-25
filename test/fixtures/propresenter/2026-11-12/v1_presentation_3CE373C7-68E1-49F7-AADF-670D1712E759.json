@@ -1,0 +1,507 @@
+{
+  "method": "GET",
+  "path": "/v1/presentation/3CE373C7-68E1-49F7-AADF-670D1712E759",
+  "status": 200,
+  "content_type": "application/json",
+  "body": {
+    "presentation": {
+      "id": {
+        "uuid": "3CE373C7-68E1-49F7-AADF-670D1712E759",
+        "name": "This Is Amazing Grace",
+        "index": 261
+      },
+      "groups": [
+        {
+          "name": "Intro",
+          "color": {
+            "red": 0.7019608020782471,
+            "green": 0.6549019813537598,
+            "blue": 0.1411764770746231,
+            "alpha": 1
+          },
+          "slides": [
+            {
+              "enabled": true,
+              "notes": "",
+              "text": "",
+              "label": "OceanWaves_01_4K.mp4",
+              "size": {
+                "width": 1920,
+                "height": 1080
+              }
+            }
+          ],
+          "uuid": "B89968CD-F659-4514-BE00-43C15B23859C"
+        },
+        {
+          "name": "Verse 1",
+          "color": {
+            "red": 0,
+            "green": 0.46666666865348816,
+            "blue": 0.800000011920929,
+            "alpha": 1
+          },
+          "slides": [
+            {
+              "enabled": true,
+              "notes": "",
+              "text": "This Is Amazing Grace / Verse 1 / slide 1 line 1\nThis Is Amazing Grace / Verse 1 / slide 1 line 2",
+              "label": "",
+              "size": {
+                "width": 1920,
+                "height": 1080
+              }
+            },
+            {
+              "enabled": true,
+              "notes": "",
+              "text": "This Is Amazing Grace / Verse 1 / slide 2 line 1\nThis Is Amazing Grace / Verse 1 / slide 2 line 2",
+              "label": "",
+              "size": {
+                "width": 1920,
+                "height": 1080
+              }
+            },
+            {
+              "enabled": true,
+              "notes": "",
+              "text": "This Is Amazing Grace / Verse 1 / slide 3 line 1\nThis Is Amazing Grace / Verse 1 / slide 3 line 2​",
+              "label": "",
+              "size": {
+                "width": 1920,
+                "height": 1080
+              }
+            },
+            {
+              "enabled": true,
+              "notes": "",
+              "text": "This Is Amazing Grace / Verse 1 / slide 4 line 1\nThis Is Amazing Grace / Verse 1 / slide 4 line 2",
+              "label": "",
+              "size": {
+                "width": 1920,
+                "height": 1080
+              }
+            },
+            {
+              "enabled": true,
+              "notes": "",
+              "text": "This Is Amazing Grace / Verse 1 / slide 5 line 1\nThis Is Amazing Grace / Verse 1 / slide 5 line 2",
+              "label": "",
+              "size": {
+                "width": 1920,
+                "height": 1080
+              }
+            },
+            {
+              "enabled": true,
+              "notes": "",
+              "text": "This Is Amazing Grace / Verse 1 / slide 6 line 1​\nThis Is Amazing Grace / Verse 1 / slide 6 line 2​",
+              "label": "",
+              "size": {
+                "width": 1920,
+                "height": 1080
+              }
+            }
+          ],
+          "uuid": "C46C219E-93AD-4E46-8874-9385024A6828"
+        },
+        {
+          "name": "Chorus",
+          "color": {
+            "red": 0.800000011920929,
+            "green": 0,
+            "blue": 0.30588236451148987,
+            "alpha": 1
+          },
+          "slides": [
+            {
+              "enabled": true,
+              "notes": "",
+              "text": "This Is Amazing Grace / Chorus / slide 1 line 1\nThis Is Amazing Grace / Chorus / slide 1 line 2",
+              "label": "",
+              "size": {
+                "width": 1920,
+                "height": 1080
+              }
+            },
+            {
+              "enabled": true,
+              "notes": "",
+              "text": "This Is Amazing Grace / Chorus / slide 2 line 1\nThis Is Amazing Grace / Chorus / slide 2 line 2",
+              "label": "",
+              "size": {
+                "width": 1920,
+                "height": 1080
+              }
+            },
+            {
+              "enabled": true,
+              "notes": "",
+              "text": "This Is Amazing Grace / Chorus / slide 3 line 1\nThis Is Amazing Grace / Chorus / slide 3 line 2",
+              "label": "",
+              "size": {
+                "width": 1920,
+                "height": 1080
+              }
+            },
+            {
+              "enabled": true,
+              "notes": "",
+              "text": "This Is Amazing Grace / Chorus / slide 4 line 1​\nThis Is Amazing Grace / Chorus / slide 4 line 2",
+              "label": "",
+              "size": {
+                "width": 1920,
+                "height": 1080
+              }
+            }
+          ],
+          "uuid": "E5B9FFAF-0D5B-4ADE-9ACF-C4A3C98478BE"
+        },
+        {
+          "name": "Intro",
+          "color": {
+            "red": 0.7019608020782471,
+            "green": 0.6549019813537598,
+            "blue": 0.1411764770746231,
+            "alpha": 1
+          },
+          "slides": [
+            {
+              "enabled": true,
+              "notes": "",
+              "text": "​ ​",
+              "label": "",
+              "size": {
+                "width": 1920,
+                "height": 1080
+              }
+            }
+          ],
+          "uuid": "878A4018-833A-416A-A84E-848B1AE4C851"
+        },
+        {
+          "name": "Verse 2",
+          "color": {
+            "red": 0,
+            "green": 0.3490196168422699,
+            "blue": 0.6000000238418579,
+            "alpha": 1
+          },
+          "slides": [
+            {
+              "enabled": true,
+              "notes": "",
+              "text": "This Is Amazing Grace / Verse 2 / slide 1 line 1\nThis Is Amazing Grace / Verse 2 / slide 1 line 2",
+              "label": "",
+              "size": {
+                "width": 1920,
+                "height": 1080
+              }
+            },
+            {
+              "enabled": true,
+              "notes": "",
+              "text": "This Is Amazing Grace / Verse 2 / slide 2 line 1\nThis Is Amazing Grace / Verse 2 / slide 2 line 2",
+              "label": "",
+              "size": {
+                "width": 1920,
+                "height": 1080
+              }
+            },
+            {
+              "enabled": true,
+              "notes": "",
+              "text": "This Is Amazing Grace / Verse 2 / slide 3 line 1\nThis Is Amazing Grace / Verse 2 / slide 3 line 2",
+              "label": "",
+              "size": {
+                "width": 1920,
+                "height": 1080
+              }
+            },
+            {
+              "enabled": true,
+              "notes": "",
+              "text": "This Is Amazing Grace / Verse 2 / slide 4 line 1\nThis Is Amazing Grace / Verse 2 / slide 4 line 2",
+              "label": "",
+              "size": {
+                "width": 1920,
+                "height": 1080
+              }
+            },
+            {
+              "enabled": true,
+              "notes": "",
+              "text": "This Is Amazing Grace / Verse 2 / slide 5 line 1\nThis Is Amazing Grace / Verse 2 / slide 5 line 2",
+              "label": "",
+              "size": {
+                "width": 1920,
+                "height": 1080
+              }
+            },
+            {
+              "enabled": true,
+              "notes": "",
+              "text": "This Is Amazing Grace / Verse 2 / slide 6 line 1​\nThis Is Amazing Grace / Verse 2 / slide 6 line 2",
+              "label": "",
+              "size": {
+                "width": 1920,
+                "height": 1080
+              }
+            }
+          ],
+          "uuid": "6CE60ECB-CD05-4400-ADD1-2E97299EC795"
+        },
+        {
+          "name": "Chorus",
+          "color": {
+            "red": 0.800000011920929,
+            "green": 0,
+            "blue": 0.30588236451148987,
+            "alpha": 1
+          },
+          "slides": [
+            {
+              "enabled": true,
+              "notes": "",
+              "text": "This Is Amazing Grace / Chorus / slide 1 line 1\nThis Is Amazing Grace / Chorus / slide 1 line 2",
+              "label": "",
+              "size": {
+                "width": 1920,
+                "height": 1080
+              }
+            },
+            {
+              "enabled": true,
+              "notes": "",
+              "text": "This Is Amazing Grace / Chorus / slide 2 line 1\nThis Is Amazing Grace / Chorus / slide 2 line 2",
+              "label": "",
+              "size": {
+                "width": 1920,
+                "height": 1080
+              }
+            },
+            {
+              "enabled": true,
+              "notes": "",
+              "text": "This Is Amazing Grace / Chorus / slide 3 line 1\nThis Is Amazing Grace / Chorus / slide 3 line 2",
+              "label": "",
+              "size": {
+                "width": 1920,
+                "height": 1080
+              }
+            },
+            {
+              "enabled": true,
+              "notes": "",
+              "text": "This Is Amazing Grace / Chorus / slide 4 line 1​\nThis Is Amazing Grace / Chorus / slide 4 line 2",
+              "label": "",
+              "size": {
+                "width": 1920,
+                "height": 1080
+              }
+            }
+          ],
+          "uuid": "D7C739F2-0239-4B0A-9D01-6556E3EF03BD"
+        },
+        {
+          "name": "Bridge",
+          "color": {
+            "red": 0.4627451002597809,
+            "green": 0,
+            "blue": 0.800000011920929,
+            "alpha": 1
+          },
+          "slides": [
+            {
+              "enabled": true,
+              "notes": "",
+              "text": "This Is Amazing Grace / Bridge / slide 1 line 1\nThis Is Amazing Grace / Bridge / slide 1 line 2",
+              "label": "",
+              "size": {
+                "width": 1920,
+                "height": 1080
+              }
+            },
+            {
+              "enabled": true,
+              "notes": "",
+              "text": "This Is Amazing Grace / Bridge / slide 2 line 1\nThis Is Amazing Grace / Bridge / slide 2 line 2",
+              "label": "",
+              "size": {
+                "width": 1920,
+                "height": 1080
+              }
+            },
+            {
+              "enabled": true,
+              "notes": "",
+              "text": "This Is Amazing Grace / Bridge / slide 1 line 1\nThis Is Amazing Grace / Bridge / slide 1 line 2",
+              "label": "",
+              "size": {
+                "width": 1920,
+                "height": 1080
+              }
+            },
+            {
+              "enabled": true,
+              "notes": "",
+              "text": "This Is Amazing Grace / Bridge / slide 4 line 1\nThis Is Amazing Grace / Bridge / slide 4 line 2",
+              "label": "",
+              "size": {
+                "width": 1920,
+                "height": 1080
+              }
+            }
+          ],
+          "uuid": "1D8E5A20-39E6-4B4C-9D9E-F6027B54479E"
+        },
+        {
+          "name": "Bridge",
+          "color": {
+            "red": 0.4627451002597809,
+            "green": 0,
+            "blue": 0.800000011920929,
+            "alpha": 1
+          },
+          "slides": [
+            {
+              "enabled": true,
+              "notes": "",
+              "text": "This Is Amazing Grace / Bridge / slide 1 line 1\nThis Is Amazing Grace / Bridge / slide 1 line 2",
+              "label": "",
+              "size": {
+                "width": 1920,
+                "height": 1080
+              }
+            },
+            {
+              "enabled": true,
+              "notes": "",
+              "text": "This Is Amazing Grace / Bridge / slide 2 line 1\nThis Is Amazing Grace / Bridge / slide 2 line 2",
+              "label": "",
+              "size": {
+                "width": 1920,
+                "height": 1080
+              }
+            },
+            {
+              "enabled": true,
+              "notes": "",
+              "text": "This Is Amazing Grace / Bridge / slide 1 line 1\nThis Is Amazing Grace / Bridge / slide 1 line 2",
+              "label": "",
+              "size": {
+                "width": 1920,
+                "height": 1080
+              }
+            },
+            {
+              "enabled": true,
+              "notes": "",
+              "text": "This Is Amazing Grace / Bridge / slide 4 line 1",
+              "label": "",
+              "size": {
+                "width": 1920,
+                "height": 1080
+              }
+            }
+          ],
+          "uuid": "AEC1216B-655E-4FF5-A0E0-06DDFB3DEF47"
+        },
+        {
+          "name": "Outro",
+          "color": {
+            "red": 0.4941176474094391,
+            "green": 0.4627451002597809,
+            "blue": 0.09803921729326248,
+            "alpha": 1
+          },
+          "slides": [
+            {
+              "enabled": true,
+              "notes": "",
+              "text": "​ ​ ​ ​",
+              "label": "",
+              "size": {
+                "width": 1920,
+                "height": 1080
+              }
+            }
+          ],
+          "uuid": "533F693A-15D0-40FE-814B-6775A679C839"
+        },
+        {
+          "name": "Ending",
+          "color": {
+            "red": 0.6000000238418579,
+            "green": 0.5607843399047852,
+            "blue": 0.12156862765550613,
+            "alpha": 1
+          },
+          "slides": [
+            {
+              "enabled": true,
+              "notes": "",
+              "text": "​",
+              "label": "",
+              "size": {
+                "width": 1920,
+                "height": 1080
+              }
+            }
+          ],
+          "uuid": "5BE8C32A-C064-442E-B62A-04C23C090A86"
+        }
+      ],
+      "has_timeline": false,
+      "presentation_path": "ProPresenter/Libraries/Default/This Is Amazing Grace.pro",
+      "destination": "presentation",
+      "arrangements": [
+        {
+          "id": {
+            "uuid": "3CE373C7-68E1-49F7-AADF-670D1712E759",
+            "name": "Master",
+            "index": 0
+          },
+          "groups": [
+            "B89968CD-F659-4514-BE00-43C15B23859C",
+            "C46C219E-93AD-4E46-8874-9385024A6828",
+            "E5B9FFAF-0D5B-4ADE-9ACF-C4A3C98478BE",
+            "878A4018-833A-416A-A84E-848B1AE4C851",
+            "6CE60ECB-CD05-4400-ADD1-2E97299EC795",
+            "D7C739F2-0239-4B0A-9D01-6556E3EF03BD",
+            "1D8E5A20-39E6-4B4C-9D9E-F6027B54479E",
+            "AEC1216B-655E-4FF5-A0E0-06DDFB3DEF47",
+            "533F693A-15D0-40FE-814B-6775A679C839",
+            "5BE8C32A-C064-442E-B62A-04C23C090A86"
+          ],
+          "total_cues": 32
+        },
+        {
+          "id": {
+            "uuid": "347E32CF-1FA9-4199-8245-F63B75119DC2",
+            "name": "Full",
+            "index": 1
+          },
+          "groups": [
+            "B89968CD-F659-4514-BE00-43C15B23859C",
+            "C46C219E-93AD-4E46-8874-9385024A6828",
+            "E5B9FFAF-0D5B-4ADE-9ACF-C4A3C98478BE",
+            "878A4018-833A-416A-A84E-848B1AE4C851",
+            "6CE60ECB-CD05-4400-ADD1-2E97299EC795",
+            "D7C739F2-0239-4B0A-9D01-6556E3EF03BD",
+            "1D8E5A20-39E6-4B4C-9D9E-F6027B54479E",
+            "AEC1216B-655E-4FF5-A0E0-06DDFB3DEF47",
+            "E5B9FFAF-0D5B-4ADE-9ACF-C4A3C98478BE",
+            "533F693A-15D0-40FE-814B-6775A679C839",
+            "5BE8C32A-C064-442E-B62A-04C23C090A86"
+          ],
+          "total_cues": 36
+        }
+      ],
+      "current_arrangement": "3CE373C7-68E1-49F7-AADF-670D1712E759",
+      "type": "multitracks",
+      "is_authorized": true,
+      "total_cues": 32
+    }
+  }
+}

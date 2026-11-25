@@ -1,0 +1,17 @@
+diff --git a/src/server/connections.ts b/src/server/connections.ts
+index e84fbb5..3a82b29 100644
+--- a/src/server/connections.ts
++++ b/src/server/connections.ts
+@@ -688,10 +688,11 @@ export function startConnections({
+     observed() {
+       const brace = loop();
+       if (!sameLoop(brace, seenLoop)) {
++        const turnedOn = seenLoop === null || seenLoop.length <= 0;
+         seenLoop = brace;
+         const braceEnd = brace && brace.length > 0 ? brace.start + brace.length : null;
+         const at = position();
+-        const wrapsFirst = braceEnd !== null && at !== null && at < braceEnd - EPSILON;
++        const wrapsFirst = turnedOn && braceEnd !== null && at !== null && at < braceEnd - EPSILON;
+         for (const entry of entries) {
+           if (entry.early?.wrap || (wrapsFirst && entry.early && entry.early.beat >= braceEnd - EPSILON)) entry.early = null;
+           scheduleFromPlayhead(entry);

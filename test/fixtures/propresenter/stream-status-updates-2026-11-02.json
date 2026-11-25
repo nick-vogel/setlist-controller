@@ -1,0 +1,2364 @@
+{
+  "method": "POST",
+  "path": "/v1/status/updates",
+  "request": [
+    "status/slide",
+    "presentation/slide_index",
+    "presentation/current"
+  ],
+  "status": 200,
+  "headers": {
+    "transfer-encoding": "chunked",
+    "connection": "close",
+    "content-type": "application/octet-stream",
+    "vary": "Origin, Access-Control-Request-Method, Access-Control-Request-Headers"
+  },
+  "chunks": [
+    {
+      "t": 0,
+      "frame": {
+        "url": "presentation/slide_index",
+        "data": {
+          "presentation_index": null
+        }
+      }
+    },
+    {
+      "t": 0,
+      "frame": {
+        "url": "presentation/current",
+        "data": {
+          "presentation": null
+        }
+      }
+    },
+    {
+      "t": 0,
+      "frame": {
+        "url": "timer/system_time",
+        "data": 1793642406
+      }
+    },
+    {
+      "t": 483,
+      "frame": {
+        "url": "timer/system_time",
+        "data": 1793642407
+      }
+    },
+    {
+      "t": 1481,
+      "frame": {
+        "url": "timer/system_time",
+        "data": 1793642408
+      }
+    },
+    {
+      "t": 2186,
+      "frame": {
+        "url": "presentation/slide_index",
+        "data": {
+          "presentation_index": {
+            "index": 0,
+            "presentation_id": {
+              "uuid": "5A606BC5-9279-4509-983E-88092AE567F0",
+              "name": "Ancient Gates",
+              "index": 63
+            },
+            "total_cues": 58,
+            "remaining_cues": 57
+          }
+        }
+      }
+    },
+    {
+      "t": 2186,
+      "frame": {
+        "url": "status/slide",
+        "data": {
+          "current": {
+            "text": "",
+            "notes": "",
+            "uuid": "9FEC19B9-274E-47C1-944A-8EE96BBF22BB"
+          },
+          "next": {
+            "text": "Ancient Gates / Verse 1 / slide 1 line 1\nAncient Gates / Verse 1 / slide 1 line 2",
+            "notes": "",
+            "uuid": "833CC868-3079-4678-98A1-4C4D28F87DE8"
+          }
+        }
+      }
+    },
+    {
+      "t": 2189,
+      "frame": {
+        "url": "presentation/current",
+        "data": {
+          "presentation": {
+            "id": {
+              "uuid": "5A606BC5-9279-4509-983E-88092AE567F0",
+              "name": "Ancient Gates",
+              "index": 0
+            },
+            "groups": [
+              {
+                "name": "",
+                "color": {
+                  "red": 0,
+                  "green": 0,
+                  "blue": 0,
+                  "alpha": 0
+                },
+                "slides": [
+                  {
+                    "enabled": true,
+                    "notes": "",
+                    "text": "\r\r\r",
+                    "label": "TheCove_10_4K.mp4",
+                    "size": {
+                      "width": 1920,
+                      "height": 1080
+                    }
+                  }
+                ],
+                "uuid": "DBE05E8C-C786-442A-AFC5-71AB1FE7FEF3"
+              },
+              {
+                "name": "Verse 1",
+                "color": {
+                  "red": 0,
+                  "green": 0,
+                  "blue": 0,
+                  "alpha": 0
+                },
+                "slides": [
+                  {
+                    "enabled": true,
+                    "notes": "",
+                    "text": "Ancient Gates / Verse 1 / slide 1 line 1\nAncient Gates / Verse 1 / slide 1 line 2",
+                    "label": "",
+                    "size": {
+                      "width": 1920,
+                      "height": 1080
+                    }
+                  },
+                  {
+                    "enabled": true,
+                    "notes": "",
+                    "text": "Ancient Gates / Verse 1 / slide 2 line 1\nAncient Gates / Verse 1 / slide 2 line 2",
+                    "label": "",
+                    "size": {
+                      "width": 1920,
+                      "height": 1080
+                    }
+                  }
+                ],
+                "uuid": "3C4A21B1-1A06-48AA-9367-B91D064F02FB"
+              },
+              {
+                "name": "Verse 2",
+                "color": {
+                  "red": 0,
+                  "green": 0,
+                  "blue": 0,
+                  "alpha": 0
+                },
+                "slides": [
+                  {
+                    "enabled": true,
+                    "notes": "",
+                    "text": "Ancient Gates / Verse 2 / slide 1 line 1\nAncient Gates / Verse 2 / slide 1 line 2\nAncient Gates / Verse 2 / slide 1 line 3",
+                    "label": "",
+                    "size": {
+                      "width": 1920,
+                      "height": 1080
+                    }
+                  },
+                  {
+                    "enabled": true,
+                    "notes": "",
+                    "text": "Ancient Gates / Verse 2 / slide 2 line 1\nAncient Gates / Verse 2 / slide 2 line 2",
+                    "label": "",
+                    "size": {
+                      "width": 1920,
+                      "height": 1080
+                    }
+                  }
+                ],
+                "uuid": "D7F9FB31-C8D8-4C82-8DC6-4ACBE0D7E5CC"
+              },
+              {
+                "name": "Chorus 1",
+                "color": {
+                  "red": 0,
+                  "green": 0,
+                  "blue": 0,
+                  "alpha": 0
+                },
+                "slides": [
+                  {
+                    "enabled": true,
+                    "notes": "",
+                    "text": "Ancient Gates / Chorus 1 / slide 1 line 1\nAncient Gates / Chorus 1 / slide 1 line 2",
+                    "label": "",
+                    "size": {
+                      "width": 1920,
+                      "height": 1080
+                    }
+                  },
+                  {
+                    "enabled": true,
+                    "notes": "",
+                    "text": "Ancient Gates / Chorus 1 / slide 2 line 1",
+                    "label": "",
+                    "size": {
+                      "width": 1920,
+                      "height": 1080
+                    }
+                  }
+                ],
+                "uuid": "871760B7-7A29-4F16-B33D-4939FCA1F323"
+              },
+              {
+                "name": "Verse 3",
+                "color": {
+                  "red": 0,
+                  "green": 0,
+                  "blue": 0,
+                  "alpha": 0
+                },
+                "slides": [
+                  {
+                    "enabled": true,
+                    "notes": "",
+                    "text": "Ancient Gates / Verse 3 / slide 1 line 1\nAncient Gates / Verse 3 / slide 1 line 2",
+                    "label": "",
+                    "size": {
+                      "width": 1920,
+                      "height": 1080
+                    }
+                  },
+                  {
+                    "enabled": true,
+                    "notes": "",
+                    "text": "Ancient Gates / Verse 3 / slide 2 line 1\nAncient Gates / Verse 3 / slide 2 line 2",
+                    "label": "",
+                    "size": {
+                      "width": 1920,
+                      "height": 1080
+                    }
+                  },
+                  {
+                    "enabled": true,
+                    "notes": "",
+                    "text": "Ancient Gates / Verse 3 / slide 3 line 1",
+                    "label": "",
+                    "size": {
+                      "width": 1920,
+                      "height": 1080
+                    }
+                  }
+                ],
+                "uuid": "678A1837-6A66-46C5-BF35-38CE5AAF8637"
+              },
+              {
+                "name": "Verse 4",
+                "color": {
+                  "red": 0,
+                  "green": 0,
+                  "blue": 0,
+                  "alpha": 0
+                },
+                "slides": [
+                  {
+                    "enabled": true,
+                    "notes": "",
+                    "text": "Ancient Gates / Verse 4 / slide 1 line 1\nAncient Gates / Verse 4 / slide 1 line 2",
+                    "label": "",
+                    "size": {
+                      "width": 1920,
+                      "height": 1080
+                    }
+                  },
+                  {
+                    "enabled": true,
+                    "notes": "",
+                    "text": "Ancient Gates / Verse 4 / slide 2 line 1\nAncient Gates / Verse 4 / slide 2 line 2",
+                    "label": "",
+                    "size": {
+                      "width": 1920,
+                      "height": 1080
+                    }
+                  }
+                ],
+                "uuid": "4E1F5F46-DFE2-45D6-B181-EC5037AFCC62"
+              },
+              {
+                "name": "Chorus 1",
+                "color": {
+                  "red": 0,
+                  "green": 0,
+                  "blue": 0,
+                  "alpha": 0
+                },
+                "slides": [
+                  {
+                    "enabled": true,
+                    "notes": "",
+                    "text": "Ancient Gates / Chorus 1 / slide 1 line 1\nAncient Gates / Chorus 1 / slide 1 line 2",
+                    "label": "",
+                    "size": {
+                      "width": 1920,
+                      "height": 1080
+                    }
+                  },
+                  {
+                    "enabled": true,
+                    "notes": "",
+                    "text": "Ancient Gates / Chorus 1 / slide 2 line 1",
+                    "label": "",
+                    "size": {
+                      "width": 1920,
+                      "height": 1080
+                    }
+                  }
+                ],
+                "uuid": "F4A95E4C-44A0-45FF-8E5E-6B9388096F8E"
+              },
+              {
+                "name": "Chorus 2",
+                "color": {
+                  "red": 0,
+                  "green": 0,
+                  "blue": 0,
+                  "alpha": 0
+                },
+                "slides": [
+                  {
+                    "enabled": true,
+                    "notes": "",
+                    "text": "Ancient Gates / Chorus 2 / slide 1 line 1\nAncient Gates / Chorus 2 / slide 1 line 2",
+                    "label": "",
+                    "size": {
+                      "width": 1920,
+                      "height": 1080
+                    }
+                  },
+                  {
+                    "enabled": true,
+                    "notes": "",
+                    "text": "Ancient Gates / Chorus 1 / slide 2 line 1",
+                    "label": "",
+                    "size": {
+                      "width": 1920,
+                      "height": 1080
+                    }
+                  }
+                ],
+                "uuid": "0A072C28-8735-4FF8-BBB8-51DA5A5E2F52"
+              },
+              {
+                "name": "Bridge",
+                "color": {
+                  "red": 0,
+                  "green": 0,
+                  "blue": 0,
+                  "alpha": 0
+                },
+                "slides": [
+                  {
+                    "enabled": true,
+                    "notes": "",
+                    "text": "Ancient Gates / Bridge / slide 1 line 1\nAncient Gates / Bridge / slide 1 line 2",
+                    "label": "",
+                    "size": {
+                      "width": 1920,
+                      "height": 1080
+                    }
+                  },
+                  {
+                    "enabled": true,
+                    "notes": "",
+                    "text": "Ancient Gates / Bridge / slide 2 line 1",
+                    "label": "",
+                    "size": {
+                      "width": 1920,
+                      "height": 1080
+                    }
+                  }
+                ],
+                "uuid": "7F27DF20-41FB-4178-B270-F175049C7014"
+              },
+              {
+                "name": "Bridge",
+                "color": {
+                  "red": 0,
+                  "green": 0,
+                  "blue": 0,
+                  "alpha": 0
+                },
+                "slides": [
+                  {
+                    "enabled": true,
+                    "notes": "",
+                    "text": "Ancient Gates / Bridge / slide 1 line 1\nAncient Gates / Bridge / slide 1 line 2",
+                    "label": "",
+                    "size": {
+                      "width": 1920,
+                      "height": 1080
+                    }
+                  },
+                  {
+                    "enabled": true,
+                    "notes": "",
+                    "text": "Ancient Gates / Bridge / slide 2 line 1",
+                    "label": "",
+                    "size": {
+                      "width": 1920,
+                      "height": 1080
+                    }
+                  }
+                ],
+                "uuid": "73D30FD0-810E-4D17-86AF-1556A4DAEEC4"
+              },
+              {
+                "name": "Bridge",
+                "color": {
+                  "red": 0,
+                  "green": 0,
+                  "blue": 0,
+                  "alpha": 0
+                },
+                "slides": [
+                  {
+                    "enabled": true,
+                    "notes": "",
+                    "text": "Ancient Gates / Bridge / slide 1 line 1\nAncient Gates / Bridge / slide 1 line 2",
+                    "label": "",
+                    "size": {
+                      "width": 1920,
+                      "height": 1080
+                    }
+                  },
+                  {
+                    "enabled": true,
+                    "notes": "",
+                    "text": "Ancient Gates / Bridge / slide 2 line 1",
+                    "label": "",
+                    "size": {
+                      "width": 1920,
+                      "height": 1080
+                    }
+                  }
+                ],
+                "uuid": "5A480841-2DA9-4D95-8946-3045D8A027FF"
+              },
+              {
+                "name": "Bridge",
+                "color": {
+                  "red": 0,
+                  "green": 0,
+                  "blue": 0,
+                  "alpha": 0
+                },
+                "slides": [
+                  {
+                    "enabled": true,
+                    "notes": "",
+                    "text": "Ancient Gates / Bridge / slide 1 line 1\nAncient Gates / Bridge / slide 1 line 2",
+                    "label": "",
+                    "size": {
+                      "width": 1920,
+                      "height": 1080
+                    }
+                  },
+                  {
+                    "enabled": true,
+                    "notes": "",
+                    "text": "Ancient Gates / Bridge / slide 2 line 1",
+                    "label": "",
+                    "size": {
+                      "width": 1920,
+                      "height": 1080
+                    }
+                  }
+                ],
+                "uuid": "0CFE50BA-B082-480D-90D4-5DFBA4311F28"
+              },
+              {
+                "name": "Chorus 1",
+                "color": {
+                  "red": 0,
+                  "green": 0,
+                  "blue": 0,
+                  "alpha": 0
+                },
+                "slides": [
+                  {
+                    "enabled": true,
+                    "notes": "",
+                    "text": "Ancient Gates / Chorus 1 / slide 1 line 1\nAncient Gates / Chorus 1 / slide 1 line 2",
+                    "label": "",
+                    "size": {
+                      "width": 1920,
+                      "height": 1080
+                    }
+                  },
+                  {
+                    "enabled": true,
+                    "notes": "",
+                    "text": "Ancient Gates / Chorus 1 / slide 2 line 1",
+                    "label": "",
+                    "size": {
+                      "width": 1920,
+                      "height": 1080
+                    }
+                  }
+                ],
+                "uuid": "2CDA0056-1F26-4A27-B937-E7CDA777FB40"
+              },
+              {
+                "name": "Chorus 2",
+                "color": {
+                  "red": 0,
+                  "green": 0,
+                  "blue": 0,
+                  "alpha": 0
+                },
+                "slides": [
+                  {
+                    "enabled": true,
+                    "notes": "",
+                    "text": "Ancient Gates / Chorus 2 / slide 1 line 1\nAncient Gates / Chorus 2 / slide 1 line 2",
+                    "label": "",
+                    "size": {
+                      "width": 1920,
+                      "height": 1080
+                    }
+                  },
+                  {
+                    "enabled": true,
+                    "notes": "",
+                    "text": "Ancient Gates / Chorus 1 / slide 2 line 1",
+                    "label": "",
+                    "size": {
+                      "width": 1920,
+                      "height": 1080
+                    }
+                  }
+                ],
+                "uuid": "D909B5C5-8B1D-4B88-8E1E-8146B274B8DA"
+              },
+              {
+                "name": "Bridge",
+                "color": {
+                  "red": 0,
+                  "green": 0,
+                  "blue": 0,
+                  "alpha": 0
+                },
+                "slides": [
+                  {
+                    "enabled": true,
+                    "notes": "",
+                    "text": "Ancient Gates / Bridge / slide 1 line 1\nAncient Gates / Bridge / slide 1 line 2",
+                    "label": "",
+                    "size": {
+                      "width": 1920,
+                      "height": 1080
+                    }
+                  },
+                  {
+                    "enabled": true,
+                    "notes": "",
+                    "text": "Ancient Gates / Bridge / slide 2 line 1",
+                    "label": "",
+                    "size": {
+                      "width": 1920,
+                      "height": 1080
+                    }
+                  }
+                ],
+                "uuid": "A6C9FA7F-72E9-4C42-B6A0-FBB310FE8CB3"
+              },
+              {
+                "name": "Bridge",
+                "color": {
+                  "red": 0,
+                  "green": 0,
+                  "blue": 0,
+                  "alpha": 0
+                },
+                "slides": [
+                  {
+                    "enabled": true,
+                    "notes": "",
+                    "text": "Ancient Gates / Bridge / slide 1 line 1\nAncient Gates / Bridge / slide 1 line 2",
+                    "label": "",
+                    "size": {
+                      "width": 1920,
+                      "height": 1080
+                    }
+                  },
+                  {
+                    "enabled": true,
+                    "notes": "",
+                    "text": "Ancient Gates / Bridge / slide 2 line 1",
+                    "label": "",
+                    "size": {
+                      "width": 1920,
+                      "height": 1080
+                    }
+                  }
+                ],
+                "uuid": "9C36189F-0318-4964-9351-C47BB7F9BA92"
+              },
+              {
+                "name": "Bridge",
+                "color": {
+                  "red": 0,
+                  "green": 0,
+                  "blue": 0,
+                  "alpha": 0
+                },
+                "slides": [
+                  {
+                    "enabled": true,
+                    "notes": "",
+                    "text": "Ancient Gates / Bridge / slide 1 line 1\nAncient Gates / Bridge / slide 1 line 2",
+                    "label": "",
+                    "size": {
+                      "width": 1920,
+                      "height": 1080
+                    }
+                  },
+                  {
+                    "enabled": true,
+                    "notes": "",
+                    "text": "Ancient Gates / Bridge / slide 2 line 1",
+                    "label": "",
+                    "size": {
+                      "width": 1920,
+                      "height": 1080
+                    }
+                  }
+                ],
+                "uuid": "B2AB3F76-BE38-4032-BC51-85E1BFF607FD"
+              },
+              {
+                "name": "Bridge",
+                "color": {
+                  "red": 0,
+                  "green": 0,
+                  "blue": 0,
+                  "alpha": 0
+                },
+                "slides": [
+                  {
+                    "enabled": true,
+                    "notes": "",
+                    "text": "Ancient Gates / Bridge / slide 1 line 1\nAncient Gates / Bridge / slide 1 line 2",
+                    "label": "",
+                    "size": {
+                      "width": 1920,
+                      "height": 1080
+                    }
+                  },
+                  {
+                    "enabled": true,
+                    "notes": "",
+                    "text": "Ancient Gates / Bridge / slide 2 line 1",
+                    "label": "",
+                    "size": {
+                      "width": 1920,
+                      "height": 1080
+                    }
+                  },
+                  {
+                    "enabled": true,
+                    "notes": "",
+                    "text": "\r\r\r",
+                    "label": "",
+                    "size": {
+                      "width": 1920,
+                      "height": 1080
+                    }
+                  },
+                  {
+                    "enabled": true,
+                    "notes": "",
+                    "text": "Ancient Gates / Bridge / slide 1 line 1\nAncient Gates / Bridge / slide 1 line 2",
+                    "label": "",
+                    "size": {
+                      "width": 1920,
+                      "height": 1080
+                    }
+                  },
+                  {
+                    "enabled": true,
+                    "notes": "",
+                    "text": "Ancient Gates / Bridge / slide 2 line 1",
+                    "label": "",
+                    "size": {
+                      "width": 1920,
+                      "height": 1080
+                    }
+                  },
+                  {
+                    "enabled": true,
+                    "notes": "",
+                    "text": "Ancient Gates / Bridge / slide 1 line 1\nAncient Gates / Bridge / slide 1 line 2",
+                    "label": "",
+                    "size": {
+                      "width": 1920,
+                      "height": 1080
+                    }
+                  },
+                  {
+                    "enabled": true,
+                    "notes": "",
+                    "text": "Ancient Gates / Bridge / slide 2 line 1",
+                    "label": "",
+                    "size": {
+                      "width": 1920,
+                      "height": 1080
+                    }
+                  },
+                  {
+                    "enabled": true,
+                    "notes": "",
+                    "text": "Ancient Gates / Bridge / slide 1 line 1\nAncient Gates / Bridge / slide 1 line 2",
+                    "label": "",
+                    "size": {
+                      "width": 1920,
+                      "height": 1080
+                    }
+                  },
+                  {
+                    "enabled": true,
+                    "notes": "",
+                    "text": "Ancient Gates / Bridge / slide 2 line 1",
+                    "label": "",
+                    "size": {
+                      "width": 1920,
+                      "height": 1080
+                    }
+                  },
+                  {
+                    "enabled": true,
+                    "notes": "",
+                    "text": "Ancient Gates / Bridge / slide 1 line 1\nAncient Gates / Bridge / slide 1 line 2",
+                    "label": "",
+                    "size": {
+                      "width": 1920,
+                      "height": 1080
+                    }
+                  },
+                  {
+                    "enabled": true,
+                    "notes": "",
+                    "text": "Ancient Gates / Bridge / slide 2 line 1",
+                    "label": "",
+                    "size": {
+                      "width": 1920,
+                      "height": 1080
+                    }
+                  },
+                  {
+                    "enabled": true,
+                    "notes": "",
+                    "text": "Ancient Gates / Chorus 1 / slide 1 line 1\nAncient Gates / Chorus 1 / slide 1 line 2",
+                    "label": "",
+                    "size": {
+                      "width": 1920,
+                      "height": 1080
+                    }
+                  },
+                  {
+                    "enabled": true,
+                    "notes": "",
+                    "text": "Ancient Gates / Chorus 1 / slide 2 line 1",
+                    "label": "",
+                    "size": {
+                      "width": 1920,
+                      "height": 1080
+                    }
+                  },
+                  {
+                    "enabled": true,
+                    "notes": "",
+                    "text": "Ancient Gates / Chorus 2 / slide 1 line 1\nAncient Gates / Chorus 2 / slide 1 line 2",
+                    "label": "",
+                    "size": {
+                      "width": 1920,
+                      "height": 1080
+                    }
+                  },
+                  {
+                    "enabled": true,
+                    "notes": "",
+                    "text": "Ancient Gates / Chorus 1 / slide 2 line 1",
+                    "label": "",
+                    "size": {
+                      "width": 1920,
+                      "height": 1080
+                    }
+                  },
+                  {
+                    "enabled": true,
+                    "notes": "",
+                    "text": "Ancient Gates / Bridge / slide 1 line 1\nAncient Gates / Bridge / slide 1 line 2",
+                    "label": "",
+                    "size": {
+                      "width": 1920,
+                      "height": 1080
+                    }
+                  },
+                  {
+                    "enabled": true,
+                    "notes": "",
+                    "text": "Ancient Gates / Bridge / slide 2 line 1",
+                    "label": "",
+                    "size": {
+                      "width": 1920,
+                      "height": 1080
+                    }
+                  },
+                  {
+                    "enabled": true,
+                    "notes": "",
+                    "text": "Ancient Gates / Bridge / slide 1 line 1\nAncient Gates / Bridge / slide 1 line 2",
+                    "label": "",
+                    "size": {
+                      "width": 1920,
+                      "height": 1080
+                    }
+                  },
+                  {
+                    "enabled": true,
+                    "notes": "",
+                    "text": "Ancient Gates / Bridge / slide 2 line 1",
+                    "label": "",
+                    "size": {
+                      "width": 1920,
+                      "height": 1080
+                    }
+                  },
+                  {
+                    "enabled": true,
+                    "notes": "",
+                    "text": "Ancient Gates / Bridge / slide 1 line 1\nAncient Gates / Bridge / slide 1 line 2",
+                    "label": "",
+                    "size": {
+                      "width": 1920,
+                      "height": 1080
+                    }
+                  },
+                  {
+                    "enabled": true,
+                    "notes": "",
+                    "text": "Ancient Gates / Bridge / slide 2 line 1",
+                    "label": "",
+                    "size": {
+                      "width": 1920,
+                      "height": 1080
+                    }
+                  },
+                  {
+                    "enabled": true,
+                    "notes": "",
+                    "text": "Ancient Gates / Bridge / slide 1 line 1\nAncient Gates / Bridge / slide 1 line 2",
+                    "label": "",
+                    "size": {
+                      "width": 1920,
+                      "height": 1080
+                    }
+                  },
+                  {
+                    "enabled": true,
+                    "notes": "",
+                    "text": "Ancient Gates / Bridge / slide 2 line 1",
+                    "label": "",
+                    "size": {
+                      "width": 1920,
+                      "height": 1080
+                    }
+                  },
+                  {
+                    "enabled": true,
+                    "notes": "",
+                    "text": "\r\r\r",
+                    "label": "",
+                    "size": {
+                      "width": 1920,
+                      "height": 1080
+                    }
+                  }
+                ],
+                "uuid": "9F5A5A88-C59E-48BE-A369-5E8B6E7BDE3E"
+              }
+            ],
+            "has_timeline": false,
+            "presentation_path": "",
+            "destination": "presentation",
+            "arrangements": [
+              {
+                "id": {
+                  "uuid": "5A606BC5-9279-4509-983E-88092AE567F0",
+                  "name": "Master",
+                  "index": 0
+                },
+                "groups": [
+                  "DBE05E8C-C786-442A-AFC5-71AB1FE7FEF3",
+                  "3C4A21B1-1A06-48AA-9367-B91D064F02FB",
+                  "D7F9FB31-C8D8-4C82-8DC6-4ACBE0D7E5CC",
+                  "871760B7-7A29-4F16-B33D-4939FCA1F323",
+                  "678A1837-6A66-46C5-BF35-38CE5AAF8637",
+                  "4E1F5F46-DFE2-45D6-B181-EC5037AFCC62",
+                  "F4A95E4C-44A0-45FF-8E5E-6B9388096F8E",
+                  "0A072C28-8735-4FF8-BBB8-51DA5A5E2F52",
+                  "7F27DF20-41FB-4178-B270-F175049C7014",
+                  "73D30FD0-810E-4D17-86AF-1556A4DAEEC4",
+                  "5A480841-2DA9-4D95-8946-3045D8A027FF",
+                  "0CFE50BA-B082-480D-90D4-5DFBA4311F28",
+                  "2CDA0056-1F26-4A27-B937-E7CDA777FB40",
+                  "D909B5C5-8B1D-4B88-8E1E-8146B274B8DA",
+                  "A6C9FA7F-72E9-4C42-B6A0-FBB310FE8CB3",
+                  "9C36189F-0318-4964-9351-C47BB7F9BA92",
+                  "B2AB3F76-BE38-4032-BC51-85E1BFF607FD",
+                  "9F5A5A88-C59E-48BE-A369-5E8B6E7BDE3E"
+                ],
+                "total_cues": 58
+              }
+            ],
+            "current_arrangement": "5A606BC5-9279-4509-983E-88092AE567F0",
+            "type": "multitracks",
+            "is_authorized": true,
+            "total_cues": 58
+          }
+        }
+      }
+    },
+    {
+      "t": 2484,
+      "frame": {
+        "url": "timer/system_time",
+        "data": 1793642409
+      }
+    },
+    {
+      "t": 3483,
+      "frame": {
+        "url": "timer/system_time",
+        "data": 1793642410
+      }
+    },
+    {
+      "t": 4476,
+      "frame": {
+        "url": "timer/system_time",
+        "data": 1793642411
+      }
+    },
+    {
+      "t": 4635,
+      "frame": {
+        "url": "presentation/slide_index",
+        "data": {
+          "presentation_index": {
+            "index": 1,
+            "presentation_id": {
+              "uuid": "5A606BC5-9279-4509-983E-88092AE567F0",
+              "name": "Ancient Gates",
+              "index": 63
+            },
+            "total_cues": 58,
+            "remaining_cues": 56
+          }
+        }
+      }
+    },
+    {
+      "t": 4635,
+      "frame": {
+        "url": "status/slide",
+        "data": {
+          "current": {
+            "text": "Ancient Gates / Verse 1 / slide 1 line 1\nAncient Gates / Verse 1 / slide 1 line 2",
+            "notes": "",
+            "uuid": "833CC868-3079-4678-98A1-4C4D28F87DE8"
+          },
+          "next": {
+            "text": "Ancient Gates / Verse 1 / slide 2 line 1\nAncient Gates / Verse 1 / slide 2 line 2",
+            "notes": "",
+            "uuid": "B24F64FD-4A40-453E-A3D8-C00ABE8C6EB6"
+          }
+        }
+      }
+    },
+    {
+      "t": 5481,
+      "frame": {
+        "url": "timer/system_time",
+        "data": 1793642412
+      }
+    },
+    {
+      "t": 5884,
+      "frame": {
+        "url": "presentation/slide_index",
+        "data": {
+          "presentation_index": {
+            "index": 2,
+            "presentation_id": {
+              "uuid": "5A606BC5-9279-4509-983E-88092AE567F0",
+              "name": "Ancient Gates",
+              "index": 63
+            },
+            "total_cues": 58,
+            "remaining_cues": 55
+          }
+        }
+      }
+    },
+    {
+      "t": 5884,
+      "frame": {
+        "url": "status/slide",
+        "data": {
+          "current": {
+            "text": "Ancient Gates / Verse 1 / slide 2 line 1\nAncient Gates / Verse 1 / slide 2 line 2",
+            "notes": "",
+            "uuid": "B24F64FD-4A40-453E-A3D8-C00ABE8C6EB6"
+          },
+          "next": {
+            "text": "Ancient Gates / Verse 2 / slide 1 line 1\nAncient Gates / Verse 2 / slide 1 line 2\nAncient Gates / Verse 2 / slide 1 line 3",
+            "notes": "",
+            "uuid": "74863982-9AAA-437C-B43B-0CCB1EEEFD44"
+          }
+        }
+      }
+    },
+    {
+      "t": 6485,
+      "frame": {
+        "url": "timer/system_time",
+        "data": 1793642413
+      }
+    },
+    {
+      "t": 7482,
+      "frame": {
+        "url": "timer/system_time",
+        "data": 1793642414
+      }
+    },
+    {
+      "t": 8484,
+      "frame": {
+        "url": "timer/system_time",
+        "data": 1793642415
+      }
+    },
+    {
+      "t": 9483,
+      "frame": {
+        "url": "timer/system_time",
+        "data": 1793642416
+      }
+    },
+    {
+      "t": 9607,
+      "frame": {
+        "url": "presentation/slide_index",
+        "data": {
+          "presentation_index": {
+            "index": 57,
+            "presentation_id": {
+              "uuid": "5A606BC5-9279-4509-983E-88092AE567F0",
+              "name": "Ancient Gates",
+              "index": 63
+            },
+            "total_cues": 58,
+            "remaining_cues": 0
+          }
+        }
+      }
+    },
+    {
+      "t": 9608,
+      "frame": {
+        "url": "status/slide",
+        "data": {
+          "current": {
+            "text": "",
+            "notes": "",
+            "uuid": "C59D6584-A77A-4693-85B5-71A3693A8469"
+          },
+          "next": null
+        }
+      }
+    },
+    {
+      "t": 10484,
+      "frame": {
+        "url": "timer/system_time",
+        "data": 1793642417
+      }
+    },
+    {
+      "t": 11484,
+      "frame": {
+        "url": "timer/system_time",
+        "data": 1793642418
+      }
+    },
+    {
+      "t": 12482,
+      "frame": {
+        "url": "timer/system_time",
+        "data": 1793642419
+      }
+    },
+    {
+      "t": 13483,
+      "frame": {
+        "url": "timer/system_time",
+        "data": 1793642420
+      }
+    },
+    {
+      "t": 14489,
+      "frame": {
+        "url": "timer/system_time",
+        "data": 1793642421
+      }
+    },
+    {
+      "t": 15482,
+      "frame": {
+        "url": "timer/system_time",
+        "data": 1793642422
+      }
+    },
+    {
+      "t": 15586,
+      "frame": {
+        "url": "presentation/current",
+        "data": {
+          "presentation": {
+            "id": {
+              "uuid": "AA8F2F17-09BE-44ED-A618-C645D5EC8AAB",
+              "name": "Worthy Of It All",
+              "index": 0
+            },
+            "groups": [
+              {
+                "name": "Verse 1",
+                "color": {
+                  "red": 0,
+                  "green": 0,
+                  "blue": 0,
+                  "alpha": 0
+                },
+                "slides": [
+                  {
+                    "enabled": true,
+                    "notes": "",
+                    "text": "\r\r\r",
+                    "label": "Daybreak_06_4K.mp4",
+                    "size": {
+                      "width": 1920,
+                      "height": 1080
+                    }
+                  },
+                  {
+                    "enabled": true,
+                    "notes": "",
+                    "text": "Worthy Of It All / Verse 1 / slide 2 line 1\nWorthy Of It All / Verse 1 / slide 2 line 2",
+                    "label": "",
+                    "size": {
+                      "width": 1920,
+                      "height": 1080
+                    }
+                  },
+                  {
+                    "enabled": true,
+                    "notes": "",
+                    "text": "Worthy Of It All / Verse 1 / slide 3 line 1\nWorthy Of It All / Verse 1 / slide 3 line 2",
+                    "label": "",
+                    "size": {
+                      "width": 1920,
+                      "height": 1080
+                    }
+                  },
+                  {
+                    "enabled": true,
+                    "notes": "",
+                    "text": "Worthy Of It All / Verse 1 / slide 4 line 1",
+                    "label": "",
+                    "size": {
+                      "width": 1920,
+                      "height": 1080
+                    }
+                  }
+                ],
+                "uuid": "B7AA1240-E923-46FB-B573-FEB8A474754E"
+              },
+              {
+                "name": "Chorus",
+                "color": {
+                  "red": 0,
+                  "green": 0,
+                  "blue": 0,
+                  "alpha": 0
+                },
+                "slides": [
+                  {
+                    "enabled": true,
+                    "notes": "",
+                    "text": "Worthy Of It All / Chorus / slide 1 line 1\nWorthy Of It All / Chorus / slide 1 line 2",
+                    "label": "",
+                    "size": {
+                      "width": 1920,
+                      "height": 1080
+                    }
+                  },
+                  {
+                    "enabled": true,
+                    "notes": "",
+                    "text": "Worthy Of It All / Chorus / slide 2 line 1",
+                    "label": "",
+                    "size": {
+                      "width": 1920,
+                      "height": 1080
+                    }
+                  },
+                  {
+                    "enabled": true,
+                    "notes": "",
+                    "text": "Worthy Of It All / Chorus / slide 3 line 1",
+                    "label": "",
+                    "size": {
+                      "width": 1920,
+                      "height": 1080
+                    }
+                  },
+                  {
+                    "enabled": true,
+                    "notes": "",
+                    "text": "Worthy Of It All / Chorus / slide 4 line 1",
+                    "label": "",
+                    "size": {
+                      "width": 1920,
+                      "height": 1080
+                    }
+                  },
+                  {
+                    "enabled": true,
+                    "notes": "",
+                    "text": "\r\r\r",
+                    "label": "",
+                    "size": {
+                      "width": 1920,
+                      "height": 1080
+                    }
+                  }
+                ],
+                "uuid": "1938C824-9CEE-4C24-BE93-A94DE65CEED2"
+              },
+              {
+                "name": "Verse 1",
+                "color": {
+                  "red": 0,
+                  "green": 0,
+                  "blue": 0,
+                  "alpha": 0
+                },
+                "slides": [
+                  {
+                    "enabled": true,
+                    "notes": "",
+                    "text": "Worthy Of It All / Verse 1 / slide 2 line 1\nWorthy Of It All / Verse 1 / slide 2 line 2",
+                    "label": "",
+                    "size": {
+                      "width": 1920,
+                      "height": 1080
+                    }
+                  },
+                  {
+                    "enabled": true,
+                    "notes": "",
+                    "text": "Worthy Of It All / Verse 1 / slide 3 line 1\nWorthy Of It All / Verse 1 / slide 3 line 2",
+                    "label": "",
+                    "size": {
+                      "width": 1920,
+                      "height": 1080
+                    }
+                  },
+                  {
+                    "enabled": true,
+                    "notes": "",
+                    "text": "Worthy Of It All / Verse 1 / slide 4 line 1",
+                    "label": "",
+                    "size": {
+                      "width": 1920,
+                      "height": 1080
+                    }
+                  }
+                ],
+                "uuid": "5FF71F0E-444C-41ED-B5B4-0D5DE3D373E4"
+              },
+              {
+                "name": "Chorus",
+                "color": {
+                  "red": 0,
+                  "green": 0,
+                  "blue": 0,
+                  "alpha": 0
+                },
+                "slides": [
+                  {
+                    "enabled": true,
+                    "notes": "",
+                    "text": "Worthy Of It All / Chorus / slide 1 line 1\nWorthy Of It All / Chorus / slide 1 line 2",
+                    "label": "",
+                    "size": {
+                      "width": 1920,
+                      "height": 1080
+                    }
+                  },
+                  {
+                    "enabled": true,
+                    "notes": "",
+                    "text": "Worthy Of It All / Chorus / slide 2 line 1\nWorthy Of It All / Chorus / slide 2 line 2",
+                    "label": "",
+                    "size": {
+                      "width": 1920,
+                      "height": 1080
+                    }
+                  },
+                  {
+                    "enabled": true,
+                    "notes": "",
+                    "text": "Worthy Of It All / Chorus / slide 4 line 1",
+                    "label": "",
+                    "size": {
+                      "width": 1920,
+                      "height": 1080
+                    }
+                  }
+                ],
+                "uuid": "8267150E-F8C5-49B7-B963-C5A32BC275BC"
+              },
+              {
+                "name": "Chorus",
+                "color": {
+                  "red": 0,
+                  "green": 0,
+                  "blue": 0,
+                  "alpha": 0
+                },
+                "slides": [
+                  {
+                    "enabled": true,
+                    "notes": "",
+                    "text": "Worthy Of It All / Chorus / slide 1 line 1\nWorthy Of It All / Chorus / slide 1 line 2",
+                    "label": "",
+                    "size": {
+                      "width": 1920,
+                      "height": 1080
+                    }
+                  },
+                  {
+                    "enabled": true,
+                    "notes": "",
+                    "text": "Worthy Of It All / Chorus / slide 2 line 1\nWorthy Of It All / Chorus / slide 2 line 2",
+                    "label": "",
+                    "size": {
+                      "width": 1920,
+                      "height": 1080
+                    }
+                  },
+                  {
+                    "enabled": true,
+                    "notes": "",
+                    "text": "Worthy Of It All / Chorus / slide 4 line 1",
+                    "label": "",
+                    "size": {
+                      "width": 1920,
+                      "height": 1080
+                    }
+                  },
+                  {
+                    "enabled": true,
+                    "notes": "",
+                    "text": "\r\r\r",
+                    "label": "",
+                    "size": {
+                      "width": 1920,
+                      "height": 1080
+                    }
+                  }
+                ],
+                "uuid": "5E7F52FB-601F-450D-8186-22651B30B459"
+              },
+              {
+                "name": "Bridge",
+                "color": {
+                  "red": 0,
+                  "green": 0,
+                  "blue": 0,
+                  "alpha": 0
+                },
+                "slides": [
+                  {
+                    "enabled": true,
+                    "notes": "",
+                    "text": "Worthy Of It All / Bridge / slide 1 line 1\nWorthy Of It All / Bridge / slide 1 line 2",
+                    "label": "",
+                    "size": {
+                      "width": 1920,
+                      "height": 1080
+                    }
+                  },
+                  {
+                    "enabled": true,
+                    "notes": "",
+                    "text": "Worthy Of It All / Bridge / slide 1 line 1\nWorthy Of It All / Bridge / slide 1 line 2",
+                    "label": "",
+                    "size": {
+                      "width": 1920,
+                      "height": 1080
+                    }
+                  },
+                  {
+                    "enabled": true,
+                    "notes": "",
+                    "text": "Worthy Of It All / Bridge / slide 3 line 1\nWorthy Of It All / Bridge / slide 3 line 2",
+                    "label": "",
+                    "size": {
+                      "width": 1920,
+                      "height": 1080
+                    }
+                  },
+                  {
+                    "enabled": true,
+                    "notes": "",
+                    "text": "Worthy Of It All / Bridge / slide 3 line 1\nWorthy Of It All / Bridge / slide 3 line 2",
+                    "label": "",
+                    "size": {
+                      "width": 1920,
+                      "height": 1080
+                    }
+                  }
+                ],
+                "uuid": "CB4F9F44-CB5D-4394-8F13-1E3950003077"
+              },
+              {
+                "name": "Bridge",
+                "color": {
+                  "red": 0,
+                  "green": 0,
+                  "blue": 0,
+                  "alpha": 0
+                },
+                "slides": [
+                  {
+                    "enabled": true,
+                    "notes": "",
+                    "text": "Worthy Of It All / Bridge / slide 3 line 1\nWorthy Of It All / Bridge / slide 3 line 2",
+                    "label": "",
+                    "size": {
+                      "width": 1920,
+                      "height": 1080
+                    }
+                  },
+                  {
+                    "enabled": true,
+                    "notes": "",
+                    "text": "Worthy Of It All / Bridge / slide 3 line 1\nWorthy Of It All / Bridge / slide 3 line 2",
+                    "label": "",
+                    "size": {
+                      "width": 1920,
+                      "height": 1080
+                    }
+                  },
+                  {
+                    "enabled": true,
+                    "notes": "",
+                    "text": "Worthy Of It All / Bridge / slide 3 line 1\nWorthy Of It All / Bridge / slide 3 line 2",
+                    "label": "",
+                    "size": {
+                      "width": 1920,
+                      "height": 1080
+                    }
+                  },
+                  {
+                    "enabled": true,
+                    "notes": "",
+                    "text": "Worthy Of It All / Bridge / slide 4 line 1\nWorthy Of It All / Bridge / slide 4 line 2",
+                    "label": "",
+                    "size": {
+                      "width": 1920,
+                      "height": 1080
+                    }
+                  }
+                ],
+                "uuid": "02EE29FA-D71F-4D82-AB4B-51CA5E1DEFA5"
+              },
+              {
+                "name": "Chorus",
+                "color": {
+                  "red": 0,
+                  "green": 0,
+                  "blue": 0,
+                  "alpha": 0
+                },
+                "slides": [
+                  {
+                    "enabled": true,
+                    "notes": "",
+                    "text": "Worthy Of It All / Chorus / slide 1 line 1\nWorthy Of It All / Chorus / slide 1 line 2",
+                    "label": "",
+                    "size": {
+                      "width": 1920,
+                      "height": 1080
+                    }
+                  },
+                  {
+                    "enabled": true,
+                    "notes": "",
+                    "text": "Worthy Of It All / Chorus / slide 2 line 1\nWorthy Of It All / Chorus / slide 2 line 2",
+                    "label": "",
+                    "size": {
+                      "width": 1920,
+                      "height": 1080
+                    }
+                  },
+                  {
+                    "enabled": true,
+                    "notes": "",
+                    "text": "Worthy Of It All / Chorus / slide 4 line 1",
+                    "label": "",
+                    "size": {
+                      "width": 1920,
+                      "height": 1080
+                    }
+                  }
+                ],
+                "uuid": "EA08D514-8AA3-4F4E-9081-5E0B482554F3"
+              },
+              {
+                "name": "Chorus",
+                "color": {
+                  "red": 0,
+                  "green": 0,
+                  "blue": 0,
+                  "alpha": 0
+                },
+                "slides": [
+                  {
+                    "enabled": true,
+                    "notes": "",
+                    "text": "Worthy Of It All / Chorus / slide 1 line 1\nWorthy Of It All / Chorus / slide 1 line 2",
+                    "label": "",
+                    "size": {
+                      "width": 1920,
+                      "height": 1080
+                    }
+                  },
+                  {
+                    "enabled": true,
+                    "notes": "",
+                    "text": "Worthy Of It All / Chorus / slide 2 line 1\nWorthy Of It All / Chorus / slide 2 line 2",
+                    "label": "",
+                    "size": {
+                      "width": 1920,
+                      "height": 1080
+                    }
+                  },
+                  {
+                    "enabled": true,
+                    "notes": "",
+                    "text": "Worthy Of It All / Chorus / slide 4 line 1",
+                    "label": "",
+                    "size": {
+                      "width": 1920,
+                      "height": 1080
+                    }
+                  },
+                  {
+                    "enabled": true,
+                    "notes": "",
+                    "text": "\r\r\r",
+                    "label": "",
+                    "size": {
+                      "width": 1920,
+                      "height": 1080
+                    }
+                  }
+                ],
+                "uuid": "6C798F5E-E841-476C-99D8-4BE2EE0AC5D4"
+              }
+            ],
+            "has_timeline": false,
+            "presentation_path": "",
+            "destination": "presentation",
+            "arrangements": [
+              {
+                "id": {
+                  "uuid": "AA8F2F17-09BE-44ED-A618-C645D5EC8AAB",
+                  "name": "Master",
+                  "index": 0
+                },
+                "groups": [
+                  "B7AA1240-E923-46FB-B573-FEB8A474754E",
+                  "1938C824-9CEE-4C24-BE93-A94DE65CEED2",
+                  "5FF71F0E-444C-41ED-B5B4-0D5DE3D373E4",
+                  "8267150E-F8C5-49B7-B963-C5A32BC275BC",
+                  "5E7F52FB-601F-450D-8186-22651B30B459",
+                  "CB4F9F44-CB5D-4394-8F13-1E3950003077",
+                  "02EE29FA-D71F-4D82-AB4B-51CA5E1DEFA5",
+                  "EA08D514-8AA3-4F4E-9081-5E0B482554F3",
+                  "6C798F5E-E841-476C-99D8-4BE2EE0AC5D4"
+                ],
+                "total_cues": 34
+              }
+            ],
+            "current_arrangement": "AA8F2F17-09BE-44ED-A618-C645D5EC8AAB",
+            "type": "multitracks",
+            "is_authorized": true,
+            "total_cues": 34
+          }
+        }
+      }
+    },
+    {
+      "t": 15590,
+      "frame": {
+        "url": "presentation/slide_index",
+        "data": {
+          "presentation_index": {
+            "index": 4,
+            "presentation_id": {
+              "uuid": "AA8F2F17-09BE-44ED-A618-C645D5EC8AAB",
+              "name": "Worthy Of It All",
+              "index": 302
+            },
+            "total_cues": 34,
+            "remaining_cues": 29
+          }
+        }
+      }
+    },
+    {
+      "t": 15590,
+      "frame": {
+        "url": "status/slide",
+        "data": {
+          "current": {
+            "text": "Worthy Of It All / Chorus / slide 1 line 1\nWorthy Of It All / Chorus / slide 1 line 2",
+            "notes": "",
+            "uuid": "520225D6-5EEB-4EE9-8576-AC62634C41A2"
+          },
+          "next": {
+            "text": "Worthy Of It All / Chorus / slide 2 line 1",
+            "notes": "",
+            "uuid": "D374068D-F551-4007-823B-8615ABB52224"
+          }
+        }
+      }
+    },
+    {
+      "t": 16478,
+      "frame": {
+        "url": "timer/system_time",
+        "data": 1793642423
+      }
+    },
+    {
+      "t": 16841,
+      "frame": {
+        "url": "presentation/slide_index",
+        "data": {
+          "presentation_index": {
+            "index": 9,
+            "presentation_id": {
+              "uuid": "AA8F2F17-09BE-44ED-A618-C645D5EC8AAB",
+              "name": "Worthy Of It All",
+              "index": 302
+            },
+            "total_cues": 34,
+            "remaining_cues": 24
+          }
+        }
+      }
+    },
+    {
+      "t": 16841,
+      "frame": {
+        "url": "status/slide",
+        "data": {
+          "current": {
+            "text": "Worthy Of It All / Verse 1 / slide 2 line 1\nWorthy Of It All / Verse 1 / slide 2 line 2",
+            "notes": "",
+            "uuid": "059A6DCE-2A43-4CAA-B395-FC52B493B3C0"
+          },
+          "next": {
+            "text": "Worthy Of It All / Verse 1 / slide 3 line 1\nWorthy Of It All / Verse 1 / slide 3 line 2",
+            "notes": "",
+            "uuid": "A610E633-4485-44EE-A340-9680C75C00FC"
+          }
+        }
+      }
+    },
+    {
+      "t": 17482,
+      "frame": {
+        "url": "timer/system_time",
+        "data": 1793642424
+      }
+    },
+    {
+      "t": 18148,
+      "frame": {
+        "url": "presentation/current",
+        "data": {
+          "presentation": {
+            "id": {
+              "uuid": "27B59282-5C91-478D-B677-23BE463959BB",
+              "name": "Holy Forever",
+              "index": 0
+            },
+            "groups": [
+              {
+                "name": "Intro",
+                "color": {
+                  "red": 0,
+                  "green": 0,
+                  "blue": 0,
+                  "alpha": 0
+                },
+                "slides": [
+                  {
+                    "enabled": true,
+                    "notes": "",
+                    "text": "\r\r\r",
+                    "label": "Mountain_04_4K.mp4",
+                    "size": {
+                      "width": 1920,
+                      "height": 1080
+                    }
+                  }
+                ],
+                "uuid": "7B0153FF-942C-49D0-A1F6-EE48C45B239C"
+              },
+              {
+                "name": "Verse 1",
+                "color": {
+                  "red": 0,
+                  "green": 0,
+                  "blue": 0,
+                  "alpha": 0
+                },
+                "slides": [
+                  {
+                    "enabled": true,
+                    "notes": "",
+                    "text": "Holy Forever / Verse 1 / slide 1 line 1\nHoly Forever / Verse 1 / slide 1 line 2",
+                    "label": "",
+                    "size": {
+                      "width": 1920,
+                      "height": 1080
+                    }
+                  },
+                  {
+                    "enabled": true,
+                    "notes": "",
+                    "text": "Holy Forever / Verse 1 / slide 2 line 1\nHoly Forever / Verse 1 / slide 2 line 2",
+                    "label": "",
+                    "size": {
+                      "width": 1920,
+                      "height": 1080
+                    }
+                  },
+                  {
+                    "enabled": true,
+                    "notes": "",
+                    "text": "Holy Forever / Verse 1 / slide 3 line 1\nHoly Forever / Verse 1 / slide 3 line 2",
+                    "label": "",
+                    "size": {
+                      "width": 1920,
+                      "height": 1080
+                    }
+                  },
+                  {
+                    "enabled": true,
+                    "notes": "",
+                    "text": "Holy Forever / Verse 1 / slide 4 line 1\nHoly Forever / Verse 1 / slide 4 line 2",
+                    "label": "",
+                    "size": {
+                      "width": 1920,
+                      "height": 1080
+                    }
+                  }
+                ],
+                "uuid": "9CBB6FD6-875D-428B-A1E5-9B66EFE88D3C"
+              },
+              {
+                "name": "Pre Chorus 1",
+                "color": {
+                  "red": 0,
+                  "green": 0,
+                  "blue": 0,
+                  "alpha": 0
+                },
+                "slides": [
+                  {
+                    "enabled": true,
+                    "notes": "",
+                    "text": "Holy Forever / Pre Chorus 1 / slide 1 line 1​\nHoly Forever / Pre Chorus 1 / slide 1 line 2",
+                    "label": "",
+                    "size": {
+                      "width": 1920,
+                      "height": 1080
+                    }
+                  },
+                  {
+                    "enabled": true,
+                    "notes": "",
+                    "text": "Holy Forever / Pre Chorus 1 / slide 2 line 1",
+                    "label": "",
+                    "size": {
+                      "width": 1920,
+                      "height": 1080
+                    }
+                  }
+                ],
+                "uuid": "CDF5BBAD-259F-48F1-98B5-9827CFEE0D18"
+              },
+              {
+                "name": "Pre Chorus 2",
+                "color": {
+                  "red": 0,
+                  "green": 0,
+                  "blue": 0,
+                  "alpha": 0
+                },
+                "slides": [
+                  {
+                    "enabled": true,
+                    "notes": "",
+                    "text": "Holy Forever / Pre Chorus 2 / slide 1 line 1​\nHoly Forever / Pre Chorus 2 / slide 1 line 2",
+                    "label": "",
+                    "size": {
+                      "width": 1920,
+                      "height": 1080
+                    }
+                  },
+                  {
+                    "enabled": true,
+                    "notes": "",
+                    "text": "Holy Forever / Pre Chorus 1 / slide 2 line 1",
+                    "label": "",
+                    "size": {
+                      "width": 1920,
+                      "height": 1080
+                    }
+                  }
+                ],
+                "uuid": "CE803962-0992-4659-A143-8478A4EACEB3"
+              },
+              {
+                "name": "Chorus 1",
+                "color": {
+                  "red": 0,
+                  "green": 0,
+                  "blue": 0,
+                  "alpha": 0
+                },
+                "slides": [
+                  {
+                    "enabled": true,
+                    "notes": "",
+                    "text": "Holy Forever / Chorus 1 / slide 1 line 1\nHoly Forever / Chorus 1 / slide 1 line 2",
+                    "label": "",
+                    "size": {
+                      "width": 1920,
+                      "height": 1080
+                    }
+                  },
+                  {
+                    "enabled": true,
+                    "notes": "",
+                    "text": "Holy Forever / Chorus 1 / slide 2 line 1\nHoly Forever / Chorus 1 / slide 2 line 2​​",
+                    "label": "",
+                    "size": {
+                      "width": 1920,
+                      "height": 1080
+                    }
+                  }
+                ],
+                "uuid": "891286DB-5636-4C2B-BE90-5488178409FD"
+              },
+              {
+                "name": "Verse 2",
+                "color": {
+                  "red": 0,
+                  "green": 0,
+                  "blue": 0,
+                  "alpha": 0
+                },
+                "slides": [
+                  {
+                    "enabled": true,
+                    "notes": "",
+                    "text": "Holy Forever / Verse 2 / slide 1 line 1\nHoly Forever / Verse 2 / slide 1 line 2",
+                    "label": "",
+                    "size": {
+                      "width": 1920,
+                      "height": 1080
+                    }
+                  },
+                  {
+                    "enabled": true,
+                    "notes": "",
+                    "text": "Holy Forever / Verse 2 / slide 2 line 1\nHoly Forever / Verse 2 / slide 2 line 2",
+                    "label": "",
+                    "size": {
+                      "width": 1920,
+                      "height": 1080
+                    }
+                  },
+                  {
+                    "enabled": true,
+                    "notes": "",
+                    "text": "Holy Forever / Verse 2 / slide 3 line 1\nHoly Forever / Verse 2 / slide 3 line 2",
+                    "label": "",
+                    "size": {
+                      "width": 1920,
+                      "height": 1080
+                    }
+                  },
+                  {
+                    "enabled": true,
+                    "notes": "",
+                    "text": "Holy Forever / Verse 2 / slide 2 line 1\nHoly Forever / Verse 2 / slide 2 line 2",
+                    "label": "",
+                    "size": {
+                      "width": 1920,
+                      "height": 1080
+                    }
+                  }
+                ],
+                "uuid": "8288ADB5-886C-4E85-8BC7-2E4E5C5890CE"
+              },
+              {
+                "name": "Tag",
+                "color": {
+                  "red": 0,
+                  "green": 0,
+                  "blue": 0,
+                  "alpha": 0
+                },
+                "slides": [
+                  {
+                    "enabled": true,
+                    "notes": "",
+                    "text": "Holy Forever / Tag / slide 1 line 1\nHoly Forever / Tag / slide 1 line 2",
+                    "label": "",
+                    "size": {
+                      "width": 1920,
+                      "height": 1080
+                    }
+                  }
+                ],
+                "uuid": "C92A9E76-E3ED-4BAD-827C-A288AAD33750"
+              },
+              {
+                "name": "Chorus 2",
+                "color": {
+                  "red": 0,
+                  "green": 0,
+                  "blue": 0,
+                  "alpha": 0
+                },
+                "slides": [
+                  {
+                    "enabled": true,
+                    "notes": "",
+                    "text": "Holy Forever / Chorus 2 / slide 1 line 1\nHoly Forever / Chorus 2 / slide 1 line 2",
+                    "label": "",
+                    "size": {
+                      "width": 1920,
+                      "height": 1080
+                    }
+                  },
+                  {
+                    "enabled": true,
+                    "notes": "",
+                    "text": "Holy Forever / Chorus 2 / slide 2 line 1\nHoly Forever / Chorus 2 / slide 2 line 2​",
+                    "label": "",
+                    "size": {
+                      "width": 1920,
+                      "height": 1080
+                    }
+                  }
+                ],
+                "uuid": "4D23D004-1949-4850-88D8-B83225F4C5B7"
+              },
+              {
+                "name": "Pre Chorus 2",
+                "color": {
+                  "red": 0,
+                  "green": 0,
+                  "blue": 0,
+                  "alpha": 0
+                },
+                "slides": [
+                  {
+                    "enabled": true,
+                    "notes": "",
+                    "text": "Holy Forever / Pre Chorus 2 / slide 1 line 1​\nHoly Forever / Pre Chorus 2 / slide 1 line 2",
+                    "label": "",
+                    "size": {
+                      "width": 1920,
+                      "height": 1080
+                    }
+                  },
+                  {
+                    "enabled": true,
+                    "notes": "",
+                    "text": "Holy Forever / Pre Chorus 1 / slide 2 line 1",
+                    "label": "",
+                    "size": {
+                      "width": 1920,
+                      "height": 1080
+                    }
+                  }
+                ],
+                "uuid": "C616206B-EE5F-4F8E-9A3D-AB58C6F7EB1F"
+              },
+              {
+                "name": "Tag",
+                "color": {
+                  "red": 0,
+                  "green": 0,
+                  "blue": 0,
+                  "alpha": 0
+                },
+                "slides": [
+                  {
+                    "enabled": true,
+                    "notes": "",
+                    "text": "Holy Forever / Chorus 2 / slide 2 line 1\nHoly Forever / Chorus 2 / slide 2 line 2​",
+                    "label": "",
+                    "size": {
+                      "width": 1920,
+                      "height": 1080
+                    }
+                  }
+                ],
+                "uuid": "944BE36F-21ED-49DF-8F27-1CC34E3B27E6"
+              },
+              {
+                "name": "",
+                "color": {
+                  "red": 0,
+                  "green": 0,
+                  "blue": 0,
+                  "alpha": 0
+                },
+                "slides": [
+                  {
+                    "enabled": true,
+                    "notes": "",
+                    "text": "Holy Forever / Chorus 2 / slide 1 line 1\nHoly Forever / Chorus 2 / slide 1 line 2",
+                    "label": "",
+                    "size": {
+                      "width": 1920,
+                      "height": 1080
+                    }
+                  }
+                ],
+                "uuid": "75DD933D-F2A3-459E-8D81-B5A4A1557044"
+              },
+              {
+                "name": "",
+                "color": {
+                  "red": 0,
+                  "green": 0,
+                  "blue": 0,
+                  "alpha": 0
+                },
+                "slides": [
+                  {
+                    "enabled": true,
+                    "notes": "",
+                    "text": "Holy Forever / group 12 / slide 1 line 1\nHoly Forever / group 12 / slide 1 line 2​​",
+                    "label": "",
+                    "size": {
+                      "width": 1920,
+                      "height": 1080
+                    }
+                  },
+                  {
+                    "enabled": true,
+                    "notes": "",
+                    "text": "Holy Forever / group 12 / slide 1 line 1\nHoly Forever / group 12 / slide 1 line 2​​",
+                    "label": "",
+                    "size": {
+                      "width": 1920,
+                      "height": 1080
+                    }
+                  }
+                ],
+                "uuid": "EFB8391C-9644-4D33-B573-8F324AA2B435"
+              },
+              {
+                "name": "Ending",
+                "color": {
+                  "red": 0,
+                  "green": 0,
+                  "blue": 0,
+                  "alpha": 0
+                },
+                "slides": [
+                  {
+                    "enabled": true,
+                    "notes": "",
+                    "text": "\r\r\r",
+                    "label": "",
+                    "size": {
+                      "width": 1920,
+                      "height": 1080
+                    }
+                  }
+                ],
+                "uuid": "F9F9DA2D-B9B5-4543-85E1-8B5C7BDECE93"
+              }
+            ],
+            "has_timeline": false,
+            "presentation_path": "",
+            "destination": "presentation",
+            "arrangements": [
+              {
+                "id": {
+                  "uuid": "27B59282-5C91-478D-B677-23BE463959BB",
+                  "name": "Master",
+                  "index": 0
+                },
+                "groups": [
+                  "7B0153FF-942C-49D0-A1F6-EE48C45B239C",
+                  "9CBB6FD6-875D-428B-A1E5-9B66EFE88D3C",
+                  "CDF5BBAD-259F-48F1-98B5-9827CFEE0D18",
+                  "CE803962-0992-4659-A143-8478A4EACEB3",
+                  "891286DB-5636-4C2B-BE90-5488178409FD",
+                  "8288ADB5-886C-4E85-8BC7-2E4E5C5890CE",
+                  "C92A9E76-E3ED-4BAD-827C-A288AAD33750",
+                  "4D23D004-1949-4850-88D8-B83225F4C5B7",
+                  "C616206B-EE5F-4F8E-9A3D-AB58C6F7EB1F",
+                  "944BE36F-21ED-49DF-8F27-1CC34E3B27E6",
+                  "75DD933D-F2A3-459E-8D81-B5A4A1557044",
+                  "EFB8391C-9644-4D33-B573-8F324AA2B435",
+                  "F9F9DA2D-B9B5-4543-85E1-8B5C7BDECE93"
+                ],
+                "total_cues": 25
+              },
+              {
+                "id": {
+                  "uuid": "B9FAACEC-D8A6-435C-96A2-447FD80EAF32",
+                  "name": "Full",
+                  "index": 1
+                },
+                "groups": [
+                  "7B0153FF-942C-49D0-A1F6-EE48C45B239C",
+                  "9CBB6FD6-875D-428B-A1E5-9B66EFE88D3C",
+                  "CDF5BBAD-259F-48F1-98B5-9827CFEE0D18",
+                  "CE803962-0992-4659-A143-8478A4EACEB3",
+                  "891286DB-5636-4C2B-BE90-5488178409FD",
+                  "8288ADB5-886C-4E85-8BC7-2E4E5C5890CE",
+                  "C92A9E76-E3ED-4BAD-827C-A288AAD33750",
+                  "891286DB-5636-4C2B-BE90-5488178409FD",
+                  "4D23D004-1949-4850-88D8-B83225F4C5B7",
+                  "CDF5BBAD-259F-48F1-98B5-9827CFEE0D18",
+                  "C616206B-EE5F-4F8E-9A3D-AB58C6F7EB1F",
+                  "CDF5BBAD-259F-48F1-98B5-9827CFEE0D18",
+                  "CE803962-0992-4659-A143-8478A4EACEB3",
+                  "891286DB-5636-4C2B-BE90-5488178409FD",
+                  "4D23D004-1949-4850-88D8-B83225F4C5B7",
+                  "944BE36F-21ED-49DF-8F27-1CC34E3B27E6",
+                  "75DD933D-F2A3-459E-8D81-B5A4A1557044",
+                  "EFB8391C-9644-4D33-B573-8F324AA2B435",
+                  "F9F9DA2D-B9B5-4543-85E1-8B5C7BDECE93"
+                ],
+                "total_cues": 37
+              }
+            ],
+            "current_arrangement": "27B59282-5C91-478D-B677-23BE463959BB",
+            "type": "multitracks",
+            "is_authorized": true,
+            "total_cues": 25
+          }
+        }
+      }
+    },
+    {
+      "t": 18157,
+      "frame": {
+        "url": "presentation/slide_index",
+        "data": {
+          "presentation_index": {
+            "index": 0,
+            "presentation_id": {
+              "uuid": "27B59282-5C91-478D-B677-23BE463959BB",
+              "name": "Holy Forever",
+              "index": 126
+            },
+            "total_cues": 25,
+            "remaining_cues": 24
+          }
+        }
+      }
+    },
+    {
+      "t": 18157,
+      "frame": {
+        "url": "status/slide",
+        "data": {
+          "current": {
+            "text": "",
+            "notes": "",
+            "uuid": "F539A436-A477-4EF3-A79B-B221133FAAF1"
+          },
+          "next": {
+            "text": "Holy Forever / Verse 1 / slide 1 line 1\nHoly Forever / Verse 1 / slide 1 line 2",
+            "notes": "",
+            "uuid": "36424ACF-E71D-460F-8750-9FBA39BBA361"
+          }
+        }
+      }
+    },
+    {
+      "t": 18485,
+      "frame": {
+        "url": "timer/system_time",
+        "data": 1793642425
+      }
+    },
+    {
+      "t": 19325,
+      "frame": {
+        "url": "presentation/slide_index",
+        "data": {
+          "presentation_index": {
+            "index": 1,
+            "presentation_id": {
+              "uuid": "27B59282-5C91-478D-B677-23BE463959BB",
+              "name": "Holy Forever",
+              "index": 126
+            },
+            "total_cues": 25,
+            "remaining_cues": 23
+          }
+        }
+      }
+    },
+    {
+      "t": 19325,
+      "frame": {
+        "url": "status/slide",
+        "data": {
+          "current": {
+            "text": "Holy Forever / Verse 1 / slide 1 line 1\nHoly Forever / Verse 1 / slide 1 line 2",
+            "notes": "",
+            "uuid": "36424ACF-E71D-460F-8750-9FBA39BBA361"
+          },
+          "next": {
+            "text": "Holy Forever / Verse 1 / slide 2 line 1\nHoly Forever / Verse 1 / slide 2 line 2",
+            "notes": "",
+            "uuid": "D30F2280-DCAB-4EB3-A33C-A773EE4DB1C4"
+          }
+        }
+      }
+    },
+    {
+      "t": 19481,
+      "frame": {
+        "url": "timer/system_time",
+        "data": 1793642426
+      }
+    },
+    {
+      "t": 20345,
+      "frame": {
+        "url": "status/slide",
+        "data": {
+          "current": null,
+          "next": null
+        }
+      }
+    },
+    {
+      "t": 20345,
+      "frame": {
+        "url": "presentation/slide_index",
+        "data": {
+          "presentation_index": null
+        }
+      }
+    },
+    {
+      "t": 20350,
+      "frame": {
+        "url": "presentation/current",
+        "data": {
+          "presentation": null
+        }
+      }
+    },
+    {
+      "t": 20486,
+      "frame": {
+        "url": "timer/system_time",
+        "data": 1793642427
+      }
+    },
+    {
+      "t": 21483,
+      "frame": {
+        "url": "timer/system_time",
+        "data": 1793642428
+      }
+    },
+    {
+      "t": 22483,
+      "frame": {
+        "url": "timer/system_time",
+        "data": 1793642429
+      }
+    },
+    {
+      "t": 23481,
+      "frame": {
+        "url": "timer/system_time",
+        "data": 1793642430
+      }
+    },
+    {
+      "t": 24481,
+      "frame": {
+        "url": "timer/system_time",
+        "data": 1793642431
+      }
+    },
+    {
+      "t": 25480,
+      "frame": {
+        "url": "timer/system_time",
+        "data": 1793642432
+      }
+    }
+  ]
+}

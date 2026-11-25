@@ -1,0 +1,145 @@
+{
+  "method": "GET",
+  "path": "/v1/presentation/E46CBF0C-156E-4791-9B72-01DDC0938758",
+  "status": 200,
+  "content_type": "application/json",
+  "body": {
+    "presentation": {
+      "id": {
+        "uuid": "E46CBF0C-156E-4791-9B72-01DDC0938758",
+        "name": "Scripture Reading",
+        "index": 227
+      },
+      "groups": [
+        {
+          "name": "",
+          "color": {
+            "red": 0.3999999761581421,
+            "green": 0.3999999761581421,
+            "blue": 0.3999999761581421,
+            "alpha": 1
+          },
+          "slides": [
+            {
+              "enabled": true,
+              "notes": "",
+              "text": "",
+              "label": "Speaker.jpg",
+              "size": {
+                "width": 1920,
+                "height": 1080
+              }
+            }
+          ],
+          "uuid": "D965FE94-BC46-4E0C-AE25-F6D34041F5B2"
+        },
+        {
+          "name": "",
+          "color": {
+            "red": 0.3999999761581421,
+            "green": 0.3999999761581421,
+            "blue": 0.3999999761581421,
+            "alpha": 1
+          },
+          "slides": [
+            {
+              "enabled": true,
+              "notes": "",
+              "text": "",
+              "label": "Title (1).JPG",
+              "size": {
+                "width": 1920,
+                "height": 1080
+              }
+            }
+          ],
+          "uuid": "94519D5C-B73A-4E8E-AAAB-1B633FC1CA9E"
+        },
+        {
+          "name": "",
+          "color": {
+            "red": 0.3999999761581421,
+            "green": 0.3999999761581421,
+            "blue": 0.3999999761581421,
+            "alpha": 1
+          },
+          "slides": [
+            {
+              "enabled": true,
+              "notes": "",
+              "text": "Scripture Reading / group 3 / slide 1 line 1\nScripture Reading / group 3 / slide 1 line 2",
+              "label": "",
+              "size": {
+                "width": 1920,
+                "height": 1080
+              }
+            },
+            {
+              "enabled": true,
+              "notes": "",
+              "text": "Scripture Reading / group 3 / slide 2 line 1\nScripture Reading / group 3 / slide 2 line 2",
+              "label": "",
+              "size": {
+                "width": 1920,
+                "height": 1080
+              }
+            },
+            {
+              "enabled": true,
+              "notes": "",
+              "text": "Scripture Reading / group 3 / slide 3 line 1\nScripture Reading / group 3 / slide 3 line 2",
+              "label": "",
+              "size": {
+                "width": 1920,
+                "height": 1080
+              }
+            },
+            {
+              "enabled": true,
+              "notes": "",
+              "text": "Scripture Reading / group 3 / slide 4 line 1\nScripture Reading / group 3 / slide 4 line 2",
+              "label": "",
+              "size": {
+                "width": 1920,
+                "height": 1080
+              }
+            },
+            {
+              "enabled": true,
+              "notes": "",
+              "text": "Series-One_Part-20_ProPresenter / group 1 / slide 7 line 1\nSeries-One_Part-20_ProPresenter / group 1 / slide 7 line 2\nSeries-One_Part-20_ProPresenter / group 1 / slide 7 line 3",
+              "label": "",
+              "size": {
+                "width": 1920,
+                "height": 1080
+              }
+            }
+          ],
+          "uuid": "F52E79A6-516F-4075-8FFA-614028054BEC"
+        }
+      ],
+      "has_timeline": false,
+      "presentation_path": "ProPresenter/Libraries/Default/Scripture Reading.pro",
+      "destination": "presentation",
+      "arrangements": [
+        {
+          "id": {
+            "uuid": "E46CBF0C-156E-4791-9B72-01DDC0938758",
+            "name": "Master",
+            "index": 0
+          },
+          "groups": [
+            "D965FE94-BC46-4E0C-AE25-F6D34041F5B2",
+            "94519D5C-B73A-4E8E-AAAB-1B633FC1CA9E",
+            "F52E79A6-516F-4075-8FFA-614028054BEC"
+          ],
+          "total_cues": 7
+        }
+      ],
+      "current_arrangement": "E46CBF0C-156E-4791-9B72-01DDC0938758",
+      "type": "standard",
+      "is_authorized": true,
+      "total_cues": 7
+    }
+  }
+}

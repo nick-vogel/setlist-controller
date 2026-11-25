@@ -1,0 +1,531 @@
+{
+  "method": "GET",
+  "path": "/v1/presentation/009E9DED-204A-4743-9A1F-0D0F9DD124EA",
+  "status": 200,
+  "content_type": "application/json",
+  "body": {
+    "presentation": {
+      "id": {
+        "uuid": "009E9DED-204A-4743-9A1F-0D0F9DD124EA",
+        "name": "Goodness of God",
+        "index": 112
+      },
+      "groups": [
+        {
+          "name": "Intro",
+          "color": {
+            "red": 0.7019608020782471,
+            "green": 0.6549019813537598,
+            "blue": 0.1411764770746231,
+            "alpha": 1
+          },
+          "slides": [
+            {
+              "enabled": true,
+              "notes": "",
+              "text": "",
+              "label": "Blossom_01_4K.mp4",
+              "size": {
+                "width": 1920,
+                "height": 1080
+              }
+            }
+          ],
+          "uuid": "D7672A39-54CE-4747-9002-CA7A89D3B37B"
+        },
+        {
+          "name": "Verse 1",
+          "color": {
+            "red": 0,
+            "green": 0.46666666865348816,
+            "blue": 0.800000011920929,
+            "alpha": 1
+          },
+          "slides": [
+            {
+              "enabled": true,
+              "notes": "",
+              "text": "Goodness of God / Verse 1 / slide 1 line 1\nGoodness of God / Verse 1 / slide 1 line 2",
+              "label": "",
+              "size": {
+                "width": 1920,
+                "height": 1080
+              }
+            },
+            {
+              "enabled": true,
+              "notes": "",
+              "text": "Goodness of God / Verse 1 / slide 2 line 1\nGoodness of God / Verse 1 / slide 2 line 2​",
+              "label": "",
+              "size": {
+                "width": 1920,
+                "height": 1080
+              }
+            },
+            {
+              "enabled": true,
+              "notes": "",
+              "text": "Goodness of God / Verse 1 / slide 3 line 1​\nGoodness of God / Verse 1 / slide 3 line 2​",
+              "label": "",
+              "size": {
+                "width": 1920,
+                "height": 1080
+              }
+            },
+            {
+              "enabled": true,
+              "notes": "",
+              "text": "Goodness of God / Verse 1 / slide 4 line 1",
+              "label": "",
+              "size": {
+                "width": 1920,
+                "height": 1080
+              }
+            }
+          ],
+          "uuid": "BCCE004A-7699-4AE7-A5BE-FE7855852B10"
+        },
+        {
+          "name": "Chorus",
+          "color": {
+            "red": 0.800000011920929,
+            "green": 0,
+            "blue": 0.30588236451148987,
+            "alpha": 1
+          },
+          "slides": [
+            {
+              "enabled": true,
+              "notes": "",
+              "text": "Goodness of God / Chorus / slide 1 line 1",
+              "label": "",
+              "size": {
+                "width": 1920,
+                "height": 1080
+              }
+            },
+            {
+              "enabled": true,
+              "notes": "",
+              "text": "Goodness of God / Chorus / slide 2 line 1\nGoodness of God / Chorus / slide 2 line 2",
+              "label": "",
+              "size": {
+                "width": 1920,
+                "height": 1080
+              }
+            },
+            {
+              "enabled": true,
+              "notes": "",
+              "text": "Goodness of God / Chorus / slide 3 line 1\nGoodness of God / Chorus / slide 3 line 2​",
+              "label": "",
+              "size": {
+                "width": 1920,
+                "height": 1080
+              }
+            },
+            {
+              "enabled": true,
+              "notes": "",
+              "text": "Goodness of God / Verse 1 / slide 4 line 1",
+              "label": "",
+              "size": {
+                "width": 1920,
+                "height": 1080
+              }
+            }
+          ],
+          "uuid": "DE5A9D1A-859F-479A-A195-EC5A31DE450C"
+        },
+        {
+          "name": "Verse 2",
+          "color": {
+            "red": 0,
+            "green": 0.3490196168422699,
+            "blue": 0.6000000238418579,
+            "alpha": 1
+          },
+          "slides": [
+            {
+              "enabled": true,
+              "notes": "",
+              "text": "Goodness of God / Verse 2 / slide 1 line 1\nGoodness of God / Verse 2 / slide 1 line 2",
+              "label": "",
+              "size": {
+                "width": 1920,
+                "height": 1080
+              }
+            },
+            {
+              "enabled": true,
+              "notes": "",
+              "text": "Goodness of God / Verse 2 / slide 2 line 1\nGoodness of God / Verse 2 / slide 2 line 2​",
+              "label": "",
+              "size": {
+                "width": 1920,
+                "height": 1080
+              }
+            },
+            {
+              "enabled": true,
+              "notes": "",
+              "text": "Goodness of God / Verse 2 / slide 3 line 1​\nGoodness of God / Verse 2 / slide 3 line 2​",
+              "label": "",
+              "size": {
+                "width": 1920,
+                "height": 1080
+              }
+            },
+            {
+              "enabled": true,
+              "notes": "",
+              "text": "Goodness of God / Verse 2 / slide 4 line 1",
+              "label": "",
+              "size": {
+                "width": 1920,
+                "height": 1080
+              }
+            }
+          ],
+          "uuid": "EB5F991D-1296-4BA4-8CF6-EAEA01324CB1"
+        },
+        {
+          "name": "Bridge",
+          "color": {
+            "red": 0.4627451002597809,
+            "green": 0,
+            "blue": 0.800000011920929,
+            "alpha": 1
+          },
+          "slides": [
+            {
+              "enabled": true,
+              "notes": "",
+              "text": "Goodness of God / Bridge / slide 1 line 1\nGoodness of God / Bridge / slide 1 line 2​",
+              "label": "",
+              "size": {
+                "width": 1920,
+                "height": 1080
+              }
+            },
+            {
+              "enabled": true,
+              "notes": "",
+              "text": "Goodness of God / Bridge / slide 1 line 1\nGoodness of God / Bridge / slide 1 line 2​",
+              "label": "",
+              "size": {
+                "width": 1920,
+                "height": 1080
+              }
+            },
+            {
+              "enabled": true,
+              "notes": "",
+              "text": "Goodness of God / Bridge / slide 3 line 1\nGoodness of God / Bridge / slide 3 line 2",
+              "label": "",
+              "size": {
+                "width": 1920,
+                "height": 1080
+              }
+            },
+            {
+              "enabled": true,
+              "notes": "",
+              "text": "Goodness of God / Bridge / slide 4 line 1",
+              "label": "",
+              "size": {
+                "width": 1920,
+                "height": 1080
+              }
+            },
+            {
+              "enabled": true,
+              "notes": "",
+              "text": "Goodness of God / Bridge / slide 5 line 1\nGoodness of God / Bridge / slide 5 line 2",
+              "label": "",
+              "size": {
+                "width": 1920,
+                "height": 1080
+              }
+            }
+          ],
+          "uuid": "13CB5FEF-47DB-47EF-A1C3-5D931A088407"
+        },
+        {
+          "name": "Bridge",
+          "color": {
+            "red": 0.4627451002597809,
+            "green": 0,
+            "blue": 0.800000011920929,
+            "alpha": 1
+          },
+          "slides": [
+            {
+              "enabled": true,
+              "notes": "",
+              "text": "Goodness of God / Bridge / slide 1 line 1\nGoodness of God / Bridge / slide 1 line 2​",
+              "label": "",
+              "size": {
+                "width": 1920,
+                "height": 1080
+              }
+            },
+            {
+              "enabled": true,
+              "notes": "",
+              "text": "Goodness of God / Bridge / slide 1 line 1\nGoodness of God / Bridge / slide 1 line 2​",
+              "label": "",
+              "size": {
+                "width": 1920,
+                "height": 1080
+              }
+            },
+            {
+              "enabled": true,
+              "notes": "",
+              "text": "Goodness of God / Bridge / slide 3 line 1\nGoodness of God / Bridge / slide 3 line 2",
+              "label": "",
+              "size": {
+                "width": 1920,
+                "height": 1080
+              }
+            },
+            {
+              "enabled": true,
+              "notes": "",
+              "text": "Goodness of God / Bridge / slide 4 line 1",
+              "label": "",
+              "size": {
+                "width": 1920,
+                "height": 1080
+              }
+            },
+            {
+              "enabled": true,
+              "notes": "",
+              "text": "Goodness of God / Bridge / slide 5 line 1\nGoodness of God / Bridge / slide 5 line 2",
+              "label": "",
+              "size": {
+                "width": 1920,
+                "height": 1080
+              }
+            }
+          ],
+          "uuid": "7729DDEF-5C42-4AB7-8662-D30F2F517B4D"
+        },
+        {
+          "name": "Interlude",
+          "color": {
+            "red": 0.1411764770746231,
+            "green": 0.7019608020782471,
+            "blue": 0.2980392277240753,
+            "alpha": 1
+          },
+          "slides": [
+            {
+              "enabled": true,
+              "notes": "",
+              "text": "​ ​ ​ ​",
+              "label": "",
+              "size": {
+                "width": 1920,
+                "height": 1080
+              }
+            }
+          ],
+          "uuid": "2A5122DD-780D-42DE-AAF8-985A5C645E3F"
+        },
+        {
+          "name": "Vamp",
+          "color": {
+            "red": 0.1411764770746231,
+            "green": 0.7019608020782471,
+            "blue": 0.2980392277240753,
+            "alpha": 1
+          },
+          "slides": [
+            {
+              "enabled": true,
+              "notes": "",
+              "text": "​",
+              "label": "",
+              "size": {
+                "width": 1920,
+                "height": 1080
+              }
+            }
+          ],
+          "uuid": "15F36D77-EA33-4E54-8CE3-530A6F9FD88F"
+        },
+        {
+          "name": "Chorus",
+          "color": {
+            "red": 0.800000011920929,
+            "green": 0,
+            "blue": 0.30588236451148987,
+            "alpha": 1
+          },
+          "slides": [
+            {
+              "enabled": true,
+              "notes": "",
+              "text": "Goodness of God / Chorus / slide 1 line 1",
+              "label": "",
+              "size": {
+                "width": 1920,
+                "height": 1080
+              }
+            },
+            {
+              "enabled": true,
+              "notes": "",
+              "text": "Goodness of God / Chorus / slide 2 line 1\nGoodness of God / Chorus / slide 2 line 2",
+              "label": "",
+              "size": {
+                "width": 1920,
+                "height": 1080
+              }
+            },
+            {
+              "enabled": true,
+              "notes": "",
+              "text": "Goodness of God / Chorus / slide 3 line 1\nGoodness of God / Chorus / slide 3 line 2​",
+              "label": "",
+              "size": {
+                "width": 1920,
+                "height": 1080
+              }
+            },
+            {
+              "enabled": true,
+              "notes": "",
+              "text": "Goodness of God / Verse 1 / slide 4 line 1",
+              "label": "",
+              "size": {
+                "width": 1920,
+                "height": 1080
+              }
+            }
+          ],
+          "uuid": "D6A4CEB0-DF55-4807-A74F-4A0DEB2D0BA5"
+        },
+        {
+          "name": "Tag",
+          "color": {
+            "red": 0.800000011920929,
+            "green": 0.16078431904315948,
+            "blue": 0.16078431904315948,
+            "alpha": 1
+          },
+          "slides": [
+            {
+              "enabled": true,
+              "notes": "",
+              "text": "Goodness of God / Tag / slide 1 line 1\nGoodness of God / Tag / slide 1 line 2",
+              "label": "",
+              "size": {
+                "width": 1920,
+                "height": 1080
+              }
+            }
+          ],
+          "uuid": "DF225330-D69C-46A5-8934-73EBB35A8D42"
+        },
+        {
+          "name": "Ending",
+          "color": {
+            "red": 0.6000000238418579,
+            "green": 0.5607843399047852,
+            "blue": 0.12156862765550613,
+            "alpha": 1
+          },
+          "slides": [
+            {
+              "enabled": true,
+              "notes": "",
+              "text": "",
+              "label": "",
+              "size": {
+                "width": 1920,
+                "height": 1080
+              }
+            }
+          ],
+          "uuid": "3CDE568A-E0B4-435B-B12A-03A801E0F265"
+        }
+      ],
+      "has_timeline": false,
+      "presentation_path": "ProPresenter/Libraries/Default/Goodness of God.pro",
+      "destination": "presentation",
+      "arrangements": [
+        {
+          "id": {
+            "uuid": "009E9DED-204A-4743-9A1F-0D0F9DD124EA",
+            "name": "Master",
+            "index": 0
+          },
+          "groups": [
+            "D7672A39-54CE-4747-9002-CA7A89D3B37B",
+            "BCCE004A-7699-4AE7-A5BE-FE7855852B10",
+            "DE5A9D1A-859F-479A-A195-EC5A31DE450C",
+            "EB5F991D-1296-4BA4-8CF6-EAEA01324CB1",
+            "13CB5FEF-47DB-47EF-A1C3-5D931A088407",
+            "7729DDEF-5C42-4AB7-8662-D30F2F517B4D",
+            "2A5122DD-780D-42DE-AAF8-985A5C645E3F",
+            "15F36D77-EA33-4E54-8CE3-530A6F9FD88F",
+            "D6A4CEB0-DF55-4807-A74F-4A0DEB2D0BA5",
+            "DF225330-D69C-46A5-8934-73EBB35A8D42",
+            "3CDE568A-E0B4-435B-B12A-03A801E0F265"
+          ],
+          "total_cues": 31
+        },
+        {
+          "id": {
+            "uuid": "92F3830B-3D41-4125-B1F9-3276DDC4F04E",
+            "name": "Full",
+            "index": 1
+          },
+          "groups": [
+            "D7672A39-54CE-4747-9002-CA7A89D3B37B",
+            "BCCE004A-7699-4AE7-A5BE-FE7855852B10",
+            "DE5A9D1A-859F-479A-A195-EC5A31DE450C",
+            "EB5F991D-1296-4BA4-8CF6-EAEA01324CB1",
+            "DE5A9D1A-859F-479A-A195-EC5A31DE450C",
+            "13CB5FEF-47DB-47EF-A1C3-5D931A088407",
+            "7729DDEF-5C42-4AB7-8662-D30F2F517B4D",
+            "2A5122DD-780D-42DE-AAF8-985A5C645E3F",
+            "DE5A9D1A-859F-479A-A195-EC5A31DE450C",
+            "15F36D77-EA33-4E54-8CE3-530A6F9FD88F",
+            "D6A4CEB0-DF55-4807-A74F-4A0DEB2D0BA5",
+            "DF225330-D69C-46A5-8934-73EBB35A8D42",
+            "3CDE568A-E0B4-435B-B12A-03A801E0F265"
+          ],
+          "total_cues": 39
+        },
+        {
+          "id": {
+            "uuid": "7AD44A18-978F-4FAF-9E21-40C7AC91E6C1",
+            "name": "Closing (PCO)",
+            "index": 2
+          },
+          "groups": [
+            "D7672A39-54CE-4747-9002-CA7A89D3B37B",
+            "7729DDEF-5C42-4AB7-8662-D30F2F517B4D",
+            "7729DDEF-5C42-4AB7-8662-D30F2F517B4D",
+            "2A5122DD-780D-42DE-AAF8-985A5C645E3F",
+            "D6A4CEB0-DF55-4807-A74F-4A0DEB2D0BA5",
+            "15F36D77-EA33-4E54-8CE3-530A6F9FD88F",
+            "D6A4CEB0-DF55-4807-A74F-4A0DEB2D0BA5",
+            "DF225330-D69C-46A5-8934-73EBB35A8D42",
+            "3CDE568A-E0B4-435B-B12A-03A801E0F265"
+          ],
+          "total_cues": 23
+        }
+      ],
+      "current_arrangement": "009E9DED-204A-4743-9A1F-0D0F9DD124EA",
+      "type": "multitracks",
+      "is_authorized": false,
+      "total_cues": 31
+    }
+  }
+}

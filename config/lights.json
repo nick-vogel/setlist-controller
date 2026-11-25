@@ -1,0 +1,7 @@
+{
+  "templateShowName": "Church Sunday template",
+  "weeklyShowNamePrefix": "Church Sunday",
+  "songCueLabel": "Song {n}",
+  "colourChannels": [1, 2, 3, 16, 17, 18],
+  "saturation": 80
+}

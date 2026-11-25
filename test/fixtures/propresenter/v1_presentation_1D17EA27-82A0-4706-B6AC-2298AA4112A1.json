@@ -1,0 +1,105 @@
+{
+  "method": "GET",
+  "path": "/v1/presentation/1D17EA27-82A0-4706-B6AC-2298AA4112A1",
+  "status": 200,
+  "content_type": "application/json",
+  "body": {
+    "presentation": {
+      "id": {
+        "uuid": "1D17EA27-82A0-4706-B6AC-2298AA4112A1",
+        "name": "Dismissal",
+        "index": 84
+      },
+      "groups": [
+        {
+          "name": "",
+          "color": {
+            "red": 0.3999999761581421,
+            "green": 0.3999999761581421,
+            "blue": 0.3999999761581421,
+            "alpha": 1
+          },
+          "slides": [
+            {
+              "enabled": true,
+              "notes": "",
+              "text": "",
+              "label": "Prayed with us today.jpg",
+              "size": {
+                "width": 1920,
+                "height": 1080
+              }
+            }
+          ],
+          "uuid": "37AA3E86-DB08-435D-9125-9CF903BE0B2D"
+        },
+        {
+          "name": "",
+          "color": {
+            "red": 0.3999999761581421,
+            "green": 0.3999999761581421,
+            "blue": 0.3999999761581421,
+            "alpha": 1
+          },
+          "slides": [
+            {
+              "enabled": true,
+              "notes": "",
+              "text": "",
+              "label": "Basics.jpg",
+              "size": {
+                "width": 1920,
+                "height": 1080
+              }
+            }
+          ],
+          "uuid": "B6800968-EDAE-460D-8279-1BC8020B5C17"
+        },
+        {
+          "name": "",
+          "color": {
+            "red": 0.3999999761581421,
+            "green": 0.3999999761581421,
+            "blue": 0.3999999761581421,
+            "alpha": 1
+          },
+          "slides": [
+            {
+              "enabled": true,
+              "notes": "",
+              "text": "",
+              "label": "Logo.jpg",
+              "size": {
+                "width": 1920,
+                "height": 1080
+              }
+            }
+          ],
+          "uuid": "3A3CD3AD-C05C-47E1-8EE2-3BD4D89FE0F5"
+        }
+      ],
+      "has_timeline": false,
+      "presentation_path": "ProPresenter/Libraries/Default/Dismissal.pro",
+      "destination": "presentation",
+      "arrangements": [
+        {
+          "id": {
+            "uuid": "1D17EA27-82A0-4706-B6AC-2298AA4112A1",
+            "name": "Master",
+            "index": 0
+          },
+          "groups": [
+            "37AA3E86-DB08-435D-9125-9CF903BE0B2D",
+            "B6800968-EDAE-460D-8279-1BC8020B5C17",
+            "3A3CD3AD-C05C-47E1-8EE2-3BD4D89FE0F5"
+          ],
+          "total_cues": 3
+        }
+      ],
+      "current_arrangement": "1D17EA27-82A0-4706-B6AC-2298AA4112A1",
+      "type": "standard",
+      "is_authorized": true,
+      "total_cues": 3
+    }
+  }
+}

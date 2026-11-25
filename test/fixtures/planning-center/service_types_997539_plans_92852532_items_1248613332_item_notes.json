@@ -1,0 +1,67 @@
+{
+  "path": "/service_types/997539/plans/92852532/items/1248613332/item_notes",
+  "status": 200,
+  "body": {
+    "links": {
+      "self": "https://api.planningcenteronline.com/services/v2/service_types/997539/plans/92852532/items/1248613332/item_notes"
+    },
+    "data": [
+      {
+        "type": "ItemNote",
+        "id": "411770165",
+        "attributes": {
+          "category_name": "Audio/Visual",
+          "content": "Scrubbed note."
+        },
+        "relationships": {
+          "item": {
+            "data": {
+              "type": "Item",
+              "id": "1248613332"
+            }
+          }
+        }
+      },
+      {
+        "type": "ItemNote",
+        "id": "411770166",
+        "attributes": {
+          "category_name": "Band",
+          "content": "Scrubbed note."
+        },
+        "relationships": {
+          "item": {
+            "data": {
+              "type": "Item",
+              "id": "1248613332"
+            }
+          }
+        }
+      },
+      {
+        "type": "ItemNote",
+        "id": "411770167",
+        "attributes": {
+          "category_name": "Person",
+          "content": "Scrubbed note."
+        },
+        "relationships": {
+          "item": {
+            "data": {
+              "type": "Item",
+              "id": "1248613332"
+            }
+          }
+        }
+      }
+    ],
+    "included": [],
+    "meta": {
+      "count": 3,
+      "total_count": 3,
+      "can_include": [
+        "item_note_category"
+      ]
+    }
+  }
+}

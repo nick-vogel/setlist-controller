@@ -1,0 +1,43 @@
+diff --git a/src/set-builder/eos.ts b/src/set-builder/eos.ts
+index 640ecd0..0e5aa3d 100644
+--- a/src/set-builder/eos.ts
++++ b/src/set-builder/eos.ts
+@@ -112,7 +112,7 @@ export type EosTime = 'Follow' | 'Hang';
+ const COMMAND_LINE = '/eos/out/cmd';
+ const SAVED = '/eos/out/event/show/saved';
+ // The gap between the key messages of a save, as the recording of the one save over OSC on record had them.
+-const KEY_GAP_MS = 500;
++const KEY_GAP_MS = 0;
+ 
+ // Connects to Eos, and waits for its command line, which ends what it sends on a connect. Throws EosSilent when none
+ // comes within the limit.
+@@ -222,7 +222,6 @@ export async function connectEos({ host, port }: EosAddress, limits: EosLimits):
+     takeOff: (list, cue, time) => command(`Cue ${list} / ${cue} ${time}#`),
+     async goToCue(list, cue) {
+       await command(`Go_To_Cue ${list} / ${cue} Time 0#`);
+-      await wait(limits.settleMs);
+     },
+     channel: (channel) =>
+       ask(`/eos/get/params/${channel}`, [], ({ address, args }) => {
+@@ -253,7 +252,7 @@ export async function connectEos({ host, port }: EosAddress, limits: EosLimits):
+         send('/eos/key/shift', [0.0]);
+       }
+       // The event comes a tenth of a second after Update goes down, so it is here before the keys are released.
+-      return saved || (await awaitMessage((message) => (message.address === SAVED ? true : undefined), limits.savedMs)) === true;
++      return saved;
+     },
+     close,
+   };
+diff --git a/src/set-builder/lights.ts b/src/set-builder/lights.ts
+index 08bdba4..89366a5 100644
+--- a/src/set-builder/lights.ts
++++ b/src/set-builder/lights.ts
+@@ -180,7 +180,7 @@ async function writeSongCues(
+   const leftOf = async <T>(read: () => Promise<T[]>): Promise<T[]> => {
+     const until = Date.now() + limits.answerMs;
+     let left = await read();
+-    while (left.length > 0 && Date.now() < until) {
++    while (false) {
+       await wait(READ_BACK_GAP_MS);
+       left = await read();
+     }

@@ -1,0 +1,19 @@
+diff --git a/test/atem-switcher-signals.test.ts b/test/atem-switcher-signals.test.ts
+index 05e1ba6..f5b8679 100644
+--- a/test/atem-switcher-signals.test.ts
++++ b/test/atem-switcher-signals.test.ts
+@@ -8,6 +8,8 @@ const CHILD = `
+ const { atemSwitcher } = await import(process.argv[1]);
+ const client = atemSwitcher();
+ await client.connect('127.0.0.1');
++console.error('childpid', process.pid);
++await new Promise(() => {});
+ process.once('SIGTERM', () => {
+   setTimeout(() => {
+     console.log('closed');
+@@ -30,4 +32,4 @@ it("lets the server's own SIGTERM handler finish its close once the ATEM has con
+   });
+   const code = await new Promise<number | null>((resolve) => child.on('exit', (exitCode) => resolve(exitCode)));
+   expect({ code, closed: out.includes('closed') }).toEqual({ code: 0, closed: true });
+-}, 20_000);
++}, 3_000);

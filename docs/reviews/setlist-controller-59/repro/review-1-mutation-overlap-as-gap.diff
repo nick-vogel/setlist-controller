@@ -1,0 +1,13 @@
+diff --git a/src/set-builder/timeline.ts b/src/set-builder/timeline.ts
+index b0e0ed1..379452b 100644
+--- a/src/set-builder/timeline.ts
++++ b/src/set-builder/timeline.ts
+@@ -61,7 +61,7 @@ export function placeSongs(songs: Song[], transitions: Partial<Record<number, Tr
+     const offset = previous ? previous.handoff + leadIn(previous, meter).beats : 0;
+     const bar = previous ? previous.handoffBar + leadIn(previous, meter).bars : 1;
+     const number = index + 1;
+-    const transition = number < songs.length ? (transitions[number] ?? { type: 'gap' }) : padAfterLast(transitions[number]);
++    const transition = number < songs.length ? (transitions[number]?.type === 'overlap' ? ({ type: 'gap' } as const) : (transitions[number] ?? { type: 'gap' })) : padAfterLast(transitions[number]); // MUTATION A: build every overlap as a gap
+     const marker = song.locators.find(isEndMarker);
+     if (transition?.type === 'overlap') {
+       const end = endingOf(song);

@@ -1,0 +1,13 @@
+diff --git a/src/set-builder/build-set.ts b/src/set-builder/build-set.ts
+index 66a14e3..3d19c55 100644
+--- a/src/set-builder/build-set.ts
++++ b/src/set-builder/build-set.ts
+@@ -70,7 +70,7 @@ const WEEKDAYS = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Frida
+ // The set's name for its date, `<date> <weekday>`, which names both its folder and its .als: `2026-10-18 Sunday`,
+ // `2026-12-24 Thursday`. The weekday is the date's own, read at midnight UTC, so the Mac's time zone never moves it.
+ export function setName(date: string): string {
+-  const day = new Date(`${date}T00:00:00Z`);
++  const day = new Date(`${date}T00:00:00`);
+   if (!/^\d{4}-\d{2}-\d{2}$/.test(date) || Number.isNaN(day.getTime()) || !day.toISOString().startsWith(date)) {
+     throw new Error(`${date} is not a real date written YYYY-MM-DD.`);
+   }

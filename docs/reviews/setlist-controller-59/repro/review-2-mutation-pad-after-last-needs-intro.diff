@@ -1,0 +1,13 @@
+diff --git a/src/set-builder/checks.ts b/src/set-builder/checks.ts
+index c39400e..457cbf4 100644
+--- a/src/set-builder/checks.ts
++++ b/src/set-builder/checks.ts
+@@ -67,7 +67,7 @@ export function overlapProblems(
+ // Each song an overlap or a pad goes into with no section after its Count Off, in service order, named once.
+ export function introProblems(service: (Song | undefined)[], transitions: Partial<Record<number, Transition>>): string[] {
+   const problems = service.flatMap((song, index) => {
+-    const into = transitions[index]?.type;
++    const into = (transitions[index] ?? (index === service.length - 1 ? transitions[index + 1] : undefined))?.type;
+     if (!song || (into !== 'overlap' && into !== 'pad') || findIntro(song) !== undefined) return [];
+     return [`${song.folder}: the song has no section after a locator named Count Off, where an overlap or a pad into it fades out what plays before it.`];
+   });

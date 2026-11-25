@@ -1,0 +1,7 @@
+{
+  "method": "GET",
+  "path": "/v1/presentation/894B40A0-42FE-411E-B915-F1919C6DA33E/thumbnail/0?quality=400&thumbnail_type=png",
+  "status": 403,
+  "content_type": null,
+  "body": ""
+}

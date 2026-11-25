@@ -1,0 +1,268 @@
+{
+  "method": "GET",
+  "path": "/v1/playlist/306E3B2A-D71A-40B2-ACBD-DE96FC9FA5F5",
+  "status": 200,
+  "content_type": "application/json",
+  "body": {
+    "id": {
+      "uuid": "306E3B2A-D71A-40B2-ACBD-DE96FC9FA5F5",
+      "name": "November 8, 2026",
+      "index": 0
+    },
+    "items": [
+      {
+        "id": {
+          "uuid": "1EE1DEF7-0D13-4231-9519-E326A0355C43",
+          "name": "PRE-SERVICE",
+          "index": 0
+        },
+        "type": "header",
+        "is_hidden": false,
+        "is_pco": true,
+        "destination": "presentation"
+      },
+      {
+        "id": {
+          "uuid": "C10A5BA0-EB28-4A58-9831-CCC685B45E0A",
+          "name": "Huddle",
+          "index": 1
+        },
+        "type": "placeholder",
+        "is_hidden": true,
+        "is_pco": true,
+        "destination": "presentation"
+      },
+      {
+        "id": {
+          "uuid": "2A81A290-F953-4AE4-AB4D-C64937963A52",
+          "name": "Loop",
+          "index": 2
+        },
+        "type": "presentation",
+        "is_hidden": false,
+        "is_pco": true,
+        "presentation_info": {
+          "presentation_uuid": "15C678B7-4F41-4CD7-8280-E240623ECBA8",
+          "arrangement_name": "Master",
+          "arrangement_uuid": "15C678B7-4F41-4CD7-8280-E240623ECBA8"
+        },
+        "destination": "presentation"
+      },
+      {
+        "id": {
+          "uuid": "47140A0D-2B25-436B-82C5-1ACC8A1C2C42",
+          "name": "Countdown",
+          "index": 3
+        },
+        "type": "presentation",
+        "is_hidden": false,
+        "is_pco": true,
+        "presentation_info": {
+          "presentation_uuid": "DFF092C1-8840-49DC-9450-6F04A10FA358",
+          "arrangement_name": "Master",
+          "arrangement_uuid": "DFF092C1-8840-49DC-9450-6F04A10FA358"
+        },
+        "destination": "presentation"
+      },
+      {
+        "id": {
+          "uuid": "88F242DA-6F87-4305-A6F5-68BE39461437",
+          "name": "WORSHIP SET",
+          "index": 4
+        },
+        "type": "header",
+        "is_hidden": false,
+        "is_pco": true,
+        "destination": "presentation"
+      },
+      {
+        "id": {
+          "uuid": "3FBAA932-0249-480E-B1FD-6594C6584B38",
+          "name": "Ancient Gates",
+          "index": 5
+        },
+        "type": "presentation",
+        "is_hidden": false,
+        "is_pco": true,
+        "presentation_info": {
+          "presentation_uuid": "5A606BC5-9279-4509-983E-88092AE567F0",
+          "arrangement_name": "Master",
+          "arrangement_uuid": "5A606BC5-9279-4509-983E-88092AE567F0"
+        },
+        "destination": "presentation"
+      },
+      {
+        "id": {
+          "uuid": "AC4ABDD7-5F11-4A0C-AD26-D34666F5D780",
+          "name": "Holy Forever",
+          "index": 6
+        },
+        "type": "presentation",
+        "is_hidden": false,
+        "is_pco": true,
+        "presentation_info": {
+          "presentation_uuid": "27B59282-5C91-478D-B677-23BE463959BB",
+          "arrangement_name": "Master",
+          "arrangement_uuid": "27B59282-5C91-478D-B677-23BE463959BB"
+        },
+        "destination": "presentation"
+      },
+      {
+        "id": {
+          "uuid": "57AB2964-5FA3-40E2-AA20-212CEB843DD2",
+          "name": "Worthy Of It All",
+          "index": 7
+        },
+        "type": "presentation",
+        "is_hidden": false,
+        "is_pco": true,
+        "presentation_info": {
+          "presentation_uuid": "AA8F2F17-09BE-44ED-A618-C645D5EC8AAB",
+          "arrangement_name": "Master",
+          "arrangement_uuid": "AA8F2F17-09BE-44ED-A618-C645D5EC8AAB"
+        },
+        "destination": "presentation"
+      },
+      {
+        "id": {
+          "uuid": "1EAAAD6D-6369-4534-AD11-14C693740B3D",
+          "name": "FACETIME",
+          "index": 8
+        },
+        "type": "header",
+        "is_hidden": false,
+        "is_pco": true,
+        "destination": "presentation"
+      },
+      {
+        "id": {
+          "uuid": "1F779AAA-FC81-4726-BA14-60D8504876CF",
+          "name": "Facetime",
+          "index": 9
+        },
+        "type": "presentation",
+        "is_hidden": false,
+        "is_pco": true,
+        "presentation_info": {
+          "presentation_uuid": "58C14FDA-CBDF-4A9C-900D-FE7D88E0E597",
+          "arrangement_name": "Master",
+          "arrangement_uuid": "58C14FDA-CBDF-4A9C-900D-FE7D88E0E597"
+        },
+        "destination": "presentation"
+      },
+      {
+        "id": {
+          "uuid": "5E7426F6-4E4D-412A-9E84-5F95E02F24D3",
+          "name": "SERVICE HOST",
+          "index": 10
+        },
+        "type": "header",
+        "is_hidden": false,
+        "is_pco": true,
+        "destination": "presentation"
+      },
+      {
+        "id": {
+          "uuid": "75704885-0297-4D66-ACB8-3B9A7EE23DB0",
+          "name": "MC",
+          "index": 11
+        },
+        "type": "presentation",
+        "is_hidden": false,
+        "is_pco": true,
+        "presentation_info": {
+          "presentation_uuid": "4CC08029-E3AF-43EB-AC89-DF1065966DA0",
+          "arrangement_name": "Master",
+          "arrangement_uuid": "4CC08029-E3AF-43EB-AC89-DF1065966DA0"
+        },
+        "destination": "presentation"
+      },
+      {
+        "id": {
+          "uuid": "83E65059-8148-49B7-94C4-5841DE02FDCA",
+          "name": "MESSAGE",
+          "index": 12
+        },
+        "type": "header",
+        "is_hidden": false,
+        "is_pco": true,
+        "destination": "presentation"
+      },
+      {
+        "id": {
+          "uuid": "0BB9970D-A405-42F0-9B74-FC27BE4F35D5",
+          "name": "Scripture Reading",
+          "index": 13
+        },
+        "type": "presentation",
+        "is_hidden": true,
+        "is_pco": true,
+        "presentation_info": {
+          "presentation_uuid": "E46CBF0C-156E-4791-9B72-01DDC0938758",
+          "arrangement_name": "Master",
+          "arrangement_uuid": "E46CBF0C-156E-4791-9B72-01DDC0938758"
+        },
+        "destination": "presentation"
+      },
+      {
+        "id": {
+          "uuid": "F4E130C1-B51F-439D-A2D7-1F01052CC3E8",
+          "name": "SeriesFour_Part1_ProPresenter",
+          "index": 14
+        },
+        "type": "presentation",
+        "is_hidden": false,
+        "is_pco": true,
+        "presentation_info": {
+          "presentation_uuid": "445A11D5-E821-488D-9D3D-76EA883AB105",
+          "arrangement_name": "Master",
+          "arrangement_uuid": "445A11D5-E821-488D-9D3D-76EA883AB105"
+        },
+        "destination": "presentation"
+      },
+      {
+        "id": {
+          "uuid": "5EBF7310-F7B7-46DC-8048-9B8A46842191",
+          "name": "Sample Message B",
+          "index": 15
+        },
+        "type": "presentation",
+        "is_hidden": true,
+        "is_pco": true,
+        "presentation_info": {
+          "presentation_uuid": "2D24702C-9B33-4140-9D97-72E2701C955C",
+          "arrangement_name": "Master",
+          "arrangement_uuid": "2D24702C-9B33-4140-9D97-72E2701C955C"
+        },
+        "destination": "presentation"
+      },
+      {
+        "id": {
+          "uuid": "A3032B86-0E8E-4930-BB18-14EB5D36E9F5",
+          "name": "CLOSE",
+          "index": 16
+        },
+        "type": "header",
+        "is_hidden": false,
+        "is_pco": true,
+        "destination": "presentation"
+      },
+      {
+        "id": {
+          "uuid": "35C7AC56-1EC5-4C4F-BD35-887EE1C081E2",
+          "name": "Dismissal",
+          "index": 17
+        },
+        "type": "presentation",
+        "is_hidden": false,
+        "is_pco": true,
+        "presentation_info": {
+          "presentation_uuid": "1D17EA27-82A0-4706-B6AC-2298AA4112A1",
+          "arrangement_name": "Master",
+          "arrangement_uuid": "1D17EA27-82A0-4706-B6AC-2298AA4112A1"
+        },
+        "destination": "presentation"
+      }
+    ]
+  }
+}

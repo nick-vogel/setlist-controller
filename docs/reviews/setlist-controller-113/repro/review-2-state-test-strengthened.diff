@@ -1,0 +1,20 @@
+diff --git a/test/connections.test.ts b/test/connections.test.ts
+index f085911..e4ffb29 100644
+--- a/test/connections.test.ts
++++ b/test/connections.test.ts
+@@ -264,11 +264,13 @@ describe("a target's read-only state", () => {
+ 
+     const none = await sendThen(producer, { kind: 'arm', target: 'propresenter' }, row('online', 'armed'));
+     expect(none.connections[0]?.state).toEqual(['Cue 13']);
++    const cleared = producer.received.length;
+     target.setState(null);
+-    await producer.snapshot((snapshot) => snapshot.connections[0]?.state.length === 0);
++    await producer.snapshot((snapshot) => producer.received.indexOf(snapshot) >= cleared && snapshot.connections[0]?.state.length === 0);
+ 
++    const reported = producer.received.length;
+     target.setState(['Cue 14']);
+-    await producer.snapshot((snapshot) => snapshot.connections[0]?.state.length === 1);
++    await producer.snapshot((snapshot) => producer.received.indexOf(snapshot) >= reported && snapshot.connections[0]?.state[0] === 'Cue 14');
+     target.goOffline();
+     const offline = await producer.snapshot(row('offline', 'armed'));
+     expect(offline.connections[0]?.state).toEqual([]);

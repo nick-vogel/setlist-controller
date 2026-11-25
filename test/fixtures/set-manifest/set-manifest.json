@@ -1,0 +1,14 @@
+{
+  "songs": [
+    {
+      "title": "Made Up Song",
+      "stemsKey": "G",
+      "chartKey": "G",
+      "chartText": "INTRO\n[G] [C] [G] [D]\n\nVERSE\n[G]Morning comes on [C]made up wings\n[Em]Every line a [D/F#]borrowed thing\n\nCHORUS\n[C]Sing it [G]once, the [D]first time round\n{ Keys only }\n\nCHORUS\n[C]Sing it [G]twice, a [D]second sound\n\nBRIDGE\n[Em]Over the [C]water line"
+    },
+    {
+      "title": "Short Song",
+      "stemsKey": null
+    }
+  ]
+}

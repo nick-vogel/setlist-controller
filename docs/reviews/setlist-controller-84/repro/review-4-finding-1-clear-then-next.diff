@@ -1,0 +1,26 @@
+diff --git a/test/propresenter.test.ts b/test/propresenter.test.ts
+index baa409d..545cee0 100644
+--- a/test/propresenter.test.ts
++++ b/test/propresenter.test.ts
+@@ -1064,6 +1064,21 @@ describe('the manual buttons', () => {
+     expect(state).toContain(NOTHING_TO_MOVE.next);
+   });
+ 
++  it('blanks the slide text at an accepted Clear slide even when a press follows before its answer', async () => {
++    const { producer, row, latest } = await streamRig();
++    await pro!.send(CHORUS);
++    await row((row) => sameLines(row.state, CHORUS_TEXT));
++
++    // Clear slide, then Next slide before the clear's answer has come. ProPresenter blanks the screen
++    // at the clear, and next then has nothing to move.
++    producer.send({ kind: 'run-button', target: 'propresenter', button: 'clear' });
++    producer.send({ kind: 'run-button', target: 'propresenter', button: 'next' });
++    await row((row) => row.state.includes(NOTHING_TO_MOVE.next));
++
++    expect(pro!.slideCommands()).toEqual(['/v1/clear/layer/slide', '/v1/presentation/active/next/trigger']);
++    expect(await latest()).toMatchObject({ connection: 'online', state: [NOTHING_TO_MOVE.next] });
++  });
++
+   it('shows no slide text from before a drop with the line of a press made after the reconnect', async () => {
+     vi.spyOn(console, 'error').mockImplementation(() => {});
+     const { producer, clock, row, next } = await streamRig();

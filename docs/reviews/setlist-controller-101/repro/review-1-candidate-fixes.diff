@@ -1,0 +1,130 @@
+diff --git a/src/server/connections.ts b/src/server/connections.ts
+index 3679fd2..742aa1b 100644
+--- a/src/server/connections.ts
++++ b/src/server/connections.ts
+@@ -54,7 +54,7 @@ export type Connections = {
+   // section's cue of a song with no Count Off, or a count-in's landing cue, which comes with no Count
+   // Off cue before it, arms the faded targets again, and any other section cue drops the word. A Fade out
+   // drops it too, so only a word said after the latest Fade out arms the faded targets again.
+-  countOff(): void;
++  countOff(countIn?: boolean): void;
+   // The leader's Fade out: every armed target that pauses on a fade is paused, by the Fade out. An
+   // armed target that opts out stays armed; a disarmed or paused target is untouched. It drops any
+   // word from countOff that no section cue has settled yet.
+@@ -122,7 +122,7 @@ export function startConnections({
+   // from a jump until its start, so the cue of Play from start while stopped comes only then. A
+   // Fade out clears it, since a word said before the Fade out (on Live's first report after a
+   // reconnect, or a tap while stopped, with no cue after it) says nothing about the music after.
+-  let musicBack = false;
++  let musicBack: false | 'section' | 'count-in' = false;
+   const set = (entry: Entry, change: Partial<Pick<Entry, 'connection' | 'arm' | 'pause' | 'check' | 'state' | 'problems'>>) => {
+     const next = { ...entry, ...change };
+     const same =
+@@ -294,7 +294,7 @@ export function startConnections({
+       // A song's End cue comes before the next song's first cue in the same move, so it leaves the
+       // word for that cue.
+       if (cue.section !== 'end') {
+-        if (musicBack && bringsMusicBack(cue)) {
++        if (musicBack === 'count-in' || (musicBack && bringsMusicBack(cue))) {
+           for (const entry of entries) if (entry.pause === 'fade-out') set(entry, { arm: 'armed', pause: null });
+         }
+         musicBack = false;
+@@ -309,8 +309,8 @@ export function startConnections({
+         if (entry.arm === 'armed' && entry.target.pausesOnFade) set(entry, { arm: 'paused', pause: 'fade-out' });
+       }
+     },
+-    countOff() {
+-      musicBack = true;
++    countOff(countIn = false) {
++      musicBack = countIn ? 'count-in' : 'section';
+     },
+     checkAll() {
+       for (const entry of entries) void runCheck(entry);
+diff --git a/src/server/playback-controller.ts b/src/server/playback-controller.ts
+index 9372d1d..fc17f31 100644
+--- a/src/server/playback-controller.ts
++++ b/src/server/playback-controller.ts
+@@ -53,7 +53,7 @@ export type ControllerOutput = {
+   // The playhead has entered a song's Count Off, or Play from start or a count-in while stopped
+   // starts the song from it, which runs for ms more before the song's first downbeat. A faded song comes back in over it. A
+   // song with no Count Off sends 0 on its first locator, and comes back at once.
+-  countOff(ms: number): void;
++  countOff(ms: number, countIn?: boolean): void;
+ };
+ 
+ // The name of the locator a song counts off from, which count-in.ts keeps beside the count-in's rule.
+@@ -131,6 +131,11 @@ export function startPlaybackController(
+   // made the jump to it already, on the Count Off's last bar line: Live then makes the new jump a bar
+   // later, so a report in the old target's first bar is no proof the new one was lost. Null otherwise.
+   let countIn: { countOff: Section; sent: boolean; replaced: Section | null } | null = null;
++  let startWait: (() => void) | null = null;
++  const cancelStartWait = () => {
++    startWait?.();
++    startWait = null;
++  };
+ 
+   const now = (at: number | null) => nowPlaying(set, at, signature);
+   // The song Play from start last jumped to, until the playhead enters it or another jump replaces it.
+@@ -138,11 +143,11 @@ export function startPlaybackController(
+   // The playhead at `at`, in that section, brings the music back: a song's Count Off says how long it
+   // has left at Live's tempo, and the first locator of a song with no Count Off says 0. Any other
+   // section says nothing.
+-  const comesBack = (address: SectionAddress, at: number) => {
++  const comesBack = (address: SectionAddress, at: number, countIn = false) => {
+     const song = set?.songs.find((candidate) => candidate.number === address.song);
+     const section = song?.sections[address.section];
+     if (!song || !section) return;
+-    if (section.name === COUNT_OFF && section.end !== null) countOff(((section.end - at) * 60_000) / tempo);
++    if (section.name === COUNT_OFF && section.end !== null) countOff(((section.end - at) * 60_000) / tempo, countIn);
+     else if (address.section === 0 && !song.sections.some((candidate) => candidate.name === COUNT_OFF)) countOff(0);
+   };
+   // A report that moves the playhead into a song's Count Off, from another song or by Play from
+@@ -373,6 +378,7 @@ export function startPlaybackController(
+ 
+   // No jump waits any more, so no count-in is held either.
+   const clearJump = () => {
++    cancelStartWait();
+     cancelLostTimer();
+     countIn = null;
+     heldEnd = null;
+@@ -543,6 +549,7 @@ export function startPlaybackController(
+         }
+         case 'playing': {
+           if (event.playing && !playing && position !== null) anchor = { position, at: clock.now() };
++          if (event.playing) cancelStartWait();
+           const stops = playing && !event.playing;
+           playing = event.playing;
+           // A stop ends a wrap, so the report after it is judged from where the playhead is.
+@@ -656,9 +663,15 @@ export function startPlaybackController(
+           forgetStop();
+           // The music comes back over the whole Count Off, as on Play from start while stopped. The
+           // report that moves the playhead into it stays inside the song, and says nothing again.
+-          comesBack({ song: song.number, section: rule.countOff }, countOff.time);
++          comesBack({ song: song.number, section: rule.countOff }, countOff.time, true);
+           waitingJump = { song: song.number, section: command.section };
+           countIn = { countOff, sent: false, replaced: null };
++          startWait = clock.every((((countOff.end ?? countOff.time) - countOff.time) * 60_000) / tempo, () => {
++            cancelStartWait();
++            if (!countIn || playing) return;
++            clearJump();
++            onChange(snapshot());
++          });
+           break;
+         }
+         case 'stop':
+diff --git a/src/server/server.ts b/src/server/server.ts
+index 728637a..49616bc 100644
+--- a/src/server/server.ts
++++ b/src/server/server.ts
+@@ -129,9 +129,9 @@ export async function startServer(options: ServerOptions): Promise<Server> {
+     },
+     fadeIn: () => fade.fadeIn(),
+     // The music comes back over the Count Off, and the targets a Fade out paused on its cue.
+-    countOff: (ms) => {
++    countOff: (ms, countIn) => {
+       fade.fadeInOver(ms);
+-      connections.countOff();
++      connections.countOff(countIn);
+     },
+   }, clock);
+   // The fade reaches the bridge by late reference too. The controller decides when a fade may start.

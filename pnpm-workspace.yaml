@@ -1,0 +1,4 @@
+# Each package's install script only checks that its prebuilt binary is there, so it need not run.
+ignoredBuiltDependencies:
+  - '@julusian/freetype2'
+  - '@julusian/midi'

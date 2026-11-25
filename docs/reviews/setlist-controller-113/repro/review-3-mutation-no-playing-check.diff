@@ -1,0 +1,13 @@
+diff --git a/src/server/playback-controller.ts b/src/server/playback-controller.ts
+index beaae8d..53879f3 100644
+--- a/src/server/playback-controller.ts
++++ b/src/server/playback-controller.ts
+@@ -145,7 +145,7 @@ export function startPlaybackController(
+   // wraps there and never plays into it. A waiting jump landing there is a landing, not a wrap, as in
+   // the cue module (cues.ts onBraceEnd).
+   const onBraceEnd = (at: number) => {
+-    if (!playing || !liveLoop.on || liveLoop.length <= 0 || !near(at, liveLoop.start + liveLoop.length)) return false;
++    if (!liveLoop.on || liveLoop.length <= 0 || !near(at, liveLoop.start + liveLoop.length)) return false;
+     const lands = waitingJump !== null && position !== at && (waitingJump.section === 'end' || sameSection(now(at), waitingJump));
+     return !lands;
+   };

@@ -1,0 +1,105 @@
+{
+  "method": "GET",
+  "path": "/v1/presentation/58C14FDA-CBDF-4A9C-900D-FE7D88E0E597",
+  "status": 200,
+  "content_type": "application/json",
+  "body": {
+    "presentation": {
+      "id": {
+        "uuid": "58C14FDA-CBDF-4A9C-900D-FE7D88E0E597",
+        "name": "Facetime",
+        "index": 89
+      },
+      "groups": [
+        {
+          "name": "",
+          "color": {
+            "red": 0.3999999761581421,
+            "green": 0.3999999761581421,
+            "blue": 0.3999999761581421,
+            "alpha": 1
+          },
+          "slides": [
+            {
+              "enabled": true,
+              "notes": "",
+              "text": "",
+              "label": "Welcome.jpg",
+              "size": {
+                "width": 1920,
+                "height": 1080
+              }
+            }
+          ],
+          "uuid": "BA45EA67-D48E-4D65-BB62-B0015F404FDC"
+        },
+        {
+          "name": "",
+          "color": {
+            "red": 0.3999999761581421,
+            "green": 0.3999999761581421,
+            "blue": 0.3999999761581421,
+            "alpha": 1
+          },
+          "slides": [
+            {
+              "enabled": true,
+              "notes": "",
+              "text": "Facetime / group 2 / slide 1 line 1\nFacetime / group 2 / slide 1 line 2",
+              "label": "pure-black-background-f82588d3.jpeg",
+              "size": {
+                "width": 1920,
+                "height": 1080
+              }
+            }
+          ],
+          "uuid": "5581466B-25BA-4FC6-96C8-C8FD650D04DF"
+        },
+        {
+          "name": "",
+          "color": {
+            "red": 0.3999999761581421,
+            "green": 0.3999999761581421,
+            "blue": 0.3999999761581421,
+            "alpha": 1
+          },
+          "slides": [
+            {
+              "enabled": true,
+              "notes": "",
+              "text": "Facetime / group 3 / slide 1 line 1\nFacetime / group 3 / slide 1 line 2",
+              "label": "pure-black-background-f82588d3.jpeg",
+              "size": {
+                "width": 1920,
+                "height": 1080
+              }
+            }
+          ],
+          "uuid": "966F675A-E695-4D06-A4B7-915FAF1D2F41"
+        }
+      ],
+      "has_timeline": false,
+      "presentation_path": "ProPresenter/Libraries/Default/Facetime.pro",
+      "destination": "presentation",
+      "arrangements": [
+        {
+          "id": {
+            "uuid": "58C14FDA-CBDF-4A9C-900D-FE7D88E0E597",
+            "name": "Master",
+            "index": 0
+          },
+          "groups": [
+            "BA45EA67-D48E-4D65-BB62-B0015F404FDC",
+            "5581466B-25BA-4FC6-96C8-C8FD650D04DF",
+            "966F675A-E695-4D06-A4B7-915FAF1D2F41"
+          ],
+          "total_cues": 3
+        }
+      ],
+      "current_arrangement": "58C14FDA-CBDF-4A9C-900D-FE7D88E0E597",
+      "type": "standard",
+      "is_authorized": true,
+      "total_cues": 3
+    }
+  }
+}

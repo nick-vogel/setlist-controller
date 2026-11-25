@@ -1,0 +1,11 @@
+diff --git a/src/server/cues.ts b/src/server/cues.ts
+index f66bf08..2728853 100644
+--- a/src/server/cues.ts
++++ b/src/server/cues.ts
+@@ -253,5 +253,5 @@ function onBraceEnd(before: PlaybackState, state: PlaybackState): boolean {
+   const { position } = state;
+   const target = before.jump;
+   const lands = target !== null && before.position !== position && (target.section === 'end' || sameSection(state.now, target));
+-  return before.playing && state.playing && !lands && position !== null && !!loop && loop.length > 0 && near(position, loop.start + loop.length);
++  return state.playing && !lands && position !== null && !!loop && loop.length > 0 && near(position, loop.start + loop.length);
+ }

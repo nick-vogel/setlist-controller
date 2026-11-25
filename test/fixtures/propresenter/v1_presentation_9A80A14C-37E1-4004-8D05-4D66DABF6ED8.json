@@ -1,0 +1,535 @@
+{
+  "method": "GET",
+  "path": "/v1/presentation/9A80A14C-37E1-4004-8D05-4D66DABF6ED8",
+  "status": 200,
+  "content_type": "application/json",
+  "body": {
+    "presentation": {
+      "id": {
+        "uuid": "9A80A14C-37E1-4004-8D05-4D66DABF6ED8",
+        "name": "Trust In God",
+        "index": 273
+      },
+      "groups": [
+        {
+          "name": "Intro",
+          "color": {
+            "red": 0.7019608020782471,
+            "green": 0.6549019813537598,
+            "blue": 0.1411764770746231,
+            "alpha": 1
+          },
+          "slides": [
+            {
+              "enabled": true,
+              "notes": "",
+              "text": "",
+              "label": "Geoscapes_01_4K.mp4",
+              "size": {
+                "width": 1920,
+                "height": 1080
+              }
+            }
+          ],
+          "uuid": "6C20032F-7569-4D0C-87F8-4AB9E8FB8354"
+        },
+        {
+          "name": "Verse 1",
+          "color": {
+            "red": 0,
+            "green": 0.46666666865348816,
+            "blue": 0.800000011920929,
+            "alpha": 1
+          },
+          "slides": [
+            {
+              "enabled": true,
+              "notes": "",
+              "text": "Trust In God / Verse 1 / slide 1 line 1\nTrust In God / Verse 1 / slide 1 line 2",
+              "label": "",
+              "size": {
+                "width": 1920,
+                "height": 1080
+              }
+            },
+            {
+              "enabled": true,
+              "notes": "",
+              "text": "Trust In God / Verse 1 / slide 2 line 1\nTrust In God / Verse 1 / slide 2 line 2",
+              "label": "",
+              "size": {
+                "width": 1920,
+                "height": 1080
+              }
+            }
+          ],
+          "uuid": "50751F03-A34C-48FC-9FB7-90E1FF37E978"
+        },
+        {
+          "name": "Verse 2",
+          "color": {
+            "red": 0,
+            "green": 0.3490196168422699,
+            "blue": 0.6000000238418579,
+            "alpha": 1
+          },
+          "slides": [
+            {
+              "enabled": true,
+              "notes": "",
+              "text": "Trust In God / Verse 2 / slide 1 line 1\nTrust In God / Verse 2 / slide 1 line 2",
+              "label": "",
+              "size": {
+                "width": 1920,
+                "height": 1080
+              }
+            },
+            {
+              "enabled": true,
+              "notes": "",
+              "text": "Trust In God / Verse 2 / slide 2 line 1\nTrust In God / Verse 2 / slide 2 line 2",
+              "label": "",
+              "size": {
+                "width": 1920,
+                "height": 1080
+              }
+            }
+          ],
+          "uuid": "7165E771-FA8D-42D6-9CF1-F295E43D7E28"
+        },
+        {
+          "name": "Chorus",
+          "color": {
+            "red": 0.800000011920929,
+            "green": 0,
+            "blue": 0.30588236451148987,
+            "alpha": 1
+          },
+          "slides": [
+            {
+              "enabled": true,
+              "notes": "",
+              "text": "Trust In God / Chorus / slide 1 line 1\nTrust In God / Chorus / slide 1 line 2\nTrust In God / Chorus / slide 1 line 3",
+              "label": "",
+              "size": {
+                "width": 1920,
+                "height": 1080
+              }
+            },
+            {
+              "enabled": true,
+              "notes": "",
+              "text": "Trust In God / Chorus / slide 2 line 1",
+              "label": "",
+              "size": {
+                "width": 1920,
+                "height": 1080
+              }
+            }
+          ],
+          "uuid": "ED8DD796-BBB1-49C0-AB56-04A0278A0499"
+        },
+        {
+          "name": "Vamp",
+          "color": {
+            "red": 0.1411764770746231,
+            "green": 0.7019608020782471,
+            "blue": 0.2980392277240753,
+            "alpha": 1
+          },
+          "slides": [
+            {
+              "enabled": true,
+              "notes": "",
+              "text": "",
+              "label": "",
+              "size": {
+                "width": 1920,
+                "height": 1080
+              }
+            }
+          ],
+          "uuid": "96F854AB-7E4A-4C10-8D9E-5568A95FDF1C"
+        },
+        {
+          "name": "Verse 3",
+          "color": {
+            "red": 0,
+            "green": 0.23529411852359772,
+            "blue": 0.4000000059604645,
+            "alpha": 1
+          },
+          "slides": [
+            {
+              "enabled": true,
+              "notes": "",
+              "text": "Trust In God / Verse 3 / slide 1 line 1\nTrust In God / Verse 3 / slide 1 line 2",
+              "label": "",
+              "size": {
+                "width": 1920,
+                "height": 1080
+              }
+            },
+            {
+              "enabled": true,
+              "notes": "",
+              "text": "Trust In God / Verse 3 / slide 2 line 1\nTrust In God / Verse 3 / slide 2 line 2",
+              "label": "",
+              "size": {
+                "width": 1920,
+                "height": 1080
+              }
+            }
+          ],
+          "uuid": "38676B88-A8C5-46A7-9EEE-A14BE7908A71"
+        },
+        {
+          "name": "Verse 4",
+          "color": {
+            "red": 0,
+            "green": 0.40784314274787903,
+            "blue": 0.7019608020782471,
+            "alpha": 1
+          },
+          "slides": [
+            {
+              "enabled": true,
+              "notes": "",
+              "text": "Trust In God / Verse 4 / slide 1 line 1\nTrust In God / Verse 4 / slide 1 line 2",
+              "label": "",
+              "size": {
+                "width": 1920,
+                "height": 1080
+              }
+            },
+            {
+              "enabled": true,
+              "notes": "",
+              "text": "Trust In God / Verse 4 / slide 2 line 1\nTrust In God / Verse 4 / slide 2 line 2​",
+              "label": "",
+              "size": {
+                "width": 1920,
+                "height": 1080
+              }
+            }
+          ],
+          "uuid": "9D21A095-E3EF-4ADD-AEFE-0381D6C1B2B7"
+        },
+        {
+          "name": "Interlude",
+          "color": {
+            "red": 0.1411764770746231,
+            "green": 0.7019608020782471,
+            "blue": 0.2980392277240753,
+            "alpha": 1
+          },
+          "slides": [
+            {
+              "enabled": true,
+              "notes": "",
+              "text": "",
+              "label": "",
+              "size": {
+                "width": 1920,
+                "height": 1080
+              }
+            }
+          ],
+          "uuid": "FE7977AB-09A8-4155-8611-3D3F64AC2253"
+        },
+        {
+          "name": "Bridge",
+          "color": {
+            "red": 0.4627451002597809,
+            "green": 0,
+            "blue": 0.800000011920929,
+            "alpha": 1
+          },
+          "slides": [
+            {
+              "enabled": true,
+              "notes": "",
+              "text": "Trust In God / Bridge / slide 1 line 1\nTrust In God / Bridge / slide 1 line 2",
+              "label": "",
+              "size": {
+                "width": 1920,
+                "height": 1080
+              }
+            },
+            {
+              "enabled": true,
+              "notes": "",
+              "text": "Trust In God / Bridge / slide 1 line 1\nTrust In God / Bridge / slide 1 line 2",
+              "label": "",
+              "size": {
+                "width": 1920,
+                "height": 1080
+              }
+            },
+            {
+              "enabled": true,
+              "notes": "",
+              "text": "Trust In God / Bridge / slide 1 line 1\nTrust In God / Bridge / slide 1 line 2",
+              "label": "",
+              "size": {
+                "width": 1920,
+                "height": 1080
+              }
+            },
+            {
+              "enabled": true,
+              "notes": "",
+              "text": "Trust In God / Bridge / slide 4 line 1\nTrust In God / Bridge / slide 4 line 2",
+              "label": "",
+              "size": {
+                "width": 1920,
+                "height": 1080
+              }
+            }
+          ],
+          "uuid": "1F037AFA-9A5C-4E5C-8986-14AF3CAD693A"
+        },
+        {
+          "name": "Chorus",
+          "color": {
+            "red": 0.800000011920929,
+            "green": 0,
+            "blue": 0.30588236451148987,
+            "alpha": 1
+          },
+          "slides": [
+            {
+              "enabled": true,
+              "notes": "",
+              "text": "Trust In God / Chorus / slide 1 line 1\nTrust In God / Chorus / slide 1 line 2",
+              "label": "",
+              "size": {
+                "width": 1920,
+                "height": 1080
+              }
+            },
+            {
+              "enabled": true,
+              "notes": "",
+              "text": "Trust In God / Chorus / slide 2 line 1",
+              "label": "",
+              "size": {
+                "width": 1920,
+                "height": 1080
+              }
+            }
+          ],
+          "uuid": "1CFE9F7F-4CBD-4210-AA42-8808326A3D89"
+        },
+        {
+          "name": "Chorus",
+          "color": {
+            "red": 0.800000011920929,
+            "green": 0,
+            "blue": 0.30588236451148987,
+            "alpha": 1
+          },
+          "slides": [
+            {
+              "enabled": true,
+              "notes": "",
+              "text": "Trust In God / Chorus / slide 1 line 1\nTrust In God / Chorus / slide 1 line 2\nTrust In God / Chorus / slide 1 line 3",
+              "label": "",
+              "size": {
+                "width": 1920,
+                "height": 1080
+              }
+            },
+            {
+              "enabled": true,
+              "notes": "",
+              "text": "Trust In God / Chorus / slide 2 line 1",
+              "label": "",
+              "size": {
+                "width": 1920,
+                "height": 1080
+              }
+            }
+          ],
+          "uuid": "8B663BC0-0298-49BD-833F-D47187AC82CE"
+        },
+        {
+          "name": "Instrumental",
+          "color": {
+            "red": 0.3999999761581421,
+            "green": 0.3999999761581421,
+            "blue": 0.3999999761581421,
+            "alpha": 1
+          },
+          "slides": [
+            {
+              "enabled": true,
+              "notes": "",
+              "text": "",
+              "label": "",
+              "size": {
+                "width": 1920,
+                "height": 1080
+              }
+            }
+          ],
+          "uuid": "D7429AEA-2B5B-4FD4-BAD4-3558D53D4F1C"
+        },
+        {
+          "name": "Chorus",
+          "color": {
+            "red": 0.800000011920929,
+            "green": 0,
+            "blue": 0.30588236451148987,
+            "alpha": 1
+          },
+          "slides": [
+            {
+              "enabled": true,
+              "notes": "",
+              "text": "Trust In God / Chorus / slide 1 line 1\nTrust In God / Chorus / slide 1 line 2\nTrust In God / Chorus / slide 1 line 3",
+              "label": "",
+              "size": {
+                "width": 1920,
+                "height": 1080
+              }
+            },
+            {
+              "enabled": true,
+              "notes": "",
+              "text": "Trust In God / Chorus / slide 2 line 1",
+              "label": "",
+              "size": {
+                "width": 1920,
+                "height": 1080
+              }
+            }
+          ],
+          "uuid": "64913B6E-D3F3-482F-B82B-95B5A6E697C4"
+        },
+        {
+          "name": "Chorus",
+          "color": {
+            "red": 0.800000011920929,
+            "green": 0,
+            "blue": 0.30588236451148987,
+            "alpha": 1
+          },
+          "slides": [
+            {
+              "enabled": true,
+              "notes": "",
+              "text": "Trust In God / Chorus / slide 1 line 1\nTrust In God / Chorus / slide 1 line 2\nTrust In God / Chorus / slide 1 line 3",
+              "label": "",
+              "size": {
+                "width": 1920,
+                "height": 1080
+              }
+            },
+            {
+              "enabled": true,
+              "notes": "",
+              "text": "Trust In God / Chorus / slide 2 line 1",
+              "label": "",
+              "size": {
+                "width": 1920,
+                "height": 1080
+              }
+            }
+          ],
+          "uuid": "D457532E-1A27-4BBE-8940-524BFD36B19C"
+        },
+        {
+          "name": "Ending",
+          "color": {
+            "red": 0.6000000238418579,
+            "green": 0.5607843399047852,
+            "blue": 0.12156862765550613,
+            "alpha": 1
+          },
+          "slides": [
+            {
+              "enabled": true,
+              "notes": "",
+              "text": "",
+              "label": "",
+              "size": {
+                "width": 1920,
+                "height": 1080
+              }
+            }
+          ],
+          "uuid": "36D07441-2764-4E99-9A6B-BBF8537E6E2A"
+        }
+      ],
+      "has_timeline": false,
+      "presentation_path": "ProPresenter/Libraries/Default/Trust In God.pro",
+      "destination": "presentation",
+      "arrangements": [
+        {
+          "id": {
+            "uuid": "9A80A14C-37E1-4004-8D05-4D66DABF6ED8",
+            "name": "Master",
+            "index": 0
+          },
+          "groups": [
+            "6C20032F-7569-4D0C-87F8-4AB9E8FB8354",
+            "50751F03-A34C-48FC-9FB7-90E1FF37E978",
+            "7165E771-FA8D-42D6-9CF1-F295E43D7E28",
+            "ED8DD796-BBB1-49C0-AB56-04A0278A0499",
+            "96F854AB-7E4A-4C10-8D9E-5568A95FDF1C",
+            "38676B88-A8C5-46A7-9EEE-A14BE7908A71",
+            "9D21A095-E3EF-4ADD-AEFE-0381D6C1B2B7",
+            "FE7977AB-09A8-4155-8611-3D3F64AC2253",
+            "1F037AFA-9A5C-4E5C-8986-14AF3CAD693A",
+            "1CFE9F7F-4CBD-4210-AA42-8808326A3D89",
+            "8B663BC0-0298-49BD-833F-D47187AC82CE",
+            "D7429AEA-2B5B-4FD4-BAD4-3558D53D4F1C",
+            "64913B6E-D3F3-482F-B82B-95B5A6E697C4",
+            "D457532E-1A27-4BBE-8940-524BFD36B19C",
+            "36D07441-2764-4E99-9A6B-BBF8537E6E2A"
+          ],
+          "total_cues": 27
+        },
+        {
+          "id": {
+            "uuid": "F31E9147-9D72-4CE6-998C-6D367BC9204D",
+            "name": "Full",
+            "index": 1
+          },
+          "groups": [
+            "6C20032F-7569-4D0C-87F8-4AB9E8FB8354",
+            "50751F03-A34C-48FC-9FB7-90E1FF37E978",
+            "7165E771-FA8D-42D6-9CF1-F295E43D7E28",
+            "ED8DD796-BBB1-49C0-AB56-04A0278A0499",
+            "ED8DD796-BBB1-49C0-AB56-04A0278A0499",
+            "96F854AB-7E4A-4C10-8D9E-5568A95FDF1C",
+            "38676B88-A8C5-46A7-9EEE-A14BE7908A71",
+            "9D21A095-E3EF-4ADD-AEFE-0381D6C1B2B7",
+            "ED8DD796-BBB1-49C0-AB56-04A0278A0499",
+            "ED8DD796-BBB1-49C0-AB56-04A0278A0499",
+            "FE7977AB-09A8-4155-8611-3D3F64AC2253",
+            "1F037AFA-9A5C-4E5C-8986-14AF3CAD693A",
+            "1F037AFA-9A5C-4E5C-8986-14AF3CAD693A",
+            "1F037AFA-9A5C-4E5C-8986-14AF3CAD693A",
+            "1F037AFA-9A5C-4E5C-8986-14AF3CAD693A",
+            "1CFE9F7F-4CBD-4210-AA42-8808326A3D89",
+            "8B663BC0-0298-49BD-833F-D47187AC82CE",
+            "1F037AFA-9A5C-4E5C-8986-14AF3CAD693A",
+            "1F037AFA-9A5C-4E5C-8986-14AF3CAD693A",
+            "D7429AEA-2B5B-4FD4-BAD4-3558D53D4F1C",
+            "D7429AEA-2B5B-4FD4-BAD4-3558D53D4F1C",
+            "64913B6E-D3F3-482F-B82B-95B5A6E697C4",
+            "D457532E-1A27-4BBE-8940-524BFD36B19C",
+            "36D07441-2764-4E99-9A6B-BBF8537E6E2A"
+          ],
+          "total_cues": 54
+        }
+      ],
+      "current_arrangement": "9A80A14C-37E1-4004-8D05-4D66DABF6ED8",
+      "type": "multitracks",
+      "is_authorized": true,
+      "total_cues": 27
+    }
+  }
+}

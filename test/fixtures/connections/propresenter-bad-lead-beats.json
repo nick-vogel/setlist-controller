@@ -1,0 +1,6 @@
+{
+  "targets": {
+    "fake": { "port": 4031 },
+    "propresenter": { "host": "192.168.10.50", "leadBeats": -1 }
+  }
+}

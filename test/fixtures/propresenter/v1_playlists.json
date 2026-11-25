@@ -1,0 +1,134 @@
+{
+  "method": "GET",
+  "path": "/v1/playlists",
+  "status": 200,
+  "content_type": "application/json",
+  "body": [
+    {
+      "id": {
+        "uuid": "49F3C197-E743-45AB-8670-C53959B82BDC",
+        "name": "Series One - October 25, 2026",
+        "index": 0
+      },
+      "field_type": "playlist",
+      "children": []
+    },
+    {
+      "id": {
+        "uuid": "6E51EFFD-0E26-43D9-A4AA-DF43A41C18B5",
+        "name": "Series One - October 11, 2026",
+        "index": 1
+      },
+      "field_type": "playlist",
+      "children": []
+    },
+    {
+      "id": {
+        "uuid": "819E1B79-3EA2-400F-8BDB-55BFCB37D008",
+        "name": "Series One - October 18, 2026",
+        "index": 2
+      },
+      "field_type": "playlist",
+      "children": []
+    },
+    {
+      "id": {
+        "uuid": "00F843BF-B767-4977-9E04-094DB59BBB1F",
+        "name": "Series One - October 4, 2026",
+        "index": 3
+      },
+      "field_type": "playlist",
+      "children": []
+    },
+    {
+      "id": {
+        "uuid": "AE513C2B-225A-44B5-882E-7F3F2546C263",
+        "name": "Series One - September 27, 2026",
+        "index": 4
+      },
+      "field_type": "playlist",
+      "children": []
+    },
+    {
+      "id": {
+        "uuid": "910A5087-B5DE-45F9-BDD9-D03D315FC35C",
+        "name": "Series One - September 20, 2026",
+        "index": 5
+      },
+      "field_type": "playlist",
+      "children": []
+    },
+    {
+      "id": {
+        "uuid": "4EA510D0-7B4E-4AB8-9AC0-17435AF2D586",
+        "name": "Series One - September 13, 2026",
+        "index": 6
+      },
+      "field_type": "playlist",
+      "children": []
+    },
+    {
+      "id": {
+        "uuid": "733948AA-2EA1-4086-9941-AA5498595AC5",
+        "name": "Series One - September 6, 2026",
+        "index": 7
+      },
+      "field_type": "playlist",
+      "children": []
+    },
+    {
+      "id": {
+        "uuid": "C07B6165-BD89-4B7C-87A2-71506736941F",
+        "name": "September 16, 2026",
+        "index": 8
+      },
+      "field_type": "playlist",
+      "children": []
+    },
+    {
+      "id": {
+        "uuid": "A29599F0-6B18-4C12-B048-C1AC74C9854A",
+        "name": "September 16, 2026",
+        "index": 9
+      },
+      "field_type": "playlist",
+      "children": []
+    },
+    {
+      "id": {
+        "uuid": "61F3F697-C9CE-4D28-9C38-906952961C1A",
+        "name": "Series One - August 30, 2026",
+        "index": 10
+      },
+      "field_type": "playlist",
+      "children": []
+    },
+    {
+      "id": {
+        "uuid": "EB970F7C-BABF-4EBB-8D16-EEC4C0F48839",
+        "name": "Series Three - Message 15 - August 9, 2026",
+        "index": 11
+      },
+      "field_type": "playlist",
+      "children": []
+    },
+    {
+      "id": {
+        "uuid": "B2BD1142-AB7C-4979-B8CF-5175AD7B5E19",
+        "name": "Series Three - Message 16 - August 16, 2026",
+        "index": 12
+      },
+      "field_type": "playlist",
+      "children": []
+    },
+    {
+      "id": {
+        "uuid": "1C9800A2-4E11-4CE9-AB0D-26B1B6796AB5",
+        "name": "Series One - August 23, 2026",
+        "index": 13
+      },
+      "field_type": "playlist",
+      "children": []
+    }
+  ]
+}

@@ -1,0 +1,59 @@
+{
+  "method": "GET",
+  "path": "/v1/presentation/DFF092C1-8840-49DC-9450-6F04A10FA358",
+  "status": 200,
+  "content_type": "application/json",
+  "body": {
+    "presentation": {
+      "id": {
+        "uuid": "DFF092C1-8840-49DC-9450-6F04A10FA358",
+        "name": "Countdown",
+        "index": 78
+      },
+      "groups": [
+        {
+          "name": "",
+          "color": {
+            "red": 0.3999999761581421,
+            "green": 0.3999999761581421,
+            "blue": 0.3999999761581421,
+            "alpha": 1
+          },
+          "slides": [
+            {
+              "enabled": true,
+              "notes": "",
+              "text": "",
+              "label": "SummerClouds_Countdown_4K.mp4",
+              "size": {
+                "width": 1920,
+                "height": 1080
+              }
+            }
+          ],
+          "uuid": "12A366E3-CBA7-443B-8D38-CF3AFD0A2B7D"
+        }
+      ],
+      "has_timeline": false,
+      "presentation_path": "ProPresenter/Libraries/Default/Countdown.pro",
+      "destination": "presentation",
+      "arrangements": [
+        {
+          "id": {
+            "uuid": "DFF092C1-8840-49DC-9450-6F04A10FA358",
+            "name": "Master",
+            "index": 0
+          },
+          "groups": [
+            "12A366E3-CBA7-443B-8D38-CF3AFD0A2B7D"
+          ],
+          "total_cues": 1
+        }
+      ],
+      "current_arrangement": "DFF092C1-8840-49DC-9450-6F04A10FA358",
+      "type": "standard",
+      "is_authorized": true,
+      "total_cues": 1
+    }
+  }
+}

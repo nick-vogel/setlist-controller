@@ -1,0 +1,12 @@
+diff --git a/src/server/fade-out.ts b/src/server/fade-out.ts
+index 8332515..b8f63e7 100644
+--- a/src/server/fade-out.ts
++++ b/src/server/fade-out.ts
+@@ -166,7 +166,6 @@ export function startFadeOut({ clock, requestTrackData, requestTrackVolume, setT
+       closed = true;
+       stopStepping();
+       if (state.kind === 'stepping' || state.kind === 'lost') restore(state);
+-      state = { kind: 'idle' };
+     },
+   };
+ }

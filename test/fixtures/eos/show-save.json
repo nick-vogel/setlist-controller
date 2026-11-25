@@ -1,0 +1,78 @@
+{
+ "scenario": "show-save",
+ "description": "The show is saved as the keypad saves it: /eos/key/shift 1.0, /eos/key/update 1.0 then 0.0, /eos/key/shift 0.0, half a second apart. Once Eos sent /eos/out/event/show/saved, the open show's path is read again.",
+ "eos_version": "3.3.10 (ETCnomad, macOS)",
+ "transport": "TCP 127.0.0.1:3032, OSC 1.0 packet-length framing",
+ "packets": [
+  {
+   "t_ms": 0,
+   "dir": "app->eos",
+   "address": "/eos/key/shift",
+   "args": [
+    1.0
+   ],
+   "hex": "2f656f732f6b65792f736869667400002c6600003f800000"
+  },
+  {
+   "t_ms": 504,
+   "dir": "app->eos",
+   "address": "/eos/key/update",
+   "args": [
+    1.0
+   ],
+   "hex": "2f656f732f6b65792f757064617465002c6600003f800000"
+  },
+  {
+   "t_ms": 625,
+   "dir": "eos->app",
+   "address": "/eos/out/show/name",
+   "args": [
+    "Colour test recording"
+   ],
+   "hex": "2f656f732f6f75742f73686f772f6e616d6500002c730000436f6c6f75722074657374207265636f7264696e67000000"
+  },
+  {
+   "t_ms": 627,
+   "dir": "eos->app",
+   "address": "/eos/out/event/show/saved",
+   "args": [
+    "/Users/nick/Documents/ETC/Colour test recording.esf3d"
+   ],
+   "hex": "2f656f732f6f75742f6576656e742f73686f772f73617665640000002c7300002f55736572732f6e69636b2f446f63756d656e74732f4554432f436f6c6f75722074657374207265636f7264696e672e6573663364000000"
+  },
+  {
+   "t_ms": 1031,
+   "dir": "app->eos",
+   "address": "/eos/key/update",
+   "args": [
+    0.0
+   ],
+   "hex": "2f656f732f6b65792f757064617465002c66000000000000"
+  },
+  {
+   "t_ms": 1535,
+   "dir": "app->eos",
+   "address": "/eos/key/shift",
+   "args": [
+    0.0
+   ],
+   "hex": "2f656f732f6b65792f736869667400002c66000000000000"
+  },
+  {
+   "t_ms": 1535,
+   "dir": "app->eos",
+   "address": "/eos/get/show/path",
+   "args": [],
+   "hex": "2f656f732f6765742f73686f772f7061746800002c000000"
+  },
+  {
+   "t_ms": 1550,
+   "dir": "eos->app",
+   "address": "/eos/out/get/show/path",
+   "args": [
+    "/Users/nick/Documents/ETC/Colour test recording 2026-11-12 16-04-48.esf3d"
+   ],
+   "hex": "2f656f732f6f75742f6765742f73686f772f7061746800002c7300002f55736572732f6e69636b2f446f63756d656e74732f4554432f436f6c6f75722074657374207265636f7264696e6720323032362d31312d31322031362d30342d34382e6573663364000000"
+  }
+ ]
+}

@@ -1,0 +1,11 @@
+--- a/src/server/playback-controller.ts
++++ b/src/server/playback-controller.ts
+@@ -285,7 +285,7 @@
+     }
+     if (!playing) return false;
+     if (!countIn.reached) return true;
+-    return !inTarget(after) && (after < time - EPSILON || (end !== null && after >= end + barLength() - EPSILON));
++    return !inTarget(after) && (after < time - EPSILON || (end !== null && after >= end + 4 * barLength() - EPSILON));
+   };
+ 
+   // Live sends nothing back for a jump, so the playhead tells when it has happened: it is in the

@@ -1,0 +1,13 @@
+diff --git a/test/propresenter-adapter.test.ts b/test/propresenter-adapter.test.ts
+index c6fe874..4603538 100644
+--- a/test/propresenter-adapter.test.ts
++++ b/test/propresenter-adapter.test.ts
+@@ -195,7 +195,7 @@ it('moves the expected slides to the slide a Next slide press brings while a tri
+ 
+ it("keeps a later press's line over a trigger ProPresenter refuses after it, and still logs the refusal", async () => {
+   rig = await startRig('refused-after-press');
+-  rig.setDelayFor((path) => (path.includes('/group/') ? 700 : undefined));
++  rig.setDelayFor((path) => (path.includes('/group/') ? 900 : undefined));
+   rig.setStatusFor((path) => (path.includes('/group/') || path.includes('/next/') ? 404 : undefined));
+   rig.target.cue(cue(1, 'Song A', 1, 'Chorus'));
+   await rig.target.runButton!('next');

@@ -1,0 +1,683 @@
+{
+ "scenario": "fire-follow-chain",
+ "description": "The app fires 99/1 only. Eos then fires 99/2 by its follow, 99/4 by 99/2's link, 99/5 by 99/4's hang, and 99/3 by 99/5's link, and stops.",
+ "eos_version": "3.3.10 (ETCnomad, macOS)",
+ "transport": "TCP 127.0.0.1:3032, OSC 1.0 packet-length framing",
+ "packets": [
+  {
+   "t_ms": 0,
+   "dir": "app->eos",
+   "address": "/eos/cue/99/1/fire",
+   "args": [],
+   "hex": "2f656f732f6375652f39392f312f6669726500002c000000"
+  },
+  {
+   "t_ms": 33,
+   "dir": "eos->app",
+   "address": "/eos/out/user/1/cmd",
+   "args": [
+    "LIVE: Cue  99 / 1 : ",
+    0
+   ],
+   "hex": "2f656f732f6f75742f757365722f312f636d64002c7369004c4956453a2043756520203939202f2031203a200000000000000000"
+  },
+  {
+   "t_ms": 36,
+   "dir": "eos->app",
+   "address": "/eos/out/cmd",
+   "args": [
+    "LIVE: Cue  99 / 1 : ",
+    0
+   ],
+   "hex": "2f656f732f6f75742f636d64000000002c7369004c4956453a2043756520203939202f2031203a200000000000000000"
+  },
+  {
+   "t_ms": 38,
+   "dir": "eos->app",
+   "address": "/eos/out/active/chan",
+   "args": [
+    ""
+   ],
+   "hex": "2f656f732f6f75742f6163746976652f6368616e000000002c73000000000000"
+  },
+  {
+   "t_ms": 41,
+   "dir": "eos->app",
+   "address": "/eos/out/active/wheel/1",
+   "args": [
+    "  [0]",
+    0,
+    0.0
+   ],
+   "hex": "2f656f732f6f75742f6163746976652f776865656c2f31002c7369660000000020205b305d0000000000000000000000"
+  },
+  {
+   "t_ms": 43,
+   "dir": "eos->app",
+   "address": "/eos/out/active/wheel/2",
+   "args": [
+    "  [0]",
+    0,
+    0.0
+   ],
+   "hex": "2f656f732f6f75742f6163746976652f776865656c2f32002c7369660000000020205b305d0000000000000000000000"
+  },
+  {
+   "t_ms": 45,
+   "dir": "eos->app",
+   "address": "/eos/out/active/wheel/3",
+   "args": [
+    "  [0]",
+    0,
+    0.0
+   ],
+   "hex": "2f656f732f6f75742f6163746976652f776865656c2f33002c7369660000000020205b305d0000000000000000000000"
+  },
+  {
+   "t_ms": 47,
+   "dir": "eos->app",
+   "address": "/eos/out/active/wheel/4",
+   "args": [
+    "  [0]",
+    0,
+    0.0
+   ],
+   "hex": "2f656f732f6f75742f6163746976652f776865656c2f34002c7369660000000020205b305d0000000000000000000000"
+  },
+  {
+   "t_ms": 50,
+   "dir": "eos->app",
+   "address": "/eos/out/active/wheel/5",
+   "args": [
+    "  [0]",
+    0,
+    0.0
+   ],
+   "hex": "2f656f732f6f75742f6163746976652f776865656c2f35002c7369660000000020205b305d0000000000000000000000"
+  },
+  {
+   "t_ms": 52,
+   "dir": "eos->app",
+   "address": "/eos/out/active/wheel/6",
+   "args": [
+    "  [0]",
+    0,
+    0.0
+   ],
+   "hex": "2f656f732f6f75742f6163746976652f776865656c2f36002c7369660000000020205b305d0000000000000000000000"
+  },
+  {
+   "t_ms": 55,
+   "dir": "eos->app",
+   "address": "/eos/out/active/wheel/7",
+   "args": [
+    "  [0]",
+    0,
+    0.0
+   ],
+   "hex": "2f656f732f6f75742f6163746976652f776865656c2f37002c7369660000000020205b305d0000000000000000000000"
+  },
+  {
+   "t_ms": 57,
+   "dir": "eos->app",
+   "address": "/eos/out/color/hs",
+   "args": [],
+   "hex": "2f656f732f6f75742f636f6c6f722f68730000002c000000"
+  },
+  {
+   "t_ms": 59,
+   "dir": "eos->app",
+   "address": "/eos/out/previous/cue",
+   "args": [],
+   "hex": "2f656f732f6f75742f70726576696f75732f6375650000002c000000"
+  },
+  {
+   "t_ms": 62,
+   "dir": "eos->app",
+   "address": "/eos/out/previous/cue/text",
+   "args": [
+    ""
+   ],
+   "hex": "2f656f732f6f75742f70726576696f75732f6375652f7465787400002c73000000000000"
+  },
+  {
+   "t_ms": 64,
+   "dir": "eos->app",
+   "address": "/eos/out/active/cue/99/1",
+   "args": [
+    0.0
+   ],
+   "hex": "2f656f732f6f75742f6163746976652f6375652f39392f31000000002c66000000000000"
+  },
+  {
+   "t_ms": 66,
+   "dir": "eos->app",
+   "address": "/eos/out/active/cue",
+   "args": [
+    0.0
+   ],
+   "hex": "2f656f732f6f75742f6163746976652f637565002c66000000000000"
+  },
+  {
+   "t_ms": 69,
+   "dir": "eos->app",
+   "address": "/eos/out/active/cue/text",
+   "args": [
+    "99/1 Follow test / 1 1.0 0%"
+   ],
+   "hex": "2f656f732f6f75742f6163746976652f6375652f74657874000000002c73000039392f3120466f6c6c6f772074657374202f203120312e3020302500"
+  },
+  {
+   "t_ms": 71,
+   "dir": "eos->app",
+   "address": "/eos/out/pending/cue/99/2",
+   "args": [],
+   "hex": "2f656f732f6f75742f70656e64696e672f6375652f39392f320000002c000000"
+  },
+  {
+   "t_ms": 74,
+   "dir": "eos->app",
+   "address": "/eos/out/pending/cue/text",
+   "args": [
+    "99/2 Follow test / 2 1.0"
+   ],
+   "hex": "2f656f732f6f75742f70656e64696e672f6375652f746578740000002c73000039392f3220466f6c6c6f772074657374202f203220312e3000000000"
+  },
+  {
+   "t_ms": 77,
+   "dir": "eos->app",
+   "address": "/eos/out/event/cue/99/1/fire",
+   "args": [
+    "Follow test / 1"
+   ],
+   "hex": "2f656f732f6f75742f6576656e742f6375652f39392f312f66697265000000002c730000466f6c6c6f772074657374202f203100"
+  },
+  {
+   "t_ms": 82,
+   "dir": "eos->app",
+   "address": "/eos/out/softkey/1",
+   "args": [
+    "Address"
+   ],
+   "hex": "2f656f732f6f75742f736f66746b65792f3100002c7300004164647265737300"
+  },
+  {
+   "t_ms": 84,
+   "dir": "eos->app",
+   "address": "/eos/out/softkey/2",
+   "args": [
+    "Query"
+   ],
+   "hex": "2f656f732f6f75742f736f66746b65792f3200002c7300005175657279000000"
+  },
+  {
+   "t_ms": 87,
+   "dir": "eos->app",
+   "address": "/eos/out/softkey/3",
+   "args": [
+    "Snapshot"
+   ],
+   "hex": "2f656f732f6f75742f736f66746b65792f3300002c730000536e617073686f7400000000"
+  },
+  {
+   "t_ms": 89,
+   "dir": "eos->app",
+   "address": "/eos/out/softkey/4",
+   "args": [
+    "Highlight"
+   ],
+   "hex": "2f656f732f6f75742f736f66746b65792f3400002c730000486967686c69676874000000"
+  },
+  {
+   "t_ms": 92,
+   "dir": "eos->app",
+   "address": "/eos/out/softkey/5",
+   "args": [
+    "Assert"
+   ],
+   "hex": "2f656f732f6f75742f736f66746b65792f3500002c7300004173736572740000"
+  },
+  {
+   "t_ms": 94,
+   "dir": "eos->app",
+   "address": "/eos/out/softkey/6",
+   "args": [
+    "Color Path"
+   ],
+   "hex": "2f656f732f6f75742f736f66746b65792f3600002c730000436f6c6f7220506174680000"
+  },
+  {
+   "t_ms": 96,
+   "dir": "eos->app",
+   "address": "/eos/out/softkey/7",
+   "args": [
+    "Preview"
+   ],
+   "hex": "2f656f732f6f75742f736f66746b65792f3700002c7300005072657669657700"
+  },
+  {
+   "t_ms": 99,
+   "dir": "eos->app",
+   "address": "/eos/out/softkey/8",
+   "args": [
+    "Fader"
+   ],
+   "hex": "2f656f732f6f75742f736f66746b65792f3800002c7300004661646572000000"
+  },
+  {
+   "t_ms": 101,
+   "dir": "eos->app",
+   "address": "/eos/out/softkey/9",
+   "args": [
+    "Offset"
+   ],
+   "hex": "2f656f732f6f75742f736f66746b65792f3900002c7300004f66667365740000"
+  },
+  {
+   "t_ms": 1014,
+   "dir": "eos->app",
+   "address": "/eos/out/event/cue/99/2/fire",
+   "args": [
+    "Follow test / 2"
+   ],
+   "hex": "2f656f732f6f75742f6576656e742f6375652f39392f322f66697265000000002c730000466f6c6c6f772074657374202f203200"
+  },
+  {
+   "t_ms": 1016,
+   "dir": "eos->app",
+   "address": "/eos/out/previous/cue/99/1",
+   "args": [],
+   "hex": "2f656f732f6f75742f70726576696f75732f6375652f39392f3100002c000000"
+  },
+  {
+   "t_ms": 1018,
+   "dir": "eos->app",
+   "address": "/eos/out/previous/cue/text",
+   "args": [
+    "99/1 Follow test / 1 1.0"
+   ],
+   "hex": "2f656f732f6f75742f70726576696f75732f6375652f7465787400002c73000039392f3120466f6c6c6f772074657374202f203120312e3000000000"
+  },
+  {
+   "t_ms": 1022,
+   "dir": "eos->app",
+   "address": "/eos/out/active/cue/99/2",
+   "args": [
+    0.0
+   ],
+   "hex": "2f656f732f6f75742f6163746976652f6375652f39392f32000000002c66000000000000"
+  },
+  {
+   "t_ms": 1024,
+   "dir": "eos->app",
+   "address": "/eos/out/active/cue/text",
+   "args": [
+    "99/2 Follow test / 2 1.0 0%"
+   ],
+   "hex": "2f656f732f6f75742f6163746976652f6375652f74657874000000002c73000039392f3220466f6c6c6f772074657374202f203220312e3020302500"
+  },
+  {
+   "t_ms": 1026,
+   "dir": "eos->app",
+   "address": "/eos/out/pending/cue/99/4",
+   "args": [],
+   "hex": "2f656f732f6f75742f70656e64696e672f6375652f39392f340000002c000000"
+  },
+  {
+   "t_ms": 1029,
+   "dir": "eos->app",
+   "address": "/eos/out/pending/cue/text",
+   "args": [
+    "99/4 Follow test / 4 1.0"
+   ],
+   "hex": "2f656f732f6f75742f70656e64696e672f6375652f746578740000002c73000039392f3420466f6c6c6f772074657374202f203420312e3000000000"
+  },
+  {
+   "t_ms": 1063,
+   "dir": "eos->app",
+   "address": "/eos/out/user/1/cmd",
+   "args": [
+    "LIVE: Cue  99 / 2 : ",
+    0
+   ],
+   "hex": "2f656f732f6f75742f757365722f312f636d64002c7369004c4956453a2043756520203939202f2032203a200000000000000000"
+  },
+  {
+   "t_ms": 1066,
+   "dir": "eos->app",
+   "address": "/eos/out/cmd",
+   "args": [
+    "LIVE: Cue  99 / 2 : ",
+    0
+   ],
+   "hex": "2f656f732f6f75742f636d64000000002c7369004c4956453a2043756520203939202f2032203a200000000000000000"
+  },
+  {
+   "t_ms": 2019,
+   "dir": "eos->app",
+   "address": "/eos/out/event/cue/99/4/fire",
+   "args": [
+    "Follow test / 4"
+   ],
+   "hex": "2f656f732f6f75742f6576656e742f6375652f39392f342f66697265000000002c730000466f6c6c6f772074657374202f203400"
+  },
+  {
+   "t_ms": 2043,
+   "dir": "eos->app",
+   "address": "/eos/out/previous/cue/99/3",
+   "args": [],
+   "hex": "2f656f732f6f75742f70726576696f75732f6375652f39392f3300002c000000"
+  },
+  {
+   "t_ms": 2046,
+   "dir": "eos->app",
+   "address": "/eos/out/previous/cue/text",
+   "args": [
+    "99/3 Follow test / 3 1.0"
+   ],
+   "hex": "2f656f732f6f75742f70726576696f75732f6375652f7465787400002c73000039392f3320466f6c6c6f772074657374202f203320312e3000000000"
+  },
+  {
+   "t_ms": 2048,
+   "dir": "eos->app",
+   "address": "/eos/out/active/cue/99/4",
+   "args": [
+    0.02
+   ],
+   "hex": "2f656f732f6f75742f6163746976652f6375652f39392f34000000002c6600003ca3d70a"
+  },
+  {
+   "t_ms": 2051,
+   "dir": "eos->app",
+   "address": "/eos/out/active/cue",
+   "args": [
+    0.02
+   ],
+   "hex": "2f656f732f6f75742f6163746976652f637565002c6600003ca3d70a"
+  },
+  {
+   "t_ms": 2053,
+   "dir": "eos->app",
+   "address": "/eos/out/active/cue/text",
+   "args": [
+    "99/4 Follow test / 4 1.0 2%"
+   ],
+   "hex": "2f656f732f6f75742f6163746976652f6375652f74657874000000002c73000039392f3420466f6c6c6f772074657374202f203420312e3020322500"
+  },
+  {
+   "t_ms": 2056,
+   "dir": "eos->app",
+   "address": "/eos/out/pending/cue/99/5",
+   "args": [],
+   "hex": "2f656f732f6f75742f70656e64696e672f6375652f39392f350000002c000000"
+  },
+  {
+   "t_ms": 2058,
+   "dir": "eos->app",
+   "address": "/eos/out/pending/cue/text",
+   "args": [
+    "99/5 Follow test / 5 1.0"
+   ],
+   "hex": "2f656f732f6f75742f70656e64696e672f6375652f746578740000002c73000039392f3520466f6c6c6f772074657374202f203520312e3000000000"
+  },
+  {
+   "t_ms": 2092,
+   "dir": "eos->app",
+   "address": "/eos/out/user/1/cmd",
+   "args": [
+    "LIVE: Cue  99 / 4 : ",
+    0
+   ],
+   "hex": "2f656f732f6f75742f757365722f312f636d64002c7369004c4956453a2043756520203939202f2034203a200000000000000000"
+  },
+  {
+   "t_ms": 2094,
+   "dir": "eos->app",
+   "address": "/eos/out/cmd",
+   "args": [
+    "LIVE: Cue  99 / 4 : ",
+    0
+   ],
+   "hex": "2f656f732f6f75742f636d64000000002c7369004c4956453a2043756520203939202f2034203a200000000000000000"
+  },
+  {
+   "t_ms": 2096,
+   "dir": "eos->app",
+   "address": "/eos/out/active/cue",
+   "args": [
+    0.04
+   ],
+   "hex": "2f656f732f6f75742f6163746976652f637565002c6600003d23d70a"
+  },
+  {
+   "t_ms": 2099,
+   "dir": "eos->app",
+   "address": "/eos/out/active/cue/text",
+   "args": [
+    "99/4 Follow test / 4 1.0 4%"
+   ],
+   "hex": "2f656f732f6f75742f6163746976652f6375652f74657874000000002c73000039392f3420466f6c6c6f772074657374202f203420312e3020342500"
+  },
+  {
+   "t_ms": 3076,
+   "dir": "eos->app",
+   "address": "/eos/out/active/cue",
+   "args": [
+    1.0
+   ],
+   "hex": "2f656f732f6f75742f6163746976652f637565002c6600003f800000"
+  },
+  {
+   "t_ms": 3079,
+   "dir": "eos->app",
+   "address": "/eos/out/active/cue/text",
+   "args": [
+    "99/4 Follow test / 4 1.0 100%"
+   ],
+   "hex": "2f656f732f6f75742f6163746976652f6375652f74657874000000002c73000039392f3420466f6c6c6f772074657374202f203420312e302031303025000000"
+  },
+  {
+   "t_ms": 4038,
+   "dir": "eos->app",
+   "address": "/eos/out/event/cue/99/5/fire",
+   "args": [
+    "Follow test / 5"
+   ],
+   "hex": "2f656f732f6f75742f6576656e742f6375652f39392f352f66697265000000002c730000466f6c6c6f772074657374202f203500"
+  },
+  {
+   "t_ms": 4084,
+   "dir": "eos->app",
+   "address": "/eos/out/user/1/cmd",
+   "args": [
+    "LIVE: Cue  99 / 5 : ",
+    0
+   ],
+   "hex": "2f656f732f6f75742f757365722f312f636d64002c7369004c4956453a2043756520203939202f2035203a200000000000000000"
+  },
+  {
+   "t_ms": 4086,
+   "dir": "eos->app",
+   "address": "/eos/out/cmd",
+   "args": [
+    "LIVE: Cue  99 / 5 : ",
+    0
+   ],
+   "hex": "2f656f732f6f75742f636d64000000002c7369004c4956453a2043756520203939202f2035203a200000000000000000"
+  },
+  {
+   "t_ms": 4089,
+   "dir": "eos->app",
+   "address": "/eos/out/previous/cue/99/4",
+   "args": [],
+   "hex": "2f656f732f6f75742f70726576696f75732f6375652f39392f3400002c000000"
+  },
+  {
+   "t_ms": 4098,
+   "dir": "eos->app",
+   "address": "/eos/out/previous/cue/text",
+   "args": [
+    "99/4 Follow test / 4 1.0"
+   ],
+   "hex": "2f656f732f6f75742f70726576696f75732f6375652f7465787400002c73000039392f3420466f6c6c6f772074657374202f203420312e3000000000"
+  },
+  {
+   "t_ms": 4100,
+   "dir": "eos->app",
+   "address": "/eos/out/active/cue/99/5",
+   "args": [
+    0.0
+   ],
+   "hex": "2f656f732f6f75742f6163746976652f6375652f39392f35000000002c66000000000000"
+  },
+  {
+   "t_ms": 4103,
+   "dir": "eos->app",
+   "address": "/eos/out/active/cue",
+   "args": [
+    0.0
+   ],
+   "hex": "2f656f732f6f75742f6163746976652f637565002c66000000000000"
+  },
+  {
+   "t_ms": 4105,
+   "dir": "eos->app",
+   "address": "/eos/out/active/cue/text",
+   "args": [
+    "99/5 Follow test / 5 1.0 0%"
+   ],
+   "hex": "2f656f732f6f75742f6163746976652f6375652f74657874000000002c73000039392f3520466f6c6c6f772074657374202f203520312e3020302500"
+  },
+  {
+   "t_ms": 4108,
+   "dir": "eos->app",
+   "address": "/eos/out/pending/cue/99/3",
+   "args": [],
+   "hex": "2f656f732f6f75742f70656e64696e672f6375652f39392f330000002c000000"
+  },
+  {
+   "t_ms": 4111,
+   "dir": "eos->app",
+   "address": "/eos/out/pending/cue/text",
+   "args": [
+    "99/3 Follow test / 3 1.0"
+   ],
+   "hex": "2f656f732f6f75742f70656e64696e672f6375652f746578740000002c73000039392f3320466f6c6c6f772074657374202f203320312e3000000000"
+  },
+  {
+   "t_ms": 5039,
+   "dir": "eos->app",
+   "address": "/eos/out/event/cue/99/3/fire",
+   "args": [
+    "Follow test / 3"
+   ],
+   "hex": "2f656f732f6f75742f6576656e742f6375652f39392f332f66697265000000002c730000466f6c6c6f772074657374202f203300"
+  },
+  {
+   "t_ms": 5063,
+   "dir": "eos->app",
+   "address": "/eos/out/previous/cue/99/2",
+   "args": [],
+   "hex": "2f656f732f6f75742f70726576696f75732f6375652f39392f3200002c000000"
+  },
+  {
+   "t_ms": 5066,
+   "dir": "eos->app",
+   "address": "/eos/out/previous/cue/text",
+   "args": [
+    "99/2 Follow test / 2 1.0"
+   ],
+   "hex": "2f656f732f6f75742f70726576696f75732f6375652f7465787400002c73000039392f3220466f6c6c6f772074657374202f203220312e3000000000"
+  },
+  {
+   "t_ms": 5068,
+   "dir": "eos->app",
+   "address": "/eos/out/active/cue/99/3",
+   "args": [
+    0.0
+   ],
+   "hex": "2f656f732f6f75742f6163746976652f6375652f39392f33000000002c66000000000000"
+  },
+  {
+   "t_ms": 5071,
+   "dir": "eos->app",
+   "address": "/eos/out/active/cue/text",
+   "args": [
+    "99/3 Follow test / 3 1.0 0%"
+   ],
+   "hex": "2f656f732f6f75742f6163746976652f6375652f74657874000000002c73000039392f3320466f6c6c6f772074657374202f203320312e3020302500"
+  },
+  {
+   "t_ms": 5073,
+   "dir": "eos->app",
+   "address": "/eos/out/pending/cue/99/4",
+   "args": [],
+   "hex": "2f656f732f6f75742f70656e64696e672f6375652f39392f340000002c000000"
+  },
+  {
+   "t_ms": 5076,
+   "dir": "eos->app",
+   "address": "/eos/out/pending/cue/text",
+   "args": [
+    "99/4 Follow test / 4 1.0"
+   ],
+   "hex": "2f656f732f6f75742f70656e64696e672f6375652f746578740000002c73000039392f3420466f6c6c6f772074657374202f203420312e3000000000"
+  },
+  {
+   "t_ms": 5111,
+   "dir": "eos->app",
+   "address": "/eos/out/user/1/cmd",
+   "args": [
+    "LIVE: Cue  99 / 3 : ",
+    0
+   ],
+   "hex": "2f656f732f6f75742f757365722f312f636d64002c7369004c4956453a2043756520203939202f2033203a200000000000000000"
+  },
+  {
+   "t_ms": 5113,
+   "dir": "eos->app",
+   "address": "/eos/out/cmd",
+   "args": [
+    "LIVE: Cue  99 / 3 : ",
+    0
+   ],
+   "hex": "2f656f732f6f75742f636d64000000002c7369004c4956453a2043756520203939202f2033203a200000000000000000"
+  },
+  {
+   "t_ms": 6090,
+   "dir": "eos->app",
+   "address": "/eos/out/active/cue",
+   "args": [
+    0.99
+   ],
+   "hex": "2f656f732f6f75742f6163746976652f637565002c6600003f7d70a4"
+  },
+  {
+   "t_ms": 6093,
+   "dir": "eos->app",
+   "address": "/eos/out/active/cue/text",
+   "args": [
+    "99/3 Follow test / 3 0.0 99%"
+   ],
+   "hex": "2f656f732f6f75742f6163746976652f6375652f74657874000000002c73000039392f3320466f6c6c6f772074657374202f203320302e302039392500000000"
+  },
+  {
+   "t_ms": 7111,
+   "dir": "eos->app",
+   "address": "/eos/out/active/cue",
+   "args": [
+    1.0
+   ],
+   "hex": "2f656f732f6f75742f6163746976652f637565002c6600003f800000"
+  },
+  {
+   "t_ms": 7113,
+   "dir": "eos->app",
+   "address": "/eos/out/active/cue/text",
+   "args": [
+    "99/3 Follow test / 3 1.0 100%"
+   ],
+   "hex": "2f656f732f6f75742f6163746976652f6375652f74657874000000002c73000039392f3320466f6c6c6f772074657374202f203320312e302031303025000000"
+  }
+ ]
+}

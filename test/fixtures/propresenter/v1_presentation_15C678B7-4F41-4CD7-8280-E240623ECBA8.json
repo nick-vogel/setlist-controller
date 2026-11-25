@@ -1,0 +1,332 @@
+{
+  "method": "GET",
+  "path": "/v1/presentation/15C678B7-4F41-4CD7-8280-E240623ECBA8",
+  "status": 200,
+  "content_type": "application/json",
+  "body": {
+    "presentation": {
+      "id": {
+        "uuid": "15C678B7-4F41-4CD7-8280-E240623ECBA8",
+        "name": "Loop",
+        "index": 176
+      },
+      "groups": [
+        {
+          "name": "",
+          "color": {
+            "red": 0.3999999761581421,
+            "green": 0.3999999761581421,
+            "blue": 0.3999999761581421,
+            "alpha": 1
+          },
+          "slides": [
+            {
+              "enabled": true,
+              "notes": "",
+              "text": "",
+              "label": "Logo.jpg",
+              "size": {
+                "width": 1920,
+                "height": 1080
+              }
+            }
+          ],
+          "uuid": "5CCF847D-06D8-40E8-89BB-CF5E25C8B728"
+        },
+        {
+          "name": "",
+          "color": {
+            "red": 0.3999999761581421,
+            "green": 0.3999999761581421,
+            "blue": 0.3999999761581421,
+            "alpha": 1
+          },
+          "slides": [
+            {
+              "enabled": true,
+              "notes": "",
+              "text": "",
+              "label": "Welcome.jpg",
+              "size": {
+                "width": 1920,
+                "height": 1080
+              }
+            }
+          ],
+          "uuid": "C9642DA7-6EB0-4539-88D3-71A7DAA22BB0"
+        },
+        {
+          "name": "",
+          "color": {
+            "red": 0.3999999761581421,
+            "green": 0.3999999761581421,
+            "blue": 0.3999999761581421,
+            "alpha": 1
+          },
+          "slides": [
+            {
+              "enabled": true,
+              "notes": "",
+              "text": "",
+              "label": "Logo copy.jpg",
+              "size": {
+                "width": 1920,
+                "height": 1080
+              }
+            }
+          ],
+          "uuid": "DE5E3188-AE30-4C67-9FB2-6462576A4B0B"
+        },
+        {
+          "name": "",
+          "color": {
+            "red": 0.3999999761581421,
+            "green": 0.3999999761581421,
+            "blue": 0.3999999761581421,
+            "alpha": 1
+          },
+          "slides": [
+            {
+              "enabled": true,
+              "notes": "",
+              "text": "",
+              "label": "First Time Guest Slide.jpg",
+              "size": {
+                "width": 1920,
+                "height": 1080
+              }
+            }
+          ],
+          "uuid": "FD3A9772-AA49-4C44-B8F8-7DB290374AA3"
+        },
+        {
+          "name": "",
+          "color": {
+            "red": 0.3999999761581421,
+            "green": 0.3999999761581421,
+            "blue": 0.3999999761581421,
+            "alpha": 1
+          },
+          "slides": [
+            {
+              "enabled": true,
+              "notes": "",
+              "text": "",
+              "label": "Basics.jpg",
+              "size": {
+                "width": 1920,
+                "height": 1080
+              }
+            }
+          ],
+          "uuid": "0884889D-91A7-4853-8B6A-321F3673C609"
+        },
+        {
+          "name": "",
+          "color": {
+            "red": 0.3999999761581421,
+            "green": 0.3999999761581421,
+            "blue": 0.3999999761581421,
+            "alpha": 1
+          },
+          "slides": [
+            {
+              "enabled": true,
+              "notes": "",
+              "text": "",
+              "label": "Ways to Give.jpg",
+              "size": {
+                "width": 1920,
+                "height": 1080
+              }
+            }
+          ],
+          "uuid": "B3D6E489-F54A-4740-AA89-17DFF9438928"
+        },
+        {
+          "name": "",
+          "color": {
+            "red": 0.3999999761581421,
+            "green": 0.3999999761581421,
+            "blue": 0.3999999761581421,
+            "alpha": 1
+          },
+          "slides": [
+            {
+              "enabled": true,
+              "notes": "",
+              "text": "",
+              "label": "Church Center.jpg",
+              "size": {
+                "width": 1920,
+                "height": 1080
+              }
+            }
+          ],
+          "uuid": "495CCF39-5028-4602-9AB7-488B7EE11959"
+        },
+        {
+          "name": "",
+          "color": {
+            "red": 0.3999999761581421,
+            "green": 0.3999999761581421,
+            "blue": 0.3999999761581421,
+            "alpha": 1
+          },
+          "slides": [
+            {
+              "enabled": true,
+              "notes": "",
+              "text": "",
+              "label": "fall-small-groups-1920x1080.png",
+              "size": {
+                "width": 1920,
+                "height": 1080
+              }
+            }
+          ],
+          "uuid": "0BDECF79-ED15-4652-BD13-A4720BAA42B6"
+        },
+        {
+          "name": "",
+          "color": {
+            "red": 0.3999999761581421,
+            "green": 0.3999999761581421,
+            "blue": 0.3999999761581421,
+            "alpha": 1
+          },
+          "slides": [
+            {
+              "enabled": true,
+              "notes": "",
+              "text": "",
+              "label": "child-dedication-dec-6-rings.jpeg",
+              "size": {
+                "width": 1920,
+                "height": 1080
+              }
+            },
+            {
+              "enabled": true,
+              "notes": "",
+              "text": "",
+              "label": "water-baptisms-november-15.png",
+              "size": {
+                "width": 1920,
+                "height": 1080
+              }
+            },
+            {
+              "enabled": true,
+              "notes": "",
+              "text": "",
+              "label": "fall-nights.png",
+              "size": {
+                "width": 1920,
+                "height": 1080
+              }
+            }
+          ],
+          "uuid": "428089A0-BA5D-43AB-B9A3-C9D3884B5645"
+        },
+        {
+          "name": "",
+          "color": {
+            "red": 0.3999999761581421,
+            "green": 0.3999999761581421,
+            "blue": 0.3999999761581421,
+            "alpha": 1
+          },
+          "slides": [
+            {
+              "enabled": true,
+              "notes": "",
+              "text": "",
+              "label": "IMG_4274.WEBP",
+              "size": {
+                "width": 1920,
+                "height": 1080
+              }
+            }
+          ],
+          "uuid": "932C2461-8E03-4A90-B574-1044DB6E5823"
+        },
+        {
+          "name": "",
+          "color": {
+            "red": 0.3999999761581421,
+            "green": 0.3999999761581421,
+            "blue": 0.3999999761581421,
+            "alpha": 1
+          },
+          "slides": [
+            {
+              "enabled": true,
+              "notes": "",
+              "text": "",
+              "label": "Option 1 – Stitched@1x.png",
+              "size": {
+                "width": 1920,
+                "height": 1080
+              }
+            }
+          ],
+          "uuid": "C308CFCB-4410-49AF-AD36-C6F15443B0D6"
+        },
+        {
+          "name": "",
+          "color": {
+            "red": 0.3999999761581421,
+            "green": 0.3999999761581421,
+            "blue": 0.3999999761581421,
+            "alpha": 1
+          },
+          "slides": [
+            {
+              "enabled": true,
+              "notes": "",
+              "text": "",
+              "label": "IMG_4340",
+              "size": {
+                "width": 1920,
+                "height": 1080
+              }
+            }
+          ],
+          "uuid": "6F2C7162-AB80-45B0-8589-30BFBE9E149B"
+        }
+      ],
+      "has_timeline": false,
+      "presentation_path": "ProPresenter/Libraries/Default/Loop.pro",
+      "destination": "presentation",
+      "arrangements": [
+        {
+          "id": {
+            "uuid": "15C678B7-4F41-4CD7-8280-E240623ECBA8",
+            "name": "Master",
+            "index": 0
+          },
+          "groups": [
+            "5CCF847D-06D8-40E8-89BB-CF5E25C8B728",
+            "C9642DA7-6EB0-4539-88D3-71A7DAA22BB0",
+            "DE5E3188-AE30-4C67-9FB2-6462576A4B0B",
+            "FD3A9772-AA49-4C44-B8F8-7DB290374AA3",
+            "0884889D-91A7-4853-8B6A-321F3673C609",
+            "B3D6E489-F54A-4740-AA89-17DFF9438928",
+            "495CCF39-5028-4602-9AB7-488B7EE11959",
+            "0BDECF79-ED15-4652-BD13-A4720BAA42B6",
+            "428089A0-BA5D-43AB-B9A3-C9D3884B5645",
+            "932C2461-8E03-4A90-B574-1044DB6E5823",
+            "C308CFCB-4410-49AF-AD36-C6F15443B0D6",
+            "6F2C7162-AB80-45B0-8589-30BFBE9E149B"
+          ],
+          "total_cues": 14
+        }
+      ],
+      "current_arrangement": "15C678B7-4F41-4CD7-8280-E240623ECBA8",
+      "type": "standard",
+      "is_authorized": true,
+      "total_cues": 14
+    }
+  }
+}

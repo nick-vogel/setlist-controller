@@ -1,0 +1,582 @@
+{
+  "method": "GET",
+  "path": "/v1/presentation/8E735B58-B70F-48C5-8DDB-B547A8005723",
+  "status": 200,
+  "content_type": "application/json",
+  "body": {
+    "presentation": {
+      "id": {
+        "uuid": "8E735B58-B70F-48C5-8DDB-B547A8005723",
+        "name": "Reckless Love",
+        "index": 217
+      },
+      "groups": [
+        {
+          "name": "",
+          "color": {
+            "red": 0.3999999761581421,
+            "green": 0.3999999761581421,
+            "blue": 0.3999999761581421,
+            "alpha": 1
+          },
+          "slides": [
+            {
+              "enabled": true,
+              "notes": "",
+              "text": "",
+              "label": "RisingSun_03_4K.mp4",
+              "size": {
+                "width": 1920,
+                "height": 1080
+              }
+            }
+          ],
+          "uuid": "E8F0C31F-43F8-40F2-AA5F-47F932BF1CCA"
+        },
+        {
+          "name": "Verse 1",
+          "color": {
+            "red": 0,
+            "green": 0.46666666865348816,
+            "blue": 0.800000011920929,
+            "alpha": 1
+          },
+          "slides": [
+            {
+              "enabled": true,
+              "notes": "",
+              "text": "Reckless Love / Verse 1 / slide 1 line 1\nReckless Love / Verse 1 / slide 1 line 2",
+              "label": "",
+              "size": {
+                "width": 1920,
+                "height": 1080
+              }
+            },
+            {
+              "enabled": true,
+              "notes": "",
+              "text": "Reckless Love / Verse 1 / slide 2 line 1\nReckless Love / Verse 1 / slide 2 line 2",
+              "label": "",
+              "size": {
+                "width": 1920,
+                "height": 1080
+              }
+            },
+            {
+              "enabled": true,
+              "notes": "",
+              "text": "Reckless Love / Verse 1 / slide 3 line 1\nReckless Love / Verse 1 / slide 3 line 2\nReckless Love / Verse 1 / slide 3 line 3",
+              "label": "",
+              "size": {
+                "width": 1920,
+                "height": 1080
+              }
+            }
+          ],
+          "uuid": "48AA48B1-0D58-434D-A0D7-A9A7016F4914"
+        },
+        {
+          "name": "Chorus",
+          "color": {
+            "red": 0.800000011920929,
+            "green": 0,
+            "blue": 0.30588236451148987,
+            "alpha": 1
+          },
+          "slides": [
+            {
+              "enabled": true,
+              "notes": "",
+              "text": "Reckless Love / Chorus / slide 1 line 1\nReckless Love / Chorus / slide 1 line 2",
+              "label": "",
+              "size": {
+                "width": 1920,
+                "height": 1080
+              }
+            },
+            {
+              "enabled": true,
+              "notes": "",
+              "text": "Reckless Love / Chorus / slide 2 line 1\nReckless Love / Chorus / slide 2 line 2\nReckless Love / Chorus / slide 2 line 3",
+              "label": "",
+              "size": {
+                "width": 1920,
+                "height": 1080
+              }
+            },
+            {
+              "enabled": true,
+              "notes": "",
+              "text": "Reckless Love / Chorus / slide 3 line 1\nReckless Love / Chorus / slide 3 line 2\nReckless Love / Chorus / slide 3 line 3",
+              "label": "",
+              "size": {
+                "width": 1920,
+                "height": 1080
+              }
+            },
+            {
+              "enabled": true,
+              "notes": "",
+              "text": "Reckless Love / Chorus / slide 4 line 1\nReckless Love / Chorus / slide 4 line 2\nReckless Love / Chorus / slide 4 line 3",
+              "label": "",
+              "size": {
+                "width": 1920,
+                "height": 1080
+              }
+            }
+          ],
+          "uuid": "0AA7E5BC-43D8-47ED-BBC3-C6F2E0B1578A"
+        },
+        {
+          "name": "",
+          "color": {
+            "red": 0.3999999761581421,
+            "green": 0.3999999761581421,
+            "blue": 0.3999999761581421,
+            "alpha": 1
+          },
+          "slides": [
+            {
+              "enabled": true,
+              "notes": "",
+              "text": "",
+              "label": "",
+              "size": {
+                "width": 1920,
+                "height": 1080
+              }
+            }
+          ],
+          "uuid": "DBB267C0-EFDB-46A5-BBA4-295FF908DBAA"
+        },
+        {
+          "name": "Verse 2",
+          "color": {
+            "red": 0,
+            "green": 0.3490196168422699,
+            "blue": 0.6000000238418579,
+            "alpha": 1
+          },
+          "slides": [
+            {
+              "enabled": true,
+              "notes": "",
+              "text": "Reckless Love / Verse 2 / slide 1 line 1\nReckless Love / Verse 2 / slide 1 line 2",
+              "label": "",
+              "size": {
+                "width": 1920,
+                "height": 1080
+              }
+            },
+            {
+              "enabled": true,
+              "notes": "",
+              "text": "Reckless Love / Verse 1 / slide 2 line 1\nReckless Love / Verse 1 / slide 2 line 2",
+              "label": "",
+              "size": {
+                "width": 1920,
+                "height": 1080
+              }
+            },
+            {
+              "enabled": true,
+              "notes": "",
+              "text": "Reckless Love / Verse 2 / slide 3 line 1\nReckless Love / Verse 2 / slide 3 line 2",
+              "label": "",
+              "size": {
+                "width": 1920,
+                "height": 1080
+              }
+            },
+            {
+              "enabled": true,
+              "notes": "",
+              "text": "Reckless Love / Verse 2 / slide 4 line 1\nReckless Love / Verse 2 / slide 4 line 2",
+              "label": "",
+              "size": {
+                "width": 1920,
+                "height": 1080
+              }
+            }
+          ],
+          "uuid": "04B7F9DF-4F4C-4810-94C4-5DE641C9FA8D"
+        },
+        {
+          "name": "Chorus",
+          "color": {
+            "red": 0.800000011920929,
+            "green": 0,
+            "blue": 0.30588236451148987,
+            "alpha": 1
+          },
+          "slides": [
+            {
+              "enabled": true,
+              "notes": "",
+              "text": "Reckless Love / Chorus / slide 1 line 1\nReckless Love / Chorus / slide 1 line 2\nReckless Love / Chorus / slide 1 line 3",
+              "label": "",
+              "size": {
+                "width": 1920,
+                "height": 1080
+              }
+            },
+            {
+              "enabled": true,
+              "notes": "",
+              "text": "Reckless Love / Chorus / slide 2 line 1\nReckless Love / Chorus / slide 2 line 2\nReckless Love / Chorus / slide 2 line 3",
+              "label": "",
+              "size": {
+                "width": 1920,
+                "height": 1080
+              }
+            },
+            {
+              "enabled": true,
+              "notes": "",
+              "text": "Reckless Love / Chorus / slide 3 line 1\nReckless Love / Chorus / slide 3 line 2\nReckless Love / Chorus / slide 3 line 3",
+              "label": "",
+              "size": {
+                "width": 1920,
+                "height": 1080
+              }
+            },
+            {
+              "enabled": true,
+              "notes": "",
+              "text": "Reckless Love / Chorus / slide 1 line 1\nReckless Love / Chorus / slide 1 line 2\nReckless Love / Chorus / slide 1 line 3",
+              "label": "",
+              "size": {
+                "width": 1920,
+                "height": 1080
+              }
+            }
+          ],
+          "uuid": "25FB1CFE-975C-4F69-A7A3-5E063FE6AF9C"
+        },
+        {
+          "name": "",
+          "color": {
+            "red": 0.3999999761581421,
+            "green": 0.3999999761581421,
+            "blue": 0.3999999761581421,
+            "alpha": 1
+          },
+          "slides": [
+            {
+              "enabled": true,
+              "notes": "",
+              "text": "",
+              "label": "",
+              "size": {
+                "width": 1920,
+                "height": 1080
+              }
+            }
+          ],
+          "uuid": "EBDF8A44-2995-44C8-B1F0-A63A0319712D"
+        },
+        {
+          "name": "Bridge",
+          "color": {
+            "red": 0.4627451002597809,
+            "green": 0,
+            "blue": 0.800000011920929,
+            "alpha": 1
+          },
+          "slides": [
+            {
+              "enabled": true,
+              "notes": "",
+              "text": "Reckless Love / Bridge / slide 1 line 1\nReckless Love / Bridge / slide 1 line 2",
+              "label": "",
+              "size": {
+                "width": 1920,
+                "height": 1080
+              }
+            },
+            {
+              "enabled": true,
+              "notes": "",
+              "text": "Reckless Love / Bridge / slide 2 line 1\nReckless Love / Bridge / slide 2 line 2",
+              "label": "",
+              "size": {
+                "width": 1920,
+                "height": 1080
+              }
+            },
+            {
+              "enabled": true,
+              "notes": "",
+              "text": "Reckless Love / Bridge / slide 3 line 1\nReckless Love / Bridge / slide 3 line 2",
+              "label": "",
+              "size": {
+                "width": 1920,
+                "height": 1080
+              }
+            },
+            {
+              "enabled": true,
+              "notes": "",
+              "text": "Reckless Love / Bridge / slide 4 line 1\nReckless Love / Bridge / slide 4 line 2",
+              "label": "",
+              "size": {
+                "width": 1920,
+                "height": 1080
+              }
+            }
+          ],
+          "uuid": "08D11D5D-B241-4CB3-B88E-15BA7AD2F503"
+        },
+        {
+          "name": "Bridge",
+          "color": {
+            "red": 0.4627451002597809,
+            "green": 0,
+            "blue": 0.800000011920929,
+            "alpha": 1
+          },
+          "slides": [
+            {
+              "enabled": true,
+              "notes": "",
+              "text": "Reckless Love / Bridge / slide 1 line 1\nReckless Love / Bridge / slide 1 line 2",
+              "label": "",
+              "size": {
+                "width": 1920,
+                "height": 1080
+              }
+            },
+            {
+              "enabled": true,
+              "notes": "",
+              "text": "Reckless Love / Bridge / slide 2 line 1\nReckless Love / Bridge / slide 2 line 2",
+              "label": "",
+              "size": {
+                "width": 1920,
+                "height": 1080
+              }
+            },
+            {
+              "enabled": true,
+              "notes": "",
+              "text": "Reckless Love / Bridge / slide 3 line 1\nReckless Love / Bridge / slide 3 line 2",
+              "label": "",
+              "size": {
+                "width": 1920,
+                "height": 1080
+              }
+            },
+            {
+              "enabled": true,
+              "notes": "",
+              "text": "Reckless Love / Bridge / slide 4 line 1\nReckless Love / Bridge / slide 4 line 2",
+              "label": "",
+              "size": {
+                "width": 1920,
+                "height": 1080
+              }
+            }
+          ],
+          "uuid": "386FAF56-D7D2-4C22-AB61-85158CE667AF"
+        },
+        {
+          "name": "Bridge",
+          "color": {
+            "red": 0.4627451002597809,
+            "green": 0,
+            "blue": 0.800000011920929,
+            "alpha": 1
+          },
+          "slides": [
+            {
+              "enabled": true,
+              "notes": "",
+              "text": "Reckless Love / Bridge / slide 1 line 1\nReckless Love / Bridge / slide 1 line 2",
+              "label": "",
+              "size": {
+                "width": 1920,
+                "height": 1080
+              }
+            },
+            {
+              "enabled": true,
+              "notes": "",
+              "text": "Reckless Love / Bridge / slide 2 line 1\nReckless Love / Bridge / slide 2 line 2",
+              "label": "",
+              "size": {
+                "width": 1920,
+                "height": 1080
+              }
+            },
+            {
+              "enabled": true,
+              "notes": "",
+              "text": "Reckless Love / Bridge / slide 3 line 1\nReckless Love / Bridge / slide 3 line 2",
+              "label": "",
+              "size": {
+                "width": 1920,
+                "height": 1080
+              }
+            },
+            {
+              "enabled": true,
+              "notes": "",
+              "text": "Reckless Love / Bridge / slide 4 line 1\nReckless Love / Bridge / slide 4 line 2",
+              "label": "",
+              "size": {
+                "width": 1920,
+                "height": 1080
+              }
+            }
+          ],
+          "uuid": "1D0DFC82-F64D-4CDC-8D2B-51D67CA6EE0B"
+        },
+        {
+          "name": "Bridge",
+          "color": {
+            "red": 0.4627451002597809,
+            "green": 0,
+            "blue": 0.800000011920929,
+            "alpha": 1
+          },
+          "slides": [
+            {
+              "enabled": true,
+              "notes": "",
+              "text": "Reckless Love / Bridge / slide 1 line 1\nReckless Love / Bridge / slide 1 line 2",
+              "label": "",
+              "size": {
+                "width": 1920,
+                "height": 1080
+              }
+            },
+            {
+              "enabled": true,
+              "notes": "",
+              "text": "Reckless Love / Bridge / slide 2 line 1\nReckless Love / Bridge / slide 2 line 2",
+              "label": "",
+              "size": {
+                "width": 1920,
+                "height": 1080
+              }
+            },
+            {
+              "enabled": true,
+              "notes": "",
+              "text": "Reckless Love / Bridge / slide 3 line 1\nReckless Love / Bridge / slide 3 line 2",
+              "label": "",
+              "size": {
+                "width": 1920,
+                "height": 1080
+              }
+            },
+            {
+              "enabled": true,
+              "notes": "",
+              "text": "Reckless Love / Bridge / slide 4 line 1\nReckless Love / Bridge / slide 4 line 2",
+              "label": "",
+              "size": {
+                "width": 1920,
+                "height": 1080
+              }
+            }
+          ],
+          "uuid": "AE51265F-7D9C-4036-80DC-F7D9D80E930C"
+        },
+        {
+          "name": "Chorus",
+          "color": {
+            "red": 0.800000011920929,
+            "green": 0,
+            "blue": 0.30588236451148987,
+            "alpha": 1
+          },
+          "slides": [
+            {
+              "enabled": true,
+              "notes": "",
+              "text": "Reckless Love / Chorus / slide 1 line 1\nReckless Love / Chorus / slide 1 line 2",
+              "label": "",
+              "size": {
+                "width": 1920,
+                "height": 1080
+              }
+            },
+            {
+              "enabled": true,
+              "notes": "",
+              "text": "Reckless Love / Chorus / slide 2 line 1\nReckless Love / Chorus / slide 2 line 2\nReckless Love / Chorus / slide 2 line 3",
+              "label": "",
+              "size": {
+                "width": 1920,
+                "height": 1080
+              }
+            },
+            {
+              "enabled": true,
+              "notes": "",
+              "text": "Reckless Love / Chorus / slide 3 line 1\nReckless Love / Chorus / slide 3 line 2\nReckless Love / Chorus / slide 3 line 3",
+              "label": "",
+              "size": {
+                "width": 1920,
+                "height": 1080
+              }
+            },
+            {
+              "enabled": true,
+              "notes": "",
+              "text": "Reckless Love / Chorus / slide 1 line 1\nReckless Love / Chorus / slide 1 line 2",
+              "label": "",
+              "size": {
+                "width": 1920,
+                "height": 1080
+              }
+            },
+            {
+              "enabled": true,
+              "notes": "",
+              "text": "",
+              "label": "",
+              "size": {
+                "width": 1920,
+                "height": 1080
+              }
+            }
+          ],
+          "uuid": "BD761064-B622-4E44-A5EE-626EE748B5A7"
+        }
+      ],
+      "has_timeline": false,
+      "presentation_path": "ProPresenter/Libraries/Default/Reckless Love.pro",
+      "destination": "presentation",
+      "arrangements": [
+        {
+          "id": {
+            "uuid": "8E735B58-B70F-48C5-8DDB-B547A8005723",
+            "name": "Master",
+            "index": 0
+          },
+          "groups": [
+            "E8F0C31F-43F8-40F2-AA5F-47F932BF1CCA",
+            "48AA48B1-0D58-434D-A0D7-A9A7016F4914",
+            "0AA7E5BC-43D8-47ED-BBC3-C6F2E0B1578A",
+            "DBB267C0-EFDB-46A5-BBA4-295FF908DBAA",
+            "04B7F9DF-4F4C-4810-94C4-5DE641C9FA8D",
+            "25FB1CFE-975C-4F69-A7A3-5E063FE6AF9C",
+            "EBDF8A44-2995-44C8-B1F0-A63A0319712D",
+            "08D11D5D-B241-4CB3-B88E-15BA7AD2F503",
+            "386FAF56-D7D2-4C22-AB61-85158CE667AF",
+            "1D0DFC82-F64D-4CDC-8D2B-51D67CA6EE0B",
+            "AE51265F-7D9C-4036-80DC-F7D9D80E930C",
+            "BD761064-B622-4E44-A5EE-626EE748B5A7"
+          ],
+          "total_cues": 39
+        }
+      ],
+      "current_arrangement": "8E735B58-B70F-48C5-8DDB-B547A8005723",
+      "type": "multitracks",
+      "is_authorized": false,
+      "total_cues": 39
+    }
+  }
+}

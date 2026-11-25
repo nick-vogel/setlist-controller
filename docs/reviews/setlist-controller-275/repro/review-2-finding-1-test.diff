@@ -1,0 +1,30 @@
+diff --git a/test/propresenter.test.ts b/test/propresenter.test.ts
+index 2a66ee8..35ce14f 100644
+--- a/test/propresenter.test.ts
++++ b/test/propresenter.test.ts
+@@ -2907,6 +2907,25 @@ describe('the lyric lead', () => {
+     expect(await triggers()).toEqual([trigger(ANCIENT_GATES, 5), trigger(ANCIENT_GATES, 6), trigger(ANCIENT_GATES, 7)]);
+   });
+ 
++  it("review 2 finding 1: never flashes Chorus 1's second slide when a brace behind the playhead is moved by hand to hold Verse 3's first slide sent early", async () => {
++    const { next, play, triggers, clockTo } = await leadRig(72);
++    await play(8, 80);
++    await play(24, 104);
++    await clockTo(rig!.clock.now(), 6 * BEAT_MS);
++    await play(7, 111);
++    const on = next((snapshot) => snapshot.loop !== null);
++    rig!.live.setLoop({ on: true, start: 64, length: 16 });
++    await on;
++    expect(await triggers()).toEqual([trigger(ANCIENT_GATES, 5), trigger(ANCIENT_GATES, 6), trigger(ANCIENT_GATES, 7)]);
++
++    // Live reports the new start, then the new length: the brace reads [96, 112) between the two.
++    const moved = next((snapshot) => snapshot.loop?.start === 96 && snapshot.loop?.length === 24);
++    rig!.live.setLoop({ start: 96, length: 24 });
++    await moved;
++
++    expect(await triggers()).toEqual([trigger(ANCIENT_GATES, 5), trigger(ANCIENT_GATES, 6), trigger(ANCIENT_GATES, 7)]);
++  });
++
+   // Verse 1's change on 32 waits for 30, 14 beats after a report at 16, when the leader fades out.
+   async function fadeOutBeforeChange() {
+     const rigged = await leadRig(8);

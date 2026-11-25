@@ -1,0 +1,15 @@
+diff --git a/scripts/scrub-pco-fixtures.mjs b/scripts/scrub-pco-fixtures.mjs
+index 9ea77fd..9f245af 100644
+--- a/scripts/scrub-pco-fixtures.mjs
++++ b/scripts/scrub-pco-fixtures.mjs
+@@ -17,8 +17,8 @@ import { parseArgs } from 'node:util';
+ 
+ const { values } = parseArgs({
+   options: {
+-    raw: { type: 'string', default: resolve(import.meta.dirname, '../dist/pco-raw') },
+-    out: { type: 'string', default: resolve(import.meta.dirname, '../test/fixtures/planning-center') },
++    raw: { type: 'string', default: 'dist/pco-raw' },
++    out: { type: 'string', default: 'test/fixtures/planning-center' },
+   },
+ });
+ const RAW = resolve(values.raw);

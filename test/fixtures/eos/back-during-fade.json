@@ -1,0 +1,250 @@
+{
+ "scenario": "back-during-fade",
+ "description": "Fire cue 1/7, then Back after 1 s while the 5 s fade runs, then Back again 2 s later.",
+ "eos_version": "3.3.10 (ETCnomad, macOS)",
+ "transport": "TCP 127.0.0.1:3032, OSC 1.0 packet-length framing",
+ "packets": [
+  {
+   "t_ms": 0,
+   "dir": "app->eos",
+   "address": "/eos/cue/1/7/fire",
+   "args": [],
+   "hex": "2f656f732f6375652f312f372f666972650000002c000000"
+  },
+  {
+   "t_ms": 44,
+   "dir": "eos->app",
+   "address": "/eos/out/event/cue/1/7/fire",
+   "args": [
+    "Great Are You Lord / Chorus"
+   ],
+   "hex": "2f656f732f6f75742f6576656e742f6375652f312f372f66697265002c73000047726561742041726520596f75204c6f7264202f2043686f72757300"
+  },
+  {
+   "t_ms": 67,
+   "dir": "eos->app",
+   "address": "/eos/out/previous/cue/1/6",
+   "args": [],
+   "hex": "2f656f732f6f75742f70726576696f75732f6375652f312f360000002c000000"
+  },
+  {
+   "t_ms": 70,
+   "dir": "eos->app",
+   "address": "/eos/out/previous/cue/text",
+   "args": [
+    "1/6 Great Are You Lord / Verse 1 5.0"
+   ],
+   "hex": "2f656f732f6f75742f70726576696f75732f6375652f7465787400002c730000312f362047726561742041726520596f75204c6f7264202f205665727365203120352e3000000000"
+  },
+  {
+   "t_ms": 72,
+   "dir": "eos->app",
+   "address": "/eos/out/active/cue/1/7",
+   "args": [
+    0.0
+   ],
+   "hex": "2f656f732f6f75742f6163746976652f6375652f312f37002c66000000000000"
+  },
+  {
+   "t_ms": 76,
+   "dir": "eos->app",
+   "address": "/eos/out/active/cue",
+   "args": [
+    0.0
+   ],
+   "hex": "2f656f732f6f75742f6163746976652f637565002c66000000000000"
+  },
+  {
+   "t_ms": 78,
+   "dir": "eos->app",
+   "address": "/eos/out/active/cue/text",
+   "args": [
+    "1/7 Great Are You Lord / Chorus 5.0 0%"
+   ],
+   "hex": "2f656f732f6f75742f6163746976652f6375652f74657874000000002c730000312f372047726561742041726520596f75204c6f7264202f2043686f72757320352e302030250000"
+  },
+  {
+   "t_ms": 81,
+   "dir": "eos->app",
+   "address": "/eos/out/pending/cue/1/8",
+   "args": [],
+   "hex": "2f656f732f6f75742f70656e64696e672f6375652f312f38000000002c000000"
+  },
+  {
+   "t_ms": 84,
+   "dir": "eos->app",
+   "address": "/eos/out/pending/cue/text",
+   "args": [
+    "1/8 5.0"
+   ],
+   "hex": "2f656f732f6f75742f70656e64696e672f6375652f746578740000002c730000312f3820352e3000"
+  },
+  {
+   "t_ms": 93,
+   "dir": "eos->app",
+   "address": "/eos/out/user/1/cmd",
+   "args": [
+    "LIVE: Cue  7 : ",
+    0
+   ],
+   "hex": "2f656f732f6f75742f757365722f312f636d64002c7369004c4956453a20437565202037203a200000000000"
+  },
+  {
+   "t_ms": 96,
+   "dir": "eos->app",
+   "address": "/eos/out/cmd",
+   "args": [
+    "LIVE: Cue  7 : ",
+    0
+   ],
+   "hex": "2f656f732f6f75742f636d64000000002c7369004c4956453a20437565202037203a200000000000"
+  },
+  {
+   "t_ms": 1003,
+   "dir": "app->eos",
+   "address": "/eos/cues/1/stop",
+   "args": [],
+   "hex": "2f656f732f637565732f312f73746f70000000002c000000"
+  },
+  {
+   "t_ms": 1050,
+   "dir": "eos->app",
+   "address": "/eos/out/event/cue/1/0/stop",
+   "args": [
+    ""
+   ],
+   "hex": "2f656f732f6f75742f6576656e742f6375652f312f302f73746f70002c73000000000000"
+  },
+  {
+   "t_ms": 1078,
+   "dir": "eos->app",
+   "address": "/eos/out/active/cue",
+   "args": [
+    0.19
+   ],
+   "hex": "2f656f732f6f75742f6163746976652f637565002c6600003e428f5c"
+  },
+  {
+   "t_ms": 1080,
+   "dir": "eos->app",
+   "address": "/eos/out/active/cue/text",
+   "args": [
+    "1/7 Great Are You Lord / Chorus 4.0 19%"
+   ],
+   "hex": "2f656f732f6f75742f6163746976652f6375652f74657874000000002c730000312f372047726561742041726520596f75204c6f7264202f2043686f72757320342e302031392500"
+  },
+  {
+   "t_ms": 3098,
+   "dir": "app->eos",
+   "address": "/eos/cues/1/stop",
+   "args": [],
+   "hex": "2f656f732f637565732f312f73746f70000000002c000000"
+  },
+  {
+   "t_ms": 3150,
+   "dir": "eos->app",
+   "address": "/eos/out/event/cue/1/6/fire",
+   "args": [
+    "Great Are You Lord / Verse 1"
+   ],
+   "hex": "2f656f732f6f75742f6576656e742f6375652f312f362f66697265002c73000047726561742041726520596f75204c6f7264202f205665727365203100000000"
+  },
+  {
+   "t_ms": 3152,
+   "dir": "eos->app",
+   "address": "/eos/out/previous/cue/1/5",
+   "args": [],
+   "hex": "2f656f732f6f75742f70726576696f75732f6375652f312f350000002c000000"
+  },
+  {
+   "t_ms": 3154,
+   "dir": "eos->app",
+   "address": "/eos/out/previous/cue/text",
+   "args": [
+    "1/5 Great Are You Lord / Count Off 5.0"
+   ],
+   "hex": "2f656f732f6f75742f70726576696f75732f6375652f7465787400002c730000312f352047726561742041726520596f75204c6f7264202f20436f756e74204f666620352e300000"
+  },
+  {
+   "t_ms": 3157,
+   "dir": "eos->app",
+   "address": "/eos/out/active/cue/1/6",
+   "args": [
+    0.07
+   ],
+   "hex": "2f656f732f6f75742f6163746976652f6375652f312f36002c6600003d8f5c29"
+  },
+  {
+   "t_ms": 3160,
+   "dir": "eos->app",
+   "address": "/eos/out/active/cue",
+   "args": [
+    0.07
+   ],
+   "hex": "2f656f732f6f75742f6163746976652f637565002c6600003d8f5c29"
+  },
+  {
+   "t_ms": 3163,
+   "dir": "eos->app",
+   "address": "/eos/out/active/cue/text",
+   "args": [
+    "1/6 Great Are You Lord / Verse 1 0.9 7%"
+   ],
+   "hex": "2f656f732f6f75742f6163746976652f6375652f74657874000000002c730000312f362047726561742041726520596f75204c6f7264202f205665727365203120302e3920372500"
+  },
+  {
+   "t_ms": 3166,
+   "dir": "eos->app",
+   "address": "/eos/out/pending/cue/1/7",
+   "args": [],
+   "hex": "2f656f732f6f75742f70656e64696e672f6375652f312f37000000002c000000"
+  },
+  {
+   "t_ms": 3168,
+   "dir": "eos->app",
+   "address": "/eos/out/pending/cue/text",
+   "args": [
+    "1/7 Great Are You Lord / Chorus 5.0"
+   ],
+   "hex": "2f656f732f6f75742f70656e64696e672f6375652f746578740000002c730000312f372047726561742041726520596f75204c6f7264202f2043686f72757320352e3000"
+  },
+  {
+   "t_ms": 3201,
+   "dir": "eos->app",
+   "address": "/eos/out/user/1/cmd",
+   "args": [
+    "LIVE: Cue  6 : ",
+    0
+   ],
+   "hex": "2f656f732f6f75742f757365722f312f636d64002c7369004c4956453a20437565202036203a200000000000"
+  },
+  {
+   "t_ms": 3203,
+   "dir": "eos->app",
+   "address": "/eos/out/cmd",
+   "args": [
+    "LIVE: Cue  6 : ",
+    0
+   ],
+   "hex": "2f656f732f6f75742f636d64000000002c7369004c4956453a20437565202036203a200000000000"
+  },
+  {
+   "t_ms": 4193,
+   "dir": "eos->app",
+   "address": "/eos/out/active/cue",
+   "args": [
+    1.0
+   ],
+   "hex": "2f656f732f6f75742f6163746976652f637565002c6600003f800000"
+  },
+  {
+   "t_ms": 4196,
+   "dir": "eos->app",
+   "address": "/eos/out/active/cue/text",
+   "args": [
+    "1/6 Great Are You Lord / Verse 1 5.0 100%"
+   ],
+   "hex": "2f656f732f6f75742f6163746976652f6375652f74657874000000002c730000312f362047726561742041726520596f75204c6f7264202f205665727365203120352e302031303025000000"
+  }
+ ]
+}

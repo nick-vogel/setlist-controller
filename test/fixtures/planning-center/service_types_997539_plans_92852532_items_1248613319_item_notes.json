@@ -1,0 +1,18 @@
+{
+  "path": "/service_types/997539/plans/92852532/items/1248613319/item_notes",
+  "status": 200,
+  "body": {
+    "links": {
+      "self": "https://api.planningcenteronline.com/services/v2/service_types/997539/plans/92852532/items/1248613319/item_notes"
+    },
+    "data": [],
+    "included": [],
+    "meta": {
+      "count": 0,
+      "total_count": 0,
+      "can_include": [
+        "item_note_category"
+      ]
+    }
+  }
+}

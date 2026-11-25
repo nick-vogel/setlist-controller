@@ -1,0 +1,11 @@
+--- a/src/server/playback-controller.ts
++++ b/src/server/playback-controller.ts
+@@ -464,7 +464,7 @@
+   const sendCountIn = () => {
+     if (!countIn || countIn.sent || !playing || position === null) return;
+     const { end } = countIn.countOff;
+-    if (end === null || position < end - barLength() - EPSILON || position >= end + barLength() - EPSILON) return;
++    if (end === null || position < end - barLength() - EPSILON) return;
+     sendTarget();
+   };
+ 

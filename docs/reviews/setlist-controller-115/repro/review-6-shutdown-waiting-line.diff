@@ -1,0 +1,83 @@
+diff --git a/test/atem.test.ts b/test/atem.test.ts
+index f07c473..b282b4e 100644
+--- a/test/atem.test.ts
++++ b/test/atem.test.ts
+@@ -1247,3 +1247,78 @@ describe('how late the ATEM gets and acts on a cue', () => {
+     expect(await linesOf(path)).toEqual([]);
+   });
+ });
++
++import { readFileSync } from 'node:fs';
++describe('PROBE shutdown and the waiting Count Off line', () => {
++  const syncLines = (path: string) => {
++    try {
++      return readFileSync(path, 'utf8').split('\n').filter((l) => l !== '').map((l) => JSON.parse(l) as Record<string, unknown>);
++    } catch {
++      return [];
++    }
++  };
++  const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms));
++
++  it('PROBE-A: switcher close rejects at shutdown', async () => {
++    const path = join(await newLogDir(), 'cue-lateness.log');
++    const switcher = fakeSwitcher();
++    const { play } = await atemRig(switcher, { latenessLog: { path } });
++    switcher.holdEchoes();
++    await play(28.25, 40.25);
++    expect(switcher.programs).toEqual([CAMERA]);
++    await sleep(100);
++    const beforeClose = syncLines(path);
++    const real = switcher.close.bind(switcher);
++    switcher.close = async () => {
++      throw new Error('threadedclass is restarting the socket process');
++    };
++    const error = await rig!.server.close().then(() => null, (e: unknown) => e);
++    const atRejection = syncLines(path);
++    await sleep(200);
++    const later = syncLines(path);
++    console.log('PROBE-A', JSON.stringify({ error: String(error), beforeClose: beforeClose.length, atRejection: atRejection.map((l) => [l.section, l.actedMs]), later: later.map((l) => [l.section, l.actedMs]) }));
++    switcher.close = real;
++    await rig!.close().catch(() => {});
++    rig = undefined;
++    expect(error).not.toBeNull();
++    expect(atRejection).toHaveLength(0);
++    expect(later).toHaveLength(1);
++  });
++
++  it('PROBE-B: clean stop writes the waiting line before close resolves', async () => {
++    const path = join(await newLogDir(), 'cue-lateness.log');
++    const switcher = fakeSwitcher();
++    const { play } = await atemRig(switcher, { latenessLog: { path } });
++    switcher.holdEchoes();
++    await play(28.25, 40.25);
++    await sleep(100);
++    const beforeClose = syncLines(path);
++    await rig!.server.close();
++    const atResolve = syncLines(path);
++    console.log('PROBE-B', JSON.stringify({ beforeClose: beforeClose.length, atResolve: atResolve.map((l) => [l.section, l.actedMs]) }));
++    await rig!.live.close();
++    rig = undefined;
++    expect(atResolve).toHaveLength(1);
++  });
++
++  it('PROBE-C: a Count Off handed while the switcher close is pending', async () => {
++    const path = join(await newLogDir(), 'cue-lateness.log');
++    const switcher = fakeSwitcher();
++    const { play } = await atemRig(switcher, { latenessLog: { path } });
++    switcher.holdEchoes();
++    const real = switcher.close.bind(switcher);
++    let release = () => {};
++    switcher.close = () => new Promise<void>((r) => (release = () => void real().then(r)));
++    const closing = rig!.server.close();
++    await play(28.25, 40.25);
++    const programs = [...switcher.programs];
++    release();
++    await closing;
++    const atResolve = syncLines(path);
++    await sleep(200);
++    const later = syncLines(path);
++    console.log('PROBE-C', JSON.stringify({ programs, atResolve: atResolve.map((l) => [l.section, l.actedMs]), later: later.map((l) => [l.section, l.actedMs]) }));
++    await rig!.live.close();
++    rig = undefined;
++  });
++});

@@ -1,0 +1,12 @@
+diff --git a/src/server/atem.ts b/src/server/atem.ts
+index acbb5d4..83d885b 100644
+--- a/src/server/atem.ts
++++ b/src/server/atem.ts
+@@ -201,7 +201,6 @@ function atemTarget(switcher: SwitcherClient, clock: Pick<Clock, 'now' | 'every'
+         }
+       });
+       switcher.onGaveUp((reason) => {
+-        if (stopped) return;
+         report.problem(`The ATEM could not connect: ${sentence(reason)}`);
+         retryLater(report);
+       });

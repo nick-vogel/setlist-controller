@@ -1,0 +1,71 @@
+{
+  "method": "GET",
+  "path": "/v1/playlists",
+  "status": 200,
+  "content_type": "application/json",
+  "body": [
+    {
+      "id": {
+        "uuid": "306E3B2A-D71A-40B2-ACBD-DE96FC9FA5F5",
+        "name": "November 8, 2026",
+        "index": 0
+      },
+      "field_type": "playlist",
+      "children": []
+    },
+    {
+      "id": {
+        "uuid": "5B02A251-921A-440A-A0C6-9FA5FF8C1A1A",
+        "name": "November 15, 2026",
+        "index": 1
+      },
+      "field_type": "playlist",
+      "children": []
+    },
+    {
+      "id": {
+        "uuid": "448C8C2F-9561-40BB-98C4-BF60258609CE",
+        "name": "Series Two - November 1, 2026",
+        "index": 2
+      },
+      "field_type": "playlist",
+      "children": []
+    },
+    {
+      "id": {
+        "uuid": "49F3C197-E743-45AB-8670-C53959B82BDC",
+        "name": "Series One - October 25, 2026",
+        "index": 3
+      },
+      "field_type": "playlist",
+      "children": []
+    },
+    {
+      "id": {
+        "uuid": "6E51EFFD-0E26-43D9-A4AA-DF43A41C18B5",
+        "name": "Series One - October 11, 2026",
+        "index": 4
+      },
+      "field_type": "playlist",
+      "children": []
+    },
+    {
+      "id": {
+        "uuid": "819E1B79-3EA2-400F-8BDB-55BFCB37D008",
+        "name": "Series One - October 18, 2026",
+        "index": 5
+      },
+      "field_type": "playlist",
+      "children": []
+    },
+    {
+      "id": {
+        "uuid": "00F843BF-B767-4977-9E04-094DB59BBB1F",
+        "name": "Series One - October 4, 2026",
+        "index": 6
+      },
+      "field_type": "playlist",
+      "children": []
+    }
+  ]
+}

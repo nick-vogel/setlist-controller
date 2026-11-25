@@ -1,0 +1,13 @@
+diff --git a/src/set-builder/colour.ts b/src/set-builder/colour.ts
+index 02e63e9..87a9ae9 100644
+--- a/src/set-builder/colour.ts
++++ b/src/set-builder/colour.ts
+@@ -9,7 +9,7 @@ export type Rgb = [number, number, number];
+ 
+ // How many colours the pixels are grouped into, and the share of the pixels a group needs to count as a large area.
+ const GROUPS = 5;
+-const LARGE = 0.05;
++const LARGE = 0;
+ // The saturation, from 0 to 1, the chosen group needs for the picture to have a colour. ProPresenter's grey placeholder
+ // and the checkerboard it draws for a slide with no background are at 0, and the palest recorded background, a grey city
+ // in rain, is at 0.077 (test/fixtures/propresenter/README.md, "The 2026-11-12 session").

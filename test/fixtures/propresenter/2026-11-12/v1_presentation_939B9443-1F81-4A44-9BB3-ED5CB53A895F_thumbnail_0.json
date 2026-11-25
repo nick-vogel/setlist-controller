@@ -1,0 +1,8 @@
+{
+  "method": "GET",
+  "path": "/v1/presentation/939B9443-1F81-4A44-9BB3-ED5CB53A895F/thumbnail/0?quality=400&thumbnail_type=png",
+  "status": 200,
+  "content_type": "image/png",
+  "body_file": "v1_presentation_939B9443-1F81-4A44-9BB3-ED5CB53A895F_thumbnail_0.png",
+  "body_bytes": 759
+}

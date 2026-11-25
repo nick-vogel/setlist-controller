@@ -1,0 +1,603 @@
+{
+  "method": "GET",
+  "path": "/v1/presentation/894B40A0-42FE-411E-B915-F1919C6DA33E",
+  "status": 200,
+  "content_type": "application/json",
+  "body": {
+    "presentation": {
+      "id": {
+        "uuid": "894B40A0-42FE-411E-B915-F1919C6DA33E",
+        "name": "There Is Freedom",
+        "index": 260
+      },
+      "groups": [
+        {
+          "name": "Intro",
+          "color": {
+            "red": 0.7019608020782471,
+            "green": 0.6549019813537598,
+            "blue": 0.1411764770746231,
+            "alpha": 1
+          },
+          "slides": [
+            {
+              "enabled": true,
+              "notes": "",
+              "text": "",
+              "label": "Cloudscape_07_4K.mp4",
+              "size": {
+                "width": 1920,
+                "height": 1080
+              }
+            }
+          ],
+          "uuid": "81AD0561-0D3E-4410-95A2-2A36794A2A4F"
+        },
+        {
+          "name": "Verse 1",
+          "color": {
+            "red": 0,
+            "green": 0.46666666865348816,
+            "blue": 0.800000011920929,
+            "alpha": 1
+          },
+          "slides": [
+            {
+              "enabled": true,
+              "notes": "",
+              "text": "There Is Freedom / Verse 1 / slide 1 line 1\nThere Is Freedom / Verse 1 / slide 1 line 2",
+              "label": "",
+              "size": {
+                "width": 1920,
+                "height": 1080
+              }
+            },
+            {
+              "enabled": true,
+              "notes": "",
+              "text": "There Is Freedom / Verse 1 / slide 2 line 1\nThere Is Freedom / Verse 1 / slide 2 line 2",
+              "label": "",
+              "size": {
+                "width": 1920,
+                "height": 1080
+              }
+            }
+          ],
+          "uuid": "3467E660-556A-47F0-9FFF-FDCF9F030F0C"
+        },
+        {
+          "name": "Verse 2",
+          "color": {
+            "red": 0,
+            "green": 0.3490196168422699,
+            "blue": 0.6000000238418579,
+            "alpha": 1
+          },
+          "slides": [
+            {
+              "enabled": true,
+              "notes": "",
+              "text": "There Is Freedom / Verse 2 / slide 1 line 1\nThere Is Freedom / Verse 2 / slide 1 line 2",
+              "label": "",
+              "size": {
+                "width": 1920,
+                "height": 1080
+              }
+            },
+            {
+              "enabled": true,
+              "notes": "",
+              "text": "There Is Freedom / Verse 1 / slide 2 line 1\nThere Is Freedom / Verse 1 / slide 2 line 2",
+              "label": "",
+              "size": {
+                "width": 1920,
+                "height": 1080
+              }
+            }
+          ],
+          "uuid": "253C73C1-1524-4DE6-9505-42C6A7BD0EB7"
+        },
+        {
+          "name": "Pre Chorus",
+          "color": {
+            "red": 0.3999999761581421,
+            "green": 0.3999999761581421,
+            "blue": 0.3999999761581421,
+            "alpha": 1
+          },
+          "slides": [
+            {
+              "enabled": true,
+              "notes": "",
+              "text": "There Is Freedom / Pre Chorus / slide 1 line 1",
+              "label": "",
+              "size": {
+                "width": 1920,
+                "height": 1080
+              }
+            }
+          ],
+          "uuid": "20069D38-F47D-4D3B-B8EB-A7792772EE6D"
+        },
+        {
+          "name": "Chorus",
+          "color": {
+            "red": 0.800000011920929,
+            "green": 0,
+            "blue": 0.30588236451148987,
+            "alpha": 1
+          },
+          "slides": [
+            {
+              "enabled": true,
+              "notes": "",
+              "text": "There Is Freedom / Chorus / slide 1 line 1\nThere Is Freedom / Chorus / slide 1 line 2",
+              "label": "",
+              "size": {
+                "width": 1920,
+                "height": 1080
+              }
+            },
+            {
+              "enabled": true,
+              "notes": "",
+              "text": "There Is Freedom / Chorus / slide 2 line 1\nThere Is Freedom / Chorus / slide 2 line 2\nThere Is Freedom / Chorus / slide 2 line 3​",
+              "label": "",
+              "size": {
+                "width": 1920,
+                "height": 1080
+              }
+            },
+            {
+              "enabled": true,
+              "notes": "",
+              "text": "There Is Freedom / Chorus / slide 3 line 1\nThere Is Freedom / Chorus / slide 3 line 2",
+              "label": "",
+              "size": {
+                "width": 1920,
+                "height": 1080
+              }
+            },
+            {
+              "enabled": true,
+              "notes": "",
+              "text": "There Is Freedom / Chorus / slide 4 line 1​\nThere Is Freedom / Chorus / slide 4 line 2",
+              "label": "",
+              "size": {
+                "width": 1920,
+                "height": 1080
+              }
+            }
+          ],
+          "uuid": "267C8258-8CC5-4E41-B0B4-73D410B2B816"
+        },
+        {
+          "name": "Turnaround",
+          "color": {
+            "red": 0.1411764770746231,
+            "green": 0.7019608020782471,
+            "blue": 0.2980392277240753,
+            "alpha": 1
+          },
+          "slides": [
+            {
+              "enabled": true,
+              "notes": "",
+              "text": "",
+              "label": "",
+              "size": {
+                "width": 1920,
+                "height": 1080
+              }
+            }
+          ],
+          "uuid": "747BA303-7F3E-4866-8FB5-FDE6B1283992"
+        },
+        {
+          "name": "Verse 3",
+          "color": {
+            "red": 0,
+            "green": 0.23529411852359772,
+            "blue": 0.4000000059604645,
+            "alpha": 1
+          },
+          "slides": [
+            {
+              "enabled": true,
+              "notes": "",
+              "text": "There Is Freedom / Verse 3 / slide 1 line 1\nThere Is Freedom / Verse 3 / slide 1 line 2",
+              "label": "",
+              "size": {
+                "width": 1920,
+                "height": 1080
+              }
+            },
+            {
+              "enabled": true,
+              "notes": "",
+              "text": "There Is Freedom / Verse 1 / slide 2 line 1\nThere Is Freedom / Verse 1 / slide 2 line 2",
+              "label": "",
+              "size": {
+                "width": 1920,
+                "height": 1080
+              }
+            }
+          ],
+          "uuid": "500E21EF-8EAC-49F1-BBE8-08B6CF2528B7"
+        },
+        {
+          "name": "Verse 4",
+          "color": {
+            "red": 0,
+            "green": 0.40784314274787903,
+            "blue": 0.7019608020782471,
+            "alpha": 1
+          },
+          "slides": [
+            {
+              "enabled": true,
+              "notes": "",
+              "text": "There Is Freedom / Verse 4 / slide 1 line 1\nThere Is Freedom / Verse 4 / slide 1 line 2",
+              "label": "",
+              "size": {
+                "width": 1920,
+                "height": 1080
+              }
+            },
+            {
+              "enabled": true,
+              "notes": "",
+              "text": "There Is Freedom / Verse 1 / slide 2 line 1\nThere Is Freedom / Verse 1 / slide 2 line 2",
+              "label": "",
+              "size": {
+                "width": 1920,
+                "height": 1080
+              }
+            },
+            {
+              "enabled": true,
+              "notes": "",
+              "text": "There Is Freedom / Chorus / slide 1 line 1\nThere Is Freedom / Chorus / slide 1 line 2",
+              "label": "",
+              "size": {
+                "width": 1920,
+                "height": 1080
+              }
+            },
+            {
+              "enabled": true,
+              "notes": "",
+              "text": "There Is Freedom / Chorus / slide 2 line 1\nThere Is Freedom / Chorus / slide 2 line 2\nThere Is Freedom / Chorus / slide 2 line 3​",
+              "label": "",
+              "size": {
+                "width": 1920,
+                "height": 1080
+              }
+            },
+            {
+              "enabled": true,
+              "notes": "",
+              "text": "There Is Freedom / Chorus / slide 3 line 1\nThere Is Freedom / Chorus / slide 3 line 2",
+              "label": "",
+              "size": {
+                "width": 1920,
+                "height": 1080
+              }
+            },
+            {
+              "enabled": true,
+              "notes": "",
+              "text": "There Is Freedom / Chorus / slide 4 line 1​\nThere Is Freedom / Chorus / slide 4 line 2",
+              "label": "",
+              "size": {
+                "width": 1920,
+                "height": 1080
+              }
+            },
+            {
+              "enabled": true,
+              "notes": "",
+              "text": "",
+              "label": "",
+              "size": {
+                "width": 1920,
+                "height": 1080
+              }
+            }
+          ],
+          "uuid": "78841568-4AD3-44CC-9D07-222C4913D3C0"
+        },
+        {
+          "name": "Bridge 1",
+          "color": {
+            "red": 0.4627451002597809,
+            "green": 0,
+            "blue": 0.800000011920929,
+            "alpha": 1
+          },
+          "slides": [
+            {
+              "enabled": true,
+              "notes": "",
+              "text": "There Is Freedom / Bridge 1 / slide 1 line 1​\nThere Is Freedom / Bridge 1 / slide 1 line 2​",
+              "label": "",
+              "size": {
+                "width": 1920,
+                "height": 1080
+              }
+            },
+            {
+              "enabled": true,
+              "notes": "",
+              "text": "There Is Freedom / Bridge 1 / slide 2 line 1\nThere Is Freedom / Bridge 1 / slide 2 line 2\nThere Is Freedom / Bridge 1 / slide 2 line 3​",
+              "label": "",
+              "size": {
+                "width": 1920,
+                "height": 1080
+              }
+            }
+          ],
+          "uuid": "07007AF6-940E-49AD-A816-07752E786EDA"
+        },
+        {
+          "name": "Bridge 2",
+          "color": {
+            "red": 0.3490196168422699,
+            "green": 0,
+            "blue": 0.6000000238418579,
+            "alpha": 1
+          },
+          "slides": [
+            {
+              "enabled": true,
+              "notes": "",
+              "text": "There Is Freedom / Bridge 2 / slide 1 line 1​\nThere Is Freedom / Bridge 2 / slide 1 line 2​",
+              "label": "",
+              "size": {
+                "width": 1920,
+                "height": 1080
+              }
+            },
+            {
+              "enabled": true,
+              "notes": "",
+              "text": "There Is Freedom / Bridge 2 / slide 2 line 1\nThere Is Freedom / Bridge 2 / slide 2 line 2\nThere Is Freedom / Bridge 2 / slide 2 line 3​",
+              "label": "",
+              "size": {
+                "width": 1920,
+                "height": 1080
+              }
+            }
+          ],
+          "uuid": "86C38989-95A0-4325-A15F-DB48CD77648B"
+        },
+        {
+          "name": "Bridge 1",
+          "color": {
+            "red": 0.4627451002597809,
+            "green": 0,
+            "blue": 0.800000011920929,
+            "alpha": 1
+          },
+          "slides": [
+            {
+              "enabled": true,
+              "notes": "",
+              "text": "There Is Freedom / Bridge 1 / slide 1 line 1\nThere Is Freedom / Bridge 1 / slide 1 line 2",
+              "label": "",
+              "size": {
+                "width": 1920,
+                "height": 1080
+              }
+            },
+            {
+              "enabled": true,
+              "notes": "",
+              "text": "There Is Freedom / Bridge 1 / slide 2 line 1\nThere Is Freedom / Bridge 1 / slide 2 line 2\nThere Is Freedom / Bridge 1 / slide 2 line 3",
+              "label": "",
+              "size": {
+                "width": 1920,
+                "height": 1080
+              }
+            }
+          ],
+          "uuid": "EED17593-188A-4FCA-963E-836CBEC30636"
+        },
+        {
+          "name": "Bridge 2",
+          "color": {
+            "red": 0.3490196168422699,
+            "green": 0,
+            "blue": 0.6000000238418579,
+            "alpha": 1
+          },
+          "slides": [
+            {
+              "enabled": true,
+              "notes": "",
+              "text": "There Is Freedom / Bridge 2 / slide 1 line 1\nThere Is Freedom / Bridge 2 / slide 1 line 2",
+              "label": "",
+              "size": {
+                "width": 1920,
+                "height": 1080
+              }
+            },
+            {
+              "enabled": true,
+              "notes": "",
+              "text": "There Is Freedom / Bridge 2 / slide 2 line 1\nThere Is Freedom / Bridge 2 / slide 2 line 2\nThere Is Freedom / Bridge 2 / slide 2 line 3",
+              "label": "",
+              "size": {
+                "width": 1920,
+                "height": 1080
+              }
+            },
+            {
+              "enabled": true,
+              "notes": "",
+              "text": "There Is Freedom / Chorus / slide 1 line 1\nThere Is Freedom / Chorus / slide 1 line 2",
+              "label": "",
+              "size": {
+                "width": 1920,
+                "height": 1080
+              }
+            },
+            {
+              "enabled": true,
+              "notes": "",
+              "text": "There Is Freedom / Chorus / slide 2 line 1\nThere Is Freedom / Chorus / slide 2 line 2\nThere Is Freedom / Chorus / slide 2 line 3​",
+              "label": "",
+              "size": {
+                "width": 1920,
+                "height": 1080
+              }
+            },
+            {
+              "enabled": true,
+              "notes": "",
+              "text": "There Is Freedom / Chorus / slide 3 line 1\nThere Is Freedom / Chorus / slide 3 line 2",
+              "label": "",
+              "size": {
+                "width": 1920,
+                "height": 1080
+              }
+            },
+            {
+              "enabled": true,
+              "notes": "",
+              "text": "There Is Freedom / Bridge 2 / slide 6 line 1​",
+              "label": "",
+              "size": {
+                "width": 1920,
+                "height": 1080
+              }
+            },
+            {
+              "enabled": true,
+              "notes": "",
+              "text": "There Is Freedom / Chorus / slide 1 line 1\nThere Is Freedom / Chorus / slide 1 line 2",
+              "label": "",
+              "size": {
+                "width": 1920,
+                "height": 1080
+              }
+            },
+            {
+              "enabled": true,
+              "notes": "",
+              "text": "There Is Freedom / Chorus / slide 2 line 1\nThere Is Freedom / Chorus / slide 2 line 2\nThere Is Freedom / Chorus / slide 2 line 3​",
+              "label": "",
+              "size": {
+                "width": 1920,
+                "height": 1080
+              }
+            },
+            {
+              "enabled": true,
+              "notes": "",
+              "text": "There Is Freedom / Chorus / slide 3 line 1\nThere Is Freedom / Chorus / slide 3 line 2",
+              "label": "",
+              "size": {
+                "width": 1920,
+                "height": 1080
+              }
+            },
+            {
+              "enabled": true,
+              "notes": "",
+              "text": "There Is Freedom / Chorus / slide 4 line 1​\nThere Is Freedom / Chorus / slide 4 line 2",
+              "label": "",
+              "size": {
+                "width": 1920,
+                "height": 1080
+              }
+            }
+          ],
+          "uuid": "AA36088A-7CBF-407D-BA78-9D4B87407EC2"
+        },
+        {
+          "name": "Ending",
+          "color": {
+            "red": 0.6000000238418579,
+            "green": 0.5607843399047852,
+            "blue": 0.12156862765550613,
+            "alpha": 1
+          },
+          "slides": [
+            {
+              "enabled": true,
+              "notes": "",
+              "text": "",
+              "label": "",
+              "size": {
+                "width": 1920,
+                "height": 1080
+              }
+            }
+          ],
+          "uuid": "1989820F-8AC7-4FE5-8374-AF10E2C4338C"
+        }
+      ],
+      "has_timeline": false,
+      "presentation_path": "ProPresenter/Libraries/Default/There Is Freedom.pro",
+      "destination": "presentation",
+      "arrangements": [
+        {
+          "id": {
+            "uuid": "894B40A0-42FE-411E-B915-F1919C6DA33E",
+            "name": "Master",
+            "index": 0
+          },
+          "groups": [
+            "81AD0561-0D3E-4410-95A2-2A36794A2A4F",
+            "3467E660-556A-47F0-9FFF-FDCF9F030F0C",
+            "253C73C1-1524-4DE6-9505-42C6A7BD0EB7",
+            "20069D38-F47D-4D3B-B8EB-A7792772EE6D",
+            "267C8258-8CC5-4E41-B0B4-73D410B2B816",
+            "747BA303-7F3E-4866-8FB5-FDE6B1283992",
+            "500E21EF-8EAC-49F1-BBE8-08B6CF2528B7",
+            "78841568-4AD3-44CC-9D07-222C4913D3C0",
+            "07007AF6-940E-49AD-A816-07752E786EDA",
+            "86C38989-95A0-4325-A15F-DB48CD77648B",
+            "EED17593-188A-4FCA-963E-836CBEC30636",
+            "AA36088A-7CBF-407D-BA78-9D4B87407EC2",
+            "1989820F-8AC7-4FE5-8374-AF10E2C4338C"
+          ],
+          "total_cues": 37
+        },
+        {
+          "id": {
+            "uuid": "6790327C-E141-4EC5-A49B-49751DA40875",
+            "name": "Full",
+            "index": 1
+          },
+          "groups": [
+            "81AD0561-0D3E-4410-95A2-2A36794A2A4F",
+            "81AD0561-0D3E-4410-95A2-2A36794A2A4F",
+            "3467E660-556A-47F0-9FFF-FDCF9F030F0C",
+            "253C73C1-1524-4DE6-9505-42C6A7BD0EB7",
+            "20069D38-F47D-4D3B-B8EB-A7792772EE6D",
+            "267C8258-8CC5-4E41-B0B4-73D410B2B816",
+            "747BA303-7F3E-4866-8FB5-FDE6B1283992",
+            "500E21EF-8EAC-49F1-BBE8-08B6CF2528B7",
+            "78841568-4AD3-44CC-9D07-222C4913D3C0",
+            "267C8258-8CC5-4E41-B0B4-73D410B2B816",
+            "747BA303-7F3E-4866-8FB5-FDE6B1283992",
+            "07007AF6-940E-49AD-A816-07752E786EDA",
+            "86C38989-95A0-4325-A15F-DB48CD77648B",
+            "EED17593-188A-4FCA-963E-836CBEC30636",
+            "AA36088A-7CBF-407D-BA78-9D4B87407EC2",
+            "267C8258-8CC5-4E41-B0B4-73D410B2B816",
+            "267C8258-8CC5-4E41-B0B4-73D410B2B816",
+            "1989820F-8AC7-4FE5-8374-AF10E2C4338C"
+          ],
+          "total_cues": 51
+        }
+      ],
+      "current_arrangement": "894B40A0-42FE-411E-B915-F1919C6DA33E",
+      "type": "multitracks",
+      "is_authorized": false,
+      "total_cues": 37
+    }
+  }
+}

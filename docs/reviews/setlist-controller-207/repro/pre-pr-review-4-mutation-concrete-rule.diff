@@ -1,0 +1,13 @@
+diff --git a/test/build-set-skill-quotes.test.ts b/test/build-set-skill-quotes.test.ts
+index 4ed035e..9a2cd00 100644
+--- a/test/build-set-skill-quotes.test.ts
++++ b/test/build-set-skill-quotes.test.ts
+@@ -84,7 +84,7 @@ function linesUp(quote: string, literal: LiteralToken[], fragment = false): bool
+       else if (code === undefined) row[j] = false;
+       else if (token.kind === 'placeholder') row[j] = code.kind === 'hole' && listEnds(literal, i).some((end) => at(end, j + 1));
+       else if (code.kind === 'char') row[j] = code.char === token.char && at(i + 1, j + 1);
+-      else row[j] = concrete && (at(i + 1, j + 1) || at(i, j + 1));
++      else row[j] = (at(i + 1, j + 1) || at(i, j + 1));
+     }
+   }
+   if (fragment) return literal.some((code, i) => (code.kind === 'char' || tokens[0]?.kind !== 'char') && at(i, 0));

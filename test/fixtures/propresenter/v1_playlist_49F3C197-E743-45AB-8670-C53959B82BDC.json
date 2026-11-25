@@ -1,0 +1,258 @@
+{
+  "method": "GET",
+  "path": "/v1/playlist/49F3C197-E743-45AB-8670-C53959B82BDC",
+  "status": 200,
+  "content_type": "application/json",
+  "body": {
+    "id": {
+      "uuid": "49F3C197-E743-45AB-8670-C53959B82BDC",
+      "name": "Series One - October 25, 2026",
+      "index": 0
+    },
+    "items": [
+      {
+        "id": {
+          "uuid": "ABBCB013-DE7B-45DA-BD71-33F5C7310005",
+          "name": "PRE-SERVICE",
+          "index": 0
+        },
+        "type": "header",
+        "is_hidden": false,
+        "is_pco": true,
+        "destination": "presentation"
+      },
+      {
+        "id": {
+          "uuid": "0C68F3F6-09BE-4FCA-A18D-D073CA81E591",
+          "name": "Huddle",
+          "index": 1
+        },
+        "type": "placeholder",
+        "is_hidden": true,
+        "is_pco": true,
+        "destination": "presentation"
+      },
+      {
+        "id": {
+          "uuid": "60AB91FC-50CB-468B-8697-F92FAA1E1ABC",
+          "name": "Loop",
+          "index": 2
+        },
+        "type": "presentation",
+        "is_hidden": false,
+        "is_pco": true,
+        "presentation_info": {
+          "presentation_uuid": "15C678B7-4F41-4CD7-8280-E240623ECBA8",
+          "arrangement_name": "Master",
+          "arrangement_uuid": "15C678B7-4F41-4CD7-8280-E240623ECBA8"
+        },
+        "destination": "presentation"
+      },
+      {
+        "id": {
+          "uuid": "EFE31543-7758-4D1C-AD48-B77274122D7A",
+          "name": "Countdown",
+          "index": 3
+        },
+        "type": "presentation",
+        "is_hidden": false,
+        "is_pco": true,
+        "presentation_info": {
+          "presentation_uuid": "DFF092C1-8840-49DC-9450-6F04A10FA358",
+          "arrangement_name": "Master",
+          "arrangement_uuid": "DFF092C1-8840-49DC-9450-6F04A10FA358"
+        },
+        "destination": "presentation"
+      },
+      {
+        "id": {
+          "uuid": "68B6ECCD-6FA8-4BD5-8C62-ECFA85261F45",
+          "name": "WORSHIP SET",
+          "index": 4
+        },
+        "type": "header",
+        "is_hidden": false,
+        "is_pco": true,
+        "destination": "presentation"
+      },
+      {
+        "id": {
+          "uuid": "EA43DC7C-ECD0-4E4D-9E69-2A05F8DAEABA",
+          "name": "There Is Freedom",
+          "index": 5
+        },
+        "type": "presentation",
+        "is_hidden": false,
+        "is_pco": true,
+        "presentation_info": {
+          "presentation_uuid": "894B40A0-42FE-411E-B915-F1919C6DA33E",
+          "arrangement_name": "Master",
+          "arrangement_uuid": "894B40A0-42FE-411E-B915-F1919C6DA33E"
+        },
+        "destination": "presentation"
+      },
+      {
+        "id": {
+          "uuid": "82213079-E0E7-4F6E-B783-40600571BFA2",
+          "name": "Holy Forever",
+          "index": 6
+        },
+        "type": "presentation",
+        "is_hidden": false,
+        "is_pco": true,
+        "presentation_info": {
+          "presentation_uuid": "27B59282-5C91-478D-B677-23BE463959BB",
+          "arrangement_name": "Master",
+          "arrangement_uuid": "27B59282-5C91-478D-B677-23BE463959BB"
+        },
+        "destination": "presentation"
+      },
+      {
+        "id": {
+          "uuid": "CBB27CC1-6813-41BE-ACBF-1E4FE9DAA1EC",
+          "name": "Sinking Deep",
+          "index": 7
+        },
+        "type": "presentation",
+        "is_hidden": false,
+        "is_pco": true,
+        "presentation_info": {
+          "presentation_uuid": "964FAA23-E5D6-46CA-A67D-E12AAD1B030F",
+          "arrangement_name": "Master",
+          "arrangement_uuid": "964FAA23-E5D6-46CA-A67D-E12AAD1B030F"
+        },
+        "destination": "presentation"
+      },
+      {
+        "id": {
+          "uuid": "94721E5C-16EB-426E-B083-9952B0B5C749",
+          "name": "FACETIME",
+          "index": 8
+        },
+        "type": "header",
+        "is_hidden": false,
+        "is_pco": true,
+        "destination": "presentation"
+      },
+      {
+        "id": {
+          "uuid": "B58FCDB4-B3DF-43D4-85B8-77C936A5F6A8",
+          "name": "Facetime",
+          "index": 9
+        },
+        "type": "presentation",
+        "is_hidden": false,
+        "is_pco": true,
+        "presentation_info": {
+          "presentation_uuid": "58C14FDA-CBDF-4A9C-900D-FE7D88E0E597",
+          "arrangement_name": "Master",
+          "arrangement_uuid": "58C14FDA-CBDF-4A9C-900D-FE7D88E0E597"
+        },
+        "destination": "presentation"
+      },
+      {
+        "id": {
+          "uuid": "6F96B75A-5BFF-482E-9BF1-9D2442DB0627",
+          "name": "SERVICE HOST",
+          "index": 10
+        },
+        "type": "header",
+        "is_hidden": false,
+        "is_pco": true,
+        "destination": "presentation"
+      },
+      {
+        "id": {
+          "uuid": "CE5CF6EF-C3AF-421A-A3BF-21BFECE2B3A1",
+          "name": "MC",
+          "index": 11
+        },
+        "type": "presentation",
+        "is_hidden": false,
+        "is_pco": true,
+        "presentation_info": {
+          "presentation_uuid": "4CC08029-E3AF-43EB-AC89-DF1065966DA0",
+          "arrangement_name": "Master",
+          "arrangement_uuid": "4CC08029-E3AF-43EB-AC89-DF1065966DA0"
+        },
+        "destination": "presentation"
+      },
+      {
+        "id": {
+          "uuid": "64F94B15-53D6-414F-8509-243B63F5FADE",
+          "name": "MESSAGE",
+          "index": 12
+        },
+        "type": "header",
+        "is_hidden": false,
+        "is_pco": true,
+        "destination": "presentation"
+      },
+      {
+        "id": {
+          "uuid": "C465AB83-A0C4-4AD0-BC43-1FBD1EC34E71",
+          "name": "Scripture Reading",
+          "index": 13
+        },
+        "type": "placeholder",
+        "is_hidden": true,
+        "is_pco": true,
+        "destination": "presentation"
+      },
+      {
+        "id": {
+          "uuid": "01C4C6A4-D854-4B10-BD85-3782D4093DE1",
+          "name": "Series-One_Part-22_ProPresenter",
+          "index": 14
+        },
+        "type": "presentation",
+        "is_hidden": false,
+        "is_pco": true,
+        "presentation_info": {
+          "presentation_uuid": "46AE4CBD-4A03-4A2F-AF7C-4DBC57664083",
+          "arrangement_name": "Master",
+          "arrangement_uuid": "46AE4CBD-4A03-4A2F-AF7C-4DBC57664083"
+        },
+        "destination": "presentation"
+      },
+      {
+        "id": {
+          "uuid": "A7462D6A-0B1E-49DE-9DFC-00DD6FADC055",
+          "name": "Prayer",
+          "index": 15
+        },
+        "type": "placeholder",
+        "is_hidden": true,
+        "is_pco": true,
+        "destination": "presentation"
+      },
+      {
+        "id": {
+          "uuid": "EB963916-44C0-4D10-9B16-D82CCCADF021",
+          "name": "CLOSE",
+          "index": 16
+        },
+        "type": "header",
+        "is_hidden": false,
+        "is_pco": true,
+        "destination": "presentation"
+      },
+      {
+        "id": {
+          "uuid": "7AA59AE8-F1F7-462F-8A07-F4D0066D6CB6",
+          "name": "Dismissal",
+          "index": 17
+        },
+        "type": "presentation",
+        "is_hidden": false,
+        "is_pco": true,
+        "presentation_info": {
+          "presentation_uuid": "1D17EA27-82A0-4706-B6AC-2298AA4112A1",
+          "arrangement_name": "Master",
+          "arrangement_uuid": "1D17EA27-82A0-4706-B6AC-2298AA4112A1"
+        },
+        "destination": "presentation"
+      }
+    ]
+  }
+}

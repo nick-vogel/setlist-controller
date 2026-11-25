@@ -1,0 +1,18 @@
+diff --git a/src/server/connections.ts b/src/server/connections.ts
+index 605d196..fd01740 100644
+--- a/src/server/connections.ts
++++ b/src/server/connections.ts
+@@ -539,9 +539,11 @@ export function startConnections({
+   // song, which went early to the target: only a crossing actually sent drops the End.
+   const droppedEnd = (entry: Entry, cue: Cue) => {
+     const { early } = entry;
+-    if (cue.section !== 'end' || cue.cause !== 'played-into' || !early || early.crosses !== cue.song) return false;
++    if (cue.section !== 'end' || cue.cause !== 'played-into' || !early) return false;
+     const song = currentSet()?.songs.find((candidate) => candidate.number === cue.song);
+-    return !!song && endInsideLead(entry, song, early);
++    const across = song && crossing(entry, song);
++    if (!song || !across || (early.crosses !== cue.song && early.cue.song !== across.cue.song)) return false;
++    return endInsideLead(entry, song, across);
+   };
+   // Whether the song's End falls inside the lead of the crossing from it: at or after the beat the
+   // crossing goes, its beat less the lead, and before or on its beat.

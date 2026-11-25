@@ -1,0 +1,13 @@
+diff --git a/src/server/cues.ts b/src/server/cues.ts
+index 140812d..e73f47c 100644
+--- a/src/server/cues.ts
++++ b/src/server/cues.ts
+@@ -210,7 +210,7 @@ export function cueBeat(set: SetList, cue: Cue, loop: Loop | null, at: number |
+   if (!section) return null;
+   const inside = loop !== null && loop.start > section.time && (section.end === null || loop.start < section.end);
+   const reached = loop !== null && at !== null && at >= loop.start - EPSILON;
+-  return cue.cause === 'loop' && inside && reached ? loop.start : section.time;
++  return cue.cause === 'loop' && reached ? loop.start : section.time;
+ }
+ 
+ // The cue for a section of the song, or its End. Null for a section the song does not have.

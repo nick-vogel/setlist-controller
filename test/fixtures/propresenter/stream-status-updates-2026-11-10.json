@@ -1,0 +1,575 @@
+{
+  "method": "POST",
+  "path": "/v1/status/updates",
+  "request": [
+    "status/slide",
+    "presentation/current"
+  ],
+  "status": 200,
+  "headers": {
+    "transfer-encoding": "chunked",
+    "connection": "close",
+    "content-type": "application/octet-stream",
+    "vary": "Origin, Access-Control-Request-Method, Access-Control-Request-Headers"
+  },
+  "chunks": [
+    {
+      "t": 165,
+      "frame": {
+        "url": "timer/system_time",
+        "data": 1794332413
+      }
+    },
+    {
+      "t": 165,
+      "frame": {
+        "url": "presentation/current",
+        "data": {
+          "presentation": {
+            "id": {
+              "uuid": "27B59282-5C91-478D-B677-23BE463959BB",
+              "name": "Holy Forever",
+              "index": 0
+            },
+            "groups": [
+              {
+                "name": "Intro",
+                "color": {
+                  "red": 0,
+                  "green": 0,
+                  "blue": 0,
+                  "alpha": 0
+                },
+                "slides": [
+                  {
+                    "enabled": true,
+                    "notes": "",
+                    "text": "\r\r\r",
+                    "label": "Mountain_04_4K.mp4",
+                    "size": {
+                      "width": 1920,
+                      "height": 1080
+                    }
+                  }
+                ],
+                "uuid": "7B0153FF-942C-49D0-A1F6-EE48C45B239C"
+              },
+              {
+                "name": "Verse 1",
+                "color": {
+                  "red": 0,
+                  "green": 0,
+                  "blue": 0,
+                  "alpha": 0
+                },
+                "slides": [
+                  {
+                    "enabled": true,
+                    "notes": "",
+                    "text": "Holy Forever / Verse 1 / slide 1 line 1\nHoly Forever / Verse 1 / slide 1 line 2",
+                    "label": "",
+                    "size": {
+                      "width": 1920,
+                      "height": 1080
+                    }
+                  },
+                  {
+                    "enabled": true,
+                    "notes": "",
+                    "text": "Holy Forever / Verse 1 / slide 2 line 1\nHoly Forever / Verse 1 / slide 2 line 2",
+                    "label": "",
+                    "size": {
+                      "width": 1920,
+                      "height": 1080
+                    }
+                  },
+                  {
+                    "enabled": true,
+                    "notes": "",
+                    "text": "Holy Forever / Verse 1 / slide 3 line 1\nHoly Forever / Verse 1 / slide 3 line 2",
+                    "label": "",
+                    "size": {
+                      "width": 1920,
+                      "height": 1080
+                    }
+                  },
+                  {
+                    "enabled": true,
+                    "notes": "",
+                    "text": "Holy Forever / Verse 1 / slide 4 line 1\nHoly Forever / Verse 1 / slide 4 line 2",
+                    "label": "",
+                    "size": {
+                      "width": 1920,
+                      "height": 1080
+                    }
+                  }
+                ],
+                "uuid": "9CBB6FD6-875D-428B-A1E5-9B66EFE88D3C"
+              },
+              {
+                "name": "Pre Chorus 1",
+                "color": {
+                  "red": 0,
+                  "green": 0,
+                  "blue": 0,
+                  "alpha": 0
+                },
+                "slides": [
+                  {
+                    "enabled": true,
+                    "notes": "",
+                    "text": "Holy Forever / Pre Chorus 1 / slide 1 line 1​\nHoly Forever / Pre Chorus 1 / slide 1 line 2",
+                    "label": "",
+                    "size": {
+                      "width": 1920,
+                      "height": 1080
+                    }
+                  },
+                  {
+                    "enabled": true,
+                    "notes": "",
+                    "text": "Holy Forever / Pre Chorus 1 / slide 2 line 1",
+                    "label": "",
+                    "size": {
+                      "width": 1920,
+                      "height": 1080
+                    }
+                  }
+                ],
+                "uuid": "CDF5BBAD-259F-48F1-98B5-9827CFEE0D18"
+              },
+              {
+                "name": "Pre Chorus 2",
+                "color": {
+                  "red": 0,
+                  "green": 0,
+                  "blue": 0,
+                  "alpha": 0
+                },
+                "slides": [
+                  {
+                    "enabled": true,
+                    "notes": "",
+                    "text": "Holy Forever / Pre Chorus 2 / slide 1 line 1​\nHoly Forever / Pre Chorus 2 / slide 1 line 2",
+                    "label": "",
+                    "size": {
+                      "width": 1920,
+                      "height": 1080
+                    }
+                  },
+                  {
+                    "enabled": true,
+                    "notes": "",
+                    "text": "Holy Forever / Pre Chorus 1 / slide 2 line 1",
+                    "label": "",
+                    "size": {
+                      "width": 1920,
+                      "height": 1080
+                    }
+                  }
+                ],
+                "uuid": "CE803962-0992-4659-A143-8478A4EACEB3"
+              },
+              {
+                "name": "Chorus 1",
+                "color": {
+                  "red": 0,
+                  "green": 0,
+                  "blue": 0,
+                  "alpha": 0
+                },
+                "slides": [
+                  {
+                    "enabled": true,
+                    "notes": "",
+                    "text": "Holy Forever / Chorus 1 / slide 1 line 1\nHoly Forever / Chorus 1 / slide 1 line 2",
+                    "label": "",
+                    "size": {
+                      "width": 1920,
+                      "height": 1080
+                    }
+                  },
+                  {
+                    "enabled": true,
+                    "notes": "",
+                    "text": "Holy Forever / Chorus 1 / slide 2 line 1\nHoly Forever / Chorus 1 / slide 2 line 2​​",
+                    "label": "",
+                    "size": {
+                      "width": 1920,
+                      "height": 1080
+                    }
+                  }
+                ],
+                "uuid": "891286DB-5636-4C2B-BE90-5488178409FD"
+              },
+              {
+                "name": "Verse 2",
+                "color": {
+                  "red": 0,
+                  "green": 0,
+                  "blue": 0,
+                  "alpha": 0
+                },
+                "slides": [
+                  {
+                    "enabled": true,
+                    "notes": "",
+                    "text": "Holy Forever / Verse 2 / slide 1 line 1\nHoly Forever / Verse 2 / slide 1 line 2",
+                    "label": "",
+                    "size": {
+                      "width": 1920,
+                      "height": 1080
+                    }
+                  },
+                  {
+                    "enabled": true,
+                    "notes": "",
+                    "text": "Holy Forever / Verse 2 / slide 2 line 1\nHoly Forever / Verse 2 / slide 2 line 2",
+                    "label": "",
+                    "size": {
+                      "width": 1920,
+                      "height": 1080
+                    }
+                  },
+                  {
+                    "enabled": true,
+                    "notes": "",
+                    "text": "Holy Forever / Verse 2 / slide 3 line 1\nHoly Forever / Verse 2 / slide 3 line 2",
+                    "label": "",
+                    "size": {
+                      "width": 1920,
+                      "height": 1080
+                    }
+                  },
+                  {
+                    "enabled": true,
+                    "notes": "",
+                    "text": "Holy Forever / Verse 2 / slide 2 line 1\nHoly Forever / Verse 2 / slide 2 line 2",
+                    "label": "",
+                    "size": {
+                      "width": 1920,
+                      "height": 1080
+                    }
+                  }
+                ],
+                "uuid": "8288ADB5-886C-4E85-8BC7-2E4E5C5890CE"
+              },
+              {
+                "name": "Tag",
+                "color": {
+                  "red": 0,
+                  "green": 0,
+                  "blue": 0,
+                  "alpha": 0
+                },
+                "slides": [
+                  {
+                    "enabled": true,
+                    "notes": "",
+                    "text": "Holy Forever / Tag / slide 1 line 1\nHoly Forever / Tag / slide 1 line 2",
+                    "label": "",
+                    "size": {
+                      "width": 1920,
+                      "height": 1080
+                    }
+                  }
+                ],
+                "uuid": "C92A9E76-E3ED-4BAD-827C-A288AAD33750"
+              },
+              {
+                "name": "Chorus 2",
+                "color": {
+                  "red": 0,
+                  "green": 0,
+                  "blue": 0,
+                  "alpha": 0
+                },
+                "slides": [
+                  {
+                    "enabled": true,
+                    "notes": "",
+                    "text": "Holy Forever / Chorus 2 / slide 1 line 1\nHoly Forever / Chorus 2 / slide 1 line 2",
+                    "label": "",
+                    "size": {
+                      "width": 1920,
+                      "height": 1080
+                    }
+                  },
+                  {
+                    "enabled": true,
+                    "notes": "",
+                    "text": "Holy Forever / Chorus 2 / slide 2 line 1\nHoly Forever / Chorus 2 / slide 2 line 2​",
+                    "label": "",
+                    "size": {
+                      "width": 1920,
+                      "height": 1080
+                    }
+                  }
+                ],
+                "uuid": "4D23D004-1949-4850-88D8-B83225F4C5B7"
+              },
+              {
+                "name": "Pre Chorus 2",
+                "color": {
+                  "red": 0,
+                  "green": 0,
+                  "blue": 0,
+                  "alpha": 0
+                },
+                "slides": [
+                  {
+                    "enabled": true,
+                    "notes": "",
+                    "text": "Holy Forever / Pre Chorus 2 / slide 1 line 1​\nHoly Forever / Pre Chorus 2 / slide 1 line 2",
+                    "label": "",
+                    "size": {
+                      "width": 1920,
+                      "height": 1080
+                    }
+                  },
+                  {
+                    "enabled": true,
+                    "notes": "",
+                    "text": "Holy Forever / Pre Chorus 1 / slide 2 line 1",
+                    "label": "",
+                    "size": {
+                      "width": 1920,
+                      "height": 1080
+                    }
+                  }
+                ],
+                "uuid": "C616206B-EE5F-4F8E-9A3D-AB58C6F7EB1F"
+              },
+              {
+                "name": "Tag",
+                "color": {
+                  "red": 0,
+                  "green": 0,
+                  "blue": 0,
+                  "alpha": 0
+                },
+                "slides": [
+                  {
+                    "enabled": true,
+                    "notes": "",
+                    "text": "Holy Forever / Chorus 2 / slide 2 line 1\nHoly Forever / Chorus 2 / slide 2 line 2​",
+                    "label": "",
+                    "size": {
+                      "width": 1920,
+                      "height": 1080
+                    }
+                  }
+                ],
+                "uuid": "944BE36F-21ED-49DF-8F27-1CC34E3B27E6"
+              },
+              {
+                "name": "",
+                "color": {
+                  "red": 0,
+                  "green": 0,
+                  "blue": 0,
+                  "alpha": 0
+                },
+                "slides": [
+                  {
+                    "enabled": true,
+                    "notes": "",
+                    "text": "Holy Forever / Chorus 2 / slide 1 line 1\nHoly Forever / Chorus 2 / slide 1 line 2",
+                    "label": "",
+                    "size": {
+                      "width": 1920,
+                      "height": 1080
+                    }
+                  }
+                ],
+                "uuid": "75DD933D-F2A3-459E-8D81-B5A4A1557044"
+              },
+              {
+                "name": "",
+                "color": {
+                  "red": 0,
+                  "green": 0,
+                  "blue": 0,
+                  "alpha": 0
+                },
+                "slides": [
+                  {
+                    "enabled": true,
+                    "notes": "",
+                    "text": "Holy Forever / group 12 / slide 1 line 1\nHoly Forever / group 12 / slide 1 line 2​​",
+                    "label": "",
+                    "size": {
+                      "width": 1920,
+                      "height": 1080
+                    }
+                  },
+                  {
+                    "enabled": true,
+                    "notes": "",
+                    "text": "Holy Forever / group 12 / slide 1 line 1\nHoly Forever / group 12 / slide 1 line 2​​",
+                    "label": "",
+                    "size": {
+                      "width": 1920,
+                      "height": 1080
+                    }
+                  }
+                ],
+                "uuid": "EFB8391C-9644-4D33-B573-8F324AA2B435"
+              },
+              {
+                "name": "Ending",
+                "color": {
+                  "red": 0,
+                  "green": 0,
+                  "blue": 0,
+                  "alpha": 0
+                },
+                "slides": [
+                  {
+                    "enabled": true,
+                    "notes": "",
+                    "text": "\r\r\r",
+                    "label": "",
+                    "size": {
+                      "width": 1920,
+                      "height": 1080
+                    }
+                  }
+                ],
+                "uuid": "F9F9DA2D-B9B5-4543-85E1-8B5C7BDECE93"
+              }
+            ],
+            "has_timeline": false,
+            "presentation_path": "",
+            "destination": "presentation",
+            "arrangements": [
+              {
+                "id": {
+                  "uuid": "27B59282-5C91-478D-B677-23BE463959BB",
+                  "name": "Master",
+                  "index": 0
+                },
+                "groups": [
+                  "7B0153FF-942C-49D0-A1F6-EE48C45B239C",
+                  "9CBB6FD6-875D-428B-A1E5-9B66EFE88D3C",
+                  "CDF5BBAD-259F-48F1-98B5-9827CFEE0D18",
+                  "CE803962-0992-4659-A143-8478A4EACEB3",
+                  "891286DB-5636-4C2B-BE90-5488178409FD",
+                  "8288ADB5-886C-4E85-8BC7-2E4E5C5890CE",
+                  "C92A9E76-E3ED-4BAD-827C-A288AAD33750",
+                  "4D23D004-1949-4850-88D8-B83225F4C5B7",
+                  "C616206B-EE5F-4F8E-9A3D-AB58C6F7EB1F",
+                  "944BE36F-21ED-49DF-8F27-1CC34E3B27E6",
+                  "75DD933D-F2A3-459E-8D81-B5A4A1557044",
+                  "EFB8391C-9644-4D33-B573-8F324AA2B435",
+                  "F9F9DA2D-B9B5-4543-85E1-8B5C7BDECE93"
+                ],
+                "total_cues": 25
+              },
+              {
+                "id": {
+                  "uuid": "B9FAACEC-D8A6-435C-96A2-447FD80EAF32",
+                  "name": "Full",
+                  "index": 1
+                },
+                "groups": [
+                  "7B0153FF-942C-49D0-A1F6-EE48C45B239C",
+                  "9CBB6FD6-875D-428B-A1E5-9B66EFE88D3C",
+                  "CDF5BBAD-259F-48F1-98B5-9827CFEE0D18",
+                  "CE803962-0992-4659-A143-8478A4EACEB3",
+                  "891286DB-5636-4C2B-BE90-5488178409FD",
+                  "8288ADB5-886C-4E85-8BC7-2E4E5C5890CE",
+                  "C92A9E76-E3ED-4BAD-827C-A288AAD33750",
+                  "891286DB-5636-4C2B-BE90-5488178409FD",
+                  "4D23D004-1949-4850-88D8-B83225F4C5B7",
+                  "CDF5BBAD-259F-48F1-98B5-9827CFEE0D18",
+                  "C616206B-EE5F-4F8E-9A3D-AB58C6F7EB1F",
+                  "CDF5BBAD-259F-48F1-98B5-9827CFEE0D18",
+                  "CE803962-0992-4659-A143-8478A4EACEB3",
+                  "891286DB-5636-4C2B-BE90-5488178409FD",
+                  "4D23D004-1949-4850-88D8-B83225F4C5B7",
+                  "944BE36F-21ED-49DF-8F27-1CC34E3B27E6",
+                  "75DD933D-F2A3-459E-8D81-B5A4A1557044",
+                  "EFB8391C-9644-4D33-B573-8F324AA2B435",
+                  "F9F9DA2D-B9B5-4543-85E1-8B5C7BDECE93"
+                ],
+                "total_cues": 37
+              }
+            ],
+            "current_arrangement": "27B59282-5C91-478D-B677-23BE463959BB",
+            "type": "multitracks",
+            "is_authorized": true,
+            "total_cues": 25
+          }
+        }
+      }
+    },
+    {
+      "t": 166,
+      "frame": {
+        "url": "status/slide",
+        "data": {
+          "current": {
+            "text": "Holy Forever / Verse 1 / slide 2 line 1\nHoly Forever / Verse 1 / slide 2 line 2",
+            "notes": "",
+            "uuid": "D30F2280-DCAB-4EB3-A33C-A773EE4DB1C4"
+          },
+          "next": {
+            "text": "Holy Forever / Verse 1 / slide 3 line 1\nHoly Forever / Verse 1 / slide 3 line 2",
+            "notes": "",
+            "uuid": "6590C43E-1E3F-4038-A303-59B1FD82AA7A"
+          }
+        }
+      }
+    },
+    {
+      "t": 311,
+      "frame": {
+        "url": "timer/system_time",
+        "data": 1794332413
+      }
+    },
+    {
+      "t": 1311,
+      "frame": {
+        "url": "timer/system_time",
+        "data": 1794332414
+      }
+    },
+    {
+      "t": 2307,
+      "frame": {
+        "url": "timer/system_time",
+        "data": 1794332415
+      }
+    },
+    {
+      "t": 3312,
+      "frame": {
+        "url": "timer/system_time",
+        "data": 1794332416
+      }
+    },
+    {
+      "t": 4310,
+      "frame": {
+        "url": "timer/system_time",
+        "data": 1794332417
+      }
+    },
+    {
+      "t": 5310,
+      "frame": {
+        "url": "timer/system_time",
+        "data": 1794332418
+      }
+    },
+    {
+      "t": 6309,
+      "frame": {
+        "url": "timer/system_time",
+        "data": 1794332419
+      }
+    }
+  ]
+}

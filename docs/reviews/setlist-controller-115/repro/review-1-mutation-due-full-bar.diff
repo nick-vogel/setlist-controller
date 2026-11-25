@@ -1,0 +1,13 @@
+diff --git a/src/server/playback-controller.ts b/src/server/playback-controller.ts
+index ba822fb..b2c6522 100644
+--- a/src/server/playback-controller.ts
++++ b/src/server/playback-controller.ts
+@@ -606,7 +606,7 @@ export function startPlaybackController(
+     dueAt(beat) {
+       // A listener report comes well within half a bar of the playhead crossing a beat, at any tempo a
+       // song is played at. Live snaps a drag to a bar line, so a report a whole bar past is a drag.
+-      if (!anchor || anchor.position - beat >= barLength() / 2 - EPSILON) return null;
++      if (!anchor || anchor.position - beat >= barLength() - EPSILON) return null;
+       return anchor.at + ((beat - anchor.position) * 60_000) / tempo;
+     },
+   };

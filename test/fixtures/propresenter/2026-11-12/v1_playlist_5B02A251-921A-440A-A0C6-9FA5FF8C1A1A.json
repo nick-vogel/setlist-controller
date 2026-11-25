@@ -1,0 +1,263 @@
+{
+  "method": "GET",
+  "path": "/v1/playlist/5B02A251-921A-440A-A0C6-9FA5FF8C1A1A",
+  "status": 200,
+  "content_type": "application/json",
+  "body": {
+    "id": {
+      "uuid": "5B02A251-921A-440A-A0C6-9FA5FF8C1A1A",
+      "name": "November 15, 2026",
+      "index": 1
+    },
+    "items": [
+      {
+        "id": {
+          "uuid": "3E5EA9E7-E70E-4CC0-BD45-A264B50A86AB",
+          "name": "PRE-SERVICE",
+          "index": 0
+        },
+        "type": "header",
+        "is_hidden": false,
+        "is_pco": true,
+        "destination": "presentation"
+      },
+      {
+        "id": {
+          "uuid": "03E06F68-C338-4D6B-9189-DFAC1948FFAE",
+          "name": "Huddle",
+          "index": 1
+        },
+        "type": "placeholder",
+        "is_hidden": false,
+        "is_pco": true,
+        "destination": "presentation"
+      },
+      {
+        "id": {
+          "uuid": "914405F0-3C17-4456-833A-9692074CDBAA",
+          "name": "Loop",
+          "index": 2
+        },
+        "type": "presentation",
+        "is_hidden": false,
+        "is_pco": true,
+        "presentation_info": {
+          "presentation_uuid": "15C678B7-4F41-4CD7-8280-E240623ECBA8",
+          "arrangement_name": "Master",
+          "arrangement_uuid": "15C678B7-4F41-4CD7-8280-E240623ECBA8"
+        },
+        "destination": "presentation"
+      },
+      {
+        "id": {
+          "uuid": "2A28D2F6-0FF5-4BCD-9700-460CAEE4EFA0",
+          "name": "Countdown",
+          "index": 3
+        },
+        "type": "presentation",
+        "is_hidden": false,
+        "is_pco": true,
+        "presentation_info": {
+          "presentation_uuid": "DFF092C1-8840-49DC-9450-6F04A10FA358",
+          "arrangement_name": "Master",
+          "arrangement_uuid": "DFF092C1-8840-49DC-9450-6F04A10FA358"
+        },
+        "destination": "presentation"
+      },
+      {
+        "id": {
+          "uuid": "B3D7254F-D272-4952-B296-182AA0599DBE",
+          "name": "WORSHIP SET",
+          "index": 4
+        },
+        "type": "header",
+        "is_hidden": false,
+        "is_pco": true,
+        "destination": "presentation"
+      },
+      {
+        "id": {
+          "uuid": "500A3BB2-C2B8-4631-9D6E-C1CE0F8CCFD3",
+          "name": "This Is Amazing Grace - [ Full ]",
+          "index": 5
+        },
+        "type": "presentation",
+        "is_hidden": false,
+        "is_pco": true,
+        "presentation_info": {
+          "presentation_uuid": "3CE373C7-68E1-49F7-AADF-670D1712E759",
+          "arrangement_name": "Full",
+          "arrangement_uuid": "347E32CF-1FA9-4199-8245-F63B75119DC2"
+        },
+        "destination": "presentation"
+      },
+      {
+        "id": {
+          "uuid": "2E99DA32-0918-4823-9115-47EA89565012",
+          "name": "Yes and Amen",
+          "index": 6
+        },
+        "type": "presentation",
+        "is_hidden": false,
+        "is_pco": true,
+        "presentation_info": {
+          "presentation_uuid": "939B9443-1F81-4A44-9BB3-ED5CB53A895F",
+          "arrangement_name": "Master",
+          "arrangement_uuid": "939B9443-1F81-4A44-9BB3-ED5CB53A895F"
+        },
+        "destination": "presentation"
+      },
+      {
+        "id": {
+          "uuid": "C5459587-E285-4C4D-83C2-23B295D7FD96",
+          "name": "I Speak Jesus",
+          "index": 7
+        },
+        "type": "presentation",
+        "is_hidden": false,
+        "is_pco": true,
+        "presentation_info": {
+          "presentation_uuid": "145FCEE7-0A1A-4CC8-B300-F901B56E278B",
+          "arrangement_name": "Master",
+          "arrangement_uuid": "145FCEE7-0A1A-4CC8-B300-F901B56E278B"
+        },
+        "destination": "presentation"
+      },
+      {
+        "id": {
+          "uuid": "B8456FD3-8F38-429B-9F0D-2F094F56B9AD",
+          "name": "FACETIME",
+          "index": 8
+        },
+        "type": "header",
+        "is_hidden": false,
+        "is_pco": true,
+        "destination": "presentation"
+      },
+      {
+        "id": {
+          "uuid": "5B4341F3-6012-4835-A72D-382600B905E4",
+          "name": "Facetime",
+          "index": 9
+        },
+        "type": "presentation",
+        "is_hidden": false,
+        "is_pco": true,
+        "presentation_info": {
+          "presentation_uuid": "58C14FDA-CBDF-4A9C-900D-FE7D88E0E597",
+          "arrangement_name": "Master",
+          "arrangement_uuid": "58C14FDA-CBDF-4A9C-900D-FE7D88E0E597"
+        },
+        "destination": "presentation"
+      },
+      {
+        "id": {
+          "uuid": "5295922F-C1D5-415E-A30F-F99A79AF81F0",
+          "name": "SERVICE HOST",
+          "index": 10
+        },
+        "type": "header",
+        "is_hidden": false,
+        "is_pco": true,
+        "destination": "presentation"
+      },
+      {
+        "id": {
+          "uuid": "510839D2-FA85-443A-BACE-33CEF505D548",
+          "name": "MC",
+          "index": 11
+        },
+        "type": "presentation",
+        "is_hidden": false,
+        "is_pco": true,
+        "presentation_info": {
+          "presentation_uuid": "4CC08029-E3AF-43EB-AC89-DF1065966DA0",
+          "arrangement_name": "Master",
+          "arrangement_uuid": "4CC08029-E3AF-43EB-AC89-DF1065966DA0"
+        },
+        "destination": "presentation"
+      },
+      {
+        "id": {
+          "uuid": "6610E12D-9126-4A17-AA68-C417102C6A76",
+          "name": "MESSAGE",
+          "index": 12
+        },
+        "type": "header",
+        "is_hidden": false,
+        "is_pco": true,
+        "destination": "presentation"
+      },
+      {
+        "id": {
+          "uuid": "570C040F-ECF6-4127-BE24-73BB51CAAE8E",
+          "name": "Program/Offering",
+          "index": 13
+        },
+        "type": "placeholder",
+        "is_hidden": false,
+        "is_pco": true,
+        "destination": "presentation"
+      },
+      {
+        "id": {
+          "uuid": "A9ACD3AB-C4A1-48C4-B1E7-4E088461A4C9",
+          "name": "Test Message",
+          "index": 14
+        },
+        "type": "presentation",
+        "is_hidden": false,
+        "is_pco": true,
+        "presentation_info": {
+          "presentation_uuid": "EB4A51A6-8A84-4435-AA45-F50097F93BC6",
+          "arrangement_name": "Master",
+          "arrangement_uuid": "EB4A51A6-8A84-4435-AA45-F50097F93BC6"
+        },
+        "destination": "presentation"
+      },
+      {
+        "id": {
+          "uuid": "4D9632AC-83A4-46C2-9221-9E4C80569501",
+          "name": "Sample Message B",
+          "index": 15
+        },
+        "type": "presentation",
+        "is_hidden": false,
+        "is_pco": true,
+        "presentation_info": {
+          "presentation_uuid": "2D24702C-9B33-4140-9D97-72E2701C955C",
+          "arrangement_name": "Master",
+          "arrangement_uuid": "2D24702C-9B33-4140-9D97-72E2701C955C"
+        },
+        "destination": "presentation"
+      },
+      {
+        "id": {
+          "uuid": "BFE7F5AA-D102-468E-B143-5C9394D793DB",
+          "name": "CLOSE",
+          "index": 16
+        },
+        "type": "header",
+        "is_hidden": false,
+        "is_pco": true,
+        "destination": "presentation"
+      },
+      {
+        "id": {
+          "uuid": "3D09C055-20AE-40BB-8EE0-D0BE9AA21C66",
+          "name": "Dismissal",
+          "index": 17
+        },
+        "type": "presentation",
+        "is_hidden": false,
+        "is_pco": true,
+        "presentation_info": {
+          "presentation_uuid": "1D17EA27-82A0-4706-B6AC-2298AA4112A1",
+          "arrangement_name": "Master",
+          "arrangement_uuid": "1D17EA27-82A0-4706-B6AC-2298AA4112A1"
+        },
+        "destination": "presentation"
+      }
+    ]
+  }
+}

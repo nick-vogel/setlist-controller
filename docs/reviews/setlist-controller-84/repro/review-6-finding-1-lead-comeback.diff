@@ -1,0 +1,45 @@
+diff --git a/test/propresenter.test.ts b/test/propresenter.test.ts
+index 688dda7..c0f9fa7 100644
+--- a/test/propresenter.test.ts
++++ b/test/propresenter.test.ts
+@@ -6926,3 +6926,40 @@ const UNNAMED_12 = 'Holy Forever: unnamed group 12 (2 slides), no section shows
+ 
+ // A path as a pattern that matches it alone.
+ const escaped = (text: string) => text.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
++
++// Pre-PR review 6: a change whose send point, its beat less the lead, comes while ProPresenter is
++// offline, and ProPresenter back online before its beat. No slide change came due (beat 32 is not
++// reached), so the comeback must send nothing; the screen still shows Verse 1's first slide.
++describe('review 6: a lead change whose send point passes while offline', () => {
++  it('sends nothing when ProPresenter comes back armed before the beat of the change whose send point passed while offline', async () => {
++    vi.spyOn(console, 'error').mockImplementation(() => {});
++    pro = await startFakeProPresenter();
++    pro.listNovember8();
++    const started = await armedRig({ position: 8, playlist: NOVEMBER_8.id, cuePoints: SLIDES_CUE_POINTS, leadBeats: 'default' });
++    const { play, triggers, next } = started;
++    const clockTo = async (from: number, ms: number) => { await rig!.advanceConnected(from + ms - rig!.clock.now()); };
++    await pro.streaming();
++    await play(4, 12);
++    const reported = rig!.clock.now();
++    await clockTo(reported, 2 * BEAT_MS);
++    expect(await triggers()).toEqual([trigger(ANCIENT_GATES, 1)]);
++    // On to 28.5 in Verse 1; its change on beat 32 is sent on 30, 1.5 beats after this report.
++    await play(16.5, 28.5);
++    const inVerse = rig!.clock.now();
++    const offline = next((snapshot) => proRow(snapshot)?.connection === 'offline');
++    pro.dropStreams();
++    await offline;
++    // No poll may bring it back before the send point.
++    await pro.stop();
++    // Past the send point at 30, with the playhead still at 28.5, before beat 32.
++    await clockTo(inVerse, 1.5 * BEAT_MS + 10);
++    expect((await started.latest()).connection).toBe('offline');
++    await pro.start();
++    const online = next((snapshot) => proRow(snapshot)?.connection === 'online');
++    started.clock.advance(POLL_MS);
++    await online;
++    await pro.streaming();
++
++    expect(await triggers()).toEqual([trigger(ANCIENT_GATES, 1)]);
++  });
++});

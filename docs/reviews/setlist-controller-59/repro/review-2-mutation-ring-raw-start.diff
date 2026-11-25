@@ -1,0 +1,13 @@
+diff --git a/src/set-builder/checks.ts b/src/set-builder/checks.ts
+index c39400e..8dd6bd9 100644
+--- a/src/set-builder/checks.ts
++++ b/src/set-builder/checks.ts
+@@ -95,7 +95,7 @@ function slotProblems(song: Song, ending: number, next: Song, targets: Map<strin
+   const targetOf = stemTargets(stemMap);
+   const intro = hasStartingValues(next) ? findIntro(next) : undefined;
+   const ringsBeforeSilence = (start: number) =>
+-    intro === undefined || ringingBeat(song, ending, Number(valueOf(mainEvents(next, 'Tempo').start)), start) < ending + silenceAfter(next, intro);
++    intro === undefined || start < ending + silenceAfter(next, intro);
+   const rings = (stem: SongTrack) => stem.clips.some((clip) => Number(valueOf(clip, 'CurrentEnd')) > ending && ringsBeforeSilence(Number(valueOf(clip, 'CurrentStart'))));
+   return Object.keys(stemMap).flatMap((name) => {
+     const target = targets.get(name);

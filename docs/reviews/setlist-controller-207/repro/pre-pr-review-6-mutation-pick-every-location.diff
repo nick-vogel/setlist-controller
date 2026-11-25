@@ -1,0 +1,13 @@
+diff --git a/.claude/skills/build-set/SKILL.md b/.claude/skills/build-set/SKILL.md
+index dffbcf3..7655728 100644
+--- a/.claude/skills/build-set/SKILL.md
++++ b/.claude/skills/build-set/SKILL.md
+@@ -69,7 +69,7 @@ The flag grammar's source of truth is the `USAGE` text in `src/set-builder/main.
+        - `has a warped clip...`: Nick turns Warp off on the stem's clips.
+        - `has a clip with clip envelopes...`: Nick clears the envelopes of the stem's clips.
+        - `has session-view clips...`: Nick deletes the stem's clips in Session View.
+-       - `refers to a file outside the song's folder...`: a clip plays a file from outside the song's folder. Nick copies it in with Collect All and Save in Live's File menu. Its dialog copies into the song's project folder only the files from the locations picked in it (Packs, the User Library, other Projects, and elsewhere on the computer), so Nick picks every location the stem's files come from, the User Library and Packs included.
++       - `refers to a file outside the song's folder...`: a clip plays a file from outside the song's folder. Nick copies it in with Collect All and Save in Live's File menu. Its dialog copies into the song's project folder only the files from the locations picked in it (Packs, the User Library, other Projects, and elsewhere on the computer).
+    - 2: a usage error, a fault in the composed command. Fix it and go back to step 4.
+ 
+    Done when Nick has the output, and a fix for each problem.

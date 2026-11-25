@@ -1,0 +1,13 @@
+diff --git a/src/server/connections.ts b/src/server/connections.ts
+index d3061f7..bdfb4c5 100644
+--- a/src/server/connections.ts
++++ b/src/server/connections.ts
+@@ -167,7 +167,7 @@ export function startConnections({
+               status: (connection) => report(entry, connection),
+               changedByHand: () => changedByHand(entry),
+               state: (lines) => {
+-                if (entry.connection === 'online') set(entry, { state: lines ? [...lines] : [] });
++                if (entry.connection === 'online' && lines) set(entry, { state: [...lines] });
+               },
+             });
+           } catch (error) {

@@ -1,0 +1,805 @@
+{
+  "method": "GET",
+  "path": "/v1/presentation/E7B9D242-CF4D-40B2-A570-BA1AB638C967",
+  "status": 200,
+  "content_type": "application/json",
+  "body": {
+    "presentation": {
+      "id": {
+        "uuid": "E7B9D242-CF4D-40B2-A570-BA1AB638C967",
+        "name": "House of the Lord",
+        "index": 130
+      },
+      "groups": [
+        {
+          "name": "",
+          "color": {
+            "red": 0.3999999761581421,
+            "green": 0.3999999761581421,
+            "blue": 0.3999999761581421,
+            "alpha": 1
+          },
+          "slides": [
+            {
+              "enabled": true,
+              "notes": "",
+              "text": "",
+              "label": "OceanWaves_01_4K.mp4",
+              "size": {
+                "width": 1920,
+                "height": 1080
+              }
+            }
+          ],
+          "uuid": "5A862027-75D0-4DF4-9FFB-89899ECFC259"
+        },
+        {
+          "name": "Chorus",
+          "color": {
+            "red": 0.800000011920929,
+            "green": 0,
+            "blue": 0.30588236451148987,
+            "alpha": 1
+          },
+          "slides": [
+            {
+              "enabled": true,
+              "notes": "",
+              "text": "House of the Lord / Chorus / slide 1 line 1\nHouse of the Lord / Chorus / slide 1 line 2",
+              "label": "",
+              "size": {
+                "width": 1920,
+                "height": 1080
+              }
+            },
+            {
+              "enabled": true,
+              "notes": "",
+              "text": "House of the Lord / Chorus / slide 2 line 1\nHouse of the Lord / Chorus / slide 2 line 2",
+              "label": "",
+              "size": {
+                "width": 1920,
+                "height": 1080
+              }
+            },
+            {
+              "enabled": true,
+              "notes": "",
+              "text": "House of the Lord / Chorus / slide 3 line 1\nHouse of the Lord / Chorus / slide 3 line 2",
+              "label": "",
+              "size": {
+                "width": 1920,
+                "height": 1080
+              }
+            },
+            {
+              "enabled": true,
+              "notes": "",
+              "text": "House of the Lord / Chorus / slide 4 line 1\nHouse of the Lord / Chorus / slide 4 line 2​",
+              "label": "",
+              "size": {
+                "width": 1920,
+                "height": 1080
+              }
+            },
+            {
+              "enabled": true,
+              "notes": "",
+              "text": "House of the Lord / Chorus / slide 5 line 1",
+              "label": "",
+              "size": {
+                "width": 1920,
+                "height": 1080
+              }
+            },
+            {
+              "enabled": true,
+              "notes": "",
+              "text": "House of the Lord / Chorus / slide 3 line 1\nHouse of the Lord / Chorus / slide 3 line 2",
+              "label": "",
+              "size": {
+                "width": 1920,
+                "height": 1080
+              }
+            }
+          ],
+          "uuid": "F7CFF6BB-787F-4791-82CB-966E4F09A0E6"
+        },
+        {
+          "name": "Turnaround",
+          "color": {
+            "red": 0.1411764770746231,
+            "green": 0.7019608020782471,
+            "blue": 0.2980392277240753,
+            "alpha": 1
+          },
+          "slides": [
+            {
+              "enabled": true,
+              "notes": "",
+              "text": "House of the Lord / Turnaround / slide 1 line 1​",
+              "label": "",
+              "size": {
+                "width": 1920,
+                "height": 1080
+              }
+            }
+          ],
+          "uuid": "BF6F16D4-77C6-4A8A-B1C4-9B6726A44989"
+        },
+        {
+          "name": "Verse 1",
+          "color": {
+            "red": 0,
+            "green": 0.46666666865348816,
+            "blue": 0.800000011920929,
+            "alpha": 1
+          },
+          "slides": [
+            {
+              "enabled": true,
+              "notes": "",
+              "text": "House of the Lord / Verse 1 / slide 1 line 1\nHouse of the Lord / Verse 1 / slide 1 line 2",
+              "label": "",
+              "size": {
+                "width": 1920,
+                "height": 1080
+              }
+            },
+            {
+              "enabled": true,
+              "notes": "",
+              "text": "House of the Lord / Verse 1 / slide 2 line 1\nHouse of the Lord / Verse 1 / slide 2 line 2",
+              "label": "",
+              "size": {
+                "width": 1920,
+                "height": 1080
+              }
+            }
+          ],
+          "uuid": "A770DCEE-EA41-4E6A-8101-7688225189FB"
+        },
+        {
+          "name": "Verse 2",
+          "color": {
+            "red": 0,
+            "green": 0.3490196168422699,
+            "blue": 0.6000000238418579,
+            "alpha": 1
+          },
+          "slides": [
+            {
+              "enabled": true,
+              "notes": "",
+              "text": "House of the Lord / Verse 2 / slide 1 line 1\nHouse of the Lord / Verse 2 / slide 1 line 2",
+              "label": "",
+              "size": {
+                "width": 1920,
+                "height": 1080
+              }
+            },
+            {
+              "enabled": true,
+              "notes": "",
+              "text": "House of the Lord / Verse 2 / slide 2 line 1",
+              "label": "",
+              "size": {
+                "width": 1920,
+                "height": 1080
+              }
+            }
+          ],
+          "uuid": "0B8436B0-7FDD-4674-A061-70CCA8B55FF8"
+        },
+        {
+          "name": "Chorus",
+          "color": {
+            "red": 0.800000011920929,
+            "green": 0,
+            "blue": 0.30588236451148987,
+            "alpha": 1
+          },
+          "slides": [
+            {
+              "enabled": true,
+              "notes": "",
+              "text": "House of the Lord / Chorus / slide 1 line 1\nHouse of the Lord / Chorus / slide 1 line 2",
+              "label": "",
+              "size": {
+                "width": 1920,
+                "height": 1080
+              }
+            },
+            {
+              "enabled": true,
+              "notes": "",
+              "text": "House of the Lord / Chorus / slide 2 line 1\nHouse of the Lord / Chorus / slide 2 line 2",
+              "label": "",
+              "size": {
+                "width": 1920,
+                "height": 1080
+              }
+            },
+            {
+              "enabled": true,
+              "notes": "",
+              "text": "House of the Lord / Chorus / slide 3 line 1\nHouse of the Lord / Chorus / slide 3 line 2",
+              "label": "",
+              "size": {
+                "width": 1920,
+                "height": 1080
+              }
+            },
+            {
+              "enabled": true,
+              "notes": "",
+              "text": "House of the Lord / Chorus / slide 1 line 1\nHouse of the Lord / Chorus / slide 1 line 2",
+              "label": "",
+              "size": {
+                "width": 1920,
+                "height": 1080
+              }
+            },
+            {
+              "enabled": true,
+              "notes": "",
+              "text": "House of the Lord / Chorus / slide 5 line 1",
+              "label": "",
+              "size": {
+                "width": 1920,
+                "height": 1080
+              }
+            },
+            {
+              "enabled": true,
+              "notes": "",
+              "text": "House of the Lord / Chorus / slide 3 line 1\nHouse of the Lord / Chorus / slide 3 line 2",
+              "label": "",
+              "size": {
+                "width": 1920,
+                "height": 1080
+              }
+            }
+          ],
+          "uuid": "13E5AF44-5DCC-43ED-BA29-A00FEBF89151"
+        },
+        {
+          "name": "Refrain",
+          "color": {
+            "red": 0.3999999761581421,
+            "green": 0.3999999761581421,
+            "blue": 0.3999999761581421,
+            "alpha": 1
+          },
+          "slides": [
+            {
+              "enabled": true,
+              "notes": "",
+              "text": "House of the Lord / Turnaround / slide 1 line 1​",
+              "label": "",
+              "size": {
+                "width": 1920,
+                "height": 1080
+              }
+            }
+          ],
+          "uuid": "A174A253-1CF8-414F-9AF3-8DA432558327"
+        },
+        {
+          "name": "Verse 3",
+          "color": {
+            "red": 0,
+            "green": 0.23529411852359772,
+            "blue": 0.4000000059604645,
+            "alpha": 1
+          },
+          "slides": [
+            {
+              "enabled": true,
+              "notes": "",
+              "text": "House of the Lord / Verse 3 / slide 1 line 1\nHouse of the Lord / Verse 3 / slide 1 line 2",
+              "label": "",
+              "size": {
+                "width": 1920,
+                "height": 1080
+              }
+            },
+            {
+              "enabled": true,
+              "notes": "",
+              "text": "House of the Lord / Verse 3 / slide 2 line 1\nHouse of the Lord / Verse 3 / slide 2 line 2",
+              "label": "",
+              "size": {
+                "width": 1920,
+                "height": 1080
+              }
+            }
+          ],
+          "uuid": "45F9B774-5049-41D0-9B9D-EF95A69FD491"
+        },
+        {
+          "name": "Verse 4",
+          "color": {
+            "red": 0,
+            "green": 0.40784314274787903,
+            "blue": 0.7019608020782471,
+            "alpha": 1
+          },
+          "slides": [
+            {
+              "enabled": true,
+              "notes": "",
+              "text": "House of the Lord / Verse 4 / slide 1 line 1\nHouse of the Lord / Verse 4 / slide 1 line 2",
+              "label": "",
+              "size": {
+                "width": 1920,
+                "height": 1080
+              }
+            },
+            {
+              "enabled": true,
+              "notes": "",
+              "text": "House of the Lord / Verse 4 / slide 2 line 1",
+              "label": "",
+              "size": {
+                "width": 1920,
+                "height": 1080
+              }
+            }
+          ],
+          "uuid": "8D137EDA-82D0-4A5E-B516-004114A447ED"
+        },
+        {
+          "name": "Chorus",
+          "color": {
+            "red": 0.800000011920929,
+            "green": 0,
+            "blue": 0.30588236451148987,
+            "alpha": 1
+          },
+          "slides": [
+            {
+              "enabled": true,
+              "notes": "",
+              "text": "House of the Lord / Chorus / slide 1 line 1\nHouse of the Lord / Chorus / slide 1 line 2",
+              "label": "",
+              "size": {
+                "width": 1920,
+                "height": 1080
+              }
+            },
+            {
+              "enabled": true,
+              "notes": "",
+              "text": "House of the Lord / Chorus / slide 2 line 1\nHouse of the Lord / Chorus / slide 2 line 2",
+              "label": "",
+              "size": {
+                "width": 1920,
+                "height": 1080
+              }
+            },
+            {
+              "enabled": true,
+              "notes": "",
+              "text": "House of the Lord / Chorus / slide 3 line 1\nHouse of the Lord / Chorus / slide 3 line 2",
+              "label": "",
+              "size": {
+                "width": 1920,
+                "height": 1080
+              }
+            },
+            {
+              "enabled": true,
+              "notes": "",
+              "text": "House of the Lord / Chorus / slide 1 line 1\nHouse of the Lord / Chorus / slide 1 line 2",
+              "label": "",
+              "size": {
+                "width": 1920,
+                "height": 1080
+              }
+            },
+            {
+              "enabled": true,
+              "notes": "",
+              "text": "House of the Lord / Chorus / slide 5 line 1",
+              "label": "",
+              "size": {
+                "width": 1920,
+                "height": 1080
+              }
+            },
+            {
+              "enabled": true,
+              "notes": "",
+              "text": "House of the Lord / Chorus / slide 3 line 1\nHouse of the Lord / Chorus / slide 3 line 2",
+              "label": "",
+              "size": {
+                "width": 1920,
+                "height": 1080
+              }
+            }
+          ],
+          "uuid": "909A547A-B557-4A4C-A898-183F2F647A78"
+        },
+        {
+          "name": "Vamp",
+          "color": {
+            "red": 0.1411764770746231,
+            "green": 0.7019608020782471,
+            "blue": 0.2980392277240753,
+            "alpha": 1
+          },
+          "slides": [
+            {
+              "enabled": true,
+              "notes": "",
+              "text": "​",
+              "label": "",
+              "size": {
+                "width": 1920,
+                "height": 1080
+              }
+            }
+          ],
+          "uuid": "3995041F-03CF-4A4C-91DC-7279D879F016"
+        },
+        {
+          "name": "Bridge",
+          "color": {
+            "red": 0.4627451002597809,
+            "green": 0,
+            "blue": 0.800000011920929,
+            "alpha": 1
+          },
+          "slides": [
+            {
+              "enabled": true,
+              "notes": "",
+              "text": "House of the Lord / Bridge / slide 1 line 1\nHouse of the Lord / Bridge / slide 1 line 2",
+              "label": "",
+              "size": {
+                "width": 1920,
+                "height": 1080
+              }
+            },
+            {
+              "enabled": true,
+              "notes": "",
+              "text": "House of the Lord / Bridge / slide 2 line 1\nHouse of the Lord / Bridge / slide 2 line 2",
+              "label": "",
+              "size": {
+                "width": 1920,
+                "height": 1080
+              }
+            },
+            {
+              "enabled": true,
+              "notes": "",
+              "text": "House of the Lord / Bridge / slide 3 line 1\nHouse of the Lord / Bridge / slide 3 line 2",
+              "label": "",
+              "size": {
+                "width": 1920,
+                "height": 1080
+              }
+            },
+            {
+              "enabled": true,
+              "notes": "",
+              "text": "House of the Lord / Bridge / slide 4 line 1",
+              "label": "",
+              "size": {
+                "width": 1920,
+                "height": 1080
+              }
+            }
+          ],
+          "uuid": "3DB323F9-DE96-48CA-A5DC-5BE1B16DFE83"
+        },
+        {
+          "name": "Bridge",
+          "color": {
+            "red": 0.4627451002597809,
+            "green": 0,
+            "blue": 0.800000011920929,
+            "alpha": 1
+          },
+          "slides": [
+            {
+              "enabled": true,
+              "notes": "",
+              "text": "House of the Lord / Bridge / slide 1 line 1\nHouse of the Lord / Bridge / slide 1 line 2",
+              "label": "",
+              "size": {
+                "width": 1920,
+                "height": 1080
+              }
+            },
+            {
+              "enabled": true,
+              "notes": "",
+              "text": "House of the Lord / Bridge / slide 2 line 1\nHouse of the Lord / Bridge / slide 2 line 2",
+              "label": "",
+              "size": {
+                "width": 1920,
+                "height": 1080
+              }
+            },
+            {
+              "enabled": true,
+              "notes": "",
+              "text": "House of the Lord / Bridge / slide 3 line 1\nHouse of the Lord / Bridge / slide 3 line 2​",
+              "label": "",
+              "size": {
+                "width": 1920,
+                "height": 1080
+              }
+            },
+            {
+              "enabled": true,
+              "notes": "",
+              "text": "House of the Lord / Bridge / slide 4 line 1",
+              "label": "",
+              "size": {
+                "width": 1920,
+                "height": 1080
+              }
+            }
+          ],
+          "uuid": "CD4F273E-71D5-4922-B593-E43AF87CF65E"
+        },
+        {
+          "name": "Chorus",
+          "color": {
+            "red": 0.800000011920929,
+            "green": 0,
+            "blue": 0.30588236451148987,
+            "alpha": 1
+          },
+          "slides": [
+            {
+              "enabled": true,
+              "notes": "",
+              "text": "House of the Lord / Chorus / slide 1 line 1\nHouse of the Lord / Chorus / slide 1 line 2",
+              "label": "",
+              "size": {
+                "width": 1920,
+                "height": 1080
+              }
+            },
+            {
+              "enabled": true,
+              "notes": "",
+              "text": "House of the Lord / Chorus / slide 2 line 1\nHouse of the Lord / Chorus / slide 2 line 2",
+              "label": "",
+              "size": {
+                "width": 1920,
+                "height": 1080
+              }
+            },
+            {
+              "enabled": true,
+              "notes": "",
+              "text": "House of the Lord / Chorus / slide 3 line 1\nHouse of the Lord / Chorus / slide 3 line 2",
+              "label": "",
+              "size": {
+                "width": 1920,
+                "height": 1080
+              }
+            },
+            {
+              "enabled": true,
+              "notes": "",
+              "text": "House of the Lord / Chorus / slide 1 line 1\nHouse of the Lord / Chorus / slide 1 line 2",
+              "label": "",
+              "size": {
+                "width": 1920,
+                "height": 1080
+              }
+            },
+            {
+              "enabled": true,
+              "notes": "",
+              "text": "House of the Lord / Chorus / slide 5 line 1",
+              "label": "",
+              "size": {
+                "width": 1920,
+                "height": 1080
+              }
+            },
+            {
+              "enabled": true,
+              "notes": "",
+              "text": "House of the Lord / Chorus / slide 3 line 1\nHouse of the Lord / Chorus / slide 3 line 2",
+              "label": "",
+              "size": {
+                "width": 1920,
+                "height": 1080
+              }
+            }
+          ],
+          "uuid": "A41EEA64-57EE-444A-9448-9E5EF25D28D7"
+        },
+        {
+          "name": "Chorus",
+          "color": {
+            "red": 0.800000011920929,
+            "green": 0,
+            "blue": 0.30588236451148987,
+            "alpha": 1
+          },
+          "slides": [
+            {
+              "enabled": true,
+              "notes": "",
+              "text": "House of the Lord / Chorus / slide 1 line 1\nHouse of the Lord / Chorus / slide 1 line 2",
+              "label": "",
+              "size": {
+                "width": 1920,
+                "height": 1080
+              }
+            },
+            {
+              "enabled": true,
+              "notes": "",
+              "text": "House of the Lord / Chorus / slide 2 line 1\nHouse of the Lord / Chorus / slide 2 line 2",
+              "label": "",
+              "size": {
+                "width": 1920,
+                "height": 1080
+              }
+            },
+            {
+              "enabled": true,
+              "notes": "",
+              "text": "House of the Lord / Chorus / slide 3 line 1\nHouse of the Lord / Chorus / slide 3 line 2",
+              "label": "",
+              "size": {
+                "width": 1920,
+                "height": 1080
+              }
+            },
+            {
+              "enabled": true,
+              "notes": "",
+              "text": "House of the Lord / Chorus / slide 1 line 1\nHouse of the Lord / Chorus / slide 1 line 2",
+              "label": "",
+              "size": {
+                "width": 1920,
+                "height": 1080
+              }
+            },
+            {
+              "enabled": true,
+              "notes": "",
+              "text": "House of the Lord / Chorus / slide 5 line 1",
+              "label": "",
+              "size": {
+                "width": 1920,
+                "height": 1080
+              }
+            },
+            {
+              "enabled": true,
+              "notes": "",
+              "text": "House of the Lord / Chorus / slide 3 line 1\nHouse of the Lord / Chorus / slide 3 line 2",
+              "label": "",
+              "size": {
+                "width": 1920,
+                "height": 1080
+              }
+            }
+          ],
+          "uuid": "6740E546-6831-4EA7-8276-0004A6593A52"
+        },
+        {
+          "name": "Outro",
+          "color": {
+            "red": 0.4941176474094391,
+            "green": 0.4627451002597809,
+            "blue": 0.09803921729326248,
+            "alpha": 1
+          },
+          "slides": [
+            {
+              "enabled": true,
+              "notes": "",
+              "text": "​ ​ ​ ​",
+              "label": "",
+              "size": {
+                "width": 1920,
+                "height": 1080
+              }
+            }
+          ],
+          "uuid": "F0A689C9-6BDD-46B1-A7B1-05692A17E637"
+        },
+        {
+          "name": "Ending",
+          "color": {
+            "red": 0.6000000238418579,
+            "green": 0.5607843399047852,
+            "blue": 0.12156862765550613,
+            "alpha": 1
+          },
+          "slides": [
+            {
+              "enabled": true,
+              "notes": "",
+              "text": "​",
+              "label": "",
+              "size": {
+                "width": 1920,
+                "height": 1080
+              }
+            }
+          ],
+          "uuid": "C175ED28-F631-4DE7-9BAC-08690EA6FF6D"
+        }
+      ],
+      "has_timeline": false,
+      "presentation_path": "ProPresenter/Libraries/Default/House of the Lord.pro",
+      "destination": "presentation",
+      "arrangements": [
+        {
+          "id": {
+            "uuid": "E7B9D242-CF4D-40B2-A570-BA1AB638C967",
+            "name": "Master",
+            "index": 0
+          },
+          "groups": [
+            "5A862027-75D0-4DF4-9FFB-89899ECFC259",
+            "F7CFF6BB-787F-4791-82CB-966E4F09A0E6",
+            "BF6F16D4-77C6-4A8A-B1C4-9B6726A44989",
+            "A770DCEE-EA41-4E6A-8101-7688225189FB",
+            "0B8436B0-7FDD-4674-A061-70CCA8B55FF8",
+            "13E5AF44-5DCC-43ED-BA29-A00FEBF89151",
+            "A174A253-1CF8-414F-9AF3-8DA432558327",
+            "45F9B774-5049-41D0-9B9D-EF95A69FD491",
+            "8D137EDA-82D0-4A5E-B516-004114A447ED",
+            "909A547A-B557-4A4C-A898-183F2F647A78",
+            "3995041F-03CF-4A4C-91DC-7279D879F016",
+            "3DB323F9-DE96-48CA-A5DC-5BE1B16DFE83",
+            "CD4F273E-71D5-4922-B593-E43AF87CF65E",
+            "A41EEA64-57EE-444A-9448-9E5EF25D28D7",
+            "6740E546-6831-4EA7-8276-0004A6593A52",
+            "F0A689C9-6BDD-46B1-A7B1-05692A17E637",
+            "C175ED28-F631-4DE7-9BAC-08690EA6FF6D"
+          ],
+          "total_cues": 52
+        },
+        {
+          "id": {
+            "uuid": "297C3E34-4762-41D7-ACA8-3C602B82994B",
+            "name": "Full",
+            "index": 1
+          },
+          "groups": [
+            "5A862027-75D0-4DF4-9FFB-89899ECFC259",
+            "F7CFF6BB-787F-4791-82CB-966E4F09A0E6",
+            "BF6F16D4-77C6-4A8A-B1C4-9B6726A44989",
+            "A770DCEE-EA41-4E6A-8101-7688225189FB",
+            "0B8436B0-7FDD-4674-A061-70CCA8B55FF8",
+            "13E5AF44-5DCC-43ED-BA29-A00FEBF89151",
+            "A174A253-1CF8-414F-9AF3-8DA432558327",
+            "45F9B774-5049-41D0-9B9D-EF95A69FD491",
+            "8D137EDA-82D0-4A5E-B516-004114A447ED",
+            "909A547A-B557-4A4C-A898-183F2F647A78",
+            "3995041F-03CF-4A4C-91DC-7279D879F016",
+            "3DB323F9-DE96-48CA-A5DC-5BE1B16DFE83",
+            "CD4F273E-71D5-4922-B593-E43AF87CF65E",
+            "A41EEA64-57EE-444A-9448-9E5EF25D28D7",
+            "6740E546-6831-4EA7-8276-0004A6593A52",
+            "F0A689C9-6BDD-46B1-A7B1-05692A17E637",
+            "F0A689C9-6BDD-46B1-A7B1-05692A17E637",
+            "C175ED28-F631-4DE7-9BAC-08690EA6FF6D"
+          ],
+          "total_cues": 53
+        }
+      ],
+      "current_arrangement": "E7B9D242-CF4D-40B2-A570-BA1AB638C967",
+      "type": "multitracks",
+      "is_authorized": false,
+      "total_cues": 52
+    }
+  }
+}

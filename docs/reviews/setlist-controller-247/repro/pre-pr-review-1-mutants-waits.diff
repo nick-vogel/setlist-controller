@@ -1,0 +1,43 @@
+diff --git a/src/set-builder/eos.ts b/src/set-builder/eos.ts
+index 9145ce1..147b93d 100644
+--- a/src/set-builder/eos.ts
++++ b/src/set-builder/eos.ts
+@@ -95,7 +95,7 @@ export type EosCue = { number: string; label: string };
+ const COMMAND_LINE = '/eos/out/cmd';
+ const SAVED = '/eos/out/event/show/saved';
+ // The gap between the key messages of a save, as the recording of the one save over OSC on record had them.
+-const KEY_GAP_MS = 500;
++const KEY_GAP_MS = 0;
+ 
+ // Connects to Eos, and waits for its command line, which ends what it sends on a connect. Throws EosSilent when none
+ // comes within the limit.
+@@ -202,7 +202,6 @@ export async function connectEos({ host, port }: EosAddress, limits: EosLimits):
+     copyCue: (list, from, to) => command(`Cue ${list} / ${from} Copy_To Cue ${list} / ${to}#`),
+     async goToCue(list, cue) {
+       await command(`Go_To_Cue ${list} / ${cue} Time 0#`);
+-      await wait(limits.settleMs);
+     },
+     channel: (channel) =>
+       ask(`/eos/get/params/${channel}`, [], ({ address, args }) => {
+@@ -233,7 +232,7 @@ export async function connectEos({ host, port }: EosAddress, limits: EosLimits):
+         send('/eos/key/shift', [0.0]);
+       }
+       // The event comes a tenth of a second after Update goes down, so it is here before the keys are released.
+-      return saved || (await awaitMessage((message) => (message.address === SAVED ? true : undefined), limits.savedMs)) === true;
++      return saved;
+     },
+     close,
+   };
+diff --git a/src/set-builder/lights.ts b/src/set-builder/lights.ts
+index efb89ee..9a5cc19 100644
+--- a/src/set-builder/lights.ts
++++ b/src/set-builder/lights.ts
+@@ -173,7 +173,7 @@ async function writeSongCues(
+   const leftOf = async <T>(read: () => Promise<T[]>): Promise<T[]> => {
+     const until = Date.now() + limits.answerMs;
+     let left = await read();
+-    while (left.length > 0 && Date.now() < until) {
++    while (false) {
+       await wait(READ_BACK_GAP_MS);
+       left = await read();
+     }

@@ -1,0 +1,11 @@
+--- a/src/server/fade-out.ts
++++ b/src/server/fade-out.ts
+@@ -188,7 +188,7 @@
+     close: () => {
+       closed = true;
+       stopStepping();
+-      if (state.kind === 'stepping' || (state.kind === 'lost' && clock.now() - state.since <= KEPT_RESTORE_MS)) restore(state);
++      if (state.kind === 'stepping' || (state.kind === 'lost' && clock.now() - state.since < KEPT_RESTORE_MS)) restore(state);
+       state = { kind: 'idle' };
+     },
+   };

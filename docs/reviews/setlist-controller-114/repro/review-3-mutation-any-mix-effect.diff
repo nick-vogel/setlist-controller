@@ -1,0 +1,11 @@
+--- a/src/server/atem-switcher.ts
++++ b/src/server/atem-switcher.ts
+@@ -50,7 +50,7 @@
+   // The program inputs the latest packet put on the first mix effect, in order.
+   let packet: number[] = [];
+   atem.on('receivedCommands', (commands) => {
+-    packet = commands.flatMap((command) => (command instanceof Commands.ProgramInputUpdateCommand && command.mixEffect === 0 ? [command.properties.source] : []));
++    packet = commands.flatMap((command) => (command instanceof Commands.ProgramInputUpdateCommand ? [command.properties.source] : []));
+   });
+   // Each program input the packet carried, or the input on program when none was kept, as for a
+   // state change that came some other way.

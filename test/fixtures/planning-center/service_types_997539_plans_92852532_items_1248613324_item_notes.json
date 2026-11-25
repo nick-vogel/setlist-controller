@@ -1,0 +1,35 @@
+{
+  "path": "/service_types/997539/plans/92852532/items/1248613324/item_notes",
+  "status": 200,
+  "body": {
+    "links": {
+      "self": "https://api.planningcenteronline.com/services/v2/service_types/997539/plans/92852532/items/1248613324/item_notes"
+    },
+    "data": [
+      {
+        "type": "ItemNote",
+        "id": "411770502",
+        "attributes": {
+          "category_name": "Audio/Visual",
+          "content": "Overlap"
+        },
+        "relationships": {
+          "item": {
+            "data": {
+              "type": "Item",
+              "id": "1248613324"
+            }
+          }
+        }
+      }
+    ],
+    "included": [],
+    "meta": {
+      "count": 1,
+      "total_count": 1,
+      "can_include": [
+        "item_note_category"
+      ]
+    }
+  }
+}

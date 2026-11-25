@@ -1,0 +1,13 @@
+diff --git a/src/server/atem.ts b/src/server/atem.ts
+index 90363d8..5a3afae 100644
+--- a/src/server/atem.ts
++++ b/src/server/atem.ts
+@@ -101,7 +101,7 @@ function atemTarget(switcher: SwitcherClient, clock: Pick<Clock, 'now'>, host: s
+   const ownCut = (input: number) => {
+     const now = clock.now();
+     sent = sent.filter(({ at }) => now - at <= OWN_CUT_WINDOW_MS);
+-    const own = sent.findIndex((cut) => cut.input === input);
++    const own = sent.findIndex(() => true);
+     if (own >= 0) sent.splice(own, 1);
+     return own >= 0;
+   };

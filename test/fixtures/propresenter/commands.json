@@ -1,0 +1,1090 @@
+[
+  {
+    "label": "group trigger by uuid (first Chorus)",
+    "method": "GET",
+    "path": "/v1/presentation/E7B9D242-CF4D-40B2-A570-BA1AB638C967/group/F7CFF6BB-787F-4791-82CB-966E4F09A0E6/trigger",
+    "status": 403,
+    "sent": 15888,
+    "answered": 15938,
+    "body": ""
+  },
+  {
+    "label": "next slide",
+    "method": "GET",
+    "path": "/v1/presentation/active/next/trigger",
+    "status": 404,
+    "sent": 18943,
+    "answered": 18946,
+    "body": ""
+  },
+  {
+    "label": "previous slide",
+    "method": "GET",
+    "path": "/v1/presentation/active/previous/trigger",
+    "status": 404,
+    "sent": 21949,
+    "answered": 21951,
+    "body": ""
+  },
+  {
+    "label": "group trigger by uuid (Verse 1)",
+    "method": "GET",
+    "path": "/v1/presentation/E7B9D242-CF4D-40B2-A570-BA1AB638C967/group/A770DCEE-EA41-4E6A-8101-7688225189FB/trigger",
+    "status": 403,
+    "sent": 24957,
+    "answered": 24995,
+    "body": ""
+  },
+  {
+    "label": "group trigger by name (Chorus, a name four groups share)",
+    "method": "GET",
+    "path": "/v1/presentation/E7B9D242-CF4D-40B2-A570-BA1AB638C967/group/Chorus/trigger",
+    "status": 403,
+    "sent": 28000,
+    "answered": 28017,
+    "body": ""
+  },
+  {
+    "label": "group trigger by name (Verse 2)",
+    "method": "GET",
+    "path": "/v1/presentation/E7B9D242-CF4D-40B2-A570-BA1AB638C967/group/Verse%202/trigger",
+    "status": 403,
+    "sent": 31019,
+    "answered": 31058,
+    "body": ""
+  },
+  {
+    "label": "group trigger by uuid (third Chorus)",
+    "method": "GET",
+    "path": "/v1/presentation/E7B9D242-CF4D-40B2-A570-BA1AB638C967/group/909A547A-B557-4A4C-A898-183F2F647A78/trigger",
+    "status": 403,
+    "sent": 34063,
+    "answered": 34073,
+    "body": ""
+  },
+  {
+    "label": "group trigger, no such group",
+    "method": "GET",
+    "path": "/v1/presentation/E7B9D242-CF4D-40B2-A570-BA1AB638C967/group/Pre-Chorus%209/trigger",
+    "status": 403,
+    "sent": 37078,
+    "answered": 37091,
+    "body": ""
+  },
+  {
+    "label": "clear slide",
+    "method": "GET",
+    "path": "/v1/clear/layer/slide",
+    "status": 204,
+    "sent": 40095,
+    "answered": 40110,
+    "body": ""
+  },
+  {
+    "label": "next slide after clear",
+    "method": "GET",
+    "path": "/v1/presentation/active/next/trigger",
+    "status": 404,
+    "sent": 43114,
+    "answered": 43115,
+    "body": ""
+  },
+  {
+    "label": "clear slide again",
+    "method": "GET",
+    "path": "/v1/clear/layer/slide",
+    "status": 204,
+    "sent": 46121,
+    "answered": 46166,
+    "body": ""
+  },
+  {
+    "label": "authorized: group trigger by uuid (Verse 1)",
+    "method": "GET",
+    "path": "/v1/presentation/894B40A0-42FE-411E-B915-F1919C6DA33E/group/3467E660-556A-47F0-9FFF-FDCF9F030F0C/trigger",
+    "status": 404,
+    "sent": 113435,
+    "answered": 114630,
+    "body": ""
+  },
+  {
+    "label": "authorized: next slide",
+    "method": "GET",
+    "path": "/v1/presentation/active/next/trigger",
+    "status": 404,
+    "sent": 117638,
+    "answered": 117642,
+    "body": ""
+  },
+  {
+    "label": "authorized: next slide (past the group end)",
+    "method": "GET",
+    "path": "/v1/presentation/active/next/trigger",
+    "status": 404,
+    "sent": 120645,
+    "answered": 120648,
+    "body": ""
+  },
+  {
+    "label": "authorized: previous slide",
+    "method": "GET",
+    "path": "/v1/presentation/active/previous/trigger",
+    "status": 404,
+    "sent": 123655,
+    "answered": 123659,
+    "body": ""
+  },
+  {
+    "label": "authorized: group trigger by uuid (Chorus)",
+    "method": "GET",
+    "path": "/v1/presentation/894B40A0-42FE-411E-B915-F1919C6DA33E/group/267C8258-8CC5-4E41-B0B4-73D410B2B816/trigger",
+    "status": 404,
+    "sent": 126665,
+    "answered": 126722,
+    "body": ""
+  },
+  {
+    "label": "authorized: group trigger by uuid (Chorus again, a loop wrap)",
+    "method": "GET",
+    "path": "/v1/presentation/894B40A0-42FE-411E-B915-F1919C6DA33E/group/267C8258-8CC5-4E41-B0B4-73D410B2B816/trigger",
+    "status": 404,
+    "sent": 129728,
+    "answered": 129807,
+    "body": ""
+  },
+  {
+    "label": "authorized: group trigger by name (Bridge 1, a name two groups share)",
+    "method": "GET",
+    "path": "/v1/presentation/894B40A0-42FE-411E-B915-F1919C6DA33E/group/Bridge%201/trigger",
+    "status": 204,
+    "sent": 132810,
+    "answered": 136245,
+    "body": ""
+  },
+  {
+    "label": "authorized: group trigger by uuid (second Bridge 1)",
+    "method": "GET",
+    "path": "/v1/presentation/894B40A0-42FE-411E-B915-F1919C6DA33E/group/EED17593-188A-4FCA-963E-836CBEC30636/trigger",
+    "status": 404,
+    "sent": 139250,
+    "answered": 139679,
+    "body": ""
+  },
+  {
+    "label": "authorized: group trigger by name (Pre Chorus)",
+    "method": "GET",
+    "path": "/v1/presentation/894B40A0-42FE-411E-B915-F1919C6DA33E/group/Pre%20Chorus/trigger",
+    "status": 204,
+    "sent": 142684,
+    "answered": 145209,
+    "body": ""
+  },
+  {
+    "label": "authorized: group trigger by name (pre chorus, lower case)",
+    "method": "GET",
+    "path": "/v1/presentation/894B40A0-42FE-411E-B915-F1919C6DA33E/group/pre%20chorus/trigger",
+    "status": 404,
+    "sent": 148210,
+    "answered": 148729,
+    "body": ""
+  },
+  {
+    "label": "authorized: group trigger, no such group",
+    "method": "GET",
+    "path": "/v1/presentation/894B40A0-42FE-411E-B915-F1919C6DA33E/group/Pre-Chorus%209/trigger",
+    "status": 404,
+    "sent": 151734,
+    "answered": 152017,
+    "body": ""
+  },
+  {
+    "label": "authorized: group trigger, no such presentation",
+    "method": "GET",
+    "path": "/v1/presentation/00000000-0000-0000-0000-000000000000/group/Chorus/trigger",
+    "status": 404,
+    "sent": 155018,
+    "answered": 155056,
+    "body": ""
+  },
+  {
+    "label": "authorized: clear slide",
+    "method": "GET",
+    "path": "/v1/clear/layer/slide",
+    "status": 204,
+    "sent": 158061,
+    "answered": 158130,
+    "body": ""
+  },
+  {
+    "label": "authorized: next slide after clear",
+    "method": "GET",
+    "path": "/v1/presentation/active/next/trigger",
+    "status": 404,
+    "sent": 161135,
+    "answered": 161138,
+    "body": ""
+  },
+  {
+    "label": "authorized: group trigger by uuid (Ending, the last group)",
+    "method": "GET",
+    "path": "/v1/presentation/894B40A0-42FE-411E-B915-F1919C6DA33E/group/1989820F-8AC7-4FE5-8374-AF10E2C4338C/trigger",
+    "status": 404,
+    "sent": 164141,
+    "answered": 164177,
+    "body": ""
+  },
+  {
+    "label": "authorized: next slide at the last slide",
+    "method": "GET",
+    "path": "/v1/presentation/active/next/trigger",
+    "status": 404,
+    "sent": 167183,
+    "answered": 167184,
+    "body": ""
+  },
+  {
+    "label": "authorized: clear slide (end)",
+    "method": "GET",
+    "path": "/v1/clear/layer/slide",
+    "status": 204,
+    "sent": 170189,
+    "answered": 170261,
+    "body": ""
+  },
+  {
+    "label": "probe: group trigger by name (Verse 1)",
+    "method": "GET",
+    "path": "/v1/presentation/894B40A0-42FE-411E-B915-F1919C6DA33E/group/Verse%201/trigger",
+    "status": 204,
+    "sent": 196139,
+    "answered": 203909,
+    "body": ""
+  },
+  {
+    "label": "probe: active presentation",
+    "method": "GET",
+    "path": "/v1/presentation/active",
+    "status": 200,
+    "sent": 207911,
+    "answered": 208158,
+    "body": {
+      "presentation": {
+        "id": {
+          "uuid": "894B40A0-42FE-411E-B915-F1919C6DA33E",
+          "name": "There Is Freedom",
+          "index": 0
+        },
+        "groups": [
+          {
+            "name": "Intro",
+            "color": {
+              "red": 0,
+              "green": 0,
+              "blue": 0,
+              "alpha": 0
+            },
+            "slides": [
+              {
+                "enabled": true,
+                "notes": "",
+                "text": "\r\r\r",
+                "label": "Cloudscape_07_4K.mp4",
+                "size": {
+                  "width": 1920,
+                  "height": 1080
+                }
+              }
+            ],
+            "uuid": "81AD0561-0D3E-4410-95A2-2A36794A2A4F"
+          },
+          {
+            "name": "Verse 1",
+            "color": {
+              "red": 0,
+              "green": 0,
+              "blue": 0,
+              "alpha": 0
+            },
+            "slides": [
+              {
+                "enabled": true,
+                "notes": "",
+                "text": "There Is Freedom / Verse 1 / slide 1 line 1\nThere Is Freedom / Verse 1 / slide 1 line 2",
+                "label": "",
+                "size": {
+                  "width": 1920,
+                  "height": 1080
+                }
+              },
+              {
+                "enabled": true,
+                "notes": "",
+                "text": "There Is Freedom / Verse 1 / slide 2 line 1\nThere Is Freedom / Verse 1 / slide 2 line 2",
+                "label": "",
+                "size": {
+                  "width": 1920,
+                  "height": 1080
+                }
+              }
+            ],
+            "uuid": "3467E660-556A-47F0-9FFF-FDCF9F030F0C"
+          },
+          {
+            "name": "Verse 2",
+            "color": {
+              "red": 0,
+              "green": 0,
+              "blue": 0,
+              "alpha": 0
+            },
+            "slides": [
+              {
+                "enabled": true,
+                "notes": "",
+                "text": "There Is Freedom / Verse 2 / slide 1 line 1\nThere Is Freedom / Verse 2 / slide 1 line 2",
+                "label": "",
+                "size": {
+                  "width": 1920,
+                  "height": 1080
+                }
+              },
+              {
+                "enabled": true,
+                "notes": "",
+                "text": "There Is Freedom / Verse 1 / slide 2 line 1\nThere Is Freedom / Verse 1 / slide 2 line 2",
+                "label": "",
+                "size": {
+                  "width": 1920,
+                  "height": 1080
+                }
+              }
+            ],
+            "uuid": "253C73C1-1524-4DE6-9505-42C6A7BD0EB7"
+          },
+          {
+            "name": "Pre Chorus",
+            "color": {
+              "red": 0,
+              "green": 0,
+              "blue": 0,
+              "alpha": 0
+            },
+            "slides": [
+              {
+                "enabled": true,
+                "notes": "",
+                "text": "There Is Freedom / Pre Chorus / slide 1 line 1",
+                "label": "",
+                "size": {
+                  "width": 1920,
+                  "height": 1080
+                }
+              }
+            ],
+            "uuid": "20069D38-F47D-4D3B-B8EB-A7792772EE6D"
+          },
+          {
+            "name": "Chorus",
+            "color": {
+              "red": 0,
+              "green": 0,
+              "blue": 0,
+              "alpha": 0
+            },
+            "slides": [
+              {
+                "enabled": true,
+                "notes": "",
+                "text": "There Is Freedom / Chorus / slide 1 line 1\nThere Is Freedom / Chorus / slide 1 line 2",
+                "label": "",
+                "size": {
+                  "width": 1920,
+                  "height": 1080
+                }
+              },
+              {
+                "enabled": true,
+                "notes": "",
+                "text": "There Is Freedom / Chorus / slide 2 line 1\nThere Is Freedom / Chorus / slide 2 line 2\nThere Is Freedom / Chorus / slide 2 line 3​",
+                "label": "",
+                "size": {
+                  "width": 1920,
+                  "height": 1080
+                }
+              },
+              {
+                "enabled": true,
+                "notes": "",
+                "text": "There Is Freedom / Chorus / slide 3 line 1\nThere Is Freedom / Chorus / slide 3 line 2",
+                "label": "",
+                "size": {
+                  "width": 1920,
+                  "height": 1080
+                }
+              },
+              {
+                "enabled": true,
+                "notes": "",
+                "text": "There Is Freedom / Chorus / slide 4 line 1​\nThere Is Freedom / Chorus / slide 4 line 2",
+                "label": "",
+                "size": {
+                  "width": 1920,
+                  "height": 1080
+                }
+              }
+            ],
+            "uuid": "267C8258-8CC5-4E41-B0B4-73D410B2B816"
+          },
+          {
+            "name": "Turnaround",
+            "color": {
+              "red": 0,
+              "green": 0,
+              "blue": 0,
+              "alpha": 0
+            },
+            "slides": [
+              {
+                "enabled": true,
+                "notes": "",
+                "text": "\r\r\r",
+                "label": "",
+                "size": {
+                  "width": 1920,
+                  "height": 1080
+                }
+              }
+            ],
+            "uuid": "747BA303-7F3E-4866-8FB5-FDE6B1283992"
+          },
+          {
+            "name": "Verse 3",
+            "color": {
+              "red": 0,
+              "green": 0,
+              "blue": 0,
+              "alpha": 0
+            },
+            "slides": [
+              {
+                "enabled": true,
+                "notes": "",
+                "text": "There Is Freedom / Verse 3 / slide 1 line 1\nThere Is Freedom / Verse 3 / slide 1 line 2",
+                "label": "",
+                "size": {
+                  "width": 1920,
+                  "height": 1080
+                }
+              },
+              {
+                "enabled": true,
+                "notes": "",
+                "text": "There Is Freedom / Verse 1 / slide 2 line 1\nThere Is Freedom / Verse 1 / slide 2 line 2",
+                "label": "",
+                "size": {
+                  "width": 1920,
+                  "height": 1080
+                }
+              }
+            ],
+            "uuid": "500E21EF-8EAC-49F1-BBE8-08B6CF2528B7"
+          },
+          {
+            "name": "Verse 4",
+            "color": {
+              "red": 0,
+              "green": 0,
+              "blue": 0,
+              "alpha": 0
+            },
+            "slides": [
+              {
+                "enabled": true,
+                "notes": "",
+                "text": "There Is Freedom / Verse 4 / slide 1 line 1\nThere Is Freedom / Verse 4 / slide 1 line 2",
+                "label": "",
+                "size": {
+                  "width": 1920,
+                  "height": 1080
+                }
+              },
+              {
+                "enabled": true,
+                "notes": "",
+                "text": "There Is Freedom / Verse 1 / slide 2 line 1\nThere Is Freedom / Verse 1 / slide 2 line 2",
+                "label": "",
+                "size": {
+                  "width": 1920,
+                  "height": 1080
+                }
+              },
+              {
+                "enabled": true,
+                "notes": "",
+                "text": "There Is Freedom / Chorus / slide 1 line 1\nThere Is Freedom / Chorus / slide 1 line 2",
+                "label": "",
+                "size": {
+                  "width": 1920,
+                  "height": 1080
+                }
+              },
+              {
+                "enabled": true,
+                "notes": "",
+                "text": "There Is Freedom / Chorus / slide 2 line 1\nThere Is Freedom / Chorus / slide 2 line 2\nThere Is Freedom / Chorus / slide 2 line 3​",
+                "label": "",
+                "size": {
+                  "width": 1920,
+                  "height": 1080
+                }
+              },
+              {
+                "enabled": true,
+                "notes": "",
+                "text": "There Is Freedom / Chorus / slide 3 line 1\nThere Is Freedom / Chorus / slide 3 line 2",
+                "label": "",
+                "size": {
+                  "width": 1920,
+                  "height": 1080
+                }
+              },
+              {
+                "enabled": true,
+                "notes": "",
+                "text": "There Is Freedom / Chorus / slide 4 line 1​\nThere Is Freedom / Chorus / slide 4 line 2",
+                "label": "",
+                "size": {
+                  "width": 1920,
+                  "height": 1080
+                }
+              },
+              {
+                "enabled": true,
+                "notes": "",
+                "text": "\r\r\r",
+                "label": "",
+                "size": {
+                  "width": 1920,
+                  "height": 1080
+                }
+              }
+            ],
+            "uuid": "78841568-4AD3-44CC-9D07-222C4913D3C0"
+          },
+          {
+            "name": "Bridge 1",
+            "color": {
+              "red": 0,
+              "green": 0,
+              "blue": 0,
+              "alpha": 0
+            },
+            "slides": [
+              {
+                "enabled": true,
+                "notes": "",
+                "text": "There Is Freedom / Bridge 1 / slide 1 line 1​\nThere Is Freedom / Bridge 1 / slide 1 line 2​",
+                "label": "",
+                "size": {
+                  "width": 1920,
+                  "height": 1080
+                }
+              },
+              {
+                "enabled": true,
+                "notes": "",
+                "text": "There Is Freedom / Bridge 1 / slide 2 line 1\nThere Is Freedom / Bridge 1 / slide 2 line 2\nThere Is Freedom / Bridge 1 / slide 2 line 3​",
+                "label": "",
+                "size": {
+                  "width": 1920,
+                  "height": 1080
+                }
+              }
+            ],
+            "uuid": "07007AF6-940E-49AD-A816-07752E786EDA"
+          },
+          {
+            "name": "Bridge 2",
+            "color": {
+              "red": 0,
+              "green": 0,
+              "blue": 0,
+              "alpha": 0
+            },
+            "slides": [
+              {
+                "enabled": true,
+                "notes": "",
+                "text": "There Is Freedom / Bridge 2 / slide 1 line 1​\nThere Is Freedom / Bridge 2 / slide 1 line 2​",
+                "label": "",
+                "size": {
+                  "width": 1920,
+                  "height": 1080
+                }
+              },
+              {
+                "enabled": true,
+                "notes": "",
+                "text": "There Is Freedom / Bridge 2 / slide 2 line 1\nThere Is Freedom / Bridge 2 / slide 2 line 2\nThere Is Freedom / Bridge 2 / slide 2 line 3​",
+                "label": "",
+                "size": {
+                  "width": 1920,
+                  "height": 1080
+                }
+              }
+            ],
+            "uuid": "86C38989-95A0-4325-A15F-DB48CD77648B"
+          },
+          {
+            "name": "Bridge 1",
+            "color": {
+              "red": 0,
+              "green": 0,
+              "blue": 0,
+              "alpha": 0
+            },
+            "slides": [
+              {
+                "enabled": true,
+                "notes": "",
+                "text": "There Is Freedom / Bridge 1 / slide 1 line 1\nThere Is Freedom / Bridge 1 / slide 1 line 2",
+                "label": "",
+                "size": {
+                  "width": 1920,
+                  "height": 1080
+                }
+              },
+              {
+                "enabled": true,
+                "notes": "",
+                "text": "There Is Freedom / Bridge 1 / slide 2 line 1\nThere Is Freedom / Bridge 1 / slide 2 line 2\nThere Is Freedom / Bridge 1 / slide 2 line 3",
+                "label": "",
+                "size": {
+                  "width": 1920,
+                  "height": 1080
+                }
+              }
+            ],
+            "uuid": "EED17593-188A-4FCA-963E-836CBEC30636"
+          },
+          {
+            "name": "Bridge 2",
+            "color": {
+              "red": 0,
+              "green": 0,
+              "blue": 0,
+              "alpha": 0
+            },
+            "slides": [
+              {
+                "enabled": true,
+                "notes": "",
+                "text": "There Is Freedom / Bridge 2 / slide 1 line 1\nThere Is Freedom / Bridge 2 / slide 1 line 2",
+                "label": "",
+                "size": {
+                  "width": 1920,
+                  "height": 1080
+                }
+              },
+              {
+                "enabled": true,
+                "notes": "",
+                "text": "There Is Freedom / Bridge 2 / slide 2 line 1\nThere Is Freedom / Bridge 2 / slide 2 line 2\nThere Is Freedom / Bridge 2 / slide 2 line 3",
+                "label": "",
+                "size": {
+                  "width": 1920,
+                  "height": 1080
+                }
+              },
+              {
+                "enabled": true,
+                "notes": "",
+                "text": "There Is Freedom / Chorus / slide 1 line 1\nThere Is Freedom / Chorus / slide 1 line 2",
+                "label": "",
+                "size": {
+                  "width": 1920,
+                  "height": 1080
+                }
+              },
+              {
+                "enabled": true,
+                "notes": "",
+                "text": "There Is Freedom / Chorus / slide 2 line 1\nThere Is Freedom / Chorus / slide 2 line 2\nThere Is Freedom / Chorus / slide 2 line 3​",
+                "label": "",
+                "size": {
+                  "width": 1920,
+                  "height": 1080
+                }
+              },
+              {
+                "enabled": true,
+                "notes": "",
+                "text": "There Is Freedom / Chorus / slide 3 line 1\nThere Is Freedom / Chorus / slide 3 line 2",
+                "label": "",
+                "size": {
+                  "width": 1920,
+                  "height": 1080
+                }
+              },
+              {
+                "enabled": true,
+                "notes": "",
+                "text": "There Is Freedom / Bridge 2 / slide 6 line 1​",
+                "label": "",
+                "size": {
+                  "width": 1920,
+                  "height": 1080
+                }
+              },
+              {
+                "enabled": true,
+                "notes": "",
+                "text": "There Is Freedom / Chorus / slide 1 line 1\nThere Is Freedom / Chorus / slide 1 line 2",
+                "label": "",
+                "size": {
+                  "width": 1920,
+                  "height": 1080
+                }
+              },
+              {
+                "enabled": true,
+                "notes": "",
+                "text": "There Is Freedom / Chorus / slide 2 line 1\nThere Is Freedom / Chorus / slide 2 line 2\nThere Is Freedom / Chorus / slide 2 line 3​",
+                "label": "",
+                "size": {
+                  "width": 1920,
+                  "height": 1080
+                }
+              },
+              {
+                "enabled": true,
+                "notes": "",
+                "text": "There Is Freedom / Chorus / slide 3 line 1\nThere Is Freedom / Chorus / slide 3 line 2",
+                "label": "",
+                "size": {
+                  "width": 1920,
+                  "height": 1080
+                }
+              },
+              {
+                "enabled": true,
+                "notes": "",
+                "text": "There Is Freedom / Chorus / slide 4 line 1​\nThere Is Freedom / Chorus / slide 4 line 2",
+                "label": "",
+                "size": {
+                  "width": 1920,
+                  "height": 1080
+                }
+              }
+            ],
+            "uuid": "AA36088A-7CBF-407D-BA78-9D4B87407EC2"
+          },
+          {
+            "name": "Ending",
+            "color": {
+              "red": 0,
+              "green": 0,
+              "blue": 0,
+              "alpha": 0
+            },
+            "slides": [
+              {
+                "enabled": true,
+                "notes": "",
+                "text": "\r\r\r",
+                "label": "",
+                "size": {
+                  "width": 1920,
+                  "height": 1080
+                }
+              }
+            ],
+            "uuid": "1989820F-8AC7-4FE5-8374-AF10E2C4338C"
+          }
+        ],
+        "has_timeline": false,
+        "presentation_path": "",
+        "destination": "presentation",
+        "arrangements": [
+          {
+            "id": {
+              "uuid": "894B40A0-42FE-411E-B915-F1919C6DA33E",
+              "name": "Master",
+              "index": 0
+            },
+            "groups": [
+              "81AD0561-0D3E-4410-95A2-2A36794A2A4F",
+              "3467E660-556A-47F0-9FFF-FDCF9F030F0C",
+              "253C73C1-1524-4DE6-9505-42C6A7BD0EB7",
+              "20069D38-F47D-4D3B-B8EB-A7792772EE6D",
+              "267C8258-8CC5-4E41-B0B4-73D410B2B816",
+              "747BA303-7F3E-4866-8FB5-FDE6B1283992",
+              "500E21EF-8EAC-49F1-BBE8-08B6CF2528B7",
+              "78841568-4AD3-44CC-9D07-222C4913D3C0",
+              "07007AF6-940E-49AD-A816-07752E786EDA",
+              "86C38989-95A0-4325-A15F-DB48CD77648B",
+              "EED17593-188A-4FCA-963E-836CBEC30636",
+              "AA36088A-7CBF-407D-BA78-9D4B87407EC2",
+              "1989820F-8AC7-4FE5-8374-AF10E2C4338C"
+            ],
+            "total_cues": 37
+          },
+          {
+            "id": {
+              "uuid": "6790327C-E141-4EC5-A49B-49751DA40875",
+              "name": "Full",
+              "index": 1
+            },
+            "groups": [
+              "81AD0561-0D3E-4410-95A2-2A36794A2A4F",
+              "81AD0561-0D3E-4410-95A2-2A36794A2A4F",
+              "3467E660-556A-47F0-9FFF-FDCF9F030F0C",
+              "253C73C1-1524-4DE6-9505-42C6A7BD0EB7",
+              "20069D38-F47D-4D3B-B8EB-A7792772EE6D",
+              "267C8258-8CC5-4E41-B0B4-73D410B2B816",
+              "747BA303-7F3E-4866-8FB5-FDE6B1283992",
+              "500E21EF-8EAC-49F1-BBE8-08B6CF2528B7",
+              "78841568-4AD3-44CC-9D07-222C4913D3C0",
+              "267C8258-8CC5-4E41-B0B4-73D410B2B816",
+              "747BA303-7F3E-4866-8FB5-FDE6B1283992",
+              "07007AF6-940E-49AD-A816-07752E786EDA",
+              "86C38989-95A0-4325-A15F-DB48CD77648B",
+              "EED17593-188A-4FCA-963E-836CBEC30636",
+              "AA36088A-7CBF-407D-BA78-9D4B87407EC2",
+              "267C8258-8CC5-4E41-B0B4-73D410B2B816",
+              "267C8258-8CC5-4E41-B0B4-73D410B2B816",
+              "1989820F-8AC7-4FE5-8374-AF10E2C4338C"
+            ],
+            "total_cues": 51
+          }
+        ],
+        "current_arrangement": "894B40A0-42FE-411E-B915-F1919C6DA33E",
+        "type": "multitracks",
+        "is_authorized": true,
+        "total_cues": 37
+      }
+    }
+  },
+  {
+    "label": "probe: slide index",
+    "method": "GET",
+    "path": "/v1/presentation/slide_index",
+    "status": 200,
+    "sent": 208662,
+    "answered": 208665,
+    "body": {
+      "presentation_index": {
+        "index": 1,
+        "presentation_id": {
+          "uuid": "894B40A0-42FE-411E-B915-F1919C6DA33E",
+          "name": "There Is Freedom",
+          "index": 257
+        },
+        "total_cues": 37,
+        "remaining_cues": 35
+      }
+    }
+  },
+  {
+    "label": "probe: focused presentation",
+    "method": "GET",
+    "path": "/v1/presentation/focused",
+    "status": 200,
+    "sent": 209170,
+    "answered": 209173,
+    "body": {
+      "uuid": "894B40A0-42FE-411E-B915-F1919C6DA33E",
+      "name": "There Is Freedom",
+      "index": 5
+    }
+  },
+  {
+    "label": "probe: active next",
+    "method": "GET",
+    "path": "/v1/presentation/active/next/trigger",
+    "status": 204,
+    "sent": 209677,
+    "answered": 216670,
+    "body": ""
+  },
+  {
+    "label": "probe: uuid next",
+    "method": "GET",
+    "path": "/v1/presentation/894B40A0-42FE-411E-B915-F1919C6DA33E/next/trigger",
+    "status": 204,
+    "sent": 219675,
+    "answered": 226313,
+    "body": ""
+  },
+  {
+    "label": "probe: uuid previous",
+    "method": "GET",
+    "path": "/v1/presentation/894B40A0-42FE-411E-B915-F1919C6DA33E/previous/trigger",
+    "status": 500,
+    "sent": 229313,
+    "answered": 239317,
+    "body": ""
+  },
+  {
+    "label": "probe: global next",
+    "method": "GET",
+    "path": "/v1/trigger/next",
+    "status": 204,
+    "sent": 242322,
+    "answered": 242326,
+    "body": ""
+  },
+  {
+    "label": "probe: global previous",
+    "method": "GET",
+    "path": "/v1/trigger/previous",
+    "status": 204,
+    "sent": 245330,
+    "answered": 245334,
+    "body": ""
+  },
+  {
+    "label": "probe: focused next",
+    "method": "GET",
+    "path": "/v1/presentation/focused/next/trigger",
+    "status": 204,
+    "sent": 248340,
+    "answered": 248408,
+    "body": ""
+  },
+  {
+    "label": "probe: group trigger by index (4, Chorus)",
+    "method": "GET",
+    "path": "/v1/presentation/894B40A0-42FE-411E-B915-F1919C6DA33E/group/4/trigger",
+    "status": 204,
+    "sent": 251413,
+    "answered": 251477,
+    "body": ""
+  },
+  {
+    "label": "probe: group trigger by name again (Chorus)",
+    "method": "GET",
+    "path": "/v1/presentation/894B40A0-42FE-411E-B915-F1919C6DA33E/group/Chorus/trigger",
+    "status": 204,
+    "sent": 255481,
+    "answered": 255549,
+    "body": ""
+  },
+  {
+    "label": "probe: group trigger by name repeat (Chorus, a loop wrap)",
+    "method": "GET",
+    "path": "/v1/presentation/894B40A0-42FE-411E-B915-F1919C6DA33E/group/Chorus/trigger",
+    "status": 204,
+    "sent": 259554,
+    "answered": 259616,
+    "body": ""
+  },
+  {
+    "label": "probe: active next after Chorus",
+    "method": "GET",
+    "path": "/v1/presentation/active/next/trigger",
+    "status": 204,
+    "sent": 263617,
+    "answered": 263686,
+    "body": ""
+  },
+  {
+    "label": "warm: group trigger by uuid (Verse 1)",
+    "method": "GET",
+    "path": "/v1/presentation/894B40A0-42FE-411E-B915-F1919C6DA33E/group/3467E660-556A-47F0-9FFF-FDCF9F030F0C/trigger",
+    "status": 404,
+    "sent": 278677,
+    "answered": 278701,
+    "body": ""
+  },
+  {
+    "label": "warm: group trigger by uuid (lower case, Verse 2)",
+    "method": "GET",
+    "path": "/v1/presentation/894B40A0-42FE-411E-B915-F1919C6DA33E/group/253c73c1-1524-4de6-9505-42c6a7bd0eb7/trigger",
+    "status": 404,
+    "sent": 281706,
+    "answered": 281721,
+    "body": ""
+  },
+  {
+    "label": "warm: group trigger by uuid (second Bridge 1)",
+    "method": "GET",
+    "path": "/v1/presentation/894B40A0-42FE-411E-B915-F1919C6DA33E/group/EED17593-188A-4FCA-963E-836CBEC30636/trigger",
+    "status": 404,
+    "sent": 284726,
+    "answered": 284740,
+    "body": ""
+  },
+  {
+    "label": "warm: group trigger by name (Bridge 1, a name two groups share)",
+    "method": "GET",
+    "path": "/v1/presentation/894B40A0-42FE-411E-B915-F1919C6DA33E/group/Bridge%201/trigger",
+    "status": 204,
+    "sent": 287743,
+    "answered": 287805,
+    "body": ""
+  },
+  {
+    "label": "warm: active previous",
+    "method": "GET",
+    "path": "/v1/presentation/active/previous/trigger",
+    "status": 204,
+    "sent": 290811,
+    "answered": 290868,
+    "body": ""
+  },
+  {
+    "label": "warm: uuid previous",
+    "method": "GET",
+    "path": "/v1/presentation/894B40A0-42FE-411E-B915-F1919C6DA33E/previous/trigger",
+    "status": 204,
+    "sent": 293874,
+    "answered": 293935,
+    "body": ""
+  },
+  {
+    "label": "warm: group trigger by name (Ending, the last group)",
+    "method": "GET",
+    "path": "/v1/presentation/894B40A0-42FE-411E-B915-F1919C6DA33E/group/Ending/trigger",
+    "status": 204,
+    "sent": 296939,
+    "answered": 296998,
+    "body": ""
+  },
+  {
+    "label": "warm: active next at the last slide",
+    "method": "GET",
+    "path": "/v1/presentation/active/next/trigger",
+    "status": 404,
+    "sent": 299999,
+    "answered": 300001,
+    "body": ""
+  },
+  {
+    "label": "warm: clear slide",
+    "method": "GET",
+    "path": "/v1/clear/layer/slide",
+    "status": 204,
+    "sent": 303004,
+    "answered": 303008,
+    "body": ""
+  },
+  {
+    "label": "warm: active next after clear",
+    "method": "GET",
+    "path": "/v1/presentation/active/next/trigger",
+    "status": 404,
+    "sent": 306011,
+    "answered": 306013,
+    "body": ""
+  },
+  {
+    "label": "warm: clear slide (end)",
+    "method": "GET",
+    "path": "/v1/clear/layer/slide",
+    "status": 204,
+    "sent": 309018,
+    "answered": 309020,
+    "body": ""
+  }
+]

@@ -1,0 +1,22 @@
+diff --git a/test/propresenter.test.ts b/test/propresenter.test.ts
+index a22ae1d..ceb317e 100644
+--- a/test/propresenter.test.ts
++++ b/test/propresenter.test.ts
+@@ -2344,6 +2344,17 @@ describe('the pre-service check', () => {
+       expect(timingProblems(after.check)).toEqual([HOLY_FOREVER_OUTSIDE]);
+     });
+ 
++    it("keeps Ancient Gates in 6/8 when Live reports Holy Forever's 4/4 before the playhead's move into it", async () => {
++      const { row } = await meterRig({ playing: false, position: 10, signature: { numerator: 6, denominator: 8 } });
++
++      // The signature report first, then the position report, the order the two listeners may take.
++      rig!.live.setSignature(4, 4);
++      rig!.live.setPosition(44);
++
++      const after = await row((row) => meterLines(row.check).length === 0 && onBeatsLines(row.check).includes(HOLY_FOREVER_ON_BEATS));
++      expect(onBeatsLines(after.check)).toEqual([HOLY_FOREVER_ON_BEATS]);
++    });
++
+     it('forgets every song\'s meter on a new set from Live, but the song the playhead sits in keeps Live\'s', async () => {
+       const { start, to } = WALKS[0]!;
+       const { row } = await meterRig(start);

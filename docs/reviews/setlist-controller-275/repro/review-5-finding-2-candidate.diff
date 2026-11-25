@@ -1,0 +1,20 @@
+diff --git a/src/server/propresenter.ts b/src/server/propresenter.ts
+index 78c8701..f07f5b3 100644
+--- a/src/server/propresenter.ts
++++ b/src/server/propresenter.ts
+@@ -1037,9 +1037,12 @@ function resolveTiming(timing: SlideTiming, presentation: Presentation, song: So
+   });
+   // The second pass: a start that lands at or before the section before's last change, judged on the
+   // first pass's entries, drops its entry whole. Not judged with no bar.
+-  const passing = bar === null ? [] : [...exceptions].filter(([index, { start }]) => start !== undefined && passes(presentation, song, index, start, bar, exceptions, before) !== null);
+-  for (const [index, exception] of passing) {
+-    problems.push({ n: exception.n, line: `${songTitle(song)}: ${exception.label}, start ${exception.start} passes ${passes(presentation, song, index, exception.start!, bar!, exceptions, before)}` });
++  for (const index of [...exceptions.keys()].sort((a, b) => a - b)) {
++    const exception = exceptions.get(index)!;
++    if (bar === null || exception.start === undefined) continue;
++    const bound = passes(presentation, song, index, exception.start, bar, exceptions, before);
++    if (bound === null) continue;
++    problems.push({ n: exception.n, line: `${songTitle(song)}: ${exception.label}, start ${exception.start} passes ${bound}` });
+     exceptions.delete(index);
+   }
+   return { exceptions, problems: problems.sort((a, b) => a.n - b.n).map(({ line }) => line) };

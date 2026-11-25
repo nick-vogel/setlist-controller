@@ -1,0 +1,13 @@
+diff --git a/src/server/atem.ts b/src/server/atem.ts
+index 90363d8..e700b3f 100644
+--- a/src/server/atem.ts
++++ b/src/server/atem.ts
+@@ -94,7 +94,7 @@ function atemTarget(switcher: SwitcherClient, clock: Pick<Clock, 'now'>, host: s
+   // client may report it before changeProgramInput returns.
+   const cut = (input: number, what: string) => {
+     sent.push({ input, at: clock.now() });
+-    switcher.changeProgramInput(input).catch(failed(what));
++    void switcher.changeProgramInput(input);
+   };
+   // Whether a program report of input is one of the ATEM's own cuts, each cut accounting for one
+   // report, the oldest first. A cut whose report has not come within the window is dropped.

@@ -1,0 +1,691 @@
+{
+  "path": "/service_types/997539/plans/90897397/items?include=item_notes&per_page=100",
+  "status": 200,
+  "body": {
+    "links": {
+      "self": "https://api.planningcenteronline.com/services/v2/service_types/997539/plans/90897397/items?include=item_notes&per_page=100"
+    },
+    "data": [
+      {
+        "type": "Item",
+        "id": "1223369399",
+        "attributes": {
+          "title": "PRE-SERVICE",
+          "item_type": "header",
+          "key_name": null,
+          "sequence": 1,
+          "service_position": "during",
+          "length": 0
+        },
+        "relationships": {
+          "song": {
+            "data": null
+          },
+          "key": {
+            "data": null
+          },
+          "arrangement": {
+            "data": null
+          },
+          "item_notes": {
+            "data": []
+          },
+          "plan": {
+            "data": {
+              "type": "Plan",
+              "id": "90897397"
+            }
+          }
+        }
+      },
+      {
+        "type": "Item",
+        "id": "1223369418",
+        "attributes": {
+          "title": "Huddle",
+          "item_type": "item",
+          "key_name": null,
+          "sequence": 2,
+          "service_position": "pre",
+          "length": 300
+        },
+        "relationships": {
+          "song": {
+            "data": null
+          },
+          "key": {
+            "data": null
+          },
+          "arrangement": {
+            "data": null
+          },
+          "item_notes": {
+            "data": []
+          },
+          "plan": {
+            "data": {
+              "type": "Plan",
+              "id": "90897397"
+            }
+          }
+        }
+      },
+      {
+        "type": "Item",
+        "id": "1223369434",
+        "attributes": {
+          "title": "Loop",
+          "item_type": "item",
+          "key_name": null,
+          "sequence": 3,
+          "service_position": "pre",
+          "length": 600
+        },
+        "relationships": {
+          "song": {
+            "data": null
+          },
+          "key": {
+            "data": null
+          },
+          "arrangement": {
+            "data": null
+          },
+          "item_notes": {
+            "data": []
+          },
+          "plan": {
+            "data": {
+              "type": "Plan",
+              "id": "90897397"
+            }
+          }
+        }
+      },
+      {
+        "type": "Item",
+        "id": "1223369447",
+        "attributes": {
+          "title": "Countdown",
+          "item_type": "item",
+          "key_name": null,
+          "sequence": 4,
+          "service_position": "pre",
+          "length": 300
+        },
+        "relationships": {
+          "song": {
+            "data": null
+          },
+          "key": {
+            "data": null
+          },
+          "arrangement": {
+            "data": null
+          },
+          "item_notes": {
+            "data": []
+          },
+          "plan": {
+            "data": {
+              "type": "Plan",
+              "id": "90897397"
+            }
+          }
+        }
+      },
+      {
+        "type": "Item",
+        "id": "1223369467",
+        "attributes": {
+          "title": "WORSHIP SET",
+          "item_type": "header",
+          "key_name": null,
+          "sequence": 5,
+          "service_position": "during",
+          "length": 0
+        },
+        "relationships": {
+          "song": {
+            "data": null
+          },
+          "key": {
+            "data": null
+          },
+          "arrangement": {
+            "data": null
+          },
+          "item_notes": {
+            "data": []
+          },
+          "plan": {
+            "data": {
+              "type": "Plan",
+              "id": "90897397"
+            }
+          }
+        }
+      },
+      {
+        "type": "Item",
+        "id": "1223369488",
+        "attributes": {
+          "title": "This Is Amazing Grace",
+          "item_type": "song",
+          "key_name": "D",
+          "sequence": 6,
+          "service_position": "during",
+          "length": 281
+        },
+        "relationships": {
+          "song": {
+            "data": {
+              "type": "Song",
+              "id": "23937516"
+            }
+          },
+          "key": {
+            "data": {
+              "type": "Key",
+              "id": "46243993"
+            }
+          },
+          "arrangement": {
+            "data": {
+              "type": "Arrangement",
+              "id": "27680774"
+            }
+          },
+          "item_notes": {
+            "data": []
+          },
+          "plan": {
+            "data": {
+              "type": "Plan",
+              "id": "90897397"
+            }
+          }
+        }
+      },
+      {
+        "type": "Item",
+        "id": "1223369536",
+        "attributes": {
+          "title": "Great Are You Lord",
+          "item_type": "song",
+          "key_name": "D",
+          "sequence": 7,
+          "service_position": "during",
+          "length": 296
+        },
+        "relationships": {
+          "song": {
+            "data": {
+              "type": "Song",
+              "id": "19355547"
+            }
+          },
+          "key": {
+            "data": {
+              "type": "Key",
+              "id": "36792902"
+            }
+          },
+          "arrangement": {
+            "data": {
+              "type": "Arrangement",
+              "id": "22168561"
+            }
+          },
+          "item_notes": {
+            "data": []
+          },
+          "plan": {
+            "data": {
+              "type": "Plan",
+              "id": "90897397"
+            }
+          }
+        }
+      },
+      {
+        "type": "Item",
+        "id": "1223369525",
+        "attributes": {
+          "title": "Fall Like Rain",
+          "item_type": "song",
+          "key_name": "E",
+          "sequence": 8,
+          "service_position": "during",
+          "length": 418
+        },
+        "relationships": {
+          "song": {
+            "data": {
+              "type": "Song",
+              "id": "30958360"
+            }
+          },
+          "key": {
+            "data": {
+              "type": "Key",
+              "id": "58105123"
+            }
+          },
+          "arrangement": {
+            "data": {
+              "type": "Arrangement",
+              "id": "36302201"
+            }
+          },
+          "item_notes": {
+            "data": []
+          },
+          "plan": {
+            "data": {
+              "type": "Plan",
+              "id": "90897397"
+            }
+          }
+        }
+      },
+      {
+        "type": "Item",
+        "id": "1223369553",
+        "attributes": {
+          "title": "FACETIME",
+          "item_type": "header",
+          "key_name": null,
+          "sequence": 9,
+          "service_position": "during",
+          "length": 0
+        },
+        "relationships": {
+          "song": {
+            "data": null
+          },
+          "key": {
+            "data": null
+          },
+          "arrangement": {
+            "data": null
+          },
+          "item_notes": {
+            "data": []
+          },
+          "plan": {
+            "data": {
+              "type": "Plan",
+              "id": "90897397"
+            }
+          }
+        }
+      },
+      {
+        "type": "Item",
+        "id": "1223369558",
+        "attributes": {
+          "title": "FaceTime",
+          "item_type": "item",
+          "key_name": null,
+          "sequence": 10,
+          "service_position": "during",
+          "length": 60
+        },
+        "relationships": {
+          "song": {
+            "data": null
+          },
+          "key": {
+            "data": null
+          },
+          "arrangement": {
+            "data": null
+          },
+          "item_notes": {
+            "data": []
+          },
+          "plan": {
+            "data": {
+              "type": "Plan",
+              "id": "90897397"
+            }
+          }
+        }
+      },
+      {
+        "type": "Item",
+        "id": "1223369567",
+        "attributes": {
+          "title": "SERVICE HOST",
+          "item_type": "header",
+          "key_name": null,
+          "sequence": 11,
+          "service_position": "during",
+          "length": 0
+        },
+        "relationships": {
+          "song": {
+            "data": null
+          },
+          "key": {
+            "data": null
+          },
+          "arrangement": {
+            "data": null
+          },
+          "item_notes": {
+            "data": []
+          },
+          "plan": {
+            "data": {
+              "type": "Plan",
+              "id": "90897397"
+            }
+          }
+        }
+      },
+      {
+        "type": "Item",
+        "id": "1223369575",
+        "attributes": {
+          "title": "MC",
+          "item_type": "item",
+          "key_name": null,
+          "sequence": 12,
+          "service_position": "during",
+          "length": 180
+        },
+        "relationships": {
+          "song": {
+            "data": null
+          },
+          "key": {
+            "data": null
+          },
+          "arrangement": {
+            "data": null
+          },
+          "item_notes": {
+            "data": [
+              {
+                "type": "ItemNote",
+                "id": "404942980"
+              },
+              {
+                "type": "ItemNote",
+                "id": "404942984"
+              },
+              {
+                "type": "ItemNote",
+                "id": "404942986"
+              }
+            ]
+          },
+          "plan": {
+            "data": {
+              "type": "Plan",
+              "id": "90897397"
+            }
+          }
+        }
+      },
+      {
+        "type": "Item",
+        "id": "1223369615",
+        "attributes": {
+          "title": "MESSAGE",
+          "item_type": "header",
+          "key_name": null,
+          "sequence": 13,
+          "service_position": "during",
+          "length": 0
+        },
+        "relationships": {
+          "song": {
+            "data": null
+          },
+          "key": {
+            "data": null
+          },
+          "arrangement": {
+            "data": null
+          },
+          "item_notes": {
+            "data": []
+          },
+          "plan": {
+            "data": {
+              "type": "Plan",
+              "id": "90897397"
+            }
+          }
+        }
+      },
+      {
+        "type": "Item",
+        "id": "1223369620",
+        "attributes": {
+          "title": "Scripture Reading",
+          "item_type": "item",
+          "key_name": null,
+          "sequence": 14,
+          "service_position": "during",
+          "length": 60
+        },
+        "relationships": {
+          "song": {
+            "data": null
+          },
+          "key": {
+            "data": null
+          },
+          "arrangement": {
+            "data": null
+          },
+          "item_notes": {
+            "data": []
+          },
+          "plan": {
+            "data": {
+              "type": "Plan",
+              "id": "90897397"
+            }
+          }
+        }
+      },
+      {
+        "type": "Item",
+        "id": "1223369625",
+        "attributes": {
+          "title": "Message",
+          "item_type": "item",
+          "key_name": null,
+          "sequence": 15,
+          "service_position": "during",
+          "length": 1920
+        },
+        "relationships": {
+          "song": {
+            "data": null
+          },
+          "key": {
+            "data": null
+          },
+          "arrangement": {
+            "data": null
+          },
+          "item_notes": {
+            "data": []
+          },
+          "plan": {
+            "data": {
+              "type": "Plan",
+              "id": "90897397"
+            }
+          }
+        }
+      },
+      {
+        "type": "Item",
+        "id": "1223369631",
+        "attributes": {
+          "title": "Prayer",
+          "item_type": "item",
+          "key_name": null,
+          "sequence": 16,
+          "service_position": "during",
+          "length": 120
+        },
+        "relationships": {
+          "song": {
+            "data": null
+          },
+          "key": {
+            "data": null
+          },
+          "arrangement": {
+            "data": null
+          },
+          "item_notes": {
+            "data": []
+          },
+          "plan": {
+            "data": {
+              "type": "Plan",
+              "id": "90897397"
+            }
+          }
+        }
+      },
+      {
+        "type": "Item",
+        "id": "1223369634",
+        "attributes": {
+          "title": "CLOSE",
+          "item_type": "header",
+          "key_name": null,
+          "sequence": 17,
+          "service_position": "during",
+          "length": 0
+        },
+        "relationships": {
+          "song": {
+            "data": null
+          },
+          "key": {
+            "data": null
+          },
+          "arrangement": {
+            "data": null
+          },
+          "item_notes": {
+            "data": []
+          },
+          "plan": {
+            "data": {
+              "type": "Plan",
+              "id": "90897397"
+            }
+          }
+        }
+      },
+      {
+        "type": "Item",
+        "id": "1223369639",
+        "attributes": {
+          "title": "Dismissal",
+          "item_type": "item",
+          "key_name": null,
+          "sequence": 18,
+          "service_position": "during",
+          "length": 120
+        },
+        "relationships": {
+          "song": {
+            "data": null
+          },
+          "key": {
+            "data": null
+          },
+          "arrangement": {
+            "data": null
+          },
+          "item_notes": {
+            "data": []
+          },
+          "plan": {
+            "data": {
+              "type": "Plan",
+              "id": "90897397"
+            }
+          }
+        }
+      }
+    ],
+    "included": [
+      {
+        "type": "ItemNote",
+        "id": "404942980",
+        "attributes": {
+          "category_name": "Audio/Visual",
+          "content": "Scrubbed note."
+        },
+        "relationships": {
+          "item": {
+            "data": {
+              "type": "Item",
+              "id": "1223369575"
+            }
+          }
+        }
+      },
+      {
+        "type": "ItemNote",
+        "id": "404942984",
+        "attributes": {
+          "category_name": "Band",
+          "content": "Scrubbed note."
+        },
+        "relationships": {
+          "item": {
+            "data": {
+              "type": "Item",
+              "id": "1223369575"
+            }
+          }
+        }
+      },
+      {
+        "type": "ItemNote",
+        "id": "404942986",
+        "attributes": {
+          "category_name": "Person",
+          "content": "Scrubbed note."
+        },
+        "relationships": {
+          "item": {
+            "data": {
+              "type": "Item",
+              "id": "1223369575"
+            }
+          }
+        }
+      }
+    ],
+    "meta": {
+      "count": 18,
+      "total_count": 18,
+      "can_include": [
+        "arrangement",
+        "item_assignments",
+        "item_notes",
+        "item_times",
+        "key",
+        "media",
+        "selected_attachment",
+        "song"
+      ]
+    }
+  }
+}

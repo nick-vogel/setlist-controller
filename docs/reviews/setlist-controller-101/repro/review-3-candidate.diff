@@ -1,0 +1,41 @@
+diff --git a/src/server/playback-controller.ts b/src/server/playback-controller.ts
+index fd6f053..c2cdd87 100644
+--- a/src/server/playback-controller.ts
++++ b/src/server/playback-controller.ts
+@@ -282,7 +282,9 @@ export function startPlaybackController(
+       countIn.reached = true;
+       return false;
+     }
+-    return playing && !countIn.reached;
++    if (!playing) return false;
++    if (!countIn.reached) return true;
++    return !inTarget(after) && (after < time - EPSILON || (end !== null && after >= end + barLength() - EPSILON));
+   };
+ 
+   // Live sends nothing back for a jump, so the playhead tells when it has happened: it is in the
+@@ -297,6 +299,7 @@ export function startPlaybackController(
+   const landed = (before: number | null, after: number) => {
+     if (!waitingJump || !inTarget(after)) return false;
+     if (waitingJump.section === 'end') return true;
++    if (countIn && !countIn.sent) return playing && countIn.reached && !inTarget(before);
+     if (before !== null && after < before) return true;
+     if (barLine === null) return !inTarget(before);
+     const last = lateBarLine ?? barLine;
+@@ -461,7 +464,7 @@ export function startPlaybackController(
+   const sendCountIn = () => {
+     if (!countIn || countIn.sent || !playing || position === null) return;
+     const { end } = countIn.countOff;
+-    if (end === null || position < end - barLength() - EPSILON) return;
++    if (end === null || position < end - barLength() - EPSILON || position >= end + barLength() - EPSILON) return;
+     sendTarget();
+   };
+ 
+@@ -705,7 +708,7 @@ export function startPlaybackController(
+           // report that moves the playhead into it stays inside the song, and says nothing again.
+           comesBack({ song: song.number, section: rule.countOff }, countOff.time, true);
+           waitingJump = { song: song.number, section: command.section };
+-          countIn = { countOff, sent: false, reached: false };
++          countIn = { countOff, sent: false, reached: position !== null && near(position, countOff.time) };
+           waitForStart((((countOff.end ?? countOff.time) - countOff.time) * 60_000) / tempo);
+           break;
+         }

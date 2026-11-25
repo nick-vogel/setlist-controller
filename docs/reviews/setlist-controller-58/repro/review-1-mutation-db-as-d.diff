@@ -1,0 +1,13 @@
+diff --git a/src/set-builder/pads.ts b/src/set-builder/pads.ts
+index 96b1eee..a09bd7d 100644
+--- a/src/set-builder/pads.ts
++++ b/src/set-builder/pads.ts
+@@ -147,7 +147,7 @@ export function sameKey(a: string | undefined, b: string | undefined): boolean {
+   if (a === undefined || b === undefined || !isKey(a) || !isKey(b)) return false;
+   if (a.endsWith('m') !== b.endsWith('m')) return false;
+   const [rootA, rootB] = [a.replace(/m$/, ''), b.replace(/m$/, '')];
+-  return rootA === rootB || ENHARMONIC_TWINS.get(rootA) === rootB;
++  return rootA.replace(/[#b]$/, '') === rootB.replace(/[#b]$/, '');
+ }
+ 
+ // The names of the pad files that play `key`, in the order they are looked for: its root's, the key without its minor

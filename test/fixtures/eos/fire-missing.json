@@ -1,0 +1,15 @@
+{
+ "scenario": "fire-missing",
+ "description": "The app fires cue 1/99, which does not exist.",
+ "eos_version": "3.3.10 (ETCnomad, macOS)",
+ "transport": "TCP 127.0.0.1:3032, OSC 1.0 packet-length framing",
+ "packets": [
+  {
+   "t_ms": 0,
+   "dir": "app->eos",
+   "address": "/eos/cue/1/99/fire",
+   "args": [],
+   "hex": "2f656f732f6375652f312f39392f6669726500002c000000"
+  }
+ ]
+}

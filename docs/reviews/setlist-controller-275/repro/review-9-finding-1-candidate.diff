@@ -1,0 +1,13 @@
+diff --git a/src/server/propresenter.ts b/src/server/propresenter.ts
+index 5d3739c..f55fc01 100644
+--- a/src/server/propresenter.ts
++++ b/src/server/propresenter.ts
+@@ -1168,7 +1168,7 @@ function boundBefore(set: SetList | null, song: Song, read: ReadPlaylist | null,
+   const presentation = read && before.title !== null ? presentationFor(read, before.title) : undefined;
+   if (last < 0 || !presentation?.authorized || !followsArrangement(presentation)) return lastStart;
+   const own = meters.get(before.number) ?? bar;
+-  const { exceptions } = firstPass(timing, presentation, bounded, own);
++  const { exceptions } = resolveTiming(timing, presentation, bounded, own, (bar) => boundBefore(set, bounded, read, timing, meters, bar));
+   return { beat: lastChange(presentation, bounded, last, own, exceptions), name: `the last change of ${songTitle(before)}` };
+ }
+ 

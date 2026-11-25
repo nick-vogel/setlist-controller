@@ -1,0 +1,46 @@
+{
+ "scenario": "cuelist-properties-wrap-off",
+ "description": "Cue list 1's properties, /eos/get/cuelist/1, with Go From Last and Back From First as the show left them, not set to Wrap. Diff against cuelist-properties-wrap-on to find the field that holds Wrap.",
+ "eos_version": "3.3.10 (ETCnomad, macOS)",
+ "transport": "TCP 127.0.0.1:3032, OSC 1.0 packet-length framing",
+ "packets": [
+  {
+   "t_ms": 0,
+   "dir": "app->eos",
+   "address": "/eos/get/cuelist/1",
+   "args": [],
+   "hex": "2f656f732f6765742f6375656c6973742f3100002c000000"
+  },
+  {
+   "t_ms": 6,
+   "dir": "eos->app",
+   "address": "/eos/out/get/cuelist/1/list/0/13",
+   "args": [
+    -1,
+    "32EBB151-F051-474A-9DA7-E110C63FA898",
+    "Goodness of God / Intro",
+    "1/1",
+    "Proportional",
+    false,
+    false,
+    false,
+    false,
+    true,
+    false,
+    -1,
+    false
+   ],
+   "hex": "2f656f732f6f75742f6765742f6375656c6973742f312f6c6973742f302f3133000000002c697373737346464646544669460000ffffffff33324542423135312d463035312d343734412d394441372d45313130433633464138393800000000476f6f646e657373206f6620476f64202f20496e74726f00312f310050726f706f7274696f6e616c00000000ffffffff"
+  },
+  {
+   "t_ms": 8,
+   "dir": "eos->app",
+   "address": "/eos/out/get/cuelist/1/links/list/0/2",
+   "args": [
+    -1,
+    "32EBB151-F051-474A-9DA7-E110C63FA898"
+   ],
+   "hex": "2f656f732f6f75742f6765742f6375656c6973742f312f6c696e6b732f6c6973742f302f320000002c697300ffffffff33324542423135312d463035312d343734412d394441372d45313130433633464138393800000000"
+  }
+ ]
+}

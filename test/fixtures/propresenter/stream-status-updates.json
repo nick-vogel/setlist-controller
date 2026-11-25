@@ -1,0 +1,4006 @@
+{
+  "method": "POST",
+  "path": "/v1/status/updates",
+  "request": [
+    "status/slide",
+    "presentation/slide_index",
+    "presentation/current"
+  ],
+  "status": 200,
+  "headers": {
+    "transfer-encoding": "chunked",
+    "connection": "close",
+    "vary": "Origin, Access-Control-Request-Method, Access-Control-Request-Headers",
+    "content-type": "application/octet-stream"
+  },
+  "chunks": [
+    {
+      "t": 0,
+      "frame": {
+        "url": "presentation/slide_index",
+        "data": {
+          "presentation_index": null
+        }
+      }
+    },
+    {
+      "t": 0,
+      "frame": {
+        "url": "presentation/current",
+        "data": {
+          "presentation": null
+        }
+      }
+    },
+    {
+      "t": 0,
+      "frame": {
+        "url": "timer/system_time",
+        "data": 1792861434
+      }
+    },
+    {
+      "t": 360,
+      "frame": {
+        "url": "timer/system_time",
+        "data": 1792861434
+      }
+    },
+    {
+      "t": 1859,
+      "frame": {
+        "url": "timer/system_time",
+        "data": 1792861436
+      }
+    },
+    {
+      "t": 3856,
+      "frame": {
+        "url": "timer/system_time",
+        "data": 1792861438
+      }
+    },
+    {
+      "t": 5859,
+      "frame": {
+        "url": "timer/system_time",
+        "data": 1792861440
+      }
+    },
+    {
+      "t": 7858,
+      "frame": {
+        "url": "timer/system_time",
+        "data": 1792861442
+      }
+    },
+    {
+      "t": 9855,
+      "frame": {
+        "url": "timer/system_time",
+        "data": 1792861444
+      }
+    },
+    {
+      "t": 11858,
+      "frame": {
+        "url": "timer/system_time",
+        "data": 1792861446
+      }
+    },
+    {
+      "t": 13858,
+      "frame": {
+        "url": "timer/system_time",
+        "data": 1792861448
+      }
+    },
+    {
+      "t": 15856,
+      "frame": {
+        "url": "timer/system_time",
+        "data": 1792861450
+      }
+    },
+    {
+      "t": 16859,
+      "frame": {
+        "url": "timer/system_time",
+        "data": 1792861451
+      }
+    },
+    {
+      "t": 18858,
+      "frame": {
+        "url": "timer/system_time",
+        "data": 1792861453
+      }
+    },
+    {
+      "t": 19858,
+      "frame": {
+        "url": "timer/system_time",
+        "data": 1792861454
+      }
+    },
+    {
+      "t": 21856,
+      "frame": {
+        "url": "timer/system_time",
+        "data": 1792861456
+      }
+    },
+    {
+      "t": 22855,
+      "frame": {
+        "url": "timer/system_time",
+        "data": 1792861457
+      }
+    },
+    {
+      "t": 24857,
+      "frame": {
+        "url": "timer/system_time",
+        "data": 1792861459
+      }
+    },
+    {
+      "t": 25854,
+      "frame": {
+        "url": "timer/system_time",
+        "data": 1792861460
+      }
+    },
+    {
+      "t": 27856,
+      "frame": {
+        "url": "timer/system_time",
+        "data": 1792861462
+      }
+    },
+    {
+      "t": 28861,
+      "frame": {
+        "url": "timer/system_time",
+        "data": 1792861463
+      }
+    },
+    {
+      "t": 30858,
+      "frame": {
+        "url": "timer/system_time",
+        "data": 1792861465
+      }
+    },
+    {
+      "t": 31858,
+      "frame": {
+        "url": "timer/system_time",
+        "data": 1792861466
+      }
+    },
+    {
+      "t": 33858,
+      "frame": {
+        "url": "timer/system_time",
+        "data": 1792861468
+      }
+    },
+    {
+      "t": 34855,
+      "frame": {
+        "url": "timer/system_time",
+        "data": 1792861469
+      }
+    },
+    {
+      "t": 36858,
+      "frame": {
+        "url": "timer/system_time",
+        "data": 1792861471
+      }
+    },
+    {
+      "t": 37858,
+      "frame": {
+        "url": "timer/system_time",
+        "data": 1792861472
+      }
+    },
+    {
+      "t": 39856,
+      "frame": {
+        "url": "timer/system_time",
+        "data": 1792861474
+      }
+    },
+    {
+      "t": 41855,
+      "frame": {
+        "url": "timer/system_time",
+        "data": 1792861476
+      }
+    },
+    {
+      "t": 44855,
+      "frame": {
+        "url": "timer/system_time",
+        "data": 1792861479
+      }
+    },
+    {
+      "t": 46856,
+      "frame": {
+        "url": "timer/system_time",
+        "data": 1792861481
+      }
+    },
+    {
+      "t": 48857,
+      "frame": {
+        "url": "timer/system_time",
+        "data": 1792861483
+      }
+    },
+    {
+      "t": 50858,
+      "frame": {
+        "url": "timer/system_time",
+        "data": 1792861485
+      }
+    },
+    {
+      "t": 52856,
+      "frame": {
+        "url": "timer/system_time",
+        "data": 1792861487
+      }
+    },
+    {
+      "t": 54857,
+      "frame": {
+        "url": "timer/system_time",
+        "data": 1792861489
+      }
+    },
+    {
+      "t": 56857,
+      "frame": {
+        "url": "timer/system_time",
+        "data": 1792861491
+      }
+    },
+    {
+      "t": 58856,
+      "frame": {
+        "url": "timer/system_time",
+        "data": 1792861493
+      }
+    },
+    {
+      "t": 60856,
+      "frame": {
+        "url": "timer/system_time",
+        "data": 1792861495
+      }
+    },
+    {
+      "t": 62857,
+      "frame": {
+        "url": "timer/system_time",
+        "data": 1792861497
+      }
+    },
+    {
+      "t": 64859,
+      "frame": {
+        "url": "timer/system_time",
+        "data": 1792861499
+      }
+    },
+    {
+      "t": 66857,
+      "frame": {
+        "url": "timer/system_time",
+        "data": 1792861501
+      }
+    },
+    {
+      "t": 68859,
+      "frame": {
+        "url": "timer/system_time",
+        "data": 1792861503
+      }
+    },
+    {
+      "t": 70852,
+      "frame": {
+        "url": "timer/system_time",
+        "data": 1792861505
+      }
+    },
+    {
+      "t": 72857,
+      "frame": {
+        "url": "timer/system_time",
+        "data": 1792861507
+      }
+    },
+    {
+      "t": 74857,
+      "frame": {
+        "url": "timer/system_time",
+        "data": 1792861509
+      }
+    },
+    {
+      "t": 77856,
+      "frame": {
+        "url": "timer/system_time",
+        "data": 1792861512
+      }
+    },
+    {
+      "t": 78853,
+      "frame": {
+        "url": "timer/system_time",
+        "data": 1792861513
+      }
+    },
+    {
+      "t": 81858,
+      "frame": {
+        "url": "timer/system_time",
+        "data": 1792861516
+      }
+    },
+    {
+      "t": 82857,
+      "frame": {
+        "url": "timer/system_time",
+        "data": 1792861517
+      }
+    },
+    {
+      "t": 85857,
+      "frame": {
+        "url": "timer/system_time",
+        "data": 1792861520
+      }
+    },
+    {
+      "t": 87856,
+      "frame": {
+        "url": "timer/system_time",
+        "data": 1792861522
+      }
+    },
+    {
+      "t": 89858,
+      "frame": {
+        "url": "timer/system_time",
+        "data": 1792861524
+      }
+    },
+    {
+      "t": 91856,
+      "frame": {
+        "url": "timer/system_time",
+        "data": 1792861526
+      }
+    },
+    {
+      "t": 93853,
+      "frame": {
+        "url": "timer/system_time",
+        "data": 1792861528
+      }
+    },
+    {
+      "t": 95857,
+      "frame": {
+        "url": "timer/system_time",
+        "data": 1792861530
+      }
+    },
+    {
+      "t": 97857,
+      "frame": {
+        "url": "timer/system_time",
+        "data": 1792861532
+      }
+    },
+    {
+      "t": 99859,
+      "frame": {
+        "url": "timer/system_time",
+        "data": 1792861534
+      }
+    },
+    {
+      "t": 101862,
+      "frame": {
+        "url": "timer/system_time",
+        "data": 1792861536
+      }
+    },
+    {
+      "t": 103864,
+      "frame": {
+        "url": "timer/system_time",
+        "data": 1792861538
+      }
+    },
+    {
+      "t": 105865,
+      "frame": {
+        "url": "timer/system_time",
+        "data": 1792861540
+      }
+    },
+    {
+      "t": 107866,
+      "frame": {
+        "url": "timer/system_time",
+        "data": 1792861542
+      }
+    },
+    {
+      "t": 109868,
+      "frame": {
+        "url": "timer/system_time",
+        "data": 1792861544
+      }
+    },
+    {
+      "t": 111869,
+      "frame": {
+        "url": "timer/system_time",
+        "data": 1792861546
+      }
+    },
+    {
+      "t": 113875,
+      "frame": {
+        "url": "timer/system_time",
+        "data": 1792861548
+      }
+    },
+    {
+      "t": 114876,
+      "frame": {
+        "url": "timer/system_time",
+        "data": 1792861549
+      }
+    },
+    {
+      "t": 116874,
+      "frame": {
+        "url": "timer/system_time",
+        "data": 1792861551
+      }
+    },
+    {
+      "t": 117877,
+      "frame": {
+        "url": "timer/system_time",
+        "data": 1792861552
+      }
+    },
+    {
+      "t": 119628,
+      "frame": {
+        "url": "timer/system_time",
+        "data": 1792861554
+      }
+    },
+    {
+      "t": 122631,
+      "frame": {
+        "url": "timer/system_time",
+        "data": 1792861557
+      }
+    },
+    {
+      "t": 125631,
+      "frame": {
+        "url": "timer/system_time",
+        "data": 1792861560
+      }
+    },
+    {
+      "t": 128631,
+      "frame": {
+        "url": "timer/system_time",
+        "data": 1792861563
+      }
+    },
+    {
+      "t": 131632,
+      "frame": {
+        "url": "timer/system_time",
+        "data": 1792861566
+      }
+    },
+    {
+      "t": 133634,
+      "frame": {
+        "url": "timer/system_time",
+        "data": 1792861568
+      }
+    },
+    {
+      "t": 135630,
+      "frame": {
+        "url": "timer/system_time",
+        "data": 1792861570
+      }
+    },
+    {
+      "t": 137755,
+      "frame": {
+        "url": "presentation/current",
+        "data": {
+          "presentation": {
+            "id": {
+              "uuid": "894B40A0-42FE-411E-B915-F1919C6DA33E",
+              "name": "There Is Freedom",
+              "index": 0
+            },
+            "groups": [
+              {
+                "name": "Intro",
+                "color": {
+                  "red": 0,
+                  "green": 0,
+                  "blue": 0,
+                  "alpha": 0
+                },
+                "slides": [
+                  {
+                    "enabled": true,
+                    "notes": "",
+                    "text": "\r\r\r",
+                    "label": "Cloudscape_07_4K.mp4",
+                    "size": {
+                      "width": 1920,
+                      "height": 1080
+                    }
+                  }
+                ],
+                "uuid": "81AD0561-0D3E-4410-95A2-2A36794A2A4F"
+              },
+              {
+                "name": "Verse 1",
+                "color": {
+                  "red": 0,
+                  "green": 0,
+                  "blue": 0,
+                  "alpha": 0
+                },
+                "slides": [
+                  {
+                    "enabled": true,
+                    "notes": "",
+                    "text": "There Is Freedom / Verse 1 / slide 1 line 1\nThere Is Freedom / Verse 1 / slide 1 line 2",
+                    "label": "",
+                    "size": {
+                      "width": 1920,
+                      "height": 1080
+                    }
+                  },
+                  {
+                    "enabled": true,
+                    "notes": "",
+                    "text": "There Is Freedom / Verse 1 / slide 2 line 1\nThere Is Freedom / Verse 1 / slide 2 line 2",
+                    "label": "",
+                    "size": {
+                      "width": 1920,
+                      "height": 1080
+                    }
+                  }
+                ],
+                "uuid": "3467E660-556A-47F0-9FFF-FDCF9F030F0C"
+              },
+              {
+                "name": "Verse 2",
+                "color": {
+                  "red": 0,
+                  "green": 0,
+                  "blue": 0,
+                  "alpha": 0
+                },
+                "slides": [
+                  {
+                    "enabled": true,
+                    "notes": "",
+                    "text": "There Is Freedom / Verse 2 / slide 1 line 1\nThere Is Freedom / Verse 2 / slide 1 line 2",
+                    "label": "",
+                    "size": {
+                      "width": 1920,
+                      "height": 1080
+                    }
+                  },
+                  {
+                    "enabled": true,
+                    "notes": "",
+                    "text": "There Is Freedom / Verse 1 / slide 2 line 1\nThere Is Freedom / Verse 1 / slide 2 line 2",
+                    "label": "",
+                    "size": {
+                      "width": 1920,
+                      "height": 1080
+                    }
+                  }
+                ],
+                "uuid": "253C73C1-1524-4DE6-9505-42C6A7BD0EB7"
+              },
+              {
+                "name": "Pre Chorus",
+                "color": {
+                  "red": 0,
+                  "green": 0,
+                  "blue": 0,
+                  "alpha": 0
+                },
+                "slides": [
+                  {
+                    "enabled": true,
+                    "notes": "",
+                    "text": "There Is Freedom / Pre Chorus / slide 1 line 1",
+                    "label": "",
+                    "size": {
+                      "width": 1920,
+                      "height": 1080
+                    }
+                  }
+                ],
+                "uuid": "20069D38-F47D-4D3B-B8EB-A7792772EE6D"
+              },
+              {
+                "name": "Chorus",
+                "color": {
+                  "red": 0,
+                  "green": 0,
+                  "blue": 0,
+                  "alpha": 0
+                },
+                "slides": [
+                  {
+                    "enabled": true,
+                    "notes": "",
+                    "text": "There Is Freedom / Chorus / slide 1 line 1\nThere Is Freedom / Chorus / slide 1 line 2",
+                    "label": "",
+                    "size": {
+                      "width": 1920,
+                      "height": 1080
+                    }
+                  },
+                  {
+                    "enabled": true,
+                    "notes": "",
+                    "text": "There Is Freedom / Chorus / slide 2 line 1\nThere Is Freedom / Chorus / slide 2 line 2\nThere Is Freedom / Chorus / slide 2 line 3​",
+                    "label": "",
+                    "size": {
+                      "width": 1920,
+                      "height": 1080
+                    }
+                  },
+                  {
+                    "enabled": true,
+                    "notes": "",
+                    "text": "There Is Freedom / Chorus / slide 3 line 1\nThere Is Freedom / Chorus / slide 3 line 2",
+                    "label": "",
+                    "size": {
+                      "width": 1920,
+                      "height": 1080
+                    }
+                  },
+                  {
+                    "enabled": true,
+                    "notes": "",
+                    "text": "There Is Freedom / Chorus / slide 4 line 1​\nThere Is Freedom / Chorus / slide 4 line 2",
+                    "label": "",
+                    "size": {
+                      "width": 1920,
+                      "height": 1080
+                    }
+                  }
+                ],
+                "uuid": "267C8258-8CC5-4E41-B0B4-73D410B2B816"
+              },
+              {
+                "name": "Turnaround",
+                "color": {
+                  "red": 0,
+                  "green": 0,
+                  "blue": 0,
+                  "alpha": 0
+                },
+                "slides": [
+                  {
+                    "enabled": true,
+                    "notes": "",
+                    "text": "\r\r\r",
+                    "label": "",
+                    "size": {
+                      "width": 1920,
+                      "height": 1080
+                    }
+                  }
+                ],
+                "uuid": "747BA303-7F3E-4866-8FB5-FDE6B1283992"
+              },
+              {
+                "name": "Verse 3",
+                "color": {
+                  "red": 0,
+                  "green": 0,
+                  "blue": 0,
+                  "alpha": 0
+                },
+                "slides": [
+                  {
+                    "enabled": true,
+                    "notes": "",
+                    "text": "There Is Freedom / Verse 3 / slide 1 line 1\nThere Is Freedom / Verse 3 / slide 1 line 2",
+                    "label": "",
+                    "size": {
+                      "width": 1920,
+                      "height": 1080
+                    }
+                  },
+                  {
+                    "enabled": true,
+                    "notes": "",
+                    "text": "There Is Freedom / Verse 1 / slide 2 line 1\nThere Is Freedom / Verse 1 / slide 2 line 2",
+                    "label": "",
+                    "size": {
+                      "width": 1920,
+                      "height": 1080
+                    }
+                  }
+                ],
+                "uuid": "500E21EF-8EAC-49F1-BBE8-08B6CF2528B7"
+              },
+              {
+                "name": "Verse 4",
+                "color": {
+                  "red": 0,
+                  "green": 0,
+                  "blue": 0,
+                  "alpha": 0
+                },
+                "slides": [
+                  {
+                    "enabled": true,
+                    "notes": "",
+                    "text": "There Is Freedom / Verse 4 / slide 1 line 1\nThere Is Freedom / Verse 4 / slide 1 line 2",
+                    "label": "",
+                    "size": {
+                      "width": 1920,
+                      "height": 1080
+                    }
+                  },
+                  {
+                    "enabled": true,
+                    "notes": "",
+                    "text": "There Is Freedom / Verse 1 / slide 2 line 1\nThere Is Freedom / Verse 1 / slide 2 line 2",
+                    "label": "",
+                    "size": {
+                      "width": 1920,
+                      "height": 1080
+                    }
+                  },
+                  {
+                    "enabled": true,
+                    "notes": "",
+                    "text": "There Is Freedom / Chorus / slide 1 line 1\nThere Is Freedom / Chorus / slide 1 line 2",
+                    "label": "",
+                    "size": {
+                      "width": 1920,
+                      "height": 1080
+                    }
+                  },
+                  {
+                    "enabled": true,
+                    "notes": "",
+                    "text": "There Is Freedom / Chorus / slide 2 line 1\nThere Is Freedom / Chorus / slide 2 line 2\nThere Is Freedom / Chorus / slide 2 line 3​",
+                    "label": "",
+                    "size": {
+                      "width": 1920,
+                      "height": 1080
+                    }
+                  },
+                  {
+                    "enabled": true,
+                    "notes": "",
+                    "text": "There Is Freedom / Chorus / slide 3 line 1\nThere Is Freedom / Chorus / slide 3 line 2",
+                    "label": "",
+                    "size": {
+                      "width": 1920,
+                      "height": 1080
+                    }
+                  },
+                  {
+                    "enabled": true,
+                    "notes": "",
+                    "text": "There Is Freedom / Chorus / slide 4 line 1​\nThere Is Freedom / Chorus / slide 4 line 2",
+                    "label": "",
+                    "size": {
+                      "width": 1920,
+                      "height": 1080
+                    }
+                  },
+                  {
+                    "enabled": true,
+                    "notes": "",
+                    "text": "\r\r\r",
+                    "label": "",
+                    "size": {
+                      "width": 1920,
+                      "height": 1080
+                    }
+                  }
+                ],
+                "uuid": "78841568-4AD3-44CC-9D07-222C4913D3C0"
+              },
+              {
+                "name": "Bridge 1",
+                "color": {
+                  "red": 0,
+                  "green": 0,
+                  "blue": 0,
+                  "alpha": 0
+                },
+                "slides": [
+                  {
+                    "enabled": true,
+                    "notes": "",
+                    "text": "There Is Freedom / Bridge 1 / slide 1 line 1​\nThere Is Freedom / Bridge 1 / slide 1 line 2​",
+                    "label": "",
+                    "size": {
+                      "width": 1920,
+                      "height": 1080
+                    }
+                  },
+                  {
+                    "enabled": true,
+                    "notes": "",
+                    "text": "There Is Freedom / Bridge 1 / slide 2 line 1\nThere Is Freedom / Bridge 1 / slide 2 line 2\nThere Is Freedom / Bridge 1 / slide 2 line 3​",
+                    "label": "",
+                    "size": {
+                      "width": 1920,
+                      "height": 1080
+                    }
+                  }
+                ],
+                "uuid": "07007AF6-940E-49AD-A816-07752E786EDA"
+              },
+              {
+                "name": "Bridge 2",
+                "color": {
+                  "red": 0,
+                  "green": 0,
+                  "blue": 0,
+                  "alpha": 0
+                },
+                "slides": [
+                  {
+                    "enabled": true,
+                    "notes": "",
+                    "text": "There Is Freedom / Bridge 2 / slide 1 line 1​\nThere Is Freedom / Bridge 2 / slide 1 line 2​",
+                    "label": "",
+                    "size": {
+                      "width": 1920,
+                      "height": 1080
+                    }
+                  },
+                  {
+                    "enabled": true,
+                    "notes": "",
+                    "text": "There Is Freedom / Bridge 2 / slide 2 line 1\nThere Is Freedom / Bridge 2 / slide 2 line 2\nThere Is Freedom / Bridge 2 / slide 2 line 3​",
+                    "label": "",
+                    "size": {
+                      "width": 1920,
+                      "height": 1080
+                    }
+                  }
+                ],
+                "uuid": "86C38989-95A0-4325-A15F-DB48CD77648B"
+              },
+              {
+                "name": "Bridge 1",
+                "color": {
+                  "red": 0,
+                  "green": 0,
+                  "blue": 0,
+                  "alpha": 0
+                },
+                "slides": [
+                  {
+                    "enabled": true,
+                    "notes": "",
+                    "text": "There Is Freedom / Bridge 1 / slide 1 line 1\nThere Is Freedom / Bridge 1 / slide 1 line 2",
+                    "label": "",
+                    "size": {
+                      "width": 1920,
+                      "height": 1080
+                    }
+                  },
+                  {
+                    "enabled": true,
+                    "notes": "",
+                    "text": "There Is Freedom / Bridge 1 / slide 2 line 1\nThere Is Freedom / Bridge 1 / slide 2 line 2\nThere Is Freedom / Bridge 1 / slide 2 line 3",
+                    "label": "",
+                    "size": {
+                      "width": 1920,
+                      "height": 1080
+                    }
+                  }
+                ],
+                "uuid": "EED17593-188A-4FCA-963E-836CBEC30636"
+              },
+              {
+                "name": "Bridge 2",
+                "color": {
+                  "red": 0,
+                  "green": 0,
+                  "blue": 0,
+                  "alpha": 0
+                },
+                "slides": [
+                  {
+                    "enabled": true,
+                    "notes": "",
+                    "text": "There Is Freedom / Bridge 2 / slide 1 line 1\nThere Is Freedom / Bridge 2 / slide 1 line 2",
+                    "label": "",
+                    "size": {
+                      "width": 1920,
+                      "height": 1080
+                    }
+                  },
+                  {
+                    "enabled": true,
+                    "notes": "",
+                    "text": "There Is Freedom / Bridge 2 / slide 2 line 1\nThere Is Freedom / Bridge 2 / slide 2 line 2\nThere Is Freedom / Bridge 2 / slide 2 line 3",
+                    "label": "",
+                    "size": {
+                      "width": 1920,
+                      "height": 1080
+                    }
+                  },
+                  {
+                    "enabled": true,
+                    "notes": "",
+                    "text": "There Is Freedom / Chorus / slide 1 line 1\nThere Is Freedom / Chorus / slide 1 line 2",
+                    "label": "",
+                    "size": {
+                      "width": 1920,
+                      "height": 1080
+                    }
+                  },
+                  {
+                    "enabled": true,
+                    "notes": "",
+                    "text": "There Is Freedom / Chorus / slide 2 line 1\nThere Is Freedom / Chorus / slide 2 line 2\nThere Is Freedom / Chorus / slide 2 line 3​",
+                    "label": "",
+                    "size": {
+                      "width": 1920,
+                      "height": 1080
+                    }
+                  },
+                  {
+                    "enabled": true,
+                    "notes": "",
+                    "text": "There Is Freedom / Chorus / slide 3 line 1\nThere Is Freedom / Chorus / slide 3 line 2",
+                    "label": "",
+                    "size": {
+                      "width": 1920,
+                      "height": 1080
+                    }
+                  },
+                  {
+                    "enabled": true,
+                    "notes": "",
+                    "text": "There Is Freedom / Bridge 2 / slide 6 line 1​",
+                    "label": "",
+                    "size": {
+                      "width": 1920,
+                      "height": 1080
+                    }
+                  },
+                  {
+                    "enabled": true,
+                    "notes": "",
+                    "text": "There Is Freedom / Chorus / slide 1 line 1\nThere Is Freedom / Chorus / slide 1 line 2",
+                    "label": "",
+                    "size": {
+                      "width": 1920,
+                      "height": 1080
+                    }
+                  },
+                  {
+                    "enabled": true,
+                    "notes": "",
+                    "text": "There Is Freedom / Chorus / slide 2 line 1\nThere Is Freedom / Chorus / slide 2 line 2\nThere Is Freedom / Chorus / slide 2 line 3​",
+                    "label": "",
+                    "size": {
+                      "width": 1920,
+                      "height": 1080
+                    }
+                  },
+                  {
+                    "enabled": true,
+                    "notes": "",
+                    "text": "There Is Freedom / Chorus / slide 3 line 1\nThere Is Freedom / Chorus / slide 3 line 2",
+                    "label": "",
+                    "size": {
+                      "width": 1920,
+                      "height": 1080
+                    }
+                  },
+                  {
+                    "enabled": true,
+                    "notes": "",
+                    "text": "There Is Freedom / Chorus / slide 4 line 1​\nThere Is Freedom / Chorus / slide 4 line 2",
+                    "label": "",
+                    "size": {
+                      "width": 1920,
+                      "height": 1080
+                    }
+                  }
+                ],
+                "uuid": "AA36088A-7CBF-407D-BA78-9D4B87407EC2"
+              },
+              {
+                "name": "Ending",
+                "color": {
+                  "red": 0,
+                  "green": 0,
+                  "blue": 0,
+                  "alpha": 0
+                },
+                "slides": [
+                  {
+                    "enabled": true,
+                    "notes": "",
+                    "text": "\r\r\r",
+                    "label": "",
+                    "size": {
+                      "width": 1920,
+                      "height": 1080
+                    }
+                  }
+                ],
+                "uuid": "1989820F-8AC7-4FE5-8374-AF10E2C4338C"
+              }
+            ],
+            "has_timeline": false,
+            "presentation_path": "",
+            "destination": "presentation",
+            "arrangements": [
+              {
+                "id": {
+                  "uuid": "894B40A0-42FE-411E-B915-F1919C6DA33E",
+                  "name": "Master",
+                  "index": 0
+                },
+                "groups": [
+                  "81AD0561-0D3E-4410-95A2-2A36794A2A4F",
+                  "3467E660-556A-47F0-9FFF-FDCF9F030F0C",
+                  "253C73C1-1524-4DE6-9505-42C6A7BD0EB7",
+                  "20069D38-F47D-4D3B-B8EB-A7792772EE6D",
+                  "267C8258-8CC5-4E41-B0B4-73D410B2B816",
+                  "747BA303-7F3E-4866-8FB5-FDE6B1283992",
+                  "500E21EF-8EAC-49F1-BBE8-08B6CF2528B7",
+                  "78841568-4AD3-44CC-9D07-222C4913D3C0",
+                  "07007AF6-940E-49AD-A816-07752E786EDA",
+                  "86C38989-95A0-4325-A15F-DB48CD77648B",
+                  "EED17593-188A-4FCA-963E-836CBEC30636",
+                  "AA36088A-7CBF-407D-BA78-9D4B87407EC2",
+                  "1989820F-8AC7-4FE5-8374-AF10E2C4338C"
+                ],
+                "total_cues": 37
+              },
+              {
+                "id": {
+                  "uuid": "6790327C-E141-4EC5-A49B-49751DA40875",
+                  "name": "Full",
+                  "index": 1
+                },
+                "groups": [
+                  "81AD0561-0D3E-4410-95A2-2A36794A2A4F",
+                  "81AD0561-0D3E-4410-95A2-2A36794A2A4F",
+                  "3467E660-556A-47F0-9FFF-FDCF9F030F0C",
+                  "253C73C1-1524-4DE6-9505-42C6A7BD0EB7",
+                  "20069D38-F47D-4D3B-B8EB-A7792772EE6D",
+                  "267C8258-8CC5-4E41-B0B4-73D410B2B816",
+                  "747BA303-7F3E-4866-8FB5-FDE6B1283992",
+                  "500E21EF-8EAC-49F1-BBE8-08B6CF2528B7",
+                  "78841568-4AD3-44CC-9D07-222C4913D3C0",
+                  "267C8258-8CC5-4E41-B0B4-73D410B2B816",
+                  "747BA303-7F3E-4866-8FB5-FDE6B1283992",
+                  "07007AF6-940E-49AD-A816-07752E786EDA",
+                  "86C38989-95A0-4325-A15F-DB48CD77648B",
+                  "EED17593-188A-4FCA-963E-836CBEC30636",
+                  "AA36088A-7CBF-407D-BA78-9D4B87407EC2",
+                  "267C8258-8CC5-4E41-B0B4-73D410B2B816",
+                  "267C8258-8CC5-4E41-B0B4-73D410B2B816",
+                  "1989820F-8AC7-4FE5-8374-AF10E2C4338C"
+                ],
+                "total_cues": 51
+              }
+            ],
+            "current_arrangement": "894B40A0-42FE-411E-B915-F1919C6DA33E",
+            "type": "multitracks",
+            "is_authorized": true,
+            "total_cues": 37
+          }
+        }
+      }
+    },
+    {
+      "t": 137983,
+      "frame": {
+        "url": "status/slide",
+        "data": {
+          "current": {
+            "text": "There Is Freedom / Bridge 1 / slide 1 line 1​\nThere Is Freedom / Bridge 1 / slide 1 line 2​",
+            "notes": "",
+            "uuid": "E003E83F-A44F-4A22-A34D-C1406C9184CE"
+          },
+          "next": {
+            "text": "There Is Freedom / Bridge 1 / slide 2 line 1\nThere Is Freedom / Bridge 1 / slide 2 line 2\nThere Is Freedom / Bridge 1 / slide 2 line 3​",
+            "notes": "",
+            "uuid": "CEE78523-62BB-4BA8-9334-B01789EA615D"
+          }
+        }
+      }
+    },
+    {
+      "t": 139634,
+      "frame": {
+        "url": "timer/system_time",
+        "data": 1792861574
+      }
+    },
+    {
+      "t": 140635,
+      "frame": {
+        "url": "timer/system_time",
+        "data": 1792861575
+      }
+    },
+    {
+      "t": 142634,
+      "frame": {
+        "url": "timer/system_time",
+        "data": 1792861577
+      }
+    },
+    {
+      "t": 144627,
+      "frame": {
+        "url": "timer/system_time",
+        "data": 1792861579
+      }
+    },
+    {
+      "t": 146620,
+      "frame": {
+        "url": "presentation/slide_index",
+        "data": {
+          "presentation_index": {
+            "index": 5,
+            "presentation_id": {
+              "uuid": "894B40A0-42FE-411E-B915-F1919C6DA33E",
+              "name": "There Is Freedom",
+              "index": 257
+            },
+            "total_cues": 37,
+            "remaining_cues": 31
+          }
+        }
+      }
+    },
+    {
+      "t": 147636,
+      "frame": {
+        "url": "timer/system_time",
+        "data": 1792861582
+      }
+    },
+    {
+      "t": 150635,
+      "frame": {
+        "url": "timer/system_time",
+        "data": 1792861585
+      }
+    },
+    {
+      "t": 153636,
+      "frame": {
+        "url": "timer/system_time",
+        "data": 1792861588
+      }
+    },
+    {
+      "t": 156636,
+      "frame": {
+        "url": "timer/system_time",
+        "data": 1792861591
+      }
+    },
+    {
+      "t": 158238,
+      "frame": {
+        "url": "presentation/current",
+        "data": {
+          "presentation": null
+        }
+      }
+    },
+    {
+      "t": 158330,
+      "frame": {
+        "url": "status/slide",
+        "data": {
+          "current": null,
+          "next": null
+        }
+      }
+    },
+    {
+      "t": 159637,
+      "frame": {
+        "url": "timer/system_time",
+        "data": 1792861594
+      }
+    },
+    {
+      "t": 162633,
+      "frame": {
+        "url": "timer/system_time",
+        "data": 1792861597
+      }
+    },
+    {
+      "t": 165635,
+      "frame": {
+        "url": "timer/system_time",
+        "data": 1792861600
+      }
+    },
+    {
+      "t": 168635,
+      "frame": {
+        "url": "timer/system_time",
+        "data": 1792861603
+      }
+    },
+    {
+      "t": 170633,
+      "frame": {
+        "url": "timer/system_time",
+        "data": 1792861605
+      }
+    },
+    {
+      "t": 172637,
+      "frame": {
+        "url": "timer/system_time",
+        "data": 1792861607
+      }
+    },
+    {
+      "t": 174636,
+      "frame": {
+        "url": "timer/system_time",
+        "data": 1792861609
+      }
+    },
+    {
+      "t": 176635,
+      "frame": {
+        "url": "timer/system_time",
+        "data": 1792861611
+      }
+    },
+    {
+      "t": 178636,
+      "frame": {
+        "url": "timer/system_time",
+        "data": 1792861613
+      }
+    },
+    {
+      "t": 180636,
+      "frame": {
+        "url": "timer/system_time",
+        "data": 1792861615
+      }
+    },
+    {
+      "t": 182635,
+      "frame": {
+        "url": "timer/system_time",
+        "data": 1792861617
+      }
+    },
+    {
+      "t": 184636,
+      "frame": {
+        "url": "timer/system_time",
+        "data": 1792861619
+      }
+    },
+    {
+      "t": 186637,
+      "frame": {
+        "url": "timer/system_time",
+        "data": 1792861621
+      }
+    },
+    {
+      "t": 188641,
+      "frame": {
+        "url": "timer/system_time",
+        "data": 1792861623
+      }
+    },
+    {
+      "t": 190636,
+      "frame": {
+        "url": "timer/system_time",
+        "data": 1792861625
+      }
+    },
+    {
+      "t": 192636,
+      "frame": {
+        "url": "timer/system_time",
+        "data": 1792861627
+      }
+    },
+    {
+      "t": 194640,
+      "frame": {
+        "url": "timer/system_time",
+        "data": 1792861629
+      }
+    },
+    {
+      "t": 196633,
+      "frame": {
+        "url": "timer/system_time",
+        "data": 1792861631
+      }
+    },
+    {
+      "t": 198635,
+      "frame": {
+        "url": "timer/system_time",
+        "data": 1792861633
+      }
+    },
+    {
+      "t": 200638,
+      "frame": {
+        "url": "timer/system_time",
+        "data": 1792861635
+      }
+    },
+    {
+      "t": 202635,
+      "frame": {
+        "url": "timer/system_time",
+        "data": 1792861637
+      }
+    },
+    {
+      "t": 204635,
+      "frame": {
+        "url": "timer/system_time",
+        "data": 1792861639
+      }
+    },
+    {
+      "t": 205191,
+      "frame": {
+        "url": "presentation/current",
+        "data": {
+          "presentation": {
+            "id": {
+              "uuid": "894B40A0-42FE-411E-B915-F1919C6DA33E",
+              "name": "There Is Freedom",
+              "index": 0
+            },
+            "groups": [
+              {
+                "name": "Intro",
+                "color": {
+                  "red": 0,
+                  "green": 0,
+                  "blue": 0,
+                  "alpha": 0
+                },
+                "slides": [
+                  {
+                    "enabled": true,
+                    "notes": "",
+                    "text": "\r\r\r",
+                    "label": "Cloudscape_07_4K.mp4",
+                    "size": {
+                      "width": 1920,
+                      "height": 1080
+                    }
+                  }
+                ],
+                "uuid": "81AD0561-0D3E-4410-95A2-2A36794A2A4F"
+              },
+              {
+                "name": "Verse 1",
+                "color": {
+                  "red": 0,
+                  "green": 0,
+                  "blue": 0,
+                  "alpha": 0
+                },
+                "slides": [
+                  {
+                    "enabled": true,
+                    "notes": "",
+                    "text": "There Is Freedom / Verse 1 / slide 1 line 1\nThere Is Freedom / Verse 1 / slide 1 line 2",
+                    "label": "",
+                    "size": {
+                      "width": 1920,
+                      "height": 1080
+                    }
+                  },
+                  {
+                    "enabled": true,
+                    "notes": "",
+                    "text": "There Is Freedom / Verse 1 / slide 2 line 1\nThere Is Freedom / Verse 1 / slide 2 line 2",
+                    "label": "",
+                    "size": {
+                      "width": 1920,
+                      "height": 1080
+                    }
+                  }
+                ],
+                "uuid": "3467E660-556A-47F0-9FFF-FDCF9F030F0C"
+              },
+              {
+                "name": "Verse 2",
+                "color": {
+                  "red": 0,
+                  "green": 0,
+                  "blue": 0,
+                  "alpha": 0
+                },
+                "slides": [
+                  {
+                    "enabled": true,
+                    "notes": "",
+                    "text": "There Is Freedom / Verse 2 / slide 1 line 1\nThere Is Freedom / Verse 2 / slide 1 line 2",
+                    "label": "",
+                    "size": {
+                      "width": 1920,
+                      "height": 1080
+                    }
+                  },
+                  {
+                    "enabled": true,
+                    "notes": "",
+                    "text": "There Is Freedom / Verse 1 / slide 2 line 1\nThere Is Freedom / Verse 1 / slide 2 line 2",
+                    "label": "",
+                    "size": {
+                      "width": 1920,
+                      "height": 1080
+                    }
+                  }
+                ],
+                "uuid": "253C73C1-1524-4DE6-9505-42C6A7BD0EB7"
+              },
+              {
+                "name": "Pre Chorus",
+                "color": {
+                  "red": 0,
+                  "green": 0,
+                  "blue": 0,
+                  "alpha": 0
+                },
+                "slides": [
+                  {
+                    "enabled": true,
+                    "notes": "",
+                    "text": "There Is Freedom / Pre Chorus / slide 1 line 1",
+                    "label": "",
+                    "size": {
+                      "width": 1920,
+                      "height": 1080
+                    }
+                  }
+                ],
+                "uuid": "20069D38-F47D-4D3B-B8EB-A7792772EE6D"
+              },
+              {
+                "name": "Chorus",
+                "color": {
+                  "red": 0,
+                  "green": 0,
+                  "blue": 0,
+                  "alpha": 0
+                },
+                "slides": [
+                  {
+                    "enabled": true,
+                    "notes": "",
+                    "text": "There Is Freedom / Chorus / slide 1 line 1\nThere Is Freedom / Chorus / slide 1 line 2",
+                    "label": "",
+                    "size": {
+                      "width": 1920,
+                      "height": 1080
+                    }
+                  },
+                  {
+                    "enabled": true,
+                    "notes": "",
+                    "text": "There Is Freedom / Chorus / slide 2 line 1\nThere Is Freedom / Chorus / slide 2 line 2\nThere Is Freedom / Chorus / slide 2 line 3​",
+                    "label": "",
+                    "size": {
+                      "width": 1920,
+                      "height": 1080
+                    }
+                  },
+                  {
+                    "enabled": true,
+                    "notes": "",
+                    "text": "There Is Freedom / Chorus / slide 3 line 1\nThere Is Freedom / Chorus / slide 3 line 2",
+                    "label": "",
+                    "size": {
+                      "width": 1920,
+                      "height": 1080
+                    }
+                  },
+                  {
+                    "enabled": true,
+                    "notes": "",
+                    "text": "There Is Freedom / Chorus / slide 4 line 1​\nThere Is Freedom / Chorus / slide 4 line 2",
+                    "label": "",
+                    "size": {
+                      "width": 1920,
+                      "height": 1080
+                    }
+                  }
+                ],
+                "uuid": "267C8258-8CC5-4E41-B0B4-73D410B2B816"
+              },
+              {
+                "name": "Turnaround",
+                "color": {
+                  "red": 0,
+                  "green": 0,
+                  "blue": 0,
+                  "alpha": 0
+                },
+                "slides": [
+                  {
+                    "enabled": true,
+                    "notes": "",
+                    "text": "\r\r\r",
+                    "label": "",
+                    "size": {
+                      "width": 1920,
+                      "height": 1080
+                    }
+                  }
+                ],
+                "uuid": "747BA303-7F3E-4866-8FB5-FDE6B1283992"
+              },
+              {
+                "name": "Verse 3",
+                "color": {
+                  "red": 0,
+                  "green": 0,
+                  "blue": 0,
+                  "alpha": 0
+                },
+                "slides": [
+                  {
+                    "enabled": true,
+                    "notes": "",
+                    "text": "There Is Freedom / Verse 3 / slide 1 line 1\nThere Is Freedom / Verse 3 / slide 1 line 2",
+                    "label": "",
+                    "size": {
+                      "width": 1920,
+                      "height": 1080
+                    }
+                  },
+                  {
+                    "enabled": true,
+                    "notes": "",
+                    "text": "There Is Freedom / Verse 1 / slide 2 line 1\nThere Is Freedom / Verse 1 / slide 2 line 2",
+                    "label": "",
+                    "size": {
+                      "width": 1920,
+                      "height": 1080
+                    }
+                  }
+                ],
+                "uuid": "500E21EF-8EAC-49F1-BBE8-08B6CF2528B7"
+              },
+              {
+                "name": "Verse 4",
+                "color": {
+                  "red": 0,
+                  "green": 0,
+                  "blue": 0,
+                  "alpha": 0
+                },
+                "slides": [
+                  {
+                    "enabled": true,
+                    "notes": "",
+                    "text": "There Is Freedom / Verse 4 / slide 1 line 1\nThere Is Freedom / Verse 4 / slide 1 line 2",
+                    "label": "",
+                    "size": {
+                      "width": 1920,
+                      "height": 1080
+                    }
+                  },
+                  {
+                    "enabled": true,
+                    "notes": "",
+                    "text": "There Is Freedom / Verse 1 / slide 2 line 1\nThere Is Freedom / Verse 1 / slide 2 line 2",
+                    "label": "",
+                    "size": {
+                      "width": 1920,
+                      "height": 1080
+                    }
+                  },
+                  {
+                    "enabled": true,
+                    "notes": "",
+                    "text": "There Is Freedom / Chorus / slide 1 line 1\nThere Is Freedom / Chorus / slide 1 line 2",
+                    "label": "",
+                    "size": {
+                      "width": 1920,
+                      "height": 1080
+                    }
+                  },
+                  {
+                    "enabled": true,
+                    "notes": "",
+                    "text": "There Is Freedom / Chorus / slide 2 line 1\nThere Is Freedom / Chorus / slide 2 line 2\nThere Is Freedom / Chorus / slide 2 line 3​",
+                    "label": "",
+                    "size": {
+                      "width": 1920,
+                      "height": 1080
+                    }
+                  },
+                  {
+                    "enabled": true,
+                    "notes": "",
+                    "text": "There Is Freedom / Chorus / slide 3 line 1\nThere Is Freedom / Chorus / slide 3 line 2",
+                    "label": "",
+                    "size": {
+                      "width": 1920,
+                      "height": 1080
+                    }
+                  },
+                  {
+                    "enabled": true,
+                    "notes": "",
+                    "text": "There Is Freedom / Chorus / slide 4 line 1​\nThere Is Freedom / Chorus / slide 4 line 2",
+                    "label": "",
+                    "size": {
+                      "width": 1920,
+                      "height": 1080
+                    }
+                  },
+                  {
+                    "enabled": true,
+                    "notes": "",
+                    "text": "\r\r\r",
+                    "label": "",
+                    "size": {
+                      "width": 1920,
+                      "height": 1080
+                    }
+                  }
+                ],
+                "uuid": "78841568-4AD3-44CC-9D07-222C4913D3C0"
+              },
+              {
+                "name": "Bridge 1",
+                "color": {
+                  "red": 0,
+                  "green": 0,
+                  "blue": 0,
+                  "alpha": 0
+                },
+                "slides": [
+                  {
+                    "enabled": true,
+                    "notes": "",
+                    "text": "There Is Freedom / Bridge 1 / slide 1 line 1​\nThere Is Freedom / Bridge 1 / slide 1 line 2​",
+                    "label": "",
+                    "size": {
+                      "width": 1920,
+                      "height": 1080
+                    }
+                  },
+                  {
+                    "enabled": true,
+                    "notes": "",
+                    "text": "There Is Freedom / Bridge 1 / slide 2 line 1\nThere Is Freedom / Bridge 1 / slide 2 line 2\nThere Is Freedom / Bridge 1 / slide 2 line 3​",
+                    "label": "",
+                    "size": {
+                      "width": 1920,
+                      "height": 1080
+                    }
+                  }
+                ],
+                "uuid": "07007AF6-940E-49AD-A816-07752E786EDA"
+              },
+              {
+                "name": "Bridge 2",
+                "color": {
+                  "red": 0,
+                  "green": 0,
+                  "blue": 0,
+                  "alpha": 0
+                },
+                "slides": [
+                  {
+                    "enabled": true,
+                    "notes": "",
+                    "text": "There Is Freedom / Bridge 2 / slide 1 line 1​\nThere Is Freedom / Bridge 2 / slide 1 line 2​",
+                    "label": "",
+                    "size": {
+                      "width": 1920,
+                      "height": 1080
+                    }
+                  },
+                  {
+                    "enabled": true,
+                    "notes": "",
+                    "text": "There Is Freedom / Bridge 2 / slide 2 line 1\nThere Is Freedom / Bridge 2 / slide 2 line 2\nThere Is Freedom / Bridge 2 / slide 2 line 3​",
+                    "label": "",
+                    "size": {
+                      "width": 1920,
+                      "height": 1080
+                    }
+                  }
+                ],
+                "uuid": "86C38989-95A0-4325-A15F-DB48CD77648B"
+              },
+              {
+                "name": "Bridge 1",
+                "color": {
+                  "red": 0,
+                  "green": 0,
+                  "blue": 0,
+                  "alpha": 0
+                },
+                "slides": [
+                  {
+                    "enabled": true,
+                    "notes": "",
+                    "text": "There Is Freedom / Bridge 1 / slide 1 line 1\nThere Is Freedom / Bridge 1 / slide 1 line 2",
+                    "label": "",
+                    "size": {
+                      "width": 1920,
+                      "height": 1080
+                    }
+                  },
+                  {
+                    "enabled": true,
+                    "notes": "",
+                    "text": "There Is Freedom / Bridge 1 / slide 2 line 1\nThere Is Freedom / Bridge 1 / slide 2 line 2\nThere Is Freedom / Bridge 1 / slide 2 line 3",
+                    "label": "",
+                    "size": {
+                      "width": 1920,
+                      "height": 1080
+                    }
+                  }
+                ],
+                "uuid": "EED17593-188A-4FCA-963E-836CBEC30636"
+              },
+              {
+                "name": "Bridge 2",
+                "color": {
+                  "red": 0,
+                  "green": 0,
+                  "blue": 0,
+                  "alpha": 0
+                },
+                "slides": [
+                  {
+                    "enabled": true,
+                    "notes": "",
+                    "text": "There Is Freedom / Bridge 2 / slide 1 line 1\nThere Is Freedom / Bridge 2 / slide 1 line 2",
+                    "label": "",
+                    "size": {
+                      "width": 1920,
+                      "height": 1080
+                    }
+                  },
+                  {
+                    "enabled": true,
+                    "notes": "",
+                    "text": "There Is Freedom / Bridge 2 / slide 2 line 1\nThere Is Freedom / Bridge 2 / slide 2 line 2\nThere Is Freedom / Bridge 2 / slide 2 line 3",
+                    "label": "",
+                    "size": {
+                      "width": 1920,
+                      "height": 1080
+                    }
+                  },
+                  {
+                    "enabled": true,
+                    "notes": "",
+                    "text": "There Is Freedom / Chorus / slide 1 line 1\nThere Is Freedom / Chorus / slide 1 line 2",
+                    "label": "",
+                    "size": {
+                      "width": 1920,
+                      "height": 1080
+                    }
+                  },
+                  {
+                    "enabled": true,
+                    "notes": "",
+                    "text": "There Is Freedom / Chorus / slide 2 line 1\nThere Is Freedom / Chorus / slide 2 line 2\nThere Is Freedom / Chorus / slide 2 line 3​",
+                    "label": "",
+                    "size": {
+                      "width": 1920,
+                      "height": 1080
+                    }
+                  },
+                  {
+                    "enabled": true,
+                    "notes": "",
+                    "text": "There Is Freedom / Chorus / slide 3 line 1\nThere Is Freedom / Chorus / slide 3 line 2",
+                    "label": "",
+                    "size": {
+                      "width": 1920,
+                      "height": 1080
+                    }
+                  },
+                  {
+                    "enabled": true,
+                    "notes": "",
+                    "text": "There Is Freedom / Bridge 2 / slide 6 line 1​",
+                    "label": "",
+                    "size": {
+                      "width": 1920,
+                      "height": 1080
+                    }
+                  },
+                  {
+                    "enabled": true,
+                    "notes": "",
+                    "text": "There Is Freedom / Chorus / slide 1 line 1\nThere Is Freedom / Chorus / slide 1 line 2",
+                    "label": "",
+                    "size": {
+                      "width": 1920,
+                      "height": 1080
+                    }
+                  },
+                  {
+                    "enabled": true,
+                    "notes": "",
+                    "text": "There Is Freedom / Chorus / slide 2 line 1\nThere Is Freedom / Chorus / slide 2 line 2\nThere Is Freedom / Chorus / slide 2 line 3​",
+                    "label": "",
+                    "size": {
+                      "width": 1920,
+                      "height": 1080
+                    }
+                  },
+                  {
+                    "enabled": true,
+                    "notes": "",
+                    "text": "There Is Freedom / Chorus / slide 3 line 1\nThere Is Freedom / Chorus / slide 3 line 2",
+                    "label": "",
+                    "size": {
+                      "width": 1920,
+                      "height": 1080
+                    }
+                  },
+                  {
+                    "enabled": true,
+                    "notes": "",
+                    "text": "There Is Freedom / Chorus / slide 4 line 1​\nThere Is Freedom / Chorus / slide 4 line 2",
+                    "label": "",
+                    "size": {
+                      "width": 1920,
+                      "height": 1080
+                    }
+                  }
+                ],
+                "uuid": "AA36088A-7CBF-407D-BA78-9D4B87407EC2"
+              },
+              {
+                "name": "Ending",
+                "color": {
+                  "red": 0,
+                  "green": 0,
+                  "blue": 0,
+                  "alpha": 0
+                },
+                "slides": [
+                  {
+                    "enabled": true,
+                    "notes": "",
+                    "text": "\r\r\r",
+                    "label": "",
+                    "size": {
+                      "width": 1920,
+                      "height": 1080
+                    }
+                  }
+                ],
+                "uuid": "1989820F-8AC7-4FE5-8374-AF10E2C4338C"
+              }
+            ],
+            "has_timeline": false,
+            "presentation_path": "",
+            "destination": "presentation",
+            "arrangements": [
+              {
+                "id": {
+                  "uuid": "894B40A0-42FE-411E-B915-F1919C6DA33E",
+                  "name": "Master",
+                  "index": 0
+                },
+                "groups": [
+                  "81AD0561-0D3E-4410-95A2-2A36794A2A4F",
+                  "3467E660-556A-47F0-9FFF-FDCF9F030F0C",
+                  "253C73C1-1524-4DE6-9505-42C6A7BD0EB7",
+                  "20069D38-F47D-4D3B-B8EB-A7792772EE6D",
+                  "267C8258-8CC5-4E41-B0B4-73D410B2B816",
+                  "747BA303-7F3E-4866-8FB5-FDE6B1283992",
+                  "500E21EF-8EAC-49F1-BBE8-08B6CF2528B7",
+                  "78841568-4AD3-44CC-9D07-222C4913D3C0",
+                  "07007AF6-940E-49AD-A816-07752E786EDA",
+                  "86C38989-95A0-4325-A15F-DB48CD77648B",
+                  "EED17593-188A-4FCA-963E-836CBEC30636",
+                  "AA36088A-7CBF-407D-BA78-9D4B87407EC2",
+                  "1989820F-8AC7-4FE5-8374-AF10E2C4338C"
+                ],
+                "total_cues": 37
+              },
+              {
+                "id": {
+                  "uuid": "6790327C-E141-4EC5-A49B-49751DA40875",
+                  "name": "Full",
+                  "index": 1
+                },
+                "groups": [
+                  "81AD0561-0D3E-4410-95A2-2A36794A2A4F",
+                  "81AD0561-0D3E-4410-95A2-2A36794A2A4F",
+                  "3467E660-556A-47F0-9FFF-FDCF9F030F0C",
+                  "253C73C1-1524-4DE6-9505-42C6A7BD0EB7",
+                  "20069D38-F47D-4D3B-B8EB-A7792772EE6D",
+                  "267C8258-8CC5-4E41-B0B4-73D410B2B816",
+                  "747BA303-7F3E-4866-8FB5-FDE6B1283992",
+                  "500E21EF-8EAC-49F1-BBE8-08B6CF2528B7",
+                  "78841568-4AD3-44CC-9D07-222C4913D3C0",
+                  "267C8258-8CC5-4E41-B0B4-73D410B2B816",
+                  "747BA303-7F3E-4866-8FB5-FDE6B1283992",
+                  "07007AF6-940E-49AD-A816-07752E786EDA",
+                  "86C38989-95A0-4325-A15F-DB48CD77648B",
+                  "EED17593-188A-4FCA-963E-836CBEC30636",
+                  "AA36088A-7CBF-407D-BA78-9D4B87407EC2",
+                  "267C8258-8CC5-4E41-B0B4-73D410B2B816",
+                  "267C8258-8CC5-4E41-B0B4-73D410B2B816",
+                  "1989820F-8AC7-4FE5-8374-AF10E2C4338C"
+                ],
+                "total_cues": 51
+              }
+            ],
+            "current_arrangement": "894B40A0-42FE-411E-B915-F1919C6DA33E",
+            "type": "multitracks",
+            "is_authorized": true,
+            "total_cues": 37
+          }
+        }
+      }
+    },
+    {
+      "t": 205540,
+      "frame": {
+        "url": "presentation/slide_index",
+        "data": {
+          "presentation_index": {
+            "index": 1,
+            "presentation_id": {
+              "uuid": "894B40A0-42FE-411E-B915-F1919C6DA33E",
+              "name": "There Is Freedom",
+              "index": 257
+            },
+            "total_cues": 37,
+            "remaining_cues": 35
+          }
+        }
+      }
+    },
+    {
+      "t": 206633,
+      "frame": {
+        "url": "timer/system_time",
+        "data": 1792861641
+      }
+    },
+    {
+      "t": 209636,
+      "frame": {
+        "url": "timer/system_time",
+        "data": 1792861644
+      }
+    },
+    {
+      "t": 211638,
+      "frame": {
+        "url": "timer/system_time",
+        "data": 1792861646
+      }
+    },
+    {
+      "t": 213636,
+      "frame": {
+        "url": "timer/system_time",
+        "data": 1792861648
+      }
+    },
+    {
+      "t": 215635,
+      "frame": {
+        "url": "timer/system_time",
+        "data": 1792861650
+      }
+    },
+    {
+      "t": 217637,
+      "frame": {
+        "url": "timer/system_time",
+        "data": 1792861652
+      }
+    },
+    {
+      "t": 219637,
+      "frame": {
+        "url": "timer/system_time",
+        "data": 1792861654
+      }
+    },
+    {
+      "t": 220635,
+      "frame": {
+        "url": "timer/system_time",
+        "data": 1792861655
+      }
+    },
+    {
+      "t": 222637,
+      "frame": {
+        "url": "timer/system_time",
+        "data": 1792861657
+      }
+    },
+    {
+      "t": 224636,
+      "frame": {
+        "url": "timer/system_time",
+        "data": 1792861659
+      }
+    },
+    {
+      "t": 224869,
+      "frame": {
+        "url": "presentation/slide_index",
+        "data": {
+          "presentation_index": {
+            "index": 2,
+            "presentation_id": {
+              "uuid": "894B40A0-42FE-411E-B915-F1919C6DA33E",
+              "name": "There Is Freedom",
+              "index": 257
+            },
+            "total_cues": 37,
+            "remaining_cues": 34
+          }
+        }
+      }
+    },
+    {
+      "t": 224869,
+      "frame": {
+        "url": "status/slide",
+        "data": {
+          "current": {
+            "text": "There Is Freedom / Verse 1 / slide 2 line 1\nThere Is Freedom / Verse 1 / slide 2 line 2",
+            "notes": "",
+            "uuid": "5592D6D8-D3C9-44A9-B44A-BAEDD001BF02"
+          },
+          "next": {
+            "text": "There Is Freedom / Verse 2 / slide 1 line 1\nThere Is Freedom / Verse 2 / slide 1 line 2",
+            "notes": "",
+            "uuid": "EC22E830-B747-4598-B2F5-0EA9E6C2D049"
+          }
+        }
+      }
+    },
+    {
+      "t": 227323,
+      "frame": {
+        "url": "status/slide",
+        "data": {
+          "current": {
+            "text": "There Is Freedom / Verse 2 / slide 1 line 1\nThere Is Freedom / Verse 2 / slide 1 line 2",
+            "notes": "",
+            "uuid": "EC22E830-B747-4598-B2F5-0EA9E6C2D049"
+          },
+          "next": {
+            "text": "There Is Freedom / Verse 1 / slide 2 line 1\nThere Is Freedom / Verse 1 / slide 2 line 2",
+            "notes": "",
+            "uuid": "5A9B2FC6-A9B4-4308-93DB-C27A2043FF5C"
+          }
+        }
+      }
+    },
+    {
+      "t": 227637,
+      "frame": {
+        "url": "timer/system_time",
+        "data": 1792861662
+      }
+    },
+    {
+      "t": 229638,
+      "frame": {
+        "url": "timer/system_time",
+        "data": 1792861664
+      }
+    },
+    {
+      "t": 231636,
+      "frame": {
+        "url": "timer/system_time",
+        "data": 1792861666
+      }
+    },
+    {
+      "t": 233635,
+      "frame": {
+        "url": "timer/system_time",
+        "data": 1792861668
+      }
+    },
+    {
+      "t": 235635,
+      "frame": {
+        "url": "timer/system_time",
+        "data": 1792861670
+      }
+    },
+    {
+      "t": 237637,
+      "frame": {
+        "url": "timer/system_time",
+        "data": 1792861672
+      }
+    },
+    {
+      "t": 239636,
+      "frame": {
+        "url": "timer/system_time",
+        "data": 1792861674
+      }
+    },
+    {
+      "t": 241902,
+      "frame": {
+        "url": "presentation/slide_index",
+        "data": {
+          "presentation_index": {
+            "index": 2,
+            "presentation_id": {
+              "uuid": "894B40A0-42FE-411E-B915-F1919C6DA33E",
+              "name": "There Is Freedom",
+              "index": 257
+            },
+            "total_cues": 37,
+            "remaining_cues": 34
+          }
+        }
+      }
+    },
+    {
+      "t": 243448,
+      "frame": {
+        "url": "presentation/slide_index",
+        "data": {
+          "presentation_index": {
+            "index": 3,
+            "presentation_id": {
+              "uuid": "894B40A0-42FE-411E-B915-F1919C6DA33E",
+              "name": "There Is Freedom",
+              "index": 257
+            },
+            "total_cues": 37,
+            "remaining_cues": 33
+          }
+        }
+      }
+    },
+    {
+      "t": 243448,
+      "frame": {
+        "url": "status/slide",
+        "data": {
+          "current": {
+            "text": "There Is Freedom / Verse 2 / slide 1 line 1\nThere Is Freedom / Verse 2 / slide 1 line 2",
+            "notes": "",
+            "uuid": "EC22E830-B747-4598-B2F5-0EA9E6C2D049"
+          },
+          "next": {
+            "text": "There Is Freedom / Verse 1 / slide 2 line 1\nThere Is Freedom / Verse 1 / slide 2 line 2",
+            "notes": "",
+            "uuid": "5A9B2FC6-A9B4-4308-93DB-C27A2043FF5C"
+          }
+        }
+      }
+    },
+    {
+      "t": 243638,
+      "frame": {
+        "url": "timer/system_time",
+        "data": 1792861678
+      }
+    },
+    {
+      "t": 245757,
+      "frame": {
+        "url": "presentation/slide_index",
+        "data": {
+          "presentation_index": {
+            "index": 2,
+            "presentation_id": {
+              "uuid": "894B40A0-42FE-411E-B915-F1919C6DA33E",
+              "name": "There Is Freedom",
+              "index": 257
+            },
+            "total_cues": 37,
+            "remaining_cues": 34
+          }
+        }
+      }
+    },
+    {
+      "t": 247634,
+      "frame": {
+        "url": "timer/system_time",
+        "data": 1792861682
+      }
+    },
+    {
+      "t": 248636,
+      "frame": {
+        "url": "timer/system_time",
+        "data": 1792861683
+      }
+    },
+    {
+      "t": 248767,
+      "frame": {
+        "url": "presentation/current",
+        "data": {
+          "presentation": {
+            "id": {
+              "uuid": "894B40A0-42FE-411E-B915-F1919C6DA33E",
+              "name": "There Is Freedom",
+              "index": 0
+            },
+            "groups": [
+              {
+                "name": "Intro",
+                "color": {
+                  "red": 0,
+                  "green": 0,
+                  "blue": 0,
+                  "alpha": 0
+                },
+                "slides": [
+                  {
+                    "enabled": true,
+                    "notes": "",
+                    "text": "\r\r\r",
+                    "label": "Cloudscape_07_4K.mp4",
+                    "size": {
+                      "width": 1920,
+                      "height": 1080
+                    }
+                  }
+                ],
+                "uuid": "81AD0561-0D3E-4410-95A2-2A36794A2A4F"
+              },
+              {
+                "name": "Verse 1",
+                "color": {
+                  "red": 0,
+                  "green": 0,
+                  "blue": 0,
+                  "alpha": 0
+                },
+                "slides": [
+                  {
+                    "enabled": true,
+                    "notes": "",
+                    "text": "There Is Freedom / Verse 1 / slide 1 line 1\nThere Is Freedom / Verse 1 / slide 1 line 2",
+                    "label": "",
+                    "size": {
+                      "width": 1920,
+                      "height": 1080
+                    }
+                  },
+                  {
+                    "enabled": true,
+                    "notes": "",
+                    "text": "There Is Freedom / Verse 1 / slide 2 line 1\nThere Is Freedom / Verse 1 / slide 2 line 2",
+                    "label": "",
+                    "size": {
+                      "width": 1920,
+                      "height": 1080
+                    }
+                  }
+                ],
+                "uuid": "3467E660-556A-47F0-9FFF-FDCF9F030F0C"
+              },
+              {
+                "name": "Verse 2",
+                "color": {
+                  "red": 0,
+                  "green": 0,
+                  "blue": 0,
+                  "alpha": 0
+                },
+                "slides": [
+                  {
+                    "enabled": true,
+                    "notes": "",
+                    "text": "There Is Freedom / Verse 2 / slide 1 line 1\nThere Is Freedom / Verse 2 / slide 1 line 2",
+                    "label": "",
+                    "size": {
+                      "width": 1920,
+                      "height": 1080
+                    }
+                  },
+                  {
+                    "enabled": true,
+                    "notes": "",
+                    "text": "There Is Freedom / Verse 1 / slide 2 line 1\nThere Is Freedom / Verse 1 / slide 2 line 2",
+                    "label": "",
+                    "size": {
+                      "width": 1920,
+                      "height": 1080
+                    }
+                  }
+                ],
+                "uuid": "253C73C1-1524-4DE6-9505-42C6A7BD0EB7"
+              },
+              {
+                "name": "Pre Chorus",
+                "color": {
+                  "red": 0,
+                  "green": 0,
+                  "blue": 0,
+                  "alpha": 0
+                },
+                "slides": [
+                  {
+                    "enabled": true,
+                    "notes": "",
+                    "text": "There Is Freedom / Pre Chorus / slide 1 line 1",
+                    "label": "",
+                    "size": {
+                      "width": 1920,
+                      "height": 1080
+                    }
+                  }
+                ],
+                "uuid": "20069D38-F47D-4D3B-B8EB-A7792772EE6D"
+              },
+              {
+                "name": "Chorus",
+                "color": {
+                  "red": 0,
+                  "green": 0,
+                  "blue": 0,
+                  "alpha": 0
+                },
+                "slides": [
+                  {
+                    "enabled": true,
+                    "notes": "",
+                    "text": "There Is Freedom / Chorus / slide 1 line 1\nThere Is Freedom / Chorus / slide 1 line 2",
+                    "label": "",
+                    "size": {
+                      "width": 1920,
+                      "height": 1080
+                    }
+                  },
+                  {
+                    "enabled": true,
+                    "notes": "",
+                    "text": "There Is Freedom / Chorus / slide 2 line 1\nThere Is Freedom / Chorus / slide 2 line 2\nThere Is Freedom / Chorus / slide 2 line 3​",
+                    "label": "",
+                    "size": {
+                      "width": 1920,
+                      "height": 1080
+                    }
+                  },
+                  {
+                    "enabled": true,
+                    "notes": "",
+                    "text": "There Is Freedom / Chorus / slide 3 line 1\nThere Is Freedom / Chorus / slide 3 line 2",
+                    "label": "",
+                    "size": {
+                      "width": 1920,
+                      "height": 1080
+                    }
+                  },
+                  {
+                    "enabled": true,
+                    "notes": "",
+                    "text": "There Is Freedom / Chorus / slide 4 line 1​\nThere Is Freedom / Chorus / slide 4 line 2",
+                    "label": "",
+                    "size": {
+                      "width": 1920,
+                      "height": 1080
+                    }
+                  }
+                ],
+                "uuid": "267C8258-8CC5-4E41-B0B4-73D410B2B816"
+              },
+              {
+                "name": "Turnaround",
+                "color": {
+                  "red": 0,
+                  "green": 0,
+                  "blue": 0,
+                  "alpha": 0
+                },
+                "slides": [
+                  {
+                    "enabled": true,
+                    "notes": "",
+                    "text": "\r\r\r",
+                    "label": "",
+                    "size": {
+                      "width": 1920,
+                      "height": 1080
+                    }
+                  }
+                ],
+                "uuid": "747BA303-7F3E-4866-8FB5-FDE6B1283992"
+              },
+              {
+                "name": "Verse 3",
+                "color": {
+                  "red": 0,
+                  "green": 0,
+                  "blue": 0,
+                  "alpha": 0
+                },
+                "slides": [
+                  {
+                    "enabled": true,
+                    "notes": "",
+                    "text": "There Is Freedom / Verse 3 / slide 1 line 1\nThere Is Freedom / Verse 3 / slide 1 line 2",
+                    "label": "",
+                    "size": {
+                      "width": 1920,
+                      "height": 1080
+                    }
+                  },
+                  {
+                    "enabled": true,
+                    "notes": "",
+                    "text": "There Is Freedom / Verse 1 / slide 2 line 1\nThere Is Freedom / Verse 1 / slide 2 line 2",
+                    "label": "",
+                    "size": {
+                      "width": 1920,
+                      "height": 1080
+                    }
+                  }
+                ],
+                "uuid": "500E21EF-8EAC-49F1-BBE8-08B6CF2528B7"
+              },
+              {
+                "name": "Verse 4",
+                "color": {
+                  "red": 0,
+                  "green": 0,
+                  "blue": 0,
+                  "alpha": 0
+                },
+                "slides": [
+                  {
+                    "enabled": true,
+                    "notes": "",
+                    "text": "There Is Freedom / Verse 4 / slide 1 line 1\nThere Is Freedom / Verse 4 / slide 1 line 2",
+                    "label": "",
+                    "size": {
+                      "width": 1920,
+                      "height": 1080
+                    }
+                  },
+                  {
+                    "enabled": true,
+                    "notes": "",
+                    "text": "There Is Freedom / Verse 1 / slide 2 line 1\nThere Is Freedom / Verse 1 / slide 2 line 2",
+                    "label": "",
+                    "size": {
+                      "width": 1920,
+                      "height": 1080
+                    }
+                  },
+                  {
+                    "enabled": true,
+                    "notes": "",
+                    "text": "There Is Freedom / Chorus / slide 1 line 1\nThere Is Freedom / Chorus / slide 1 line 2",
+                    "label": "",
+                    "size": {
+                      "width": 1920,
+                      "height": 1080
+                    }
+                  },
+                  {
+                    "enabled": true,
+                    "notes": "",
+                    "text": "There Is Freedom / Chorus / slide 2 line 1\nThere Is Freedom / Chorus / slide 2 line 2\nThere Is Freedom / Chorus / slide 2 line 3​",
+                    "label": "",
+                    "size": {
+                      "width": 1920,
+                      "height": 1080
+                    }
+                  },
+                  {
+                    "enabled": true,
+                    "notes": "",
+                    "text": "There Is Freedom / Chorus / slide 3 line 1\nThere Is Freedom / Chorus / slide 3 line 2",
+                    "label": "",
+                    "size": {
+                      "width": 1920,
+                      "height": 1080
+                    }
+                  },
+                  {
+                    "enabled": true,
+                    "notes": "",
+                    "text": "There Is Freedom / Chorus / slide 4 line 1​\nThere Is Freedom / Chorus / slide 4 line 2",
+                    "label": "",
+                    "size": {
+                      "width": 1920,
+                      "height": 1080
+                    }
+                  },
+                  {
+                    "enabled": true,
+                    "notes": "",
+                    "text": "\r\r\r",
+                    "label": "",
+                    "size": {
+                      "width": 1920,
+                      "height": 1080
+                    }
+                  }
+                ],
+                "uuid": "78841568-4AD3-44CC-9D07-222C4913D3C0"
+              },
+              {
+                "name": "Bridge 1",
+                "color": {
+                  "red": 0,
+                  "green": 0,
+                  "blue": 0,
+                  "alpha": 0
+                },
+                "slides": [
+                  {
+                    "enabled": true,
+                    "notes": "",
+                    "text": "There Is Freedom / Bridge 1 / slide 1 line 1​\nThere Is Freedom / Bridge 1 / slide 1 line 2​",
+                    "label": "",
+                    "size": {
+                      "width": 1920,
+                      "height": 1080
+                    }
+                  },
+                  {
+                    "enabled": true,
+                    "notes": "",
+                    "text": "There Is Freedom / Bridge 1 / slide 2 line 1\nThere Is Freedom / Bridge 1 / slide 2 line 2\nThere Is Freedom / Bridge 1 / slide 2 line 3​",
+                    "label": "",
+                    "size": {
+                      "width": 1920,
+                      "height": 1080
+                    }
+                  }
+                ],
+                "uuid": "07007AF6-940E-49AD-A816-07752E786EDA"
+              },
+              {
+                "name": "Bridge 2",
+                "color": {
+                  "red": 0,
+                  "green": 0,
+                  "blue": 0,
+                  "alpha": 0
+                },
+                "slides": [
+                  {
+                    "enabled": true,
+                    "notes": "",
+                    "text": "There Is Freedom / Bridge 2 / slide 1 line 1​\nThere Is Freedom / Bridge 2 / slide 1 line 2​",
+                    "label": "",
+                    "size": {
+                      "width": 1920,
+                      "height": 1080
+                    }
+                  },
+                  {
+                    "enabled": true,
+                    "notes": "",
+                    "text": "There Is Freedom / Bridge 2 / slide 2 line 1\nThere Is Freedom / Bridge 2 / slide 2 line 2\nThere Is Freedom / Bridge 2 / slide 2 line 3​",
+                    "label": "",
+                    "size": {
+                      "width": 1920,
+                      "height": 1080
+                    }
+                  }
+                ],
+                "uuid": "86C38989-95A0-4325-A15F-DB48CD77648B"
+              },
+              {
+                "name": "Bridge 1",
+                "color": {
+                  "red": 0,
+                  "green": 0,
+                  "blue": 0,
+                  "alpha": 0
+                },
+                "slides": [
+                  {
+                    "enabled": true,
+                    "notes": "",
+                    "text": "There Is Freedom / Bridge 1 / slide 1 line 1\nThere Is Freedom / Bridge 1 / slide 1 line 2",
+                    "label": "",
+                    "size": {
+                      "width": 1920,
+                      "height": 1080
+                    }
+                  },
+                  {
+                    "enabled": true,
+                    "notes": "",
+                    "text": "There Is Freedom / Bridge 1 / slide 2 line 1\nThere Is Freedom / Bridge 1 / slide 2 line 2\nThere Is Freedom / Bridge 1 / slide 2 line 3",
+                    "label": "",
+                    "size": {
+                      "width": 1920,
+                      "height": 1080
+                    }
+                  }
+                ],
+                "uuid": "EED17593-188A-4FCA-963E-836CBEC30636"
+              },
+              {
+                "name": "Bridge 2",
+                "color": {
+                  "red": 0,
+                  "green": 0,
+                  "blue": 0,
+                  "alpha": 0
+                },
+                "slides": [
+                  {
+                    "enabled": true,
+                    "notes": "",
+                    "text": "There Is Freedom / Bridge 2 / slide 1 line 1\nThere Is Freedom / Bridge 2 / slide 1 line 2",
+                    "label": "",
+                    "size": {
+                      "width": 1920,
+                      "height": 1080
+                    }
+                  },
+                  {
+                    "enabled": true,
+                    "notes": "",
+                    "text": "There Is Freedom / Bridge 2 / slide 2 line 1\nThere Is Freedom / Bridge 2 / slide 2 line 2\nThere Is Freedom / Bridge 2 / slide 2 line 3",
+                    "label": "",
+                    "size": {
+                      "width": 1920,
+                      "height": 1080
+                    }
+                  },
+                  {
+                    "enabled": true,
+                    "notes": "",
+                    "text": "There Is Freedom / Chorus / slide 1 line 1\nThere Is Freedom / Chorus / slide 1 line 2",
+                    "label": "",
+                    "size": {
+                      "width": 1920,
+                      "height": 1080
+                    }
+                  },
+                  {
+                    "enabled": true,
+                    "notes": "",
+                    "text": "There Is Freedom / Chorus / slide 2 line 1\nThere Is Freedom / Chorus / slide 2 line 2\nThere Is Freedom / Chorus / slide 2 line 3​",
+                    "label": "",
+                    "size": {
+                      "width": 1920,
+                      "height": 1080
+                    }
+                  },
+                  {
+                    "enabled": true,
+                    "notes": "",
+                    "text": "There Is Freedom / Chorus / slide 3 line 1\nThere Is Freedom / Chorus / slide 3 line 2",
+                    "label": "",
+                    "size": {
+                      "width": 1920,
+                      "height": 1080
+                    }
+                  },
+                  {
+                    "enabled": true,
+                    "notes": "",
+                    "text": "There Is Freedom / Bridge 2 / slide 6 line 1​",
+                    "label": "",
+                    "size": {
+                      "width": 1920,
+                      "height": 1080
+                    }
+                  },
+                  {
+                    "enabled": true,
+                    "notes": "",
+                    "text": "There Is Freedom / Chorus / slide 1 line 1\nThere Is Freedom / Chorus / slide 1 line 2",
+                    "label": "",
+                    "size": {
+                      "width": 1920,
+                      "height": 1080
+                    }
+                  },
+                  {
+                    "enabled": true,
+                    "notes": "",
+                    "text": "There Is Freedom / Chorus / slide 2 line 1\nThere Is Freedom / Chorus / slide 2 line 2\nThere Is Freedom / Chorus / slide 2 line 3​",
+                    "label": "",
+                    "size": {
+                      "width": 1920,
+                      "height": 1080
+                    }
+                  },
+                  {
+                    "enabled": true,
+                    "notes": "",
+                    "text": "There Is Freedom / Chorus / slide 3 line 1\nThere Is Freedom / Chorus / slide 3 line 2",
+                    "label": "",
+                    "size": {
+                      "width": 1920,
+                      "height": 1080
+                    }
+                  },
+                  {
+                    "enabled": true,
+                    "notes": "",
+                    "text": "There Is Freedom / Chorus / slide 4 line 1​\nThere Is Freedom / Chorus / slide 4 line 2",
+                    "label": "",
+                    "size": {
+                      "width": 1920,
+                      "height": 1080
+                    }
+                  }
+                ],
+                "uuid": "AA36088A-7CBF-407D-BA78-9D4B87407EC2"
+              },
+              {
+                "name": "Ending",
+                "color": {
+                  "red": 0,
+                  "green": 0,
+                  "blue": 0,
+                  "alpha": 0
+                },
+                "slides": [
+                  {
+                    "enabled": true,
+                    "notes": "",
+                    "text": "\r\r\r",
+                    "label": "",
+                    "size": {
+                      "width": 1920,
+                      "height": 1080
+                    }
+                  }
+                ],
+                "uuid": "1989820F-8AC7-4FE5-8374-AF10E2C4338C"
+              }
+            ],
+            "has_timeline": false,
+            "presentation_path": "",
+            "destination": "presentation",
+            "arrangements": [
+              {
+                "id": {
+                  "uuid": "894B40A0-42FE-411E-B915-F1919C6DA33E",
+                  "name": "Master",
+                  "index": 0
+                },
+                "groups": [
+                  "81AD0561-0D3E-4410-95A2-2A36794A2A4F",
+                  "3467E660-556A-47F0-9FFF-FDCF9F030F0C",
+                  "253C73C1-1524-4DE6-9505-42C6A7BD0EB7",
+                  "20069D38-F47D-4D3B-B8EB-A7792772EE6D",
+                  "267C8258-8CC5-4E41-B0B4-73D410B2B816",
+                  "747BA303-7F3E-4866-8FB5-FDE6B1283992",
+                  "500E21EF-8EAC-49F1-BBE8-08B6CF2528B7",
+                  "78841568-4AD3-44CC-9D07-222C4913D3C0",
+                  "07007AF6-940E-49AD-A816-07752E786EDA",
+                  "86C38989-95A0-4325-A15F-DB48CD77648B",
+                  "EED17593-188A-4FCA-963E-836CBEC30636",
+                  "AA36088A-7CBF-407D-BA78-9D4B87407EC2",
+                  "1989820F-8AC7-4FE5-8374-AF10E2C4338C"
+                ],
+                "total_cues": 37
+              },
+              {
+                "id": {
+                  "uuid": "6790327C-E141-4EC5-A49B-49751DA40875",
+                  "name": "Full",
+                  "index": 1
+                },
+                "groups": [
+                  "81AD0561-0D3E-4410-95A2-2A36794A2A4F",
+                  "81AD0561-0D3E-4410-95A2-2A36794A2A4F",
+                  "3467E660-556A-47F0-9FFF-FDCF9F030F0C",
+                  "253C73C1-1524-4DE6-9505-42C6A7BD0EB7",
+                  "20069D38-F47D-4D3B-B8EB-A7792772EE6D",
+                  "267C8258-8CC5-4E41-B0B4-73D410B2B816",
+                  "747BA303-7F3E-4866-8FB5-FDE6B1283992",
+                  "500E21EF-8EAC-49F1-BBE8-08B6CF2528B7",
+                  "78841568-4AD3-44CC-9D07-222C4913D3C0",
+                  "267C8258-8CC5-4E41-B0B4-73D410B2B816",
+                  "747BA303-7F3E-4866-8FB5-FDE6B1283992",
+                  "07007AF6-940E-49AD-A816-07752E786EDA",
+                  "86C38989-95A0-4325-A15F-DB48CD77648B",
+                  "EED17593-188A-4FCA-963E-836CBEC30636",
+                  "AA36088A-7CBF-407D-BA78-9D4B87407EC2",
+                  "267C8258-8CC5-4E41-B0B4-73D410B2B816",
+                  "267C8258-8CC5-4E41-B0B4-73D410B2B816",
+                  "1989820F-8AC7-4FE5-8374-AF10E2C4338C"
+                ],
+                "total_cues": 51
+              }
+            ],
+            "current_arrangement": "894B40A0-42FE-411E-B915-F1919C6DA33E",
+            "type": "multitracks",
+            "is_authorized": true,
+            "total_cues": 37
+          }
+        }
+      }
+    },
+    {
+      "t": 248770,
+      "frame": {
+        "url": "status/slide",
+        "data": {
+          "current": {
+            "text": "There Is Freedom / Verse 2 / slide 1 line 1\nThere Is Freedom / Verse 2 / slide 1 line 2",
+            "notes": "",
+            "uuid": "EC22E830-B747-4598-B2F5-0EA9E6C2D049"
+          },
+          "next": {
+            "text": "There Is Freedom / Verse 1 / slide 2 line 1\nThere Is Freedom / Verse 1 / slide 2 line 2",
+            "notes": "",
+            "uuid": "5A9B2FC6-A9B4-4308-93DB-C27A2043FF5C"
+          }
+        }
+      }
+    },
+    {
+      "t": 249635,
+      "frame": {
+        "url": "timer/system_time",
+        "data": 1792861684
+      }
+    },
+    {
+      "t": 251835,
+      "frame": {
+        "url": "presentation/slide_index",
+        "data": {
+          "presentation_index": {
+            "index": 6,
+            "presentation_id": {
+              "uuid": "894B40A0-42FE-411E-B915-F1919C6DA33E",
+              "name": "There Is Freedom",
+              "index": 257
+            },
+            "total_cues": 37,
+            "remaining_cues": 30
+          }
+        }
+      }
+    },
+    {
+      "t": 251835,
+      "frame": {
+        "url": "status/slide",
+        "data": {
+          "current": {
+            "text": "There Is Freedom / Chorus / slide 1 line 1\nThere Is Freedom / Chorus / slide 1 line 2",
+            "notes": "",
+            "uuid": "683DE8A0-A6B8-4914-A162-F8CF6625200F"
+          },
+          "next": {
+            "text": "There Is Freedom / Chorus / slide 2 line 1\nThere Is Freedom / Chorus / slide 2 line 2\nThere Is Freedom / Chorus / slide 2 line 3​",
+            "notes": "",
+            "uuid": "219757B7-A09C-4A7B-ABCC-C4005EF2D589"
+          }
+        }
+      }
+    },
+    {
+      "t": 252637,
+      "frame": {
+        "url": "timer/system_time",
+        "data": 1792861687
+      }
+    },
+    {
+      "t": 254636,
+      "frame": {
+        "url": "timer/system_time",
+        "data": 1792861689
+      }
+    },
+    {
+      "t": 255636,
+      "frame": {
+        "url": "timer/system_time",
+        "data": 1792861690
+      }
+    },
+    {
+      "t": 256633,
+      "frame": {
+        "url": "timer/system_time",
+        "data": 1792861691
+      }
+    },
+    {
+      "t": 258634,
+      "frame": {
+        "url": "timer/system_time",
+        "data": 1792861693
+      }
+    },
+    {
+      "t": 260634,
+      "frame": {
+        "url": "timer/system_time",
+        "data": 1792861695
+      }
+    },
+    {
+      "t": 262634,
+      "frame": {
+        "url": "timer/system_time",
+        "data": 1792861697
+      }
+    },
+    {
+      "t": 264050,
+      "frame": {
+        "url": "status/slide",
+        "data": {
+          "current": {
+            "text": "There Is Freedom / Chorus / slide 2 line 1\nThere Is Freedom / Chorus / slide 2 line 2\nThere Is Freedom / Chorus / slide 2 line 3​",
+            "notes": "",
+            "uuid": "219757B7-A09C-4A7B-ABCC-C4005EF2D589"
+          },
+          "next": {
+            "text": "There Is Freedom / Chorus / slide 3 line 1\nThere Is Freedom / Chorus / slide 3 line 2",
+            "notes": "",
+            "uuid": "BD5B3B34-8F59-484B-976C-51A6504B86AE"
+          }
+        }
+      }
+    },
+    {
+      "t": 264634,
+      "frame": {
+        "url": "timer/system_time",
+        "data": 1792861699
+      }
+    },
+    {
+      "t": 266638,
+      "frame": {
+        "url": "timer/system_time",
+        "data": 1792861701
+      }
+    },
+    {
+      "t": 268638,
+      "frame": {
+        "url": "timer/system_time",
+        "data": 1792861703
+      }
+    },
+    {
+      "t": 270637,
+      "frame": {
+        "url": "timer/system_time",
+        "data": 1792861705
+      }
+    },
+    {
+      "t": 272635,
+      "frame": {
+        "url": "timer/system_time",
+        "data": 1792861707
+      }
+    },
+    {
+      "t": 274638,
+      "frame": {
+        "url": "timer/system_time",
+        "data": 1792861709
+      }
+    },
+    {
+      "t": 276637,
+      "frame": {
+        "url": "timer/system_time",
+        "data": 1792861711
+      }
+    },
+    {
+      "t": 278633,
+      "frame": {
+        "url": "timer/system_time",
+        "data": 1792861713
+      }
+    },
+    {
+      "t": 279634,
+      "frame": {
+        "url": "timer/system_time",
+        "data": 1792861714
+      }
+    },
+    {
+      "t": 281638,
+      "frame": {
+        "url": "timer/system_time",
+        "data": 1792861716
+      }
+    },
+    {
+      "t": 282638,
+      "frame": {
+        "url": "timer/system_time",
+        "data": 1792861717
+      }
+    },
+    {
+      "t": 284633,
+      "frame": {
+        "url": "timer/system_time",
+        "data": 1792861719
+      }
+    },
+    {
+      "t": 285637,
+      "frame": {
+        "url": "timer/system_time",
+        "data": 1792861720
+      }
+    },
+    {
+      "t": 287635,
+      "frame": {
+        "url": "timer/system_time",
+        "data": 1792861722
+      }
+    },
+    {
+      "t": 288177,
+      "frame": {
+        "url": "presentation/slide_index",
+        "data": {
+          "presentation_index": {
+            "index": 20,
+            "presentation_id": {
+              "uuid": "894B40A0-42FE-411E-B915-F1919C6DA33E",
+              "name": "There Is Freedom",
+              "index": 257
+            },
+            "total_cues": 37,
+            "remaining_cues": 16
+          }
+        }
+      }
+    },
+    {
+      "t": 289637,
+      "frame": {
+        "url": "timer/system_time",
+        "data": 1792861724
+      }
+    },
+    {
+      "t": 291205,
+      "frame": {
+        "url": "status/slide",
+        "data": {
+          "current": {
+            "text": "",
+            "notes": "",
+            "uuid": "559EC1FB-7849-4E19-AC70-1D6ECF4953B8"
+          },
+          "next": {
+            "text": "There Is Freedom / Bridge 1 / slide 1 line 1​\nThere Is Freedom / Bridge 1 / slide 1 line 2​",
+            "notes": "",
+            "uuid": "E003E83F-A44F-4A22-A34D-C1406C9184CE"
+          }
+        }
+      }
+    },
+    {
+      "t": 291639,
+      "frame": {
+        "url": "timer/system_time",
+        "data": 1792861726
+      }
+    },
+    {
+      "t": 293635,
+      "frame": {
+        "url": "timer/system_time",
+        "data": 1792861728
+      }
+    },
+    {
+      "t": 294286,
+      "frame": {
+        "url": "presentation/slide_index",
+        "data": {
+          "presentation_index": {
+            "index": 18,
+            "presentation_id": {
+              "uuid": "894B40A0-42FE-411E-B915-F1919C6DA33E",
+              "name": "There Is Freedom",
+              "index": 257
+            },
+            "total_cues": 37,
+            "remaining_cues": 18
+          }
+        }
+      }
+    },
+    {
+      "t": 295638,
+      "frame": {
+        "url": "timer/system_time",
+        "data": 1792861730
+      }
+    },
+    {
+      "t": 298634,
+      "frame": {
+        "url": "timer/system_time",
+        "data": 1792861733
+      }
+    },
+    {
+      "t": 301637,
+      "frame": {
+        "url": "timer/system_time",
+        "data": 1792861736
+      }
+    },
+    {
+      "t": 303114,
+      "frame": {
+        "url": "presentation/slide_index",
+        "data": {
+          "presentation_index": null
+        }
+      }
+    },
+    {
+      "t": 303635,
+      "frame": {
+        "url": "timer/system_time",
+        "data": 1792861738
+      }
+    },
+    {
+      "t": 305639,
+      "frame": {
+        "url": "timer/system_time",
+        "data": 1792861740
+      }
+    },
+    {
+      "t": 306638,
+      "frame": {
+        "url": "timer/system_time",
+        "data": 1792861741
+      }
+    },
+    {
+      "t": 308637,
+      "frame": {
+        "url": "timer/system_time",
+        "data": 1792861743
+      }
+    },
+    {
+      "t": 310635,
+      "frame": {
+        "url": "timer/system_time",
+        "data": 1792861745
+      }
+    },
+    {
+      "t": 312638,
+      "frame": {
+        "url": "timer/system_time",
+        "data": 1792861747
+      }
+    },
+    {
+      "t": 314634,
+      "frame": {
+        "url": "timer/system_time",
+        "data": 1792861749
+      }
+    },
+    {
+      "t": 316638,
+      "frame": {
+        "url": "timer/system_time",
+        "data": 1792861751
+      }
+    },
+    {
+      "t": 318637,
+      "frame": {
+        "url": "timer/system_time",
+        "data": 1792861753
+      }
+    },
+    {
+      "t": 320637,
+      "frame": {
+        "url": "timer/system_time",
+        "data": 1792861755
+      }
+    },
+    {
+      "t": 322634,
+      "frame": {
+        "url": "timer/system_time",
+        "data": 1792861757
+      }
+    },
+    {
+      "t": 324638,
+      "frame": {
+        "url": "timer/system_time",
+        "data": 1792861759
+      }
+    },
+    {
+      "t": 326634,
+      "frame": {
+        "url": "timer/system_time",
+        "data": 1792861761
+      }
+    },
+    {
+      "t": 328638,
+      "frame": {
+        "url": "timer/system_time",
+        "data": 1792861763
+      }
+    },
+    {
+      "t": 330636,
+      "frame": {
+        "url": "timer/system_time",
+        "data": 1792861765
+      }
+    },
+    {
+      "t": 332638,
+      "frame": {
+        "url": "timer/system_time",
+        "data": 1792861767
+      }
+    },
+    {
+      "t": 334638,
+      "frame": {
+        "url": "timer/system_time",
+        "data": 1792861769
+      }
+    },
+    {
+      "t": 336635,
+      "frame": {
+        "url": "timer/system_time",
+        "data": 1792861771
+      }
+    },
+    {
+      "t": 338638,
+      "frame": {
+        "url": "timer/system_time",
+        "data": 1792861773
+      }
+    },
+    {
+      "t": 340638,
+      "frame": {
+        "url": "timer/system_time",
+        "data": 1792861775
+      }
+    },
+    {
+      "t": 342638,
+      "frame": {
+        "url": "timer/system_time",
+        "data": 1792861777
+      }
+    },
+    {
+      "t": 344635,
+      "frame": {
+        "url": "timer/system_time",
+        "data": 1792861779
+      }
+    },
+    {
+      "t": 346635,
+      "frame": {
+        "url": "timer/system_time",
+        "data": 1792861781
+      }
+    },
+    {
+      "t": 348636,
+      "frame": {
+        "url": "timer/system_time",
+        "data": 1792861783
+      }
+    },
+    {
+      "t": 350639,
+      "frame": {
+        "url": "timer/system_time",
+        "data": 1792861785
+      }
+    },
+    {
+      "t": 352637,
+      "frame": {
+        "url": "timer/system_time",
+        "data": 1792861787
+      }
+    },
+    {
+      "t": 354639,
+      "frame": {
+        "url": "timer/system_time",
+        "data": 1792861789
+      }
+    },
+    {
+      "t": 356637,
+      "frame": {
+        "url": "timer/system_time",
+        "data": 1792861791
+      }
+    },
+    {
+      "t": 358638,
+      "frame": {
+        "url": "timer/system_time",
+        "data": 1792861793
+      }
+    },
+    {
+      "t": 360636,
+      "frame": {
+        "url": "timer/system_time",
+        "data": 1792861795
+      }
+    },
+    {
+      "t": 362639,
+      "frame": {
+        "url": "timer/system_time",
+        "data": 1792861797
+      }
+    },
+    {
+      "t": 364630,
+      "frame": {
+        "url": "timer/system_time",
+        "data": 1792861799
+      }
+    },
+    {
+      "t": 366638,
+      "frame": {
+        "url": "timer/system_time",
+        "data": 1792861801
+      }
+    },
+    {
+      "t": 368637,
+      "frame": {
+        "url": "timer/system_time",
+        "data": 1792861803
+      }
+    },
+    {
+      "t": 370638,
+      "frame": {
+        "url": "timer/system_time",
+        "data": 1792861805
+      }
+    },
+    {
+      "t": 372637,
+      "frame": {
+        "url": "timer/system_time",
+        "data": 1792861807
+      }
+    },
+    {
+      "t": 374638,
+      "frame": {
+        "url": "timer/system_time",
+        "data": 1792861809
+      }
+    },
+    {
+      "t": 376634,
+      "frame": {
+        "url": "timer/system_time",
+        "data": 1792861811
+      }
+    },
+    {
+      "t": 378636,
+      "frame": {
+        "url": "timer/system_time",
+        "data": 1792861813
+      }
+    },
+    {
+      "t": 380639,
+      "frame": {
+        "url": "timer/system_time",
+        "data": 1792861815
+      }
+    },
+    {
+      "t": 382639,
+      "frame": {
+        "url": "timer/system_time",
+        "data": 1792861817
+      }
+    },
+    {
+      "t": 384633,
+      "frame": {
+        "url": "timer/system_time",
+        "data": 1792861819
+      }
+    },
+    {
+      "t": 386634,
+      "frame": {
+        "url": "timer/system_time",
+        "data": 1792861821
+      }
+    },
+    {
+      "t": 388639,
+      "frame": {
+        "url": "timer/system_time",
+        "data": 1792861823
+      }
+    },
+    {
+      "t": 390635,
+      "frame": {
+        "url": "timer/system_time",
+        "data": 1792861825
+      }
+    },
+    {
+      "t": 392638,
+      "frame": {
+        "url": "timer/system_time",
+        "data": 1792861827
+      }
+    },
+    {
+      "t": 394639,
+      "frame": {
+        "url": "timer/system_time",
+        "data": 1792861829
+      }
+    },
+    {
+      "t": 396638,
+      "frame": {
+        "url": "timer/system_time",
+        "data": 1792861831
+      }
+    },
+    {
+      "t": 398638,
+      "frame": {
+        "url": "timer/system_time",
+        "data": 1792861833
+      }
+    },
+    {
+      "t": 400637,
+      "frame": {
+        "url": "timer/system_time",
+        "data": 1792861835
+      }
+    },
+    {
+      "t": 402635,
+      "frame": {
+        "url": "timer/system_time",
+        "data": 1792861837
+      }
+    },
+    {
+      "t": 404638,
+      "frame": {
+        "url": "timer/system_time",
+        "data": 1792861839
+      }
+    },
+    {
+      "t": 406632,
+      "frame": {
+        "url": "timer/system_time",
+        "data": 1792861841
+      }
+    },
+    {
+      "t": 408155,
+      "frame": {
+        "url": "status/slide",
+        "data": {
+          "current": {
+            "text": "There Is Freedom / Verse 1 / slide 1 line 1\nThere Is Freedom / Verse 1 / slide 1 line 2",
+            "notes": "",
+            "uuid": "CB8FFF44-8131-417C-B908-E691283891A1"
+          },
+          "next": {
+            "text": "There Is Freedom / Verse 1 / slide 2 line 1\nThere Is Freedom / Verse 1 / slide 2 line 2",
+            "notes": "",
+            "uuid": "5592D6D8-D3C9-44A9-B44A-BAEDD001BF02"
+          }
+        }
+      }
+    },
+    {
+      "t": 408636,
+      "frame": {
+        "url": "timer/system_time",
+        "data": 1792861843
+      }
+    },
+    {
+      "t": 410639,
+      "frame": {
+        "url": "timer/system_time",
+        "data": 1792861845
+      }
+    },
+    {
+      "t": 412636,
+      "frame": {
+        "url": "timer/system_time",
+        "data": 1792861847
+      }
+    },
+    {
+      "t": 414155,
+      "frame": {
+        "url": "presentation/slide_index",
+        "data": {
+          "presentation_index": {
+            "index": 2,
+            "presentation_id": {
+              "uuid": "894B40A0-42FE-411E-B915-F1919C6DA33E",
+              "name": "There Is Freedom",
+              "index": 257
+            },
+            "total_cues": 37,
+            "remaining_cues": 34
+          }
+        }
+      }
+    },
+    {
+      "t": 414635,
+      "frame": {
+        "url": "timer/system_time",
+        "data": 1792861849
+      }
+    },
+    {
+      "t": 416635,
+      "frame": {
+        "url": "timer/system_time",
+        "data": 1792861851
+      }
+    },
+    {
+      "t": 418636,
+      "frame": {
+        "url": "timer/system_time",
+        "data": 1792861853
+      }
+    },
+    {
+      "t": 420635,
+      "frame": {
+        "url": "timer/system_time",
+        "data": 1792861855
+      }
+    },
+    {
+      "t": 422635,
+      "frame": {
+        "url": "timer/system_time",
+        "data": 1792861857
+      }
+    },
+    {
+      "t": 424631,
+      "frame": {
+        "url": "timer/system_time",
+        "data": 1792861859
+      }
+    },
+    {
+      "t": 426636,
+      "frame": {
+        "url": "timer/system_time",
+        "data": 1792861861
+      }
+    },
+    {
+      "t": 427564,
+      "frame": {
+        "url": "status/slide",
+        "data": {
+          "current": {
+            "text": "There Is Freedom / Verse 3 / slide 1 line 1\nThere Is Freedom / Verse 3 / slide 1 line 2",
+            "notes": "",
+            "uuid": "0E371B3A-66F8-49DF-BCF9-07D1668458B2"
+          },
+          "next": {
+            "text": "There Is Freedom / Verse 1 / slide 2 line 1\nThere Is Freedom / Verse 1 / slide 2 line 2",
+            "notes": "",
+            "uuid": "8A412C0B-228E-42ED-BB27-134BB1DB4098"
+          }
+        }
+      }
+    },
+    {
+      "t": 427635,
+      "frame": {
+        "url": "timer/system_time",
+        "data": 1792861862
+      }
+    },
+    {
+      "t": 429639,
+      "frame": {
+        "url": "timer/system_time",
+        "data": 1792861864
+      }
+    },
+    {
+      "t": 431638,
+      "frame": {
+        "url": "timer/system_time",
+        "data": 1792861866
+      }
+    },
+    {
+      "t": 433638,
+      "frame": {
+        "url": "timer/system_time",
+        "data": 1792861868
+      }
+    },
+    {
+      "t": 435638,
+      "frame": {
+        "url": "timer/system_time",
+        "data": 1792861870
+      }
+    },
+    {
+      "t": 437638,
+      "frame": {
+        "url": "timer/system_time",
+        "data": 1792861872
+      }
+    },
+    {
+      "t": 438140,
+      "frame": {
+        "url": "status/slide",
+        "data": {
+          "current": {
+            "text": "There Is Freedom / Chorus / slide 1 line 1\nThere Is Freedom / Chorus / slide 1 line 2",
+            "notes": "",
+            "uuid": "683DE8A0-A6B8-4914-A162-F8CF6625200F"
+          },
+          "next": {
+            "text": "There Is Freedom / Chorus / slide 2 line 1\nThere Is Freedom / Chorus / slide 2 line 2\nThere Is Freedom / Chorus / slide 2 line 3​",
+            "notes": "",
+            "uuid": "219757B7-A09C-4A7B-ABCC-C4005EF2D589"
+          }
+        }
+      }
+    },
+    {
+      "t": 438635,
+      "frame": {
+        "url": "timer/system_time",
+        "data": 1792861873
+      }
+    },
+    {
+      "t": 440553,
+      "frame": {
+        "url": "presentation/slide_index",
+        "data": {
+          "presentation_index": {
+            "index": 11,
+            "presentation_id": {
+              "uuid": "894B40A0-42FE-411E-B915-F1919C6DA33E",
+              "name": "There Is Freedom",
+              "index": 257
+            },
+            "total_cues": 37,
+            "remaining_cues": 25
+          }
+        }
+      }
+    },
+    {
+      "t": 441638,
+      "frame": {
+        "url": "timer/system_time",
+        "data": 1792861876
+      }
+    },
+    {
+      "t": 443152,
+      "frame": {
+        "url": "presentation/slide_index",
+        "data": {
+          "presentation_index": {
+            "index": 6,
+            "presentation_id": {
+              "uuid": "894B40A0-42FE-411E-B915-F1919C6DA33E",
+              "name": "There Is Freedom",
+              "index": 257
+            },
+            "total_cues": 37,
+            "remaining_cues": 30
+          }
+        }
+      }
+    },
+    {
+      "t": 444638,
+      "frame": {
+        "url": "timer/system_time",
+        "data": 1792861879
+      }
+    },
+    {
+      "t": 446637,
+      "frame": {
+        "url": "timer/system_time",
+        "data": 1792861881
+      }
+    },
+    {
+      "t": 448636,
+      "frame": {
+        "url": "timer/system_time",
+        "data": 1792861883
+      }
+    },
+    {
+      "t": 448784,
+      "frame": {
+        "url": "status/slide",
+        "data": {
+          "current": {
+            "text": "There Is Freedom / Verse 3 / slide 1 line 1\nThere Is Freedom / Verse 3 / slide 1 line 2",
+            "notes": "",
+            "uuid": "0E371B3A-66F8-49DF-BCF9-07D1668458B2"
+          },
+          "next": {
+            "text": "There Is Freedom / Verse 1 / slide 2 line 1\nThere Is Freedom / Verse 1 / slide 2 line 2",
+            "notes": "",
+            "uuid": "8A412C0B-228E-42ED-BB27-134BB1DB4098"
+          }
+        }
+      }
+    },
+    {
+      "t": 449638,
+      "frame": {
+        "url": "timer/system_time",
+        "data": 1792861884
+      }
+    },
+    {
+      "t": 451639,
+      "frame": {
+        "url": "timer/system_time",
+        "data": 1792861886
+      }
+    },
+    {
+      "t": 453638,
+      "frame": {
+        "url": "timer/system_time",
+        "data": 1792861888
+      }
+    },
+    {
+      "t": 455639,
+      "frame": {
+        "url": "timer/system_time",
+        "data": 1792861890
+      }
+    },
+    {
+      "t": 457639,
+      "frame": {
+        "url": "timer/system_time",
+        "data": 1792861892
+      }
+    },
+    {
+      "t": 459639,
+      "frame": {
+        "url": "timer/system_time",
+        "data": 1792861894
+      }
+    },
+    {
+      "t": 461638,
+      "frame": {
+        "url": "timer/system_time",
+        "data": 1792861896
+      }
+    },
+    {
+      "t": 463638,
+      "frame": {
+        "url": "timer/system_time",
+        "data": 1792861898
+      }
+    },
+    {
+      "t": 465636,
+      "frame": {
+        "url": "timer/system_time",
+        "data": 1792861900
+      }
+    },
+    {
+      "t": 467638,
+      "frame": {
+        "url": "timer/system_time",
+        "data": 1792861902
+      }
+    },
+    {
+      "t": 469638,
+      "frame": {
+        "url": "timer/system_time",
+        "data": 1792861904
+      }
+    },
+    {
+      "t": 471639,
+      "frame": {
+        "url": "timer/system_time",
+        "data": 1792861906
+      }
+    },
+    {
+      "t": 473639,
+      "frame": {
+        "url": "timer/system_time",
+        "data": 1792861908
+      }
+    },
+    {
+      "t": 475635,
+      "frame": {
+        "url": "timer/system_time",
+        "data": 1792861910
+      }
+    },
+    {
+      "t": 477638,
+      "frame": {
+        "url": "timer/system_time",
+        "data": 1792861912
+      }
+    },
+    {
+      "t": 479638,
+      "frame": {
+        "url": "timer/system_time",
+        "data": 1792861914
+      }
+    },
+    {
+      "t": 481637,
+      "frame": {
+        "url": "timer/system_time",
+        "data": 1792861916
+      }
+    },
+    {
+      "t": 483636,
+      "frame": {
+        "url": "timer/system_time",
+        "data": 1792861918
+      }
+    },
+    {
+      "t": 485639,
+      "frame": {
+        "url": "timer/system_time",
+        "data": 1792861920
+      }
+    }
+  ]
+}

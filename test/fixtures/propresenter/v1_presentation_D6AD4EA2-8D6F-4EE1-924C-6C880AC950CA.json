@@ -1,0 +1,681 @@
+{
+  "method": "GET",
+  "path": "/v1/presentation/D6AD4EA2-8D6F-4EE1-924C-6C880AC950CA",
+  "status": 200,
+  "content_type": "application/json",
+  "body": {
+    "presentation": {
+      "id": {
+        "uuid": "D6AD4EA2-8D6F-4EE1-924C-6C880AC950CA",
+        "name": "Great Are You Lord",
+        "index": 117
+      },
+      "groups": [
+        {
+          "name": "",
+          "color": {
+            "red": 0.3999999761581421,
+            "green": 0.3999999761581421,
+            "blue": 0.3999999761581421,
+            "alpha": 1
+          },
+          "slides": [
+            {
+              "enabled": true,
+              "notes": "",
+              "text": "",
+              "label": "Highlands_02_4K.mp4",
+              "size": {
+                "width": 1920,
+                "height": 1080
+              }
+            }
+          ],
+          "uuid": "5114BA88-1E0D-4D9D-A1A3-C8FE8FEB8D23"
+        },
+        {
+          "name": "Verse 1",
+          "color": {
+            "red": 0,
+            "green": 0.46666666865348816,
+            "blue": 0.800000011920929,
+            "alpha": 1
+          },
+          "slides": [
+            {
+              "enabled": true,
+              "notes": "",
+              "text": "Great Are You Lord / Verse 1 / slide 1 line 1\nGreat Are You Lord / Verse 1 / slide 1 line 2",
+              "label": "",
+              "size": {
+                "width": 1920,
+                "height": 1080
+              }
+            },
+            {
+              "enabled": true,
+              "notes": "",
+              "text": "Great Are You Lord / Verse 1 / slide 2 line 1\nGreat Are You Lord / Verse 1 / slide 2 line 2",
+              "label": "",
+              "size": {
+                "width": 1920,
+                "height": 1080
+              }
+            }
+          ],
+          "uuid": "07280EA8-2825-42CC-AB5E-7B236656413B"
+        },
+        {
+          "name": "Pre Chorus",
+          "color": {
+            "red": 0.3999999761581421,
+            "green": 0.3999999761581421,
+            "blue": 0.3999999761581421,
+            "alpha": 1
+          },
+          "slides": [
+            {
+              "enabled": true,
+              "notes": "",
+              "text": "Great Are You Lord / Pre Chorus / slide 1 line 1",
+              "label": "",
+              "size": {
+                "width": 1920,
+                "height": 1080
+              }
+            }
+          ],
+          "uuid": "30FDC3F9-F226-461A-941B-BF3DF573B59D"
+        },
+        {
+          "name": "Chorus",
+          "color": {
+            "red": 0.800000011920929,
+            "green": 0,
+            "blue": 0.30588236451148987,
+            "alpha": 1
+          },
+          "slides": [
+            {
+              "enabled": true,
+              "notes": "",
+              "text": "Great Are You Lord / Chorus / slide 1 line 1\nGreat Are You Lord / Chorus / slide 1 line 2",
+              "label": "",
+              "size": {
+                "width": 1920,
+                "height": 1080
+              }
+            },
+            {
+              "enabled": true,
+              "notes": "",
+              "text": "Great Are You Lord / Chorus / slide 2 line 1\nGreat Are You Lord / Chorus / slide 2 line 2",
+              "label": "",
+              "size": {
+                "width": 1920,
+                "height": 1080
+              }
+            },
+            {
+              "enabled": true,
+              "notes": "",
+              "text": "Great Are You Lord / Chorus / slide 3 line 1\nGreat Are You Lord / Chorus / slide 3 line 2",
+              "label": "",
+              "size": {
+                "width": 1920,
+                "height": 1080
+              }
+            },
+            {
+              "enabled": true,
+              "notes": "",
+              "text": "",
+              "label": "",
+              "size": {
+                "width": 1920,
+                "height": 1080
+              }
+            }
+          ],
+          "uuid": "3DA798CE-C23F-432D-8F3E-AB93E9CC4E56"
+        },
+        {
+          "name": "Verse 2",
+          "color": {
+            "red": 0,
+            "green": 0.3490196168422699,
+            "blue": 0.6000000238418579,
+            "alpha": 1
+          },
+          "slides": [
+            {
+              "enabled": true,
+              "notes": "",
+              "text": "Great Are You Lord / Verse 1 / slide 1 line 1\nGreat Are You Lord / Verse 1 / slide 1 line 2",
+              "label": "",
+              "size": {
+                "width": 1920,
+                "height": 1080
+              }
+            },
+            {
+              "enabled": true,
+              "notes": "",
+              "text": "Great Are You Lord / Verse 1 / slide 2 line 1\nGreat Are You Lord / Verse 1 / slide 2 line 2",
+              "label": "",
+              "size": {
+                "width": 1920,
+                "height": 1080
+              }
+            }
+          ],
+          "uuid": "E198A2F6-9D6D-48F5-85F1-2F16702771EF"
+        },
+        {
+          "name": "Pre Chorus",
+          "color": {
+            "red": 0.3999999761581421,
+            "green": 0.3999999761581421,
+            "blue": 0.3999999761581421,
+            "alpha": 1
+          },
+          "slides": [
+            {
+              "enabled": true,
+              "notes": "",
+              "text": "Great Are You Lord / Pre Chorus / slide 1 line 1",
+              "label": "",
+              "size": {
+                "width": 1920,
+                "height": 1080
+              }
+            }
+          ],
+          "uuid": "E4363313-D3C3-4F89-9807-6D9D1759D9D2"
+        },
+        {
+          "name": "Chorus",
+          "color": {
+            "red": 0.800000011920929,
+            "green": 0,
+            "blue": 0.30588236451148987,
+            "alpha": 1
+          },
+          "slides": [
+            {
+              "enabled": true,
+              "notes": "",
+              "text": "Great Are You Lord / Chorus / slide 1 line 1\nGreat Are You Lord / Chorus / slide 1 line 2",
+              "label": "",
+              "size": {
+                "width": 1920,
+                "height": 1080
+              }
+            },
+            {
+              "enabled": true,
+              "notes": "",
+              "text": "Great Are You Lord / Chorus / slide 2 line 1\nGreat Are You Lord / Chorus / slide 2 line 2",
+              "label": "",
+              "size": {
+                "width": 1920,
+                "height": 1080
+              }
+            },
+            {
+              "enabled": true,
+              "notes": "",
+              "text": "Great Are You Lord / Chorus / slide 3 line 1\nGreat Are You Lord / Chorus / slide 3 line 2",
+              "label": "",
+              "size": {
+                "width": 1920,
+                "height": 1080
+              }
+            }
+          ],
+          "uuid": "300B8FFD-6B5C-4DED-9A58-5EE5C472E499"
+        },
+        {
+          "name": "Chorus",
+          "color": {
+            "red": 0.800000011920929,
+            "green": 0,
+            "blue": 0.30588236451148987,
+            "alpha": 1
+          },
+          "slides": [
+            {
+              "enabled": true,
+              "notes": "",
+              "text": "Great Are You Lord / Chorus / slide 1 line 1\nGreat Are You Lord / Chorus / slide 1 line 2",
+              "label": "",
+              "size": {
+                "width": 1920,
+                "height": 1080
+              }
+            },
+            {
+              "enabled": true,
+              "notes": "",
+              "text": "Great Are You Lord / Chorus / slide 2 line 1\nGreat Are You Lord / Chorus / slide 2 line 2",
+              "label": "",
+              "size": {
+                "width": 1920,
+                "height": 1080
+              }
+            },
+            {
+              "enabled": true,
+              "notes": "",
+              "text": "Great Are You Lord / Chorus / slide 3 line 1\nGreat Are You Lord / Chorus / slide 3 line 2",
+              "label": "",
+              "size": {
+                "width": 1920,
+                "height": 1080
+              }
+            }
+          ],
+          "uuid": "0C449FB9-A09F-41F8-9388-6858436D2D6C"
+        },
+        {
+          "name": "",
+          "color": {
+            "red": 0.3999999761581421,
+            "green": 0.3999999761581421,
+            "blue": 0.3999999761581421,
+            "alpha": 1
+          },
+          "slides": [
+            {
+              "enabled": true,
+              "notes": "",
+              "text": "",
+              "label": "",
+              "size": {
+                "width": 1920,
+                "height": 1080
+              }
+            }
+          ],
+          "uuid": "9EE11BC0-FBA7-4C7E-844D-0EBE2841B9CF"
+        },
+        {
+          "name": "Bridge",
+          "color": {
+            "red": 0.4627451002597809,
+            "green": 0,
+            "blue": 0.800000011920929,
+            "alpha": 1
+          },
+          "slides": [
+            {
+              "enabled": true,
+              "notes": "",
+              "text": "Great Are You Lord / Bridge / slide 1 line 1\nGreat Are You Lord / Bridge / slide 1 line 2",
+              "label": "",
+              "size": {
+                "width": 1920,
+                "height": 1080
+              }
+            },
+            {
+              "enabled": true,
+              "notes": "",
+              "text": "Great Are You Lord / Bridge / slide 2 line 1\nGreat Are You Lord / Bridge / slide 2 line 2",
+              "label": "",
+              "size": {
+                "width": 1920,
+                "height": 1080
+              }
+            },
+            {
+              "enabled": true,
+              "notes": "",
+              "text": "Great Are You Lord / Pre Chorus / slide 1 line 1",
+              "label": "",
+              "size": {
+                "width": 1920,
+                "height": 1080
+              }
+            }
+          ],
+          "uuid": "61609CEC-4137-4F82-8997-BBF35D429298"
+        },
+        {
+          "name": "Bridge",
+          "color": {
+            "red": 0.4627451002597809,
+            "green": 0,
+            "blue": 0.800000011920929,
+            "alpha": 1
+          },
+          "slides": [
+            {
+              "enabled": true,
+              "notes": "",
+              "text": "Great Are You Lord / Bridge / slide 1 line 1\nGreat Are You Lord / Bridge / slide 1 line 2",
+              "label": "",
+              "size": {
+                "width": 1920,
+                "height": 1080
+              }
+            },
+            {
+              "enabled": true,
+              "notes": "",
+              "text": "Great Are You Lord / Bridge / slide 2 line 1\nGreat Are You Lord / Bridge / slide 2 line 2",
+              "label": "",
+              "size": {
+                "width": 1920,
+                "height": 1080
+              }
+            },
+            {
+              "enabled": true,
+              "notes": "",
+              "text": "Great Are You Lord / Bridge / slide 3 line 1",
+              "label": "",
+              "size": {
+                "width": 1920,
+                "height": 1080
+              }
+            }
+          ],
+          "uuid": "FA18B11B-5083-499E-95B0-7F111FAD3E4A"
+        },
+        {
+          "name": "Bridge",
+          "color": {
+            "red": 0.4627451002597809,
+            "green": 0,
+            "blue": 0.800000011920929,
+            "alpha": 1
+          },
+          "slides": [
+            {
+              "enabled": true,
+              "notes": "",
+              "text": "Great Are You Lord / Bridge / slide 1 line 1\nGreat Are You Lord / Bridge / slide 1 line 2",
+              "label": "",
+              "size": {
+                "width": 1920,
+                "height": 1080
+              }
+            },
+            {
+              "enabled": true,
+              "notes": "",
+              "text": "Great Are You Lord / Bridge / slide 2 line 1\nGreat Are You Lord / Bridge / slide 2 line 2",
+              "label": "",
+              "size": {
+                "width": 1920,
+                "height": 1080
+              }
+            },
+            {
+              "enabled": true,
+              "notes": "",
+              "text": "Great Are You Lord / Pre Chorus / slide 1 line 1",
+              "label": "",
+              "size": {
+                "width": 1920,
+                "height": 1080
+              }
+            }
+          ],
+          "uuid": "B0DB4466-0CAF-4665-BE1D-284E14AFDD4D"
+        },
+        {
+          "name": "Chorus",
+          "color": {
+            "red": 0.800000011920929,
+            "green": 0,
+            "blue": 0.30588236451148987,
+            "alpha": 1
+          },
+          "slides": [
+            {
+              "enabled": true,
+              "notes": "",
+              "text": "Great Are You Lord / Chorus / slide 1 line 1\nGreat Are You Lord / Chorus / slide 1 line 2",
+              "label": "",
+              "size": {
+                "width": 1920,
+                "height": 1080
+              }
+            },
+            {
+              "enabled": true,
+              "notes": "",
+              "text": "Great Are You Lord / Chorus / slide 2 line 1\nGreat Are You Lord / Chorus / slide 2 line 2",
+              "label": "",
+              "size": {
+                "width": 1920,
+                "height": 1080
+              }
+            },
+            {
+              "enabled": true,
+              "notes": "",
+              "text": "Great Are You Lord / Chorus / slide 3 line 1\nGreat Are You Lord / Chorus / slide 3 line 2",
+              "label": "",
+              "size": {
+                "width": 1920,
+                "height": 1080
+              }
+            }
+          ],
+          "uuid": "49B971D9-4426-4EA2-ADF4-65C319735F4E"
+        },
+        {
+          "name": "Chorus",
+          "color": {
+            "red": 0.800000011920929,
+            "green": 0,
+            "blue": 0.30588236451148987,
+            "alpha": 1
+          },
+          "slides": [
+            {
+              "enabled": true,
+              "notes": "",
+              "text": "Great Are You Lord / Chorus / slide 1 line 1\nGreat Are You Lord / Chorus / slide 1 line 2",
+              "label": "",
+              "size": {
+                "width": 1920,
+                "height": 1080
+              }
+            },
+            {
+              "enabled": true,
+              "notes": "",
+              "text": "Great Are You Lord / Chorus / slide 2 line 1\nGreat Are You Lord / Chorus / slide 2 line 2",
+              "label": "",
+              "size": {
+                "width": 1920,
+                "height": 1080
+              }
+            },
+            {
+              "enabled": true,
+              "notes": "",
+              "text": "Great Are You Lord / Chorus / slide 3 line 1\nGreat Are You Lord / Chorus / slide 3 line 2",
+              "label": "",
+              "size": {
+                "width": 1920,
+                "height": 1080
+              }
+            }
+          ],
+          "uuid": "FD9ECD2A-4272-41D7-B5A9-D4DB144C628F"
+        },
+        {
+          "name": "",
+          "color": {
+            "red": 0.3999999761581421,
+            "green": 0.3999999761581421,
+            "blue": 0.3999999761581421,
+            "alpha": 1
+          },
+          "slides": [
+            {
+              "enabled": true,
+              "notes": "",
+              "text": "Great Are You Lord / Bridge / slide 1 line 1\nGreat Are You Lord / Bridge / slide 1 line 2",
+              "label": "",
+              "size": {
+                "width": 1920,
+                "height": 1080
+              }
+            },
+            {
+              "enabled": true,
+              "notes": "",
+              "text": "Great Are You Lord / Bridge / slide 2 line 1\nGreat Are You Lord / Bridge / slide 2 line 2",
+              "label": "",
+              "size": {
+                "width": 1920,
+                "height": 1080
+              }
+            },
+            {
+              "enabled": true,
+              "notes": "",
+              "text": "Great Are You Lord / Bridge / slide 3 line 1",
+              "label": "",
+              "size": {
+                "width": 1920,
+                "height": 1080
+              }
+            },
+            {
+              "enabled": true,
+              "notes": "",
+              "text": "Great Are You Lord / Bridge / slide 1 line 1\nGreat Are You Lord / Bridge / slide 1 line 2",
+              "label": "",
+              "size": {
+                "width": 1920,
+                "height": 1080
+              }
+            },
+            {
+              "enabled": true,
+              "notes": "",
+              "text": "Great Are You Lord / Bridge / slide 2 line 1\nGreat Are You Lord / Bridge / slide 2 line 2",
+              "label": "",
+              "size": {
+                "width": 1920,
+                "height": 1080
+              }
+            },
+            {
+              "enabled": true,
+              "notes": "",
+              "text": "Great Are You Lord / Pre Chorus / slide 1 line 1",
+              "label": "",
+              "size": {
+                "width": 1920,
+                "height": 1080
+              }
+            },
+            {
+              "enabled": true,
+              "notes": "",
+              "text": "Great Are You Lord / Chorus / slide 1 line 1\nGreat Are You Lord / Chorus / slide 1 line 2",
+              "label": "",
+              "size": {
+                "width": 1920,
+                "height": 1080
+              }
+            },
+            {
+              "enabled": true,
+              "notes": "",
+              "text": "Great Are You Lord / Chorus / slide 2 line 1\nGreat Are You Lord / Chorus / slide 2 line 2",
+              "label": "",
+              "size": {
+                "width": 1920,
+                "height": 1080
+              }
+            },
+            {
+              "enabled": true,
+              "notes": "",
+              "text": "Great Are You Lord / Chorus / slide 3 line 1\nGreat Are You Lord / Chorus / slide 3 line 2",
+              "label": "",
+              "size": {
+                "width": 1920,
+                "height": 1080
+              }
+            },
+            {
+              "enabled": true,
+              "notes": "",
+              "text": "",
+              "label": "",
+              "size": {
+                "width": 1920,
+                "height": 1080
+              }
+            }
+          ],
+          "uuid": "02E19656-677E-44E1-8413-24325C04BD6E"
+        }
+      ],
+      "has_timeline": false,
+      "presentation_path": "ProPresenter/Libraries/Default/Great Are You Lord.pro",
+      "destination": "presentation",
+      "arrangements": [
+        {
+          "id": {
+            "uuid": "D6AD4EA2-8D6F-4EE1-924C-6C880AC950CA",
+            "name": "Master",
+            "index": 0
+          },
+          "groups": [
+            "5114BA88-1E0D-4D9D-A1A3-C8FE8FEB8D23",
+            "07280EA8-2825-42CC-AB5E-7B236656413B",
+            "30FDC3F9-F226-461A-941B-BF3DF573B59D",
+            "3DA798CE-C23F-432D-8F3E-AB93E9CC4E56",
+            "E198A2F6-9D6D-48F5-85F1-2F16702771EF",
+            "E4363313-D3C3-4F89-9807-6D9D1759D9D2",
+            "300B8FFD-6B5C-4DED-9A58-5EE5C472E499",
+            "0C449FB9-A09F-41F8-9388-6858436D2D6C",
+            "9EE11BC0-FBA7-4C7E-844D-0EBE2841B9CF",
+            "61609CEC-4137-4F82-8997-BBF35D429298",
+            "FA18B11B-5083-499E-95B0-7F111FAD3E4A",
+            "B0DB4466-0CAF-4665-BE1D-284E14AFDD4D",
+            "49B971D9-4426-4EA2-ADF4-65C319735F4E",
+            "FD9ECD2A-4272-41D7-B5A9-D4DB144C628F",
+            "02E19656-677E-44E1-8413-24325C04BD6E"
+          ],
+          "total_cues": 43
+        },
+        {
+          "id": {
+            "uuid": "8BF8E3F2-414A-45A4-9467-0C34BC086D11",
+            "name": "All Sons & Daughters (PCO)",
+            "index": 1
+          },
+          "groups": [
+            "07280EA8-2825-42CC-AB5E-7B236656413B",
+            "FD9ECD2A-4272-41D7-B5A9-D4DB144C628F",
+            "E198A2F6-9D6D-48F5-85F1-2F16702771EF",
+            "FD9ECD2A-4272-41D7-B5A9-D4DB144C628F",
+            "FD9ECD2A-4272-41D7-B5A9-D4DB144C628F",
+            "B0DB4466-0CAF-4665-BE1D-284E14AFDD4D",
+            "B0DB4466-0CAF-4665-BE1D-284E14AFDD4D",
+            "B0DB4466-0CAF-4665-BE1D-284E14AFDD4D",
+            "FD9ECD2A-4272-41D7-B5A9-D4DB144C628F",
+            "FD9ECD2A-4272-41D7-B5A9-D4DB144C628F"
+          ],
+          "total_cues": 28
+        }
+      ],
+      "current_arrangement": "D6AD4EA2-8D6F-4EE1-924C-6C880AC950CA",
+      "type": "multitracks",
+      "is_authorized": true,
+      "total_cues": 43
+    }
+  }
+}

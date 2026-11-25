@@ -1,0 +1,13 @@
+diff --git a/src/server/native-loaders.ts b/src/server/native-loaders.ts
+index cfbcc45..7eb49c0 100644
+--- a/src/server/native-loaders.ts
++++ b/src/server/native-loaders.ts
+@@ -19,7 +19,7 @@ export async function openMidiInput(
+     return startCoreMidiInput();
+   } catch (error) {
+     console.error('Setlist server: could not open MIDI, so the foot pedal does nothing', error);
+-    return unavailableMidiInput(error instanceof Error ? error.message : String(error));
++    return unavailableMidiInput(error instanceof Error ? error.message : '');
+   }
+ }
+ 

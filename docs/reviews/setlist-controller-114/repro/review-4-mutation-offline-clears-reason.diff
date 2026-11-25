@@ -1,0 +1,14 @@
+diff --git a/src/server/atem.ts b/src/server/atem.ts
+index d0de6c7..e566ab2 100644
+--- a/src/server/atem.ts
++++ b/src/server/atem.ts
+@@ -180,8 +180,8 @@ function atemTarget(switcher: SwitcherClient, clock: Pick<Clock, 'now' | 'every'
+         if (connected) {
+           retry?.();
+           retry = null;
+-          report.problem(null);
+         }
++        report.problem(null);
+         report.status(connected ? 'online' : 'offline');
+         if (connected) {
+           known = switcher.programInput();

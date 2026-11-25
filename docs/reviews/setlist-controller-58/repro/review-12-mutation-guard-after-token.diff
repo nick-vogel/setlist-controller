@@ -1,0 +1,22 @@
+diff --git a/src/set-builder/main.ts b/src/set-builder/main.ts
+index c73bd12..523b4b4 100644
+--- a/src/set-builder/main.ts
++++ b/src/set-builder/main.ts
+@@ -187,8 +187,8 @@ async function planList(): Promise<void> {
+   checkPlanId();
+   if (values.date !== undefined && !isDate(values.date)) usage(`--date must be a real date written YYYY-MM-DD, not ${values.date}.`);
+   const date = values.date ?? defaultSetDate(new Date());
+-  const replace = replaces(date);
+   const plan = await readWeekPlan(date);
++  const replace = replaces(date);
+   if (plan === undefined) return;
+   const { transitions, problems, sources } = transitionsWithFlags(plan, flagTransitions(plan.songs.length));
+   const picked = await pickFolders({ library, pads: padsPath }, plan.songs);
+@@ -315,6 +315,7 @@ async function readWeekPlan(date: string): Promise<Plan | undefined> {
+   const tokenFile = tokenFilePath(process.env.PCO_ENV, from);
+   const token = await readToken(tokenFile);
+   if (!token.ok) return fail([token.problem]);
++  replaces(date);
+   const reading = await readPlan({
+     apiBase: process.env.PCO_API_BASE ?? API_BASE,
+     authorization: token.authorization,

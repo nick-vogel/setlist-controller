@@ -1,0 +1,36 @@
+{
+ "scenario": "ping",
+ "description": "The app pings Eos twice, 1 s apart, as the lights do: /eos/ping, no argument.",
+ "eos_version": "3.3.10 (ETCnomad, macOS)",
+ "transport": "TCP 127.0.0.1:3032, OSC 1.0 packet-length framing",
+ "packets": [
+  {
+   "t_ms": 0,
+   "dir": "app->eos",
+   "address": "/eos/ping",
+   "args": [],
+   "hex": "2f656f732f70696e670000002c000000"
+  },
+  {
+   "t_ms": 9,
+   "dir": "eos->app",
+   "address": "/eos/out/ping",
+   "args": [],
+   "hex": "2f656f732f6f75742f70696e670000002c000000"
+  },
+  {
+   "t_ms": 1020,
+   "dir": "app->eos",
+   "address": "/eos/ping",
+   "args": [],
+   "hex": "2f656f732f70696e670000002c000000"
+  },
+  {
+   "t_ms": 1037,
+   "dir": "eos->app",
+   "address": "/eos/out/ping",
+   "args": [],
+   "hex": "2f656f732f6f75742f70696e670000002c000000"
+  }
+ ]
+}

@@ -1,0 +1,13 @@
+diff --git a/.claude/skills/build-set/SKILL.md b/.claude/skills/build-set/SKILL.md
+index 689b5f1..9d33d59 100644
+--- a/.claude/skills/build-set/SKILL.md
++++ b/.claude/skills/build-set/SKILL.md
+@@ -73,7 +73,7 @@ The flag grammar's source of truth is the `USAGE` text in `src/set-builder/main.
+        - `refers to a file outside the song's folder...`: a clip plays a file from outside the song's folder. Nick copies it in with Collect All and Save in Live's File menu. Its dialog copies into the song's project folder only the files from the locations picked in it (Packs, the User Library, other Projects, and elsewhere on the computer), so Nick picks every location the stem's files come from, the User Library and Packs included.
+ 
+      A short name that matches no song folder, or more than one, is fixed on the command, or in the library:
+-     - `"<name>" matches no song folder in <library>. The song folders are:...`: the short name is in no folder name the library holds, so the library changed after step 1's listing, or the name is not one the listing printed. When the song is among the folders the line lists, the listing runs again (back to step 1), and Nick's command takes the song's short name from it. When it is not, its song folder is missing from the library: Nick adds it, and the listing runs again (back to step 1).
++     - `"<name>" matches no song folder in <library>. The song folders are:...`: the short name is in no folder name the library holds, so the library changed after step 1's listing, or the name is not one the listing printed. When it is not, its song folder is missing from the library: Nick adds it, and the listing runs again (back to step 1).
+      - `"<name>" matches <n> song folders; name one more fully:...`: the name is part of more than one folder name the library holds, so the library changed after step 1's listing, or the name is not one the listing printed. The listing runs again (back to step 1), and the command takes the short name it prints for the folder Nick means, which names that folder alone.
+    - 2: a usage error, a fault in the composed command. Fix it and go back to step 4.
+ 

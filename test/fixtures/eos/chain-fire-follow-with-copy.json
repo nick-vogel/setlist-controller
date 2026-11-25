@@ -1,0 +1,389 @@
+{
+ "scenario": "chain-fire-follow-with-copy",
+ "description": "With the copy 1/23 in the list straight after 1/22, and no follow on the copy: the app fires cue 1/22 by number, then sends nothing for 8 s. Shows which cue the follow of 1/22 fires now.",
+ "eos_version": "3.3.10 (ETCnomad, macOS)",
+ "transport": "TCP 127.0.0.1:3032, OSC 1.0 packet-length framing",
+ "packets": [
+  {
+   "t_ms": 0,
+   "dir": "app->eos",
+   "address": "/eos/cue/1/22/fire",
+   "args": [],
+   "hex": "2f656f732f6375652f312f32322f6669726500002c000000"
+  },
+  {
+   "t_ms": 51,
+   "dir": "eos->app",
+   "address": "/eos/out/event/cue/1/22/fire",
+   "args": [
+    "Worthy Of It All"
+   ],
+   "hex": "2f656f732f6f75742f6576656e742f6375652f312f32322f66697265000000002c730000576f72746879204f6620497420416c6c00000000"
+  },
+  {
+   "t_ms": 54,
+   "dir": "eos->app",
+   "address": "/eos/out/softkey/1",
+   "args": [
+    "Address"
+   ],
+   "hex": "2f656f732f6f75742f736f66746b65792f3100002c7300004164647265737300"
+  },
+  {
+   "t_ms": 56,
+   "dir": "eos->app",
+   "address": "/eos/out/softkey/2",
+   "args": [
+    "Query"
+   ],
+   "hex": "2f656f732f6f75742f736f66746b65792f3200002c7300005175657279000000"
+  },
+  {
+   "t_ms": 59,
+   "dir": "eos->app",
+   "address": "/eos/out/softkey/3",
+   "args": [
+    "Snapshot"
+   ],
+   "hex": "2f656f732f6f75742f736f66746b65792f3300002c730000536e617073686f7400000000"
+  },
+  {
+   "t_ms": 61,
+   "dir": "eos->app",
+   "address": "/eos/out/softkey/4",
+   "args": [
+    "Highlight"
+   ],
+   "hex": "2f656f732f6f75742f736f66746b65792f3400002c730000486967686c69676874000000"
+  },
+  {
+   "t_ms": 64,
+   "dir": "eos->app",
+   "address": "/eos/out/softkey/5",
+   "args": [
+    "Assert"
+   ],
+   "hex": "2f656f732f6f75742f736f66746b65792f3500002c7300004173736572740000"
+  },
+  {
+   "t_ms": 66,
+   "dir": "eos->app",
+   "address": "/eos/out/softkey/6",
+   "args": [
+    "Color Path"
+   ],
+   "hex": "2f656f732f6f75742f736f66746b65792f3600002c730000436f6c6f7220506174680000"
+  },
+  {
+   "t_ms": 69,
+   "dir": "eos->app",
+   "address": "/eos/out/softkey/7",
+   "args": [
+    "Preview"
+   ],
+   "hex": "2f656f732f6f75742f736f66746b65792f3700002c7300005072657669657700"
+  },
+  {
+   "t_ms": 71,
+   "dir": "eos->app",
+   "address": "/eos/out/softkey/8",
+   "args": [
+    "Fader"
+   ],
+   "hex": "2f656f732f6f75742f736f66746b65792f3800002c7300004661646572000000"
+  },
+  {
+   "t_ms": 74,
+   "dir": "eos->app",
+   "address": "/eos/out/softkey/9",
+   "args": [
+    "Offset"
+   ],
+   "hex": "2f656f732f6f75742f736f66746b65792f3900002c7300004f66667365740000"
+  },
+  {
+   "t_ms": 76,
+   "dir": "eos->app",
+   "address": "/eos/out/softkey/10",
+   "args": [
+    ""
+   ],
+   "hex": "2f656f732f6f75742f736f66746b65792f3130002c73000000000000"
+  },
+  {
+   "t_ms": 79,
+   "dir": "eos->app",
+   "address": "/eos/out/softkey/11",
+   "args": [
+    ""
+   ],
+   "hex": "2f656f732f6f75742f736f66746b65792f3131002c73000000000000"
+  },
+  {
+   "t_ms": 81,
+   "dir": "eos->app",
+   "address": "/eos/out/softkey/12",
+   "args": [
+    ""
+   ],
+   "hex": "2f656f732f6f75742f736f66746b65792f3132002c73000000000000"
+  },
+  {
+   "t_ms": 84,
+   "dir": "eos->app",
+   "address": "/eos/out/user/1/cmd",
+   "args": [
+    "LIVE: Cue  22 : ",
+    0
+   ],
+   "hex": "2f656f732f6f75742f757365722f312f636d64002c7369004c4956453a2043756520203232203a200000000000000000"
+  },
+  {
+   "t_ms": 86,
+   "dir": "eos->app",
+   "address": "/eos/out/cmd",
+   "args": [
+    "LIVE: Cue  22 : ",
+    0
+   ],
+   "hex": "2f656f732f6f75742f636d64000000002c7369004c4956453a2043756520203232203a200000000000000000"
+  },
+  {
+   "t_ms": 89,
+   "dir": "eos->app",
+   "address": "/eos/out/previous/cue/1/11",
+   "args": [],
+   "hex": "2f656f732f6f75742f70726576696f75732f6375652f312f313100002c000000"
+  },
+  {
+   "t_ms": 91,
+   "dir": "eos->app",
+   "address": "/eos/out/previous/cue/text",
+   "args": [
+    "1/11 Holy Forever 2.0"
+   ],
+   "hex": "2f656f732f6f75742f70726576696f75732f6375652f7465787400002c730000312f313120486f6c7920466f726576657220322e30000000"
+  },
+  {
+   "t_ms": 94,
+   "dir": "eos->app",
+   "address": "/eos/out/active/cue/1/22",
+   "args": [
+    0.0
+   ],
+   "hex": "2f656f732f6f75742f6163746976652f6375652f312f3232000000002c66000000000000"
+  },
+  {
+   "t_ms": 96,
+   "dir": "eos->app",
+   "address": "/eos/out/active/cue",
+   "args": [
+    0.0
+   ],
+   "hex": "2f656f732f6f75742f6163746976652f637565002c66000000000000"
+  },
+  {
+   "t_ms": 99,
+   "dir": "eos->app",
+   "address": "/eos/out/active/cue/text",
+   "args": [
+    "1/22 Worthy Of It All 2.0 0%"
+   ],
+   "hex": "2f656f732f6f75742f6163746976652f6375652f74657874000000002c730000312f323220576f72746879204f6620497420416c6c20322e3020302500000000"
+  },
+  {
+   "t_ms": 102,
+   "dir": "eos->app",
+   "address": "/eos/out/pending/cue/1/23",
+   "args": [],
+   "hex": "2f656f732f6f75742f70656e64696e672f6375652f312f32330000002c000000"
+  },
+  {
+   "t_ms": 104,
+   "dir": "eos->app",
+   "address": "/eos/out/pending/cue/text",
+   "args": [
+    "1/23 Worthy Of It All 2.0"
+   ],
+   "hex": "2f656f732f6f75742f70656e64696e672f6375652f746578740000002c730000312f323320576f72746879204f6620497420416c6c20322e30000000"
+  },
+  {
+   "t_ms": 1065,
+   "dir": "eos->app",
+   "address": "/eos/out/active/cue",
+   "args": [
+    0.49
+   ],
+   "hex": "2f656f732f6f75742f6163746976652f637565002c6600003efae148"
+  },
+  {
+   "t_ms": 1067,
+   "dir": "eos->app",
+   "address": "/eos/out/active/cue/text",
+   "args": [
+    "1/22 Worthy Of It All 1.0 49%"
+   ],
+   "hex": "2f656f732f6f75742f6163746976652f6375652f74657874000000002c730000312f323220576f72746879204f6620497420416c6c20312e3020343925000000"
+  },
+  {
+   "t_ms": 2065,
+   "dir": "eos->app",
+   "address": "/eos/out/active/cue",
+   "args": [
+    1.0
+   ],
+   "hex": "2f656f732f6f75742f6163746976652f637565002c6600003f800000"
+  },
+  {
+   "t_ms": 2067,
+   "dir": "eos->app",
+   "address": "/eos/out/active/cue/text",
+   "args": [
+    "1/22 Worthy Of It All 2.0 100%"
+   ],
+   "hex": "2f656f732f6f75742f6163746976652f6375652f74657874000000002c730000312f323220576f72746879204f6620497420416c6c20322e3020313030250000"
+  },
+  {
+   "t_ms": 3012,
+   "dir": "eos->app",
+   "address": "/eos/out/event/cue/1/23/fire",
+   "args": [
+    "Worthy Of It All"
+   ],
+   "hex": "2f656f732f6f75742f6576656e742f6375652f312f32332f66697265000000002c730000576f72746879204f6620497420416c6c00000000"
+  },
+  {
+   "t_ms": 3036,
+   "dir": "eos->app",
+   "address": "/eos/out/user/1/cmd",
+   "args": [
+    "LIVE: Cue  23 : ",
+    0
+   ],
+   "hex": "2f656f732f6f75742f757365722f312f636d64002c7369004c4956453a2043756520203233203a200000000000000000"
+  },
+  {
+   "t_ms": 3039,
+   "dir": "eos->app",
+   "address": "/eos/out/cmd",
+   "args": [
+    "LIVE: Cue  23 : ",
+    0
+   ],
+   "hex": "2f656f732f6f75742f636d64000000002c7369004c4956453a2043756520203233203a200000000000000000"
+  },
+  {
+   "t_ms": 3041,
+   "dir": "eos->app",
+   "address": "/eos/out/previous/cue/1/22",
+   "args": [],
+   "hex": "2f656f732f6f75742f70726576696f75732f6375652f312f323200002c000000"
+  },
+  {
+   "t_ms": 3043,
+   "dir": "eos->app",
+   "address": "/eos/out/previous/cue/text",
+   "args": [
+    "1/22 Worthy Of It All 2.0"
+   ],
+   "hex": "2f656f732f6f75742f70726576696f75732f6375652f7465787400002c730000312f323220576f72746879204f6620497420416c6c20322e30000000"
+  },
+  {
+   "t_ms": 3046,
+   "dir": "eos->app",
+   "address": "/eos/out/active/cue/1/23",
+   "args": [
+    0.0
+   ],
+   "hex": "2f656f732f6f75742f6163746976652f6375652f312f3233000000002c66000000000000"
+  },
+  {
+   "t_ms": 3048,
+   "dir": "eos->app",
+   "address": "/eos/out/active/cue",
+   "args": [
+    0.0
+   ],
+   "hex": "2f656f732f6f75742f6163746976652f637565002c66000000000000"
+  },
+  {
+   "t_ms": 3051,
+   "dir": "eos->app",
+   "address": "/eos/out/active/cue/text",
+   "args": [
+    "1/23 Worthy Of It All 2.0 0%"
+   ],
+   "hex": "2f656f732f6f75742f6163746976652f6375652f74657874000000002c730000312f323320576f72746879204f6620497420416c6c20322e3020302500000000"
+  },
+  {
+   "t_ms": 3053,
+   "dir": "eos->app",
+   "address": "/eos/out/pending/cue/1/35",
+   "args": [],
+   "hex": "2f656f732f6f75742f70656e64696e672f6375652f312f33350000002c000000"
+  },
+  {
+   "t_ms": 3056,
+   "dir": "eos->app",
+   "address": "/eos/out/pending/cue/text",
+   "args": [
+    "1/35 Closing 2.0"
+   ],
+   "hex": "2f656f732f6f75742f70656e64696e672f6375652f746578740000002c730000312f333520436c6f73696e6720322e3000000000"
+  },
+  {
+   "t_ms": 4031,
+   "dir": "eos->app",
+   "address": "/eos/out/active/cue",
+   "args": [
+    0.49
+   ],
+   "hex": "2f656f732f6f75742f6163746976652f637565002c6600003efae148"
+  },
+  {
+   "t_ms": 4034,
+   "dir": "eos->app",
+   "address": "/eos/out/active/cue/text",
+   "args": [
+    "1/23 Worthy Of It All 1.0 49%"
+   ],
+   "hex": "2f656f732f6f75742f6163746976652f6375652f74657874000000002c730000312f323320576f72746879204f6620497420416c6c20312e3020343925000000"
+  },
+  {
+   "t_ms": 5045,
+   "dir": "eos->app",
+   "address": "/eos/out/active/cue",
+   "args": [
+    0.99
+   ],
+   "hex": "2f656f732f6f75742f6163746976652f637565002c6600003f7d70a4"
+  },
+  {
+   "t_ms": 5048,
+   "dir": "eos->app",
+   "address": "/eos/out/active/cue/text",
+   "args": [
+    "1/23 Worthy Of It All 0.0 99%"
+   ],
+   "hex": "2f656f732f6f75742f6163746976652f6375652f74657874000000002c730000312f323320576f72746879204f6620497420416c6c20302e3020393925000000"
+  },
+  {
+   "t_ms": 6045,
+   "dir": "eos->app",
+   "address": "/eos/out/active/cue",
+   "args": [
+    1.0
+   ],
+   "hex": "2f656f732f6f75742f6163746976652f637565002c6600003f800000"
+  },
+  {
+   "t_ms": 6047,
+   "dir": "eos->app",
+   "address": "/eos/out/active/cue/text",
+   "args": [
+    "1/23 Worthy Of It All 2.0 100%"
+   ],
+   "hex": "2f656f732f6f75742f6163746976652f6375652f74657874000000002c730000312f323320576f72746879204f6620497420416c6c20322e3020313030250000"
+  }
+ ]
+}

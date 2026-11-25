@@ -1,0 +1,244 @@
+{
+ "scenario": "chain-go-to-cue-follow",
+ "description": "With a follow of 3 s on cue 1/22: Go To Cue 1/22 in no time, as the lights step sends it (Go_To_Cue 1 / 22 Time 0), the live levels of channel 16 a second later, then 8 s with nothing sent, and channel 16 again. Shows whether the follow fires 1/35 after a Go To Cue in no time.",
+ "eos_version": "3.3.10 (ETCnomad, macOS)",
+ "transport": "TCP 127.0.0.1:3032, OSC 1.0 packet-length framing",
+ "packets": [
+  {
+   "t_ms": 0,
+   "dir": "app->eos",
+   "address": "/eos/newcmd",
+   "args": [
+    "Go_To_Cue 1 / 22 Time 0#"
+   ],
+   "hex": "2f656f732f6e6577636d64002c730000476f5f546f5f4375652031202f2032322054696d6520302300000000"
+  },
+  {
+   "t_ms": 54,
+   "dir": "eos->app",
+   "address": "/eos/out/event/cue/1/22/fire",
+   "args": [
+    "Worthy Of It All"
+   ],
+   "hex": "2f656f732f6f75742f6576656e742f6375652f312f32322f66697265000000002c730000576f72746879204f6620497420416c6c00000000"
+  },
+  {
+   "t_ms": 57,
+   "dir": "eos->app",
+   "address": "/eos/out/softkey/1",
+   "args": [
+    "Address"
+   ],
+   "hex": "2f656f732f6f75742f736f66746b65792f3100002c7300004164647265737300"
+  },
+  {
+   "t_ms": 59,
+   "dir": "eos->app",
+   "address": "/eos/out/softkey/2",
+   "args": [
+    "Query"
+   ],
+   "hex": "2f656f732f6f75742f736f66746b65792f3200002c7300005175657279000000"
+  },
+  {
+   "t_ms": 62,
+   "dir": "eos->app",
+   "address": "/eos/out/softkey/3",
+   "args": [
+    "Snapshot"
+   ],
+   "hex": "2f656f732f6f75742f736f66746b65792f3300002c730000536e617073686f7400000000"
+  },
+  {
+   "t_ms": 65,
+   "dir": "eos->app",
+   "address": "/eos/out/softkey/4",
+   "args": [
+    "Highlight"
+   ],
+   "hex": "2f656f732f6f75742f736f66746b65792f3400002c730000486967686c69676874000000"
+  },
+  {
+   "t_ms": 67,
+   "dir": "eos->app",
+   "address": "/eos/out/softkey/5",
+   "args": [
+    "Assert"
+   ],
+   "hex": "2f656f732f6f75742f736f66746b65792f3500002c7300004173736572740000"
+  },
+  {
+   "t_ms": 70,
+   "dir": "eos->app",
+   "address": "/eos/out/softkey/6",
+   "args": [
+    "Color Path"
+   ],
+   "hex": "2f656f732f6f75742f736f66746b65792f3600002c730000436f6c6f7220506174680000"
+  },
+  {
+   "t_ms": 72,
+   "dir": "eos->app",
+   "address": "/eos/out/softkey/7",
+   "args": [
+    "Preview"
+   ],
+   "hex": "2f656f732f6f75742f736f66746b65792f3700002c7300005072657669657700"
+  },
+  {
+   "t_ms": 75,
+   "dir": "eos->app",
+   "address": "/eos/out/softkey/8",
+   "args": [
+    "Fader"
+   ],
+   "hex": "2f656f732f6f75742f736f66746b65792f3800002c7300004661646572000000"
+  },
+  {
+   "t_ms": 77,
+   "dir": "eos->app",
+   "address": "/eos/out/softkey/9",
+   "args": [
+    "Offset"
+   ],
+   "hex": "2f656f732f6f75742f736f66746b65792f3900002c7300004f66667365740000"
+  },
+  {
+   "t_ms": 79,
+   "dir": "eos->app",
+   "address": "/eos/out/softkey/10",
+   "args": [
+    ""
+   ],
+   "hex": "2f656f732f6f75742f736f66746b65792f3130002c73000000000000"
+  },
+  {
+   "t_ms": 82,
+   "dir": "eos->app",
+   "address": "/eos/out/softkey/11",
+   "args": [
+    ""
+   ],
+   "hex": "2f656f732f6f75742f736f66746b65792f3131002c73000000000000"
+  },
+  {
+   "t_ms": 84,
+   "dir": "eos->app",
+   "address": "/eos/out/softkey/12",
+   "args": [
+    ""
+   ],
+   "hex": "2f656f732f6f75742f736f66746b65792f3132002c73000000000000"
+  },
+  {
+   "t_ms": 87,
+   "dir": "eos->app",
+   "address": "/eos/out/user/1/cmd",
+   "args": [
+    "LIVE: Cue  22 : Go To Cue 1 / 22 Time 0:00 #",
+    0
+   ],
+   "hex": "2f656f732f6f75742f757365722f312f636d64002c7369004c4956453a2043756520203232203a20476f20546f204375652031202f2032322054696d6520303a303020230000000000000000"
+  },
+  {
+   "t_ms": 89,
+   "dir": "eos->app",
+   "address": "/eos/out/cmd",
+   "args": [
+    "LIVE: Cue  22 : Go To Cue 1 / 22 Time 0:00 #",
+    0
+   ],
+   "hex": "2f656f732f6f75742f636d64000000002c7369004c4956453a2043756520203232203a20476f20546f204375652031202f2032322054696d6520303a303020230000000000000000"
+  },
+  {
+   "t_ms": 1100,
+   "dir": "app->eos",
+   "address": "/eos/get/params/16",
+   "args": [],
+   "hex": "2f656f732f6765742f706172616d732f313600002c000000"
+  },
+  {
+   "t_ms": 1104,
+   "dir": "eos->app",
+   "address": "/eos/out/get/params/16",
+   "args": [
+    "ETC Fixtures",
+    "D22 Studio RGB Str",
+    "Intens",
+    62.0,
+    0.0,
+    100.0,
+    "Red",
+    100.0,
+    0.0,
+    100.0,
+    "Green",
+    70.0,
+    0.0,
+    100.0,
+    "Blue",
+    20.0,
+    0.0,
+    100.0,
+    "Hue",
+    0.0,
+    0.0,
+    360.0,
+    "Saturation",
+    0.0,
+    0.0,
+    100.0,
+    "Shutter Strobe",
+    0.0,
+    0.0,
+    0.0
+   ],
+   "hex": "2f656f732f6f75742f6765742f706172616d732f313600002c73737366666673666666736666667366666673666666736666667366666600455443204669787475726573000000004432322053747564696f20524742205374720000496e74656e730000427800000000000042c800005265640042c800000000000042c80000477265656e000000428c00000000000042c80000426c75650000000041a000000000000042c8000048756500000000000000000043b4000053617475726174696f6e0000000000000000000042c8000053687574746572205374726f62650000000000000000000000000000"
+  },
+  {
+   "t_ms": 9175,
+   "dir": "app->eos",
+   "address": "/eos/get/params/16",
+   "args": [],
+   "hex": "2f656f732f6765742f706172616d732f313600002c000000"
+  },
+  {
+   "t_ms": 9201,
+   "dir": "eos->app",
+   "address": "/eos/out/get/params/16",
+   "args": [
+    "ETC Fixtures",
+    "D22 Studio RGB Str",
+    "Intens",
+    62.0,
+    0.0,
+    100.0,
+    "Red",
+    100.0,
+    0.0,
+    100.0,
+    "Green",
+    70.0,
+    0.0,
+    100.0,
+    "Blue",
+    20.0,
+    0.0,
+    100.0,
+    "Hue",
+    0.0,
+    0.0,
+    360.0,
+    "Saturation",
+    0.0,
+    0.0,
+    100.0,
+    "Shutter Strobe",
+    0.0,
+    0.0,
+    0.0
+   ],
+   "hex": "2f656f732f6f75742f6765742f706172616d732f313600002c73737366666673666666736666667366666673666666736666667366666600455443204669787475726573000000004432322053747564696f20524742205374720000496e74656e730000427800000000000042c800005265640042c800000000000042c80000477265656e000000428c00000000000042c80000426c75650000000041a000000000000042c8000048756500000000000000000043b4000053617475726174696f6e0000000000000000000042c8000053687574746572205374726f62650000000000000000000000000000"
+  }
+ ]
+}

@@ -1,0 +1,13 @@
+diff --git a/src/server/fade-out.ts b/src/server/fade-out.ts
+index 8332515..12942c0 100644
+--- a/src/server/fade-out.ts
++++ b/src/server/fade-out.ts
+@@ -149,7 +149,7 @@ export function startFadeOut({ clock, requestTrackData, requestTrackVolume, setT
+           startStepping(tracks, new Map());
+           return;
+         }
+-        state = { kind: 'reading-volumes', since: state.since, tracks, saved: new Map() };
++        state = { kind: 'reading-volumes', since: clock.now(), tracks, saved: new Map() };
+         for (const track of tracks) requestTrackVolume(track);
+         return;
+       }

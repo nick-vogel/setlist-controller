@@ -1,0 +1,17 @@
+diff --git a/src/server/playback-controller.ts b/src/server/playback-controller.ts
+index 5d2842d..82f5d4a 100644
+--- a/src/server/playback-controller.ts
++++ b/src/server/playback-controller.ts
+@@ -329,9 +329,10 @@ export function startPlaybackController(
+   const lost = (after: number, end: Song | null) => {
+     if (!waitingJump || barLine === null) return false;
+     if (inTarget(after)) return false;
+-    if (after >= barLine + EPSILON && end !== null) return true;
++    if (after >= barLine + EPSILON && end !== null && endToggles[end.number] === 'stop') return true;
+     if (replaced?.starts.some((start) => after >= start - EPSILON && after < start + barLength() - EPSILON)) return false;
+-    return after >= barLine + barLength() + EPSILON;
++    if (after >= barLine + barLength() + EPSILON) return true;
++    return after >= barLine + EPSILON && end !== null;
+   };
+ 
+   // A loop never carries to a different section, so a jump anywhere but the looped section turns

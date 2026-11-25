@@ -1,0 +1,38 @@
+{
+  "method": "GET",
+  "path": "/v1/presentation/5F5C4A7C-5763-482F-8EC7-9EF32AF77334/thumbnail/0?quality=400&thumbnail_type=png",
+  "answers": [
+    {
+      "t_ms": 0,
+      "answered_ms": 731,
+      "status": 200,
+      "content_type": "image/png",
+      "body_bytes": 36140,
+      "body_md5": "32baa3dee2bbfac916dfdfa193c3ef88"
+    },
+    {
+      "t_ms": 1236,
+      "answered_ms": 1281,
+      "status": 200,
+      "content_type": "image/png",
+      "body_bytes": 26282,
+      "body_md5": "62b35fee173488623805d6792bdfffb5"
+    },
+    {
+      "t_ms": 2285,
+      "answered_ms": 2329,
+      "status": 200,
+      "content_type": "image/png",
+      "body_bytes": 26282,
+      "body_md5": "62b35fee173488623805d6792bdfffb5"
+    },
+    {
+      "t_ms": 4334,
+      "answered_ms": 4367,
+      "status": 200,
+      "content_type": "image/png",
+      "body_bytes": 26282,
+      "body_md5": "62b35fee173488623805d6792bdfffb5"
+    }
+  ]
+}

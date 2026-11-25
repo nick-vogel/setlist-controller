@@ -1,0 +1,13 @@
+diff --git a/src/set-builder/write-set.ts b/src/set-builder/write-set.ts
+index bcaa34b..d577403 100644
+--- a/src/set-builder/write-set.ts
++++ b/src/set-builder/write-set.ts
+@@ -294,7 +294,7 @@ function stitch(placed: PlacedSong[], parameter: MainParameter): Element[] {
+     };
+   });
+   return songs.flatMap(({ start, opening, later, handoff, last, pad }) => {
+-    if (last && !pad) return [opening, ...later];
++    if (last && !pad && parameter === 'Tempo') return [opening, ...later]; // MUTATION C: the last song with no pad keeps every tempo event, but not every meter event
+     const kept = [opening, ...later.filter((event) => timeOf(event) < handoff)];
+     const reached = parameter === 'Tempo' ? [tempoReached(opening, later, handoff)] : [];
+     // The next song brings its starting value to the handoff as its opening; a pad after the last song brings back the

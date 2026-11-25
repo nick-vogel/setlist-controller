@@ -1,0 +1,36 @@
+diff --git a/src/set-builder/meter.ts b/src/set-builder/meter.ts
+index 5c67eec..57fead5 100644
+--- a/src/set-builder/meter.ts
++++ b/src/set-builder/meter.ts
+@@ -33,6 +33,10 @@ export function barLineAtOrAfter(point: number, meter: Meter): { bar: number; pa
+   return firstBarLine(meter, (bar) => bar >= point);
+ }
+ 
++export function barLineStrictlyAfter(point: number, meter: Meter): { bar: number; passed: number } {
++  return firstBarLine(meter, (bar) => bar > point);
++}
++
+ // The first bar line after `point`, never on it.
+ export function barAfter(point: number, meter: Meter): number {
+   return firstBarLine(meter, (bar) => bar > point).bar;
+diff --git a/src/set-builder/timeline.ts b/src/set-builder/timeline.ts
+index 45c01b3..6b81d90 100644
+--- a/src/set-builder/timeline.ts
++++ b/src/set-builder/timeline.ts
+@@ -1,6 +1,6 @@
+ import { valueOf, type Element } from './als.ts';
+ import type { Transition } from './build-set.ts';
+-import { barAfter, barLength, barLineAtOrAfter, roundUpToBar, type Meter } from './meter.ts';
++import { barAfter, barLength, barLineAtOrAfter, barLineStrictlyAfter, roundUpToBar, type Meter } from './meter.ts';
+ import { mainEvents, type Song } from './song.ts';
+ import { secondsBetween } from './tempo.ts';
+ 
+@@ -110,7 +110,7 @@ const ON_BAR_LINE_TOLERANCE = 1e-4;
+ // The bar line `point` is on, counting a point at most ON_BAR_LINE_TOLERANCE past a bar line as on it, or else the
+ // first one after it, and how many bars start before it, from one walk of barLineAtOrAfter.
+ function onOrNextBarLine(point: number, meter: Meter): { bar: number; passed: number } {
+-  return barLineAtOrAfter(point - ON_BAR_LINE_TOLERANCE, meter);
++  return barLineStrictlyAfter(point - ON_BAR_LINE_TOLERANCE, meter);
+ }
+ 
+ // The Pad section after `song`, from its Pad locator `at`, which holds the starting tempo and meter of `holder`: the

@@ -1,0 +1,15 @@
+diff --git a/src/server/start-up.ts b/src/server/start-up.ts
+index 30b4a03..64ba2f5 100644
+--- a/src/server/start-up.ts
++++ b/src/server/start-up.ts
+@@ -49,10 +49,8 @@ export async function startUp(args: string[], natives: Natives): Promise<{ serve
+     oscSendPort: Number(values['osc-send-port']),
+     oscReceivePort: Number(values['osc-receive-port']),
+     midiInput: await natives.openMidiInput(),
+-    pedalConfigPath: values['pedal-config'],
+     connectionsConfigPath: values['connections-config'],
+     targetKinds: TARGET_KINDS,
+-    latenessLog: { path: values['lateness-log'] },
+     leaderSecret,
+     producerSecret,
+   });

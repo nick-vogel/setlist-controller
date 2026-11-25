@@ -1,0 +1,18 @@
+diff --git a/test/propresenter-adapter.test.ts b/test/propresenter-adapter.test.ts
+index c6fe874..0065122 100644
+--- a/test/propresenter-adapter.test.ts
++++ b/test/propresenter-adapter.test.ts
+@@ -201,11 +201,11 @@ it("keeps a later press's line over a trigger ProPresenter refuses after it, and
+   await rig.target.runButton!('next');
+   expect(rig.states.at(-1)).toEqual(['Pressed Next slide: nothing to move.']);
+ 
+-  await sleep(800);
++  const refusals = () => vi.mocked(console.error).mock.calls.filter(([message]) => message === 'Setlist server: ProPresenter refused the trigger for Song A, Chorus: it answered 404 to /v1/presentation/A/group/Chorus/trigger.');
++  await vi.waitFor(() => expect(refusals()).toHaveLength(1), { timeout: 3000 });
+ 
+   expect(rig.triggers()).toEqual(['/v1/presentation/A/group/Chorus/trigger']);
+   expect(rig.states.at(-1)).toEqual(['Pressed Next slide: nothing to move.']);
+-  expect(vi.mocked(console.error).mock.calls.filter(([message]) => String(message).includes('refused the trigger for Song A, Chorus'))).toHaveLength(1);
+ });
+ 
+ it('leaves the reconnected ProPresenter online with its stream when a trigger sent before the stream dropped times out after the reconnect', async () => {

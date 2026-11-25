@@ -1,0 +1,39 @@
+diff --git a/src/server/propresenter.ts b/src/server/propresenter.ts
+index e65c2bf..9915a3e 100644
+--- a/src/server/propresenter.ts
++++ b/src/server/propresenter.ts
+@@ -217,6 +217,7 @@ function proPresenterTarget({
+   // the presentation it triggers is kept, to place a later frame's text in its groups.
+   let expected: Set<string> | null = null;
+   let triggeredIn: Presentation | null = null;
++  let cueOut: Set<string> | null = null;
+   // Where the last status/slide frame put ProPresenter, and the slides each Next slide or Previous
+   // slide press may bring, oldest first, as texts, each until a frame shows one of its slides or one
+   // of a later press's, or its end by the clock: BUTTON_FRAME_MS after its answer, and none for an
+@@ -438,6 +439,7 @@ function proPresenterTarget({
+     const own = commandsOut > 0 || now <= windowEnd || brought >= 0;
+     if (expected?.has(current)) return;
+     if (!own) report?.changedByHand();
++    if (cueOut !== null && brought < 0) return;
+     expected = groupShowing(triggeredIn, current) ?? expected;
+   };
+ 
+@@ -491,13 +493,17 @@ function proPresenterTarget({
+       expected = new Set(triggered.group.slides);
+       triggeredIn = triggered.presentation;
+       buttonBrings = [];
++      const out = expected;
++      cueOut = out;
+       // A trigger makes a presentation active, so a line about the last press would be stale.
+       presses += 1;
+       if (buttonLine !== null) {
+         buttonLine = null;
+         reportState();
+       }
+-      void command(triggered.path);
++      void command(triggered.path).then(() => {
++        if (cueOut === out) cueOut = null;
++      });
+     },
+     // The producer's slide buttons. The server runs them whatever the arm state, never while offline,
+     // and a run never pauses ProPresenter. They act on whatever presentation ProPresenter has active,

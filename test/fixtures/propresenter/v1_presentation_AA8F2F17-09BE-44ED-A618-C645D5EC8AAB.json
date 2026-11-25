@@ -1,0 +1,496 @@
+{
+  "method": "GET",
+  "path": "/v1/presentation/AA8F2F17-09BE-44ED-A618-C645D5EC8AAB",
+  "status": 200,
+  "content_type": "application/json",
+  "body": {
+    "presentation": {
+      "id": {
+        "uuid": "AA8F2F17-09BE-44ED-A618-C645D5EC8AAB",
+        "name": "Worthy Of It All",
+        "index": 303
+      },
+      "groups": [
+        {
+          "name": "Intro",
+          "color": {
+            "red": 0.7019608020782471,
+            "green": 0.6549019813537598,
+            "blue": 0.1411764770746231,
+            "alpha": 1
+          },
+          "slides": [
+            {
+              "enabled": true,
+              "notes": "",
+              "text": "",
+              "label": "Daybreak_06_4K.mp4",
+              "size": {
+                "width": 1920,
+                "height": 1080
+              }
+            }
+          ],
+          "uuid": "F5DAC174-A96D-42C5-ABB3-5F987747FF93"
+        },
+        {
+          "name": "Verse 1",
+          "color": {
+            "red": 0,
+            "green": 0.46666666865348816,
+            "blue": 0.800000011920929,
+            "alpha": 1
+          },
+          "slides": [
+            {
+              "enabled": true,
+              "notes": "",
+              "text": "Worthy Of It All / Verse 1 / slide 1 line 1\nWorthy Of It All / Verse 1 / slide 1 line 2",
+              "label": "",
+              "size": {
+                "width": 1920,
+                "height": 1080
+              }
+            },
+            {
+              "enabled": true,
+              "notes": "",
+              "text": "Worthy Of It All / Verse 1 / slide 2 line 1\nWorthy Of It All / Verse 1 / slide 2 line 2",
+              "label": "",
+              "size": {
+                "width": 1920,
+                "height": 1080
+              }
+            },
+            {
+              "enabled": true,
+              "notes": "",
+              "text": "Worthy Of It All / Verse 1 / slide 3 line 1",
+              "label": "",
+              "size": {
+                "width": 1920,
+                "height": 1080
+              }
+            }
+          ],
+          "uuid": "82742DEB-7FDA-4706-B75C-05990FC2F9B1"
+        },
+        {
+          "name": "Chorus",
+          "color": {
+            "red": 0.800000011920929,
+            "green": 0,
+            "blue": 0.30588236451148987,
+            "alpha": 1
+          },
+          "slides": [
+            {
+              "enabled": true,
+              "notes": "",
+              "text": "Worthy Of It All / Chorus / slide 1 line 1\nWorthy Of It All / Chorus / slide 1 line 2",
+              "label": "",
+              "size": {
+                "width": 1920,
+                "height": 1080
+              }
+            },
+            {
+              "enabled": true,
+              "notes": "",
+              "text": "Worthy Of It All / Chorus / slide 2 line 1\nWorthy Of It All / Chorus / slide 2 line 2",
+              "label": "",
+              "size": {
+                "width": 1920,
+                "height": 1080
+              }
+            },
+            {
+              "enabled": true,
+              "notes": "",
+              "text": "Worthy Of It All / Chorus / slide 3 line 1",
+              "label": "",
+              "size": {
+                "width": 1920,
+                "height": 1080
+              }
+            },
+            {
+              "enabled": true,
+              "notes": "",
+              "text": "",
+              "label": "",
+              "size": {
+                "width": 1920,
+                "height": 1080
+              }
+            }
+          ],
+          "uuid": "1938C824-9CEE-4C24-BE93-A94DE65CEED2"
+        },
+        {
+          "name": "Verse 1",
+          "color": {
+            "red": 0,
+            "green": 0.46666666865348816,
+            "blue": 0.800000011920929,
+            "alpha": 1
+          },
+          "slides": [
+            {
+              "enabled": true,
+              "notes": "",
+              "text": "Worthy Of It All / Verse 1 / slide 1 line 1\nWorthy Of It All / Verse 1 / slide 1 line 2",
+              "label": "",
+              "size": {
+                "width": 1920,
+                "height": 1080
+              }
+            },
+            {
+              "enabled": true,
+              "notes": "",
+              "text": "Worthy Of It All / Verse 1 / slide 2 line 1\nWorthy Of It All / Verse 1 / slide 2 line 2",
+              "label": "",
+              "size": {
+                "width": 1920,
+                "height": 1080
+              }
+            },
+            {
+              "enabled": true,
+              "notes": "",
+              "text": "Worthy Of It All / Verse 1 / slide 3 line 1",
+              "label": "",
+              "size": {
+                "width": 1920,
+                "height": 1080
+              }
+            }
+          ],
+          "uuid": "5FF71F0E-444C-41ED-B5B4-0D5DE3D373E4"
+        },
+        {
+          "name": "Chorus",
+          "color": {
+            "red": 0.800000011920929,
+            "green": 0,
+            "blue": 0.30588236451148987,
+            "alpha": 1
+          },
+          "slides": [
+            {
+              "enabled": true,
+              "notes": "",
+              "text": "Worthy Of It All / Chorus / slide 1 line 1\nWorthy Of It All / Chorus / slide 1 line 2",
+              "label": "",
+              "size": {
+                "width": 1920,
+                "height": 1080
+              }
+            },
+            {
+              "enabled": true,
+              "notes": "",
+              "text": "Worthy Of It All / Chorus / slide 2 line 1\nWorthy Of It All / Chorus / slide 2 line 2",
+              "label": "",
+              "size": {
+                "width": 1920,
+                "height": 1080
+              }
+            },
+            {
+              "enabled": true,
+              "notes": "",
+              "text": "Worthy Of It All / Chorus / slide 3 line 1",
+              "label": "",
+              "size": {
+                "width": 1920,
+                "height": 1080
+              }
+            }
+          ],
+          "uuid": "8267150E-F8C5-49B7-B963-C5A32BC275BC"
+        },
+        {
+          "name": "Chorus",
+          "color": {
+            "red": 0.800000011920929,
+            "green": 0,
+            "blue": 0.30588236451148987,
+            "alpha": 1
+          },
+          "slides": [
+            {
+              "enabled": true,
+              "notes": "",
+              "text": "Worthy Of It All / Chorus / slide 1 line 1\nWorthy Of It All / Chorus / slide 1 line 2",
+              "label": "",
+              "size": {
+                "width": 1920,
+                "height": 1080
+              }
+            },
+            {
+              "enabled": true,
+              "notes": "",
+              "text": "Worthy Of It All / Chorus / slide 2 line 1\nWorthy Of It All / Chorus / slide 2 line 2",
+              "label": "",
+              "size": {
+                "width": 1920,
+                "height": 1080
+              }
+            },
+            {
+              "enabled": true,
+              "notes": "",
+              "text": "Worthy Of It All / Chorus / slide 3 line 1",
+              "label": "",
+              "size": {
+                "width": 1920,
+                "height": 1080
+              }
+            },
+            {
+              "enabled": true,
+              "notes": "",
+              "text": "",
+              "label": "",
+              "size": {
+                "width": 1920,
+                "height": 1080
+              }
+            }
+          ],
+          "uuid": "5E7F52FB-601F-450D-8186-22651B30B459"
+        },
+        {
+          "name": "Bridge",
+          "color": {
+            "red": 0.4627451002597809,
+            "green": 0,
+            "blue": 0.800000011920929,
+            "alpha": 1
+          },
+          "slides": [
+            {
+              "enabled": true,
+              "notes": "",
+              "text": "Worthy Of It All / Bridge / slide 1 line 1\nWorthy Of It All / Bridge / slide 1 line 2",
+              "label": "",
+              "size": {
+                "width": 1920,
+                "height": 1080
+              }
+            },
+            {
+              "enabled": true,
+              "notes": "",
+              "text": "Worthy Of It All / Bridge / slide 1 line 1\nWorthy Of It All / Bridge / slide 1 line 2",
+              "label": "",
+              "size": {
+                "width": 1920,
+                "height": 1080
+              }
+            },
+            {
+              "enabled": true,
+              "notes": "",
+              "text": "Worthy Of It All / Bridge / slide 3 line 1\nWorthy Of It All / Bridge / slide 3 line 2",
+              "label": "",
+              "size": {
+                "width": 1920,
+                "height": 1080
+              }
+            },
+            {
+              "enabled": true,
+              "notes": "",
+              "text": "Worthy Of It All / Bridge / slide 3 line 1\nWorthy Of It All / Bridge / slide 3 line 2",
+              "label": "",
+              "size": {
+                "width": 1920,
+                "height": 1080
+              }
+            }
+          ],
+          "uuid": "CB4F9F44-CB5D-4394-8F13-1E3950003077"
+        },
+        {
+          "name": "Bridge",
+          "color": {
+            "red": 0.4627451002597809,
+            "green": 0,
+            "blue": 0.800000011920929,
+            "alpha": 1
+          },
+          "slides": [
+            {
+              "enabled": true,
+              "notes": "",
+              "text": "Worthy Of It All / Bridge / slide 3 line 1\nWorthy Of It All / Bridge / slide 3 line 2",
+              "label": "",
+              "size": {
+                "width": 1920,
+                "height": 1080
+              }
+            },
+            {
+              "enabled": true,
+              "notes": "",
+              "text": "Worthy Of It All / Bridge / slide 3 line 1\nWorthy Of It All / Bridge / slide 3 line 2",
+              "label": "",
+              "size": {
+                "width": 1920,
+                "height": 1080
+              }
+            },
+            {
+              "enabled": true,
+              "notes": "",
+              "text": "Worthy Of It All / Bridge / slide 3 line 1\nWorthy Of It All / Bridge / slide 3 line 2",
+              "label": "",
+              "size": {
+                "width": 1920,
+                "height": 1080
+              }
+            },
+            {
+              "enabled": true,
+              "notes": "",
+              "text": "Worthy Of It All / Bridge / slide 4 line 1\nWorthy Of It All / Bridge / slide 4 line 2",
+              "label": "",
+              "size": {
+                "width": 1920,
+                "height": 1080
+              }
+            }
+          ],
+          "uuid": "02EE29FA-D71F-4D82-AB4B-51CA5E1DEFA5"
+        },
+        {
+          "name": "Chorus",
+          "color": {
+            "red": 0.800000011920929,
+            "green": 0,
+            "blue": 0.30588236451148987,
+            "alpha": 1
+          },
+          "slides": [
+            {
+              "enabled": true,
+              "notes": "",
+              "text": "Worthy Of It All / Chorus / slide 1 line 1\nWorthy Of It All / Chorus / slide 1 line 2",
+              "label": "",
+              "size": {
+                "width": 1920,
+                "height": 1080
+              }
+            },
+            {
+              "enabled": true,
+              "notes": "",
+              "text": "Worthy Of It All / Chorus / slide 2 line 1\nWorthy Of It All / Chorus / slide 2 line 2",
+              "label": "",
+              "size": {
+                "width": 1920,
+                "height": 1080
+              }
+            },
+            {
+              "enabled": true,
+              "notes": "",
+              "text": "Worthy Of It All / Chorus / slide 3 line 1",
+              "label": "",
+              "size": {
+                "width": 1920,
+                "height": 1080
+              }
+            }
+          ],
+          "uuid": "EA08D514-8AA3-4F4E-9081-5E0B482554F3"
+        },
+        {
+          "name": "Chorus",
+          "color": {
+            "red": 0.800000011920929,
+            "green": 0,
+            "blue": 0.30588236451148987,
+            "alpha": 1
+          },
+          "slides": [
+            {
+              "enabled": true,
+              "notes": "",
+              "text": "Worthy Of It All / Chorus / slide 1 line 1\nWorthy Of It All / Chorus / slide 1 line 2",
+              "label": "",
+              "size": {
+                "width": 1920,
+                "height": 1080
+              }
+            },
+            {
+              "enabled": true,
+              "notes": "",
+              "text": "Worthy Of It All / Chorus / slide 2 line 1\nWorthy Of It All / Chorus / slide 2 line 2",
+              "label": "",
+              "size": {
+                "width": 1920,
+                "height": 1080
+              }
+            },
+            {
+              "enabled": true,
+              "notes": "",
+              "text": "Worthy Of It All / Chorus / slide 3 line 1",
+              "label": "",
+              "size": {
+                "width": 1920,
+                "height": 1080
+              }
+            },
+            {
+              "enabled": true,
+              "notes": "",
+              "text": "",
+              "label": "",
+              "size": {
+                "width": 1920,
+                "height": 1080
+              }
+            }
+          ],
+          "uuid": "6C798F5E-E841-476C-99D8-4BE2EE0AC5D4"
+        }
+      ],
+      "has_timeline": false,
+      "presentation_path": "ProPresenter/Libraries/Default/Worthy Of It All.pro",
+      "destination": "presentation",
+      "arrangements": [
+        {
+          "id": {
+            "uuid": "AA8F2F17-09BE-44ED-A618-C645D5EC8AAB",
+            "name": "Master",
+            "index": 0
+          },
+          "groups": [
+            "F5DAC174-A96D-42C5-ABB3-5F987747FF93",
+            "82742DEB-7FDA-4706-B75C-05990FC2F9B1",
+            "1938C824-9CEE-4C24-BE93-A94DE65CEED2",
+            "5FF71F0E-444C-41ED-B5B4-0D5DE3D373E4",
+            "8267150E-F8C5-49B7-B963-C5A32BC275BC",
+            "5E7F52FB-601F-450D-8186-22651B30B459",
+            "CB4F9F44-CB5D-4394-8F13-1E3950003077",
+            "02EE29FA-D71F-4D82-AB4B-51CA5E1DEFA5",
+            "EA08D514-8AA3-4F4E-9081-5E0B482554F3",
+            "6C798F5E-E841-476C-99D8-4BE2EE0AC5D4"
+          ],
+          "total_cues": 33
+        }
+      ],
+      "current_arrangement": "AA8F2F17-09BE-44ED-A618-C645D5EC8AAB",
+      "type": "multitracks",
+      "is_authorized": true,
+      "total_cues": 33
+    }
+  }
+}

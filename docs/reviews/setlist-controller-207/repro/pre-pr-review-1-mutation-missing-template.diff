@@ -1,0 +1,13 @@
+diff --git a/test/build-set-skill-examples.test.ts b/test/build-set-skill-examples.test.ts
+index 9b08007..76f9b20 100644
+--- a/test/build-set-skill-examples.test.ts
++++ b/test/build-set-skill-examples.test.ts
+@@ -140,7 +140,7 @@ describe('the build-set skill\'s worked examples', () => {
+   for (const { line, text, args } of examples.commands) {
+     it(`SKILL.md:${line} ${text} passes the command's flag rules and names one listed folder per song`, async () => {
+       const plan = args.includes('--plan');
+-      const paths = ['--library', join(dir, 'library'), '--template', FIXTURE_TEMPLATE, '--output-root', join(dir, 'Sets'), '--pads', join(dir, 'pads')];
++      const paths = ['--library', join(dir, 'library'), '--template', FIXTURE_TEMPLATE, '--output-root', join(dir, 'Sets'), '--pads', join(dir, 'pads')].map((p) => p === FIXTURE_TEMPLATE ? p + '.missing' : p);
+       const before = fake.requests.length;
+ 
+       const result = await run([...args, ...paths, ...(plan ? ['--date', NOVEMBER_1] : [])], { PCO_API_BASE: fake.base, PCO_ENV: tokenFile });

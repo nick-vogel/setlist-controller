@@ -1,0 +1,242 @@
+{
+  "path": "/service_types/997539/plans?filter=future&order=sort_date&per_page=100",
+  "status": 200,
+  "body": {
+    "links": {
+      "self": "https://api.planningcenteronline.com/services/v2/service_types/997539/plans?filter=future&order=sort_date&per_page=100"
+    },
+    "data": [
+      {
+        "type": "Plan",
+        "id": "90897396",
+        "attributes": {
+          "title": null,
+          "dates": "October 25, 2026",
+          "short_dates": "Oct 25",
+          "sort_date": "2026-10-25T10:30:00Z",
+          "last_time_at": "2026-10-25T10:30:00Z",
+          "items_count": 18
+        },
+        "relationships": {
+          "service_type": {
+            "data": {
+              "type": "ServiceType",
+              "id": "997539"
+            }
+          }
+        }
+      },
+      {
+        "type": "Plan",
+        "id": "90897397",
+        "attributes": {
+          "title": null,
+          "dates": "November 1, 2026",
+          "short_dates": "Nov 1",
+          "sort_date": "2026-11-01T10:30:00Z",
+          "last_time_at": "2026-11-01T10:30:00Z",
+          "items_count": 18
+        },
+        "relationships": {
+          "service_type": {
+            "data": {
+              "type": "ServiceType",
+              "id": "997539"
+            }
+          }
+        }
+      },
+      {
+        "type": "Plan",
+        "id": "90897398",
+        "attributes": {
+          "title": null,
+          "dates": "November 8, 2026",
+          "short_dates": "Nov 8",
+          "sort_date": "2026-11-08T10:30:00Z",
+          "last_time_at": "2026-11-08T10:30:00Z",
+          "items_count": 18
+        },
+        "relationships": {
+          "service_type": {
+            "data": {
+              "type": "ServiceType",
+              "id": "997539"
+            }
+          }
+        }
+      },
+      {
+        "type": "Plan",
+        "id": "90897399",
+        "attributes": {
+          "title": null,
+          "dates": "November 15, 2026",
+          "short_dates": "Nov 15",
+          "sort_date": "2026-11-15T10:30:00Z",
+          "last_time_at": "2026-11-15T10:30:00Z",
+          "items_count": 19
+        },
+        "relationships": {
+          "service_type": {
+            "data": {
+              "type": "ServiceType",
+              "id": "997539"
+            }
+          }
+        }
+      },
+      {
+        "type": "Plan",
+        "id": "90897400",
+        "attributes": {
+          "title": null,
+          "dates": "November 22, 2026",
+          "short_dates": "Nov 22",
+          "sort_date": "2026-11-22T10:30:00Z",
+          "last_time_at": "2026-11-22T10:30:00Z",
+          "items_count": 18
+        },
+        "relationships": {
+          "service_type": {
+            "data": {
+              "type": "ServiceType",
+              "id": "997539"
+            }
+          }
+        }
+      },
+      {
+        "type": "Plan",
+        "id": "90897401",
+        "attributes": {
+          "title": null,
+          "dates": "November 29, 2026",
+          "short_dates": "Nov 29",
+          "sort_date": "2026-11-29T10:30:00Z",
+          "last_time_at": "2026-11-29T10:30:00Z",
+          "items_count": 18
+        },
+        "relationships": {
+          "service_type": {
+            "data": {
+              "type": "ServiceType",
+              "id": "997539"
+            }
+          }
+        }
+      },
+      {
+        "type": "Plan",
+        "id": "90897402",
+        "attributes": {
+          "title": null,
+          "dates": "December 6, 2026",
+          "short_dates": "Dec 6",
+          "sort_date": "2026-12-06T10:30:00Z",
+          "last_time_at": "2026-12-06T10:30:00Z",
+          "items_count": 18
+        },
+        "relationships": {
+          "service_type": {
+            "data": {
+              "type": "ServiceType",
+              "id": "997539"
+            }
+          }
+        }
+      },
+      {
+        "type": "Plan",
+        "id": "90897403",
+        "attributes": {
+          "title": null,
+          "dates": "December 13, 2026",
+          "short_dates": "Dec 13",
+          "sort_date": "2026-12-13T10:30:00Z",
+          "last_time_at": "2026-12-13T10:30:00Z",
+          "items_count": 18
+        },
+        "relationships": {
+          "service_type": {
+            "data": {
+              "type": "ServiceType",
+              "id": "997539"
+            }
+          }
+        }
+      },
+      {
+        "type": "Plan",
+        "id": "90897404",
+        "attributes": {
+          "title": null,
+          "dates": "December 20, 2026",
+          "short_dates": "Dec 20",
+          "sort_date": "2026-12-20T10:30:00Z",
+          "last_time_at": "2026-12-20T10:30:00Z",
+          "items_count": 18
+        },
+        "relationships": {
+          "service_type": {
+            "data": {
+              "type": "ServiceType",
+              "id": "997539"
+            }
+          }
+        }
+      },
+      {
+        "type": "Plan",
+        "id": "92852532",
+        "attributes": {
+          "title": "TEST TEST TEST",
+          "dates": "January 3, 2027",
+          "short_dates": "Jan 3",
+          "sort_date": "2027-01-03T10:30:00Z",
+          "last_time_at": "2027-01-03T10:30:00Z",
+          "items_count": 19
+        },
+        "relationships": {
+          "service_type": {
+            "data": {
+              "type": "ServiceType",
+              "id": "997539"
+            }
+          }
+        }
+      }
+    ],
+    "included": [],
+    "meta": {
+      "count": 10,
+      "total_count": 10,
+      "can_include": [
+        "contributors",
+        "my_schedules",
+        "plan_times",
+        "series"
+      ],
+      "can_filter": [
+        "future",
+        "past",
+        "after",
+        "before",
+        "no_dates"
+      ],
+      "can_order_by": [
+        "title",
+        "created_at",
+        "updated_at",
+        "sort_date"
+      ],
+      "can_query_by": [
+        "id",
+        "created_at",
+        "updated_at",
+        "series_title",
+        "title"
+      ]
+    }
+  }
+}

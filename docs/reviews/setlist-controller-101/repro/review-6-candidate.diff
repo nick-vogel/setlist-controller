@@ -1,0 +1,13 @@
+diff --git a/src/server/playback-controller.ts b/src/server/playback-controller.ts
+index 827116e..1a0ebe6 100644
+--- a/src/server/playback-controller.ts
++++ b/src/server/playback-controller.ts
+@@ -477,7 +477,7 @@ export function startPlaybackController(
+   // Live makes it on the bar line after, as it does a late tap. Once it is sent, the count-in waits for
+   // the landing like any other jump.
+   const sendCountIn = () => {
+-    if (!countIn || countIn.sent || !playing || position === null) return;
++    if (!countIn || countIn.sent || !countIn.reached || !playing || position === null) return;
+     const { end } = countIn.countOff;
+     if (end === null || position < end - barLength() - EPSILON || position >= end + barLength() - EPSILON) return;
+     sendTarget();

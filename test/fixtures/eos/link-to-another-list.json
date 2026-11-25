@@ -1,0 +1,185 @@
+{
+ "scenario": "link-to-another-list",
+ "description": "With cue 99/1 recorded in a temporary cue list 99, cue 1/4 is linked to it (Cue 1 / 4 Link 99 / 1), then read with /eos/get/cue/1/4, and list 99 read with /eos/get/cuelist/99. Shows the link to a cue in another list (argument 19 of the list/0/31 reply) and the cues that link to list 99. The run then clears the link and deletes list 99.",
+ "eos_version": "3.3.10 (ETCnomad, macOS)",
+ "transport": "TCP 127.0.0.1:3032, OSC 1.0 packet-length framing",
+ "packets": [
+  {
+   "t_ms": 0,
+   "dir": "app->eos",
+   "address": "/eos/newcmd",
+   "args": [
+    "Cue 1 / 4 Link 99 / 1#"
+   ],
+   "hex": "2f656f732f6e6577636d64002c7300004375652031202f2034204c696e6b203939202f2031230000"
+  },
+  {
+   "t_ms": 31,
+   "dir": "eos->app",
+   "address": "/eos/out/previous/cue/1/7",
+   "args": [],
+   "hex": "2f656f732f6f75742f70726576696f75732f6375652f312f370000002c000000"
+  },
+  {
+   "t_ms": 33,
+   "dir": "eos->app",
+   "address": "/eos/out/previous/cue/text",
+   "args": [
+    "1/7 Great Are You Lord / Chorus 5.0"
+   ],
+   "hex": "2f656f732f6f75742f70726576696f75732f6375652f7465787400002c730000312f372047726561742041726520596f75204c6f7264202f2043686f72757320352e3000"
+  },
+  {
+   "t_ms": 36,
+   "dir": "eos->app",
+   "address": "/eos/out/active/cue/1/8",
+   "args": [
+    1.0
+   ],
+   "hex": "2f656f732f6f75742f6163746976652f6375652f312f38002c6600003f800000"
+  },
+  {
+   "t_ms": 38,
+   "dir": "eos->app",
+   "address": "/eos/out/active/cue/text",
+   "args": [
+    "1/8 5.0 100%"
+   ],
+   "hex": "2f656f732f6f75742f6163746976652f6375652f74657874000000002c730000312f3820352e30203130302500000000"
+  },
+  {
+   "t_ms": 59,
+   "dir": "eos->app",
+   "address": "/eos/out/user/1/cmd",
+   "args": [
+    "LIVE: Cue  4 : Cue 1 / 4 Link 99 / 1 #",
+    0
+   ],
+   "hex": "2f656f732f6f75742f757365722f312f636d64002c7369004c4956453a20437565202034203a204375652031202f2034204c696e6b203939202f20312023000000000000"
+  },
+  {
+   "t_ms": 61,
+   "dir": "eos->app",
+   "address": "/eos/out/cmd",
+   "args": [
+    "LIVE: Cue  4 : Cue 1 / 4 Link 99 / 1 #",
+    0
+   ],
+   "hex": "2f656f732f6f75742f636d64000000002c7369004c4956453a20437565202034203a204375652031202f2034204c696e6b203939202f20312023000000000000"
+  },
+  {
+   "t_ms": 2075,
+   "dir": "app->eos",
+   "address": "/eos/get/cue/1/4",
+   "args": [],
+   "hex": "2f656f732f6765742f6375652f312f34000000002c000000"
+  },
+  {
+   "t_ms": 2075,
+   "dir": "app->eos",
+   "address": "/eos/get/cuelist/99",
+   "args": [],
+   "hex": "2f656f732f6765742f6375656c6973742f3939002c000000"
+  },
+  {
+   "t_ms": 2094,
+   "dir": "eos->app",
+   "address": "/eos/out/get/cue/1/4/0/list/0/31",
+   "args": [
+    -1,
+    "DCFC109D-F2AB-48F0-B343-7028EA90F829",
+    "Goodness of God / End",
+    5000,
+    0,
+    -1,
+    -1,
+    -1,
+    -1,
+    -1,
+    -1,
+    -1,
+    -1,
+    false,
+    "0",
+    100,
+    "",
+    "",
+    "",
+    "99/1",
+    -1,
+    -1,
+    false,
+    -1,
+    false,
+    "",
+    0,
+    "",
+    "",
+    false,
+    -1
+   ],
+   "hex": "2f656f732f6f75742f6765742f6375652f312f342f302f6c6973742f302f3331000000002c6973736969696969696969696946736973737373696946694673697373466900000000ffffffff44434643313039442d463241422d343846302d423334332d37303238454139304638323900000000476f6f646e657373206f6620476f64202f20456e640000000000138800000000ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff300000000000006400000000000000000000000039392f3100000000ffffffffffffffffffffffff00000000000000000000000000000000ffffffff"
+  },
+  {
+   "t_ms": 2097,
+   "dir": "eos->app",
+   "address": "/eos/out/get/cue/1/4/0/fx/list/0/2",
+   "args": [
+    -1,
+    "DCFC109D-F2AB-48F0-B343-7028EA90F829"
+   ],
+   "hex": "2f656f732f6f75742f6765742f6375652f312f342f302f66782f6c6973742f302f3200002c697300ffffffff44434643313039442d463241422d343846302d423334332d37303238454139304638323900000000"
+  },
+  {
+   "t_ms": 2099,
+   "dir": "eos->app",
+   "address": "/eos/out/get/cue/1/4/0/links/list/0/2",
+   "args": [
+    -1,
+    "DCFC109D-F2AB-48F0-B343-7028EA90F829"
+   ],
+   "hex": "2f656f732f6f75742f6765742f6375652f312f342f302f6c696e6b732f6c6973742f302f320000002c697300ffffffff44434643313039442d463241422d343846302d423334332d37303238454139304638323900000000"
+  },
+  {
+   "t_ms": 2101,
+   "dir": "eos->app",
+   "address": "/eos/out/get/cue/1/4/0/actions/list/0/2",
+   "args": [
+    -1,
+    "DCFC109D-F2AB-48F0-B343-7028EA90F829"
+   ],
+   "hex": "2f656f732f6f75742f6765742f6375652f312f342f302f616374696f6e732f6c6973742f302f32002c697300ffffffff44434643313039442d463241422d343846302d423334332d37303238454139304638323900000000"
+  },
+  {
+   "t_ms": 2104,
+   "dir": "eos->app",
+   "address": "/eos/out/get/cuelist/99/list/0/13",
+   "args": [
+    -1,
+    "EA8C9E2F-1052-4CB3-A3A4-28B2A60BDD30",
+    "",
+    "1/2",
+    "Proportional",
+    false,
+    false,
+    false,
+    false,
+    true,
+    false,
+    -1,
+    false
+   ],
+   "hex": "2f656f732f6f75742f6765742f6375656c6973742f39392f6c6973742f302f31330000002c697373737346464646544669460000ffffffff45413843394532462d313035322d344342332d413341342d3238423241363042444433300000000000000000312f320050726f706f7274696f6e616c00000000ffffffff"
+  },
+  {
+   "t_ms": 2106,
+   "dir": "eos->app",
+   "address": "/eos/out/get/cuelist/99/links/list/0/2",
+   "args": [
+    -1,
+    "EA8C9E2F-1052-4CB3-A3A4-28B2A60BDD30"
+   ],
+   "hex": "2f656f732f6f75742f6765742f6375656c6973742f39392f6c696e6b732f6c6973742f302f3200002c697300ffffffff45413843394532462d313035322d344342332d413341342d32384232413630424444333000000000"
+  }
+ ]
+}

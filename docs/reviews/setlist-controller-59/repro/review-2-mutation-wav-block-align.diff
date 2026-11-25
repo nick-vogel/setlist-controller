@@ -1,0 +1,13 @@
+diff --git a/src/set-builder/wav.ts b/src/set-builder/wav.ts
+index 1cf96fb..0b19df6 100644
+--- a/src/set-builder/wav.ts
++++ b/src/set-builder/wav.ts
+@@ -42,7 +42,7 @@ export async function readWavHeader(path: string): Promise<WavHeader> {
+     }
+     if (format === undefined) throw new Error('it has no fmt chunk');
+     if (dataSize === undefined) throw new Error('it has no data chunk');
+-    if (format.sampleRate === 0 || format.blockAlign === 0) throw new Error('its fmt chunk gives no sample rate or frame size');
++    if (format.sampleRate === 0) throw new Error('its fmt chunk gives no sample rate or frame size');
+     return { sampleRate: format.sampleRate, frames: Math.floor(dataSize / format.blockAlign) };
+   } finally {
+     await file.close();

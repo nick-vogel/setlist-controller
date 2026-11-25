@@ -1,0 +1,11 @@
+diff --git a/src/server/atem.ts b/src/server/atem.ts
+--- a/src/server/atem.ts
++++ b/src/server/atem.ts
+@@ -194,7 +194,6 @@
+         sent = [];
+         if (connected) {
+           retry?.();
+-          retry = null;
+           report.problem(null);
+         }
+         report.status(connected ? 'online' : 'offline');

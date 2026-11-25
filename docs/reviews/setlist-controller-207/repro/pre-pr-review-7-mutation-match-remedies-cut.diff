@@ -1,0 +1,24 @@
+diff --git a/.claude/skills/build-set/SKILL.md b/.claude/skills/build-set/SKILL.md
+index d46772b..9342075 100644
+--- a/.claude/skills/build-set/SKILL.md
++++ b/.claude/skills/build-set/SKILL.md
+@@ -57,7 +57,7 @@ The flag grammar's source of truth is the `USAGE` text in `src/set-builder/main.
+      - `<folder>: the song has no section after a locator named Count Off, where an overlap or a pad into it fades out what plays before it.`: the song an overlap or a pad goes into needs a locator named `Count Off` and a locator after it, its Intro, whatever that one is named. Nick adds the missing locator to that song's set in the library, or makes the song change into it a gap (back to step 4).
+ 
+      A song's own set is checked before anything is built. Its problems are fixed in that song's set in the library, saved in Live 12, and then Nick builds again:
+-     - `<folder>: the song could not be read: ...`: the song's set, `MultiTrack.als` in that song's folder in the library, is missing, or is not a Live set the build can read, such as a file that is not gzipped. The reason after the colon says which: "ENOENT" for a missing file, "incorrect header check" for one that is not gzipped. Nick saves the song's set from Live 12 into that folder as `MultiTrack.als`, then builds again.
++     - `<folder>: the song could not be read: ...`: the song's set, `MultiTrack.als` in that song's folder in the library, is missing, or is not a Live set the build can read, such as a file that is not gzipped. The reason after the colon says which: "ENOENT" for a missing file, "incorrect header check" for one that is not gzipped.
+      - `<folder>: saved by <Live version>, not Live 12. Open the song in Live 12 and save it, then build again.`: the line names its fix.
+      - `<folder>: the song has no locators, which the builder does not handle.`: the build places the set's sections from the song's locators. Nick adds a locator at the start of each of the song's sections in its set, with `Count Off` and `Ending` by those names.
+      - `<folder>: "<track>" is a group track, which the builder does not handle.`: Nick ungroups it in the song's set, with Ungroup Tracks in Live's Edit menu, so each stem in it is a track of its own.
+@@ -73,8 +73,8 @@ The flag grammar's source of truth is the `USAGE` text in `src/set-builder/main.
+        - `refers to a file outside the song's folder...`: a clip plays a file from outside the song's folder. Nick copies it in with Collect All and Save in Live's File menu. Its dialog copies into the song's project folder only the files from the locations picked in it (Packs, the User Library, other Projects, and elsewhere on the computer), so Nick picks every location the stem's files come from, the User Library and Packs included.
+ 
+      A short name that matches no song folder, or more than one, is fixed on the command, or in the library:
+-     - `"<name>" matches no song folder in <library>. The song folders are:...`: the short name is in no folder name the library holds. Nick changes the command to a short name from the listing (back to step 4), or, when the song is not among the folders the line lists, its song folder is missing from the library: Nick adds it, and the listing runs again (back to step 1).
+-     - `"<name>" matches <n> song folders; name one more fully:...`: a longer name, one that only one of the folders the line lists holds, such as that folder's short name from the listing (back to step 4).
++     - `"<name>" matches no song folder in <library>. The song folders are:...`: the short name is in no folder name the library holds.
++     - `"<name>" matches <n> song folders; name one more fully:...`.
+    - 2: a usage error, a fault in the composed command. Fix it and go back to step 4.
+ 
+    Done when Nick has the output, and a fix for each problem.

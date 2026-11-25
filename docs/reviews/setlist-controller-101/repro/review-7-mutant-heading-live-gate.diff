@@ -1,0 +1,13 @@
+diff --git a/web/src/App.tsx b/web/src/App.tsx
+index 57249b9..bfbecec 100644
+--- a/web/src/App.tsx
++++ b/web/src/App.tsx
+@@ -96,7 +96,7 @@ export function Page({
+             toggle={endToggles[song.number]!}
+             role={role}
+             available={connected}
+-            playable={liveReady}
++            playable={connected}
+             playing={playing}
+             now={now}
+             send={send}

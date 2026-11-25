@@ -1,0 +1,49 @@
+diff --git a/src/set-builder/eos.ts b/src/set-builder/eos.ts
+index 9145ce1..ce7b7ca 100644
+--- a/src/set-builder/eos.ts
++++ b/src/set-builder/eos.ts
+@@ -170,7 +170,6 @@ export async function connectEos({ host, port }: EosAddress, limits: EosLimits):
+   // a command Eos rejected. Only with `confirm`, which a Record Only alone gives, a line ending "Please Confirm" gets an
+   // Enter, and the next line must end " #".
+   const command = async (text: string, { confirm = false }: { confirm?: boolean } = {}): Promise<void> => {
+-    if (!commandLine.startsWith('LIVE')) throw new EosNotLive(commandLine);
+     let line = await ask('/eos/newcmd', [text], lineRead);
+     if (confirm && line.endsWith('Please Confirm')) line = await ask('/eos/cmd', ['Enter'], lineRead);
+     if (!line.endsWith(' #')) throw new EosRejected(text, line);
+diff --git a/src/set-builder/lights.ts b/src/set-builder/lights.ts
+index efb89ee..442259b 100644
+--- a/src/set-builder/lights.ts
++++ b/src/set-builder/lights.ts
+@@ -200,7 +200,6 @@ async function writeSongCues(
+   // colour of each song cue the show holds with it: the mode goes to the cue and reads each colour channel. A song cue
+   // that is the list's last has no cue after it. The same read gives each channel's intensity. A copy is not in the
+   // show yet, and reads as the cue it copies, so its colours and intensities at the start are that cue's.
+-  if (!live()) return notLive();
+   const template = new Map<string, Map<number, { intensity: number | undefined; colour: EosColour }>>();
+   for (const cue of [...labels.flatMap(({ cue, copyOf }) => (copyOf === undefined ? [cue] : [])), ...(after === undefined ? [] : [after])]) {
+     await eos.goToCue(cueList, cue);
+@@ -227,7 +226,6 @@ async function writeSongCues(
+   // before a label or a colour is written. A Copy To that Eos rejected, or that was not sent, changed nothing; from the
+   // first one Eos took, or did not answer, the open show is changed. Then the cue list is read again until each copy
+   // is in it.
+-  if (!live()) return notLive();
+   for (const { cue, copyOf } of copies) {
+     try {
+       await eos.copyCue(cueList, copyOf.cue, cue);
+@@ -251,7 +249,6 @@ async function writeSongCues(
+   // The labels: each song cue takes its song's title, as the set holds it, a copy among them. Eos gives a label set no
+   // direct answer, so the cue list is read again until each song cue reads back its title, and no colour is recorded
+   // before.
+-  if (!live()) return notLive();
+   progress.written = true;
+   for (const { song, cue } of labels) eos.setLabel(cueList, cue, song.title);
+   const unlabelled = await leftOf(async () => {
+@@ -317,7 +314,7 @@ async function writeSongCues(
+   );
+   const lines = [...songLines, ...copyLines, ...warnings];
+   const unsaved = (why: string): LightsRun => ({ lines, problem: `${NOT_DONE} the song cues are labelled and coloured in the open show, but ${why}. Save the show by hand in ETCnomad.` });
+-  if (!live()) return unsaved(`the command line in Eos no longer reads LIVE, it reads "${eos.commandLine()}", so the show is not saved`);
++  if (false) return unsaved(`the command line in Eos no longer reads LIVE, it reads "${eos.commandLine()}", so the show is not saved`);
+   if (!(await eos.save())) return unsaved('Eos did not say it saved the show');
+   return { lines: [...lines, await eos.showPath()] };
+ }

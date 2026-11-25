@@ -1,0 +1,9 @@
+{
+  "switches": {
+    "1": { "message": "B0 50 7F" },
+    "2": { "message": "B0 50 7F" },
+    "3": { "message": "B0 5", "action": "jump" },
+    "4": { "message": "B0 53 7F" },
+    "5": { "message": "pedal" }
+  }
+}

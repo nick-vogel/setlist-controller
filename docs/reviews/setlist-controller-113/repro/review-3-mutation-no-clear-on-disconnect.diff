@@ -1,0 +1,12 @@
+diff --git a/src/server/playback-controller.ts b/src/server/playback-controller.ts
+index beaae8d..a0f9b53 100644
+--- a/src/server/playback-controller.ts
++++ b/src/server/playback-controller.ts
+@@ -387,7 +387,6 @@ export function startPlaybackController(
+             playing = false;
+             position = null;
+             liveLoop.on = false;
+-            wrapFrom = null;
+             forgetAskedLoop();
+             forgetStop();
+             clearJump();

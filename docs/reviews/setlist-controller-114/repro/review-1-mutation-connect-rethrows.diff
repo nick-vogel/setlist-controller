@@ -1,0 +1,13 @@
+diff --git a/src/server/atem.ts b/src/server/atem.ts
+index 90363d8..96b010f 100644
+--- a/src/server/atem.ts
++++ b/src/server/atem.ts
+@@ -136,7 +136,7 @@ function atemTarget(switcher: SwitcherClient, clock: Pick<Clock, 'now'>, host: s
+       try {
+         await switcher.connect(host);
+       } catch (error) {
+-        failed(`connect to ${host}`)(error);
++        throw error;
+       }
+     },
+     stop: () => switcher.close(),

@@ -1,0 +1,13 @@
+diff --git a/src/set-builder/checks.ts b/src/set-builder/checks.ts
+index 34ba54d..d6d0efc 100644
+--- a/src/set-builder/checks.ts
++++ b/src/set-builder/checks.ts
+@@ -106,7 +106,7 @@ function ringingSongs(service: (Song | undefined)[], transitions: Partial<Record
+     const song = service[position];
+     const next = service[position + 1];
+     const ending = song && findEnding(song);
+-    if (!song || !next || ending === undefined || transitions[position + 1]?.type !== 'overlap') break;
++    if (!song || !next || ending === undefined) break;
+     start += ending;
+     songs.unshift({ song, holds: holdsAt(song, ending, next, start, position === index - 1) });
+   }

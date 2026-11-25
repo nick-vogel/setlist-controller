@@ -1,0 +1,15 @@
+{
+ "scenario": "go-last-cue",
+ "description": "Go on cue list 1 with the last cue, 1/8, completed: /eos/cues/1/fire.",
+ "eos_version": "3.3.10 (ETCnomad, macOS)",
+ "transport": "TCP 127.0.0.1:3032, OSC 1.0 packet-length framing",
+ "packets": [
+  {
+   "t_ms": 0,
+   "dir": "app->eos",
+   "address": "/eos/cues/1/fire",
+   "args": [],
+   "hex": "2f656f732f637565732f312f66697265000000002c000000"
+  }
+ ]
+}

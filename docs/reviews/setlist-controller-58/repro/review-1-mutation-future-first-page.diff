@@ -1,0 +1,13 @@
+diff --git a/src/set-builder/plan-reader.ts b/src/set-builder/plan-reader.ts
+index bb39af5..2d8985f 100644
+--- a/src/set-builder/plan-reader.ts
++++ b/src/set-builder/plan-reader.ts
+@@ -159,7 +159,7 @@ export async function readPlan({
+     return day !== undefined && past(day);
+   };
+   const plansPath = `/service_types/${encodeURIComponent(type.id)}/plans`;
+-  const future = await list(`${plansPath}?filter=future&order=sort_date&per_page=100`, endsPast((day) => day > date));
++  const future = await list(`${plansPath}?filter=future&order=sort_date&per_page=100`, () => true);
+   if (!future.ok) return future;
+   const past = await list(`${plansPath}?filter=past&order=-sort_date&per_page=25`, endsPast((day) => day < date));
+   if (!past.ok) return past;

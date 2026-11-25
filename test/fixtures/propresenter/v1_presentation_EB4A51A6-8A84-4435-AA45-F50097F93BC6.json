@@ -1,0 +1,69 @@
+{
+  "method": "GET",
+  "path": "/v1/presentation/EB4A51A6-8A84-4435-AA45-F50097F93BC6",
+  "status": 200,
+  "content_type": "application/json",
+  "body": {
+    "presentation": {
+      "id": {
+        "uuid": "EB4A51A6-8A84-4435-AA45-F50097F93BC6",
+        "name": "Test Message",
+        "index": 242
+      },
+      "groups": [
+        {
+          "name": "",
+          "color": {
+            "red": 0.3999999761581421,
+            "green": 0.3999999761581421,
+            "blue": 0.3999999761581421,
+            "alpha": 1
+          },
+          "slides": [
+            {
+              "enabled": true,
+              "notes": "",
+              "text": "",
+              "label": "fruit-roll-up-race.jpg",
+              "size": {
+                "width": 1920,
+                "height": 1080
+              }
+            },
+            {
+              "enabled": true,
+              "notes": "",
+              "text": "",
+              "label": "Both And.jpg",
+              "size": {
+                "width": 1920,
+                "height": 1080
+              }
+            }
+          ],
+          "uuid": "298016EE-2017-4BE3-B02A-4E74790DE396"
+        }
+      ],
+      "has_timeline": false,
+      "presentation_path": "ProPresenter/Libraries/Default/Test Message.pro",
+      "destination": "presentation",
+      "arrangements": [
+        {
+          "id": {
+            "uuid": "EB4A51A6-8A84-4435-AA45-F50097F93BC6",
+            "name": "Master",
+            "index": 0
+          },
+          "groups": [
+            "298016EE-2017-4BE3-B02A-4E74790DE396"
+          ],
+          "total_cues": 2
+        }
+      ],
+      "current_arrangement": "EB4A51A6-8A84-4435-AA45-F50097F93BC6",
+      "type": "standard",
+      "is_authorized": true,
+      "total_cues": 2
+    }
+  }
+}

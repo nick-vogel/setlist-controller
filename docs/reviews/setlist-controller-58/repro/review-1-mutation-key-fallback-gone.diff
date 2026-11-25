@@ -1,0 +1,13 @@
+diff --git a/src/set-builder/plan-reader.ts b/src/set-builder/plan-reader.ts
+index bb39af5..9af02bb 100644
+--- a/src/set-builder/plan-reader.ts
++++ b/src/set-builder/plan-reader.ts
+@@ -217,7 +217,7 @@ export async function readPlan({
+     }
+     const key = related(item, 'key')?.attributes;
+     const arrangement = related(item, 'arrangement')?.attributes;
+-    const keyName = text(item.attributes.key_name) ?? (text(key?.starting_key) && `${text(key?.starting_key)}${key?.starting_minor === true ? 'm' : ''}`);
++    const keyName = text(item.attributes.key_name);
+     const bpm = arrangement?.bpm;
+     const meter = text(arrangement?.meter);
+     songs.push({

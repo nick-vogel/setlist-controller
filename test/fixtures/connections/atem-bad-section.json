@@ -1,0 +1,6 @@
+{
+  "targets": {
+    "fake": { "port": 4031 },
+    "atem": { "host": "192.168.10.240", "pro": 2, "camera": 2 }
+  }
+}

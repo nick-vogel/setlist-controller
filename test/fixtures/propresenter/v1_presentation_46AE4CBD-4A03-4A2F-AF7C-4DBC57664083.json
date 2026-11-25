@@ -1,0 +1,409 @@
+{
+  "method": "GET",
+  "path": "/v1/presentation/46AE4CBD-4A03-4A2F-AF7C-4DBC57664083",
+  "status": 200,
+  "content_type": "application/json",
+  "body": {
+    "presentation": {
+      "id": {
+        "uuid": "46AE4CBD-4A03-4A2F-AF7C-4DBC57664083",
+        "name": "Series-One_Part-22_ProPresenter",
+        "index": 62
+      },
+      "groups": [
+        {
+          "name": "",
+          "color": {
+            "red": 0.3999999761581421,
+            "green": 0.3999999761581421,
+            "blue": 0.3999999761581421,
+            "alpha": 1
+          },
+          "slides": [
+            {
+              "enabled": true,
+              "notes": "",
+              "text": "",
+              "label": "Speaker.jpg",
+              "size": {
+                "width": 1920,
+                "height": 1080
+              }
+            },
+            {
+              "enabled": true,
+              "notes": "",
+              "text": "",
+              "label": "Title (1).JPG",
+              "size": {
+                "width": 1920,
+                "height": 1080
+              }
+            },
+            {
+              "enabled": true,
+              "notes": "",
+              "text": "Series-One_Part-22_ProPresenter / group 1 / slide 3 line 1\nSeries-One_Part-22_ProPresenter / group 1 / slide 3 line 2",
+              "label": "",
+              "size": {
+                "width": 1920,
+                "height": 1080
+              }
+            },
+            {
+              "enabled": true,
+              "notes": "",
+              "text": "Series-One_Part-22_ProPresenter / group 1 / slide 4 line 1\nSeries-One_Part-22_ProPresenter / group 1 / slide 4 line 2",
+              "label": "",
+              "size": {
+                "width": 1920,
+                "height": 1080
+              }
+            },
+            {
+              "enabled": true,
+              "notes": "",
+              "text": "Series-One_Part-20_ProPresenter / group 1 / slide 7 line 1\nSeries-One_Part-20_ProPresenter / group 1 / slide 7 line 2\nSeries-One_Part-20_ProPresenter / group 1 / slide 7 line 3",
+              "label": "",
+              "size": {
+                "width": 1920,
+                "height": 1080
+              }
+            },
+            {
+              "enabled": true,
+              "notes": "",
+              "text": "",
+              "label": "Title (1).JPG",
+              "size": {
+                "width": 1920,
+                "height": 1080
+              }
+            },
+            {
+              "enabled": true,
+              "notes": "",
+              "text": "Series-One_Part-22_ProPresenter / group 1 / slide 3 line 1\nSeries-One_Part-22_ProPresenter / group 1 / slide 3 line 2",
+              "label": "",
+              "size": {
+                "width": 1920,
+                "height": 1080
+              }
+            },
+            {
+              "enabled": true,
+              "notes": "",
+              "text": "Series-One_Part-22_ProPresenter / group 1 / slide 8 line 1\nSeries-One_Part-22_ProPresenter / group 1 / slide 8 line 2",
+              "label": "",
+              "size": {
+                "width": 1920,
+                "height": 1080
+              }
+            },
+            {
+              "enabled": true,
+              "notes": "",
+              "text": "",
+              "label": "Title (1).JPG",
+              "size": {
+                "width": 1920,
+                "height": 1080
+              }
+            },
+            {
+              "enabled": true,
+              "notes": "",
+              "text": "Series-One_Part-22_ProPresenter / group 1 / slide 10 line 1\nSeries-One_Part-22_ProPresenter / group 1 / slide 10 line 2",
+              "label": "",
+              "size": {
+                "width": 1920,
+                "height": 1080
+              }
+            },
+            {
+              "enabled": true,
+              "notes": "",
+              "text": "",
+              "label": "Title (1).JPG",
+              "size": {
+                "width": 1920,
+                "height": 1080
+              }
+            },
+            {
+              "enabled": true,
+              "notes": "",
+              "text": "Series-One_Part-22_ProPresenter / group 1 / slide 12 line 1\n\n",
+              "label": "",
+              "size": {
+                "width": 1920,
+                "height": 1080
+              }
+            },
+            {
+              "enabled": true,
+              "notes": "",
+              "text": "Series-One_Part-22_ProPresenter / group 1 / slide 13 line 1\nSeries-One_Part-22_ProPresenter / group 1 / slide 13 line 2",
+              "label": "",
+              "size": {
+                "width": 1920,
+                "height": 1080
+              }
+            },
+            {
+              "enabled": true,
+              "notes": "",
+              "text": "",
+              "label": "Title (1).JPG",
+              "size": {
+                "width": 1920,
+                "height": 1080
+              }
+            },
+            {
+              "enabled": true,
+              "notes": "",
+              "text": "Series-One_Part-22_ProPresenter / group 1 / slide 15 line 1",
+              "label": "",
+              "size": {
+                "width": 1920,
+                "height": 1080
+              }
+            },
+            {
+              "enabled": true,
+              "notes": "",
+              "text": "",
+              "label": "Title (1).JPG",
+              "size": {
+                "width": 1920,
+                "height": 1080
+              }
+            },
+            {
+              "enabled": true,
+              "notes": "",
+              "text": "Series-One_Part-22_ProPresenter / group 1 / slide 17 line 1\nSeries-One_Part-22_ProPresenter / group 1 / slide 17 line 2",
+              "label": "",
+              "size": {
+                "width": 1920,
+                "height": 1080
+              }
+            },
+            {
+              "enabled": true,
+              "notes": "",
+              "text": "",
+              "label": "Title (1).JPG",
+              "size": {
+                "width": 1920,
+                "height": 1080
+              }
+            },
+            {
+              "enabled": true,
+              "notes": "",
+              "text": "Series-One_Part-22_ProPresenter / group 1 / slide 19 line 1\nSeries-One_Part-22_ProPresenter / group 1 / slide 19 line 2",
+              "label": "",
+              "size": {
+                "width": 1920,
+                "height": 1080
+              }
+            },
+            {
+              "enabled": true,
+              "notes": "",
+              "text": "",
+              "label": "Title (1).JPG",
+              "size": {
+                "width": 1920,
+                "height": 1080
+              }
+            },
+            {
+              "enabled": true,
+              "notes": "",
+              "text": "Series-One_Part-22_ProPresenter / group 1 / slide 21 line 1\nSeries-One_Part-22_ProPresenter / group 1 / slide 21 line 2",
+              "label": "",
+              "size": {
+                "width": 1920,
+                "height": 1080
+              }
+            },
+            {
+              "enabled": true,
+              "notes": "",
+              "text": "",
+              "label": "Title (1).JPG",
+              "size": {
+                "width": 1920,
+                "height": 1080
+              }
+            },
+            {
+              "enabled": true,
+              "notes": "",
+              "text": "Series-One_Part-22_ProPresenter / group 1 / slide 23 line 1\nSeries-One_Part-22_ProPresenter / group 1 / slide 23 line 2",
+              "label": "",
+              "size": {
+                "width": 1920,
+                "height": 1080
+              }
+            },
+            {
+              "enabled": true,
+              "notes": "",
+              "text": "Series-One_Part-22_ProPresenter / group 1 / slide 24 line 1\nSeries-One_Part-22_ProPresenter / group 1 / slide 24 line 2",
+              "label": "",
+              "size": {
+                "width": 1920,
+                "height": 1080
+              }
+            },
+            {
+              "enabled": true,
+              "notes": "",
+              "text": "Series-One_Part-22_ProPresenter / group 1 / slide 25 line 1\nSeries-One_Part-22_ProPresenter / group 1 / slide 25 line 2",
+              "label": "",
+              "size": {
+                "width": 1920,
+                "height": 1080
+              }
+            },
+            {
+              "enabled": true,
+              "notes": "",
+              "text": "",
+              "label": "Title (1).JPG",
+              "size": {
+                "width": 1920,
+                "height": 1080
+              }
+            },
+            {
+              "enabled": true,
+              "notes": "",
+              "text": "Series-One_Part-22_ProPresenter / group 1 / slide 27 line 1\nSeries-One_Part-22_ProPresenter / group 1 / slide 27 line 2",
+              "label": "",
+              "size": {
+                "width": 1920,
+                "height": 1080
+              }
+            },
+            {
+              "enabled": true,
+              "notes": "",
+              "text": "",
+              "label": "Title (1).JPG",
+              "size": {
+                "width": 1920,
+                "height": 1080
+              }
+            },
+            {
+              "enabled": true,
+              "notes": "",
+              "text": "Series-One_Part-22_ProPresenter / group 1 / slide 29 line 1",
+              "label": "",
+              "size": {
+                "width": 1920,
+                "height": 1080
+              }
+            },
+            {
+              "enabled": true,
+              "notes": "",
+              "text": "",
+              "label": "Title (1).JPG",
+              "size": {
+                "width": 1920,
+                "height": 1080
+              }
+            },
+            {
+              "enabled": true,
+              "notes": "",
+              "text": "Series-One_Part-22_ProPresenter / group 1 / slide 31 line 1\nSeries-One_Part-22_ProPresenter / group 1 / slide 31 line 2",
+              "label": "",
+              "size": {
+                "width": 1920,
+                "height": 1080
+              }
+            },
+            {
+              "enabled": true,
+              "notes": "",
+              "text": "",
+              "label": "Title (1).JPG",
+              "size": {
+                "width": 1920,
+                "height": 1080
+              }
+            },
+            {
+              "enabled": true,
+              "notes": "",
+              "text": "Series-One_Part-22_ProPresenter / group 1 / slide 33 line 1",
+              "label": "",
+              "size": {
+                "width": 1920,
+                "height": 1080
+              }
+            },
+            {
+              "enabled": true,
+              "notes": "",
+              "text": "",
+              "label": "Title (1).JPG",
+              "size": {
+                "width": 1920,
+                "height": 1080
+              }
+            },
+            {
+              "enabled": true,
+              "notes": "",
+              "text": "Series-One_Part-22_ProPresenter / group 1 / slide 35 line 1\nSeries-One_Part-22_ProPresenter / group 1 / slide 35 line 2\nSeries-One_Part-22_ProPresenter / group 1 / slide 35 line 3\n",
+              "label": "",
+              "size": {
+                "width": 1920,
+                "height": 1080
+              }
+            },
+            {
+              "enabled": true,
+              "notes": "",
+              "text": "",
+              "label": "Title (1).JPG",
+              "size": {
+                "width": 1920,
+                "height": 1080
+              }
+            }
+          ],
+          "uuid": "0309BEB3-BFCC-49AD-8D81-E11EBD07E39E"
+        }
+      ],
+      "has_timeline": false,
+      "presentation_path": "ProPresenter/Libraries/Default/Series-One_Part-22_ProPresenter.pro",
+      "destination": "presentation",
+      "arrangements": [
+        {
+          "id": {
+            "uuid": "46AE4CBD-4A03-4A2F-AF7C-4DBC57664083",
+            "name": "Master",
+            "index": 0
+          },
+          "groups": [
+            "0309BEB3-BFCC-49AD-8D81-E11EBD07E39E"
+          ],
+          "total_cues": 36
+        }
+      ],
+      "current_arrangement": "46AE4CBD-4A03-4A2F-AF7C-4DBC57664083",
+      "type": "standard",
+      "is_authorized": true,
+      "total_cues": 36
+    }
+  }
+}

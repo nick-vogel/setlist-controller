@@ -1,0 +1,57 @@
+diff --git a/test/propresenter.test.ts b/test/propresenter.test.ts
+index 2a4495e..9f351c9 100644
+--- a/test/propresenter.test.ts
++++ b/test/propresenter.test.ts
+@@ -895,6 +895,52 @@ describe('a reconnect while armed', () => {
+   });
+ });
+ 
++describe('review 7 finding 1', () => {
++  it('pauses on a slide beside the last slide shown but not beside the slide showing, after a cold Previous slide with a frame since the open', async () => {
++    vi.spyOn(console, 'error').mockImplementation(() => {});
++    const { play, producer, clock, row, triggers } = await armedRig({ position: 24, playlist: OCTOBER_25.id });
++    await pro!.streaming();
++    await play(8, 32);
++    expect(await triggers()).toEqual([trigger(THERE_IS_FREEDOM, 6)]);
++    await pro!.sendSlide(THERE_IS_FREEDOM, 7);
++    clock.advance(PAST_WINDOW_MS);
++    await press(producer, 'previous');
++    clock.advance(COLD_BUTTON_FRAME_MS);
++    await pro!.sendSlide(THERE_IS_FREEDOM, 5);
++
++    expect(await row((row) => row.arm === 'paused')).toMatchObject({ arm: 'paused', pause: 'by-hand' });
++  });
++});
++
++describe('review 7 finding 1, the limit of the cold press', () => {
++  const CUES: CuePoint[] = [
++    { name: '1 - Chorus (There Is Freedom)', time: 0 },
++    { name: '1 - Turnaround', time: 16 },
++    { name: '1 - End', time: 32 },
++  ];
++  it('pauses on a slide pressed by hand inside a cold Next slide frame time after a reconnect over a slide with no words, when it is neither slide beside the last slide shown', async () => {
++    vi.spyOn(console, 'error').mockImplementation(() => {});
++    const started = await armedRig({ position: 8, playlist: OCTOBER_25.id, cuePoints: CUES });
++    const { play, next, clock, triggers, producer, row } = started;
++    await pro!.streaming();
++    await play(8, 16);
++    expect(await triggers()).toEqual([trigger(THERE_IS_FREEDOM, 10)]);
++    const offline = next((snapshot) => proRow(snapshot)?.connection === 'offline');
++    pro!.dropStreams();
++    await offline;
++    const online = next((snapshot) => proRow(snapshot)?.connection === 'online');
++    clock.advance(POLL_MS);
++    await online;
++    await pro!.streaming();
++
++    await press(producer, 'next');
++    clock.advance(COLD_BUTTON_FRAME_MS);
++    await pro!.sendSlide(THERE_IS_FREEDOM, 20);
++
++    expect(await row((row) => row.arm === 'paused')).toMatchObject({ arm: 'paused', pause: 'by-hand' });
++  });
++});
++
+ const OCTOBER_25 = { id: '49F3C197-E743-45AB-8670-C53959B82BDC', label: 'Series One - October 25, 2026' };
+ const OCTOBER_11 = { id: '6E51EFFD-0E26-43D9-A4AA-DF43A41C18B5', label: 'Series One - October 11, 2026' };
+ const THERE_IS_FREEDOM = '894B40A0-42FE-411E-B915-F1919C6DA33E';

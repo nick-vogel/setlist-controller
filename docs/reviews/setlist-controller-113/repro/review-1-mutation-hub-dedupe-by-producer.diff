@@ -1,0 +1,11 @@
+--- a/src/server/hub.ts
++++ b/src/server/hub.ts
+@@ -79,7 +79,7 @@
+       sent = next;
+       for (const socket of sockets.clients) {
+         const role = roles.get(socket);
+-        if (role === 'producer' ? changed.producer : changed.playback) socket.send(forRole(role));
++        if (changed.producer) socket.send(forRole(role));
+       }
+     },
+     close() {

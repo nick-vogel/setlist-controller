@@ -1,0 +1,41 @@
+diff --git a/src/server/propresenter.ts b/src/server/propresenter.ts
+index e65c2bf..427495f 100644
+--- a/src/server/propresenter.ts
++++ b/src/server/propresenter.ts
+@@ -190,6 +190,7 @@ function proPresenterTarget({
+   let logged = false;
+   // Set by stop: every request still out is aborted, and nothing it brings back is reported.
+   const stopping = new AbortController();
++  let connection = new AbortController();
+   let stopPoll: (() => void) | null = null;
+   let polling = false;
+   const store = picksStore(statePath);
+@@ -262,6 +263,8 @@ function proPresenterTarget({
+   const goOffline = (error: unknown) => {
+     if (!report || stopping.signal.aborted) return;
+     closeStream();
++    connection.abort();
++    connection = new AbortController();
+     const reason = `ProPresenter could not be reached at ${where}: ${describe(error, requestTimeoutMs)}`;
+     if (!logged) console.error(`Setlist server: ${reason}`);
+     logged = true;
+@@ -279,8 +282,9 @@ function proPresenterTarget({
+   // Every request goes through here. It resolves with the answer whatever its status, and with null
+   // after a connection failure or a timeout, which put ProPresenter offline.
+   const request = async (path: string): Promise<Answer | null> => {
++    const given = connection.signal;
+     try {
+-      const response = await fetch(`http://${where}${path}`, { signal: AbortSignal.any([stopping.signal, AbortSignal.timeout(requestTimeoutMs)]) });
++      const response = await fetch(`http://${where}${path}`, { signal: AbortSignal.any([stopping.signal, given, AbortSignal.timeout(requestTimeoutMs)]) });
+       const text = await response.text();
+       let body: unknown;
+       try {
+@@ -290,7 +294,7 @@ function proPresenterTarget({
+       }
+       return { status: response.status, body };
+     } catch (error) {
+-      goOffline(error);
++      if (!given.aborted) goOffline(error);
+       return null;
+     }
+   };

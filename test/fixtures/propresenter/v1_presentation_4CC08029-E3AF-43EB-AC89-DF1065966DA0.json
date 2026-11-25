@@ -1,0 +1,185 @@
+{
+  "method": "GET",
+  "path": "/v1/presentation/4CC08029-E3AF-43EB-AC89-DF1065966DA0",
+  "status": 200,
+  "content_type": "application/json",
+  "body": {
+    "presentation": {
+      "id": {
+        "uuid": "4CC08029-E3AF-43EB-AC89-DF1065966DA0",
+        "name": "MC",
+        "index": 181
+      },
+      "groups": [
+        {
+          "name": "",
+          "color": {
+            "red": 0.3999999761581421,
+            "green": 0.3999999761581421,
+            "blue": 0.3999999761581421,
+            "alpha": 1
+          },
+          "slides": [
+            {
+              "enabled": true,
+              "notes": "",
+              "text": "",
+              "label": "Logo.jpg",
+              "size": {
+                "width": 1280,
+                "height": 720
+              }
+            },
+            {
+              "enabled": true,
+              "notes": "",
+              "text": "",
+              "label": "Logo copy.jpg",
+              "size": {
+                "width": 1280,
+                "height": 720
+              }
+            },
+            {
+              "enabled": true,
+              "notes": "",
+              "text": "",
+              "label": "First Time Guest Slide.jpg",
+              "size": {
+                "width": 1280,
+                "height": 720
+              }
+            },
+            {
+              "enabled": true,
+              "notes": "",
+              "text": "",
+              "label": "Basics.jpg",
+              "size": {
+                "width": 1280,
+                "height": 720
+              }
+            },
+            {
+              "enabled": true,
+              "notes": "",
+              "text": "",
+              "label": "fall-small-groups-1920x1080.png",
+              "size": {
+                "width": 1280,
+                "height": 720
+              }
+            },
+            {
+              "enabled": true,
+              "notes": "",
+              "text": "",
+              "label": "water-baptisms-november-15.png",
+              "size": {
+                "width": 1280,
+                "height": 720
+              }
+            },
+            {
+              "enabled": true,
+              "notes": "",
+              "text": "",
+              "label": "costume-bash-oct-27.jpeg",
+              "size": {
+                "width": 1280,
+                "height": 720
+              }
+            },
+            {
+              "enabled": true,
+              "notes": "",
+              "text": "",
+              "label": "Logo.jpg",
+              "size": {
+                "width": 1280,
+                "height": 720
+              }
+            },
+            {
+              "enabled": true,
+              "notes": "",
+              "text": "",
+              "label": "Ways to Give.jpg",
+              "size": {
+                "width": 1280,
+                "height": 720
+              }
+            }
+          ],
+          "uuid": "8EDFEDB9-1BD9-4003-98C9-3EF942C8D1A0"
+        },
+        {
+          "name": "",
+          "color": {
+            "red": 0.3999999761581421,
+            "green": 0.3999999761581421,
+            "blue": 0.3999999761581421,
+            "alpha": 1
+          },
+          "slides": [
+            {
+              "enabled": false,
+              "notes": "",
+              "text": "",
+              "label": "IMG_4274.WEBP",
+              "size": {
+                "width": 1280,
+                "height": 720
+              }
+            }
+          ],
+          "uuid": "90BC9706-45E9-4375-A253-BEC400679E07"
+        },
+        {
+          "name": "",
+          "color": {
+            "red": 0.3999999761581421,
+            "green": 0.3999999761581421,
+            "blue": 0.3999999761581421,
+            "alpha": 1
+          },
+          "slides": [
+            {
+              "enabled": true,
+              "notes": "",
+              "text": "",
+              "label": "IMG_4340",
+              "size": {
+                "width": 1280,
+                "height": 720
+              }
+            }
+          ],
+          "uuid": "E9EB9B19-573D-444D-A94F-AF3A8E6C08AF"
+        }
+      ],
+      "has_timeline": false,
+      "presentation_path": "ProPresenter/Libraries/Default/MC.pro",
+      "destination": "presentation",
+      "arrangements": [
+        {
+          "id": {
+            "uuid": "4CC08029-E3AF-43EB-AC89-DF1065966DA0",
+            "name": "Master",
+            "index": 0
+          },
+          "groups": [
+            "8EDFEDB9-1BD9-4003-98C9-3EF942C8D1A0",
+            "90BC9706-45E9-4375-A253-BEC400679E07",
+            "E9EB9B19-573D-444D-A94F-AF3A8E6C08AF"
+          ],
+          "total_cues": 11
+        }
+      ],
+      "current_arrangement": "4CC08029-E3AF-43EB-AC89-DF1065966DA0",
+      "type": "standard",
+      "is_authorized": true,
+      "total_cues": 11
+    }
+  }
+}

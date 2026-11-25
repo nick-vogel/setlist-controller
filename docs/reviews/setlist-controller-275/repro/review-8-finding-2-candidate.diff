@@ -1,0 +1,22 @@
+diff --git a/src/server/playback-controller.ts b/src/server/playback-controller.ts
+index 300e3f8..09f99b0 100644
+--- a/src/server/playback-controller.ts
++++ b/src/server/playback-controller.ts
+@@ -648,7 +648,7 @@ export function startPlaybackController(
+       // waiting meter first, except a lost Live, which drops it.
+       const comesWithMove = event.kind === 'tempo' || event.kind === 'signature-numerator' || event.kind === 'signature-denominator';
+       const goneAway = event.kind === 'connection' && !event.connected;
+-      if (event.kind === 'position' && settlingCarried) settlingSong = meterSong(event.beats);
++      if (event.kind === 'position' && settlingCarried && !onBraceEnd(event.beats)) settlingSong = meterSong(event.beats);
+       const settled = !comesWithMove && !goneAway && commitMeter();
+       // A report that changes nothing on any page still publishes a meter it settled.
+       const unchanged = () => {
+@@ -713,7 +713,7 @@ export function startPlaybackController(
+           wrapFrom = wrapping ? { from: before } : null;
+           if (!wrapping) enteredCountOff(before, now(position), event.beats);
+           sendCountIn();
+-          settleMeter(meterSong(position));
++          settleMeter(wrapping ? null : meterSong(position));
+           break;
+         }
+         case 'playing': {

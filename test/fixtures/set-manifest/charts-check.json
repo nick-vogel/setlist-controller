@@ -1,0 +1,25 @@
+{
+  "songs": [
+    {
+      "title": "Made Up Song",
+      "stemsKey": "G",
+      "chartKey": "G",
+      "chartText": "Made up words before any heading\nINTRO\n[G] [C] [G] [D]\n\nVERSE\n[G]Morning comes on [C]made up wings\n\nCHORUS\n[C]Sing it [G]once, the [D]first time round\n\nCHORUS\n[C]Sing it [G]twice, a [D]second sound\nTRANSPOSE KEY +2\n\nBRIDGE\n[Em]Over the [C]water line"
+    },
+    {
+      "title": "Second Made Up Song",
+      "stemsKey": "D",
+      "chartKey": "",
+      "chartText": "INTRO\nD G A\n\nVERSE\nMade up words with no brackets"
+    },
+    {
+      "title": "No Chart Song",
+      "stemsKey": "A"
+    },
+    {
+      "title": "Third Made Up Song",
+      "stemsKey": null,
+      "chartText": "VERSE\n[A]A made up line in no key"
+    }
+  ]
+}

@@ -1,0 +1,13 @@
+diff --git a/src/set-builder/pads.ts b/src/set-builder/pads.ts
+index 9a892ab..2cb10a6 100644
+--- a/src/set-builder/pads.ts
++++ b/src/set-builder/pads.ts
+@@ -100,7 +100,7 @@ export async function readPads(folder: string, service: (Song | undefined)[], tr
+       .find((found) => found !== undefined);
+     if (name === undefined) {
+       const keyOf = from === undefined ? '' : `the key of ${from}, `;
+-      problems.push(`The pad after song ${position} is in ${key}, ${keyOf}and the pads folder ${folder} has no ${names.join(' or ')}. ${keysIn(entries)}`);
++      problems.push(`The pad after song ${position} is in ${key}, ${keyOf}and the pads folder ${folder} lacks ${names.join(' or ')}. ${keysIn(entries)}`);
+       continue;
+     }
+     if (!files.has(name)) files.set(name, readPad(folder, name));

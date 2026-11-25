@@ -1,0 +1,12 @@
+diff --git a/src/server/playback-controller.ts b/src/server/playback-controller.ts
+index beaae8d..f2433b5 100644
+--- a/src/server/playback-controller.ts
++++ b/src/server/playback-controller.ts
+@@ -434,7 +434,6 @@ export function startPlaybackController(
+           // A stop ends a wrap, so the report after it is judged from where the playhead is.
+           if (!playing) {
+             forgetStop();
+-            wrapFrom = null;
+           }
+           // Live drops a jump that waits for the bar line when it stops, so the jump no longer waits.
+           if (!playing && barLine !== null) {

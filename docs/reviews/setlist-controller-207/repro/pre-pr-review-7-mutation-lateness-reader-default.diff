@@ -1,0 +1,13 @@
+diff --git a/src/lateness/main.ts b/src/lateness/main.ts
+index c83b85a..60658a2 100644
+--- a/src/lateness/main.ts
++++ b/src/lateness/main.ts
+@@ -23,7 +23,7 @@ try {
+ }
+ // A relative --log is from the folder the command was run in, which pnpm gives as INIT_CWD.
+ const from = (process.env.npm_lifecycle_event === 'lateness' && process.env.INIT_CWD) || process.cwd();
+-const path = parsed.values.log === undefined ? DEFAULT_LATENESS_LOG : resolve(from, parsed.values.log);
++const path = parsed.values.log === undefined ? resolve(from, 'cue-lateness.log') : resolve(from, parsed.values.log);
+ 
+ // A file's text, or null when it does not exist. Any other failure to read it stops the command.
+ async function textOf(file: string): Promise<string | null> {

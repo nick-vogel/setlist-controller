@@ -1,0 +1,43 @@
+diff --git a/src/server/playback-controller.ts b/src/server/playback-controller.ts
+index 696cf80..d620a4e 100644
+--- a/src/server/playback-controller.ts
++++ b/src/server/playback-controller.ts
+@@ -128,6 +128,7 @@ export function startPlaybackController(
+   // The song whose meter waits for Live's reports to settle (settleMeter), null for none, and the
+   // function that stops its timer, while one runs.
+   let settlingSong: number | null = null;
++  let settlingCarried = false;
+   let stopSettle: (() => void) | null = null;
+   // Live's tempo, which turns a time into beats. 120 BPM until Live reports it.
+   let tempo = 120;
+@@ -261,6 +262,7 @@ export function startPlaybackController(
+     stopSettle?.();
+     stopSettle = null;
+     settlingSong = null;
++    settlingCarried = false;
+   };
+   // Where the playhead is for the meter a signature report gives. While Live plays, it reports the
+   // next song's signature before the first position past the change, with the last position it
+@@ -642,6 +644,7 @@ export function startPlaybackController(
+       // waiting meter first, except a lost Live, which drops it.
+       const comesWithMove = event.kind === 'tempo' || event.kind === 'signature-numerator' || event.kind === 'signature-denominator';
+       const goneAway = event.kind === 'connection' && !event.connected;
++      if (event.kind === 'position' && settlingCarried) settlingSong = meterSong(event.beats);
+       const settled = !comesWithMove && !goneAway && commitMeter();
+       // A report that changes nothing on any page still publishes a meter it settled.
+       const unchanged = () => {
+@@ -746,12 +749,14 @@ export function startPlaybackController(
+           signature.numerator = event.numerator;
+           reported.numerator = true;
+           settleMeter(meterSong(signaturePlayhead()));
++          settlingCarried = playing;
+           break;
+         case 'signature-denominator':
+           if (!(event.denominator > 0)) return;
+           signature.denominator = event.denominator;
+           reported.denominator = true;
+           settleMeter(meterSong(signaturePlayhead()));
++          settlingCarried = playing;
+           break;
+         case 'loop':
+           // Live reports the brace before the loop, in the order the controller sends them, so this

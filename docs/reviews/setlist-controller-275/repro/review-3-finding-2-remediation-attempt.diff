@@ -1,0 +1,72 @@
+diff --git a/src/server/playback-controller.ts b/src/server/playback-controller.ts
+index ee1b831..e931700 100644
+--- a/src/server/playback-controller.ts
++++ b/src/server/playback-controller.ts
+@@ -278,6 +278,22 @@ export function startPlaybackController(
+     askedLoop = null;
+   };
+ 
++  let stopMeterWait: (() => void) | null = null;
++  const meterWaits = () => {
++    forgetMeterWait();
++    stopMeterWait = clock.every(LOOP_REPORT_MS, () => {
++      forgetMeterWait();
++      const before = meters;
++      rememberMeter();
++      if (meters !== before) onChange(snapshot());
++    });
++  };
++
++  const forgetMeterWait = () => {
++    stopMeterWait?.();
++    stopMeterWait = null;
++  };
++
+   const askStop = () => {
+     forgetStop();
+     stopWait = clock.every(LOOP_REPORT_MS, forgetStop);
+@@ -643,6 +659,7 @@ export function startPlaybackController(
+           wrapFrom = wrapping ? { from: before } : null;
+           if (!wrapping) enteredCountOff(before, now(position), event.beats);
+           sendCountIn();
++          forgetMeterWait();
+           rememberMeter();
+           break;
+         }
+@@ -682,13 +699,13 @@ export function startPlaybackController(
+           if (!(event.numerator > 0)) return;
+           signature.numerator = event.numerator;
+           reported.numerator = true;
+-          rememberMeter();
++          meterWaits();
+           break;
+         case 'signature-denominator':
+           if (!(event.denominator > 0)) return;
+           signature.denominator = event.denominator;
+           reported.denominator = true;
+-          rememberMeter();
++          meterWaits();
+           break;
+         case 'loop':
+           // Live reports the brace before the loop, in the order the controller sends them, so this
+diff --git a/test/propresenter.test.ts b/test/propresenter.test.ts
+index fe2f7c3..773b883 100644
+--- a/test/propresenter.test.ts
++++ b/test/propresenter.test.ts
+@@ -2344,6 +2344,16 @@ describe('the pre-service check', () => {
+       expect(timingProblems(after.check)).toEqual([HOLY_FOREVER_OUTSIDE]);
+     });
+ 
++    it("keeps Ancient Gates in 6/8 when Live reports Holy Forever's 4/4 before the playhead's move into it", async () => {
++      const { row } = await meterRig({ playing: false, position: 10, signature: { numerator: 6, denominator: 8 } });
++
++      rig!.live.setSignature(4, 4);
++      rig!.live.setPosition(44);
++
++      const after = await row((row) => meterLines(row.check).length === 0 && onBeatsLines(row.check).includes(HOLY_FOREVER_ON_BEATS));
++      expect(onBeatsLines(after.check)).toEqual([HOLY_FOREVER_ON_BEATS]);
++    });
++
+     it('forgets every song\'s meter on a new set from Live, but the song the playhead sits in keeps Live\'s', async () => {
+       const { start, to } = WALKS[0]!;
+       const { row } = await meterRig(start);

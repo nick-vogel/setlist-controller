@@ -1,0 +1,850 @@
+{
+  "method": "GET",
+  "path": "/v1/presentation/5A606BC5-9279-4509-983E-88092AE567F0",
+  "status": 200,
+  "content_type": "application/json",
+  "body": {
+    "presentation": {
+      "id": {
+        "uuid": "5A606BC5-9279-4509-983E-88092AE567F0",
+        "name": "Ancient Gates",
+        "index": 63
+      },
+      "groups": [
+        {
+          "name": "",
+          "color": {
+            "red": 0.3999999761581421,
+            "green": 0.3999999761581421,
+            "blue": 0.3999999761581421,
+            "alpha": 1
+          },
+          "slides": [
+            {
+              "enabled": true,
+              "notes": "",
+              "text": "",
+              "label": "TheCove_10_4K.mp4",
+              "size": {
+                "width": 1920,
+                "height": 1080
+              }
+            }
+          ],
+          "uuid": "DBE05E8C-C786-442A-AFC5-71AB1FE7FEF3"
+        },
+        {
+          "name": "Verse 1",
+          "color": {
+            "red": 0,
+            "green": 0.46666666865348816,
+            "blue": 0.800000011920929,
+            "alpha": 1
+          },
+          "slides": [
+            {
+              "enabled": true,
+              "notes": "",
+              "text": "Ancient Gates / Verse 1 / slide 1 line 1\nAncient Gates / Verse 1 / slide 1 line 2",
+              "label": "",
+              "size": {
+                "width": 1920,
+                "height": 1080
+              }
+            },
+            {
+              "enabled": true,
+              "notes": "",
+              "text": "Ancient Gates / Verse 1 / slide 2 line 1\nAncient Gates / Verse 1 / slide 2 line 2",
+              "label": "",
+              "size": {
+                "width": 1920,
+                "height": 1080
+              }
+            }
+          ],
+          "uuid": "3C4A21B1-1A06-48AA-9367-B91D064F02FB"
+        },
+        {
+          "name": "Verse 2",
+          "color": {
+            "red": 0,
+            "green": 0.3490196168422699,
+            "blue": 0.6000000238418579,
+            "alpha": 1
+          },
+          "slides": [
+            {
+              "enabled": true,
+              "notes": "",
+              "text": "Ancient Gates / Verse 2 / slide 1 line 1\nAncient Gates / Verse 2 / slide 1 line 2\nAncient Gates / Verse 2 / slide 1 line 3",
+              "label": "",
+              "size": {
+                "width": 1920,
+                "height": 1080
+              }
+            },
+            {
+              "enabled": true,
+              "notes": "",
+              "text": "Ancient Gates / Verse 2 / slide 2 line 1\nAncient Gates / Verse 2 / slide 2 line 2",
+              "label": "",
+              "size": {
+                "width": 1920,
+                "height": 1080
+              }
+            }
+          ],
+          "uuid": "D7F9FB31-C8D8-4C82-8DC6-4ACBE0D7E5CC"
+        },
+        {
+          "name": "Chorus 1",
+          "color": {
+            "red": 0.800000011920929,
+            "green": 0,
+            "blue": 0.30588236451148987,
+            "alpha": 1
+          },
+          "slides": [
+            {
+              "enabled": true,
+              "notes": "",
+              "text": "Ancient Gates / Chorus 1 / slide 1 line 1\nAncient Gates / Chorus 1 / slide 1 line 2",
+              "label": "",
+              "size": {
+                "width": 1920,
+                "height": 1080
+              }
+            },
+            {
+              "enabled": true,
+              "notes": "",
+              "text": "Ancient Gates / Chorus 1 / slide 2 line 1",
+              "label": "",
+              "size": {
+                "width": 1920,
+                "height": 1080
+              }
+            }
+          ],
+          "uuid": "871760B7-7A29-4F16-B33D-4939FCA1F323"
+        },
+        {
+          "name": "Verse 3",
+          "color": {
+            "red": 0,
+            "green": 0.23529411852359772,
+            "blue": 0.4000000059604645,
+            "alpha": 1
+          },
+          "slides": [
+            {
+              "enabled": true,
+              "notes": "",
+              "text": "Ancient Gates / Verse 3 / slide 1 line 1\nAncient Gates / Verse 3 / slide 1 line 2",
+              "label": "",
+              "size": {
+                "width": 1920,
+                "height": 1080
+              }
+            },
+            {
+              "enabled": true,
+              "notes": "",
+              "text": "Ancient Gates / Verse 3 / slide 2 line 1\nAncient Gates / Verse 3 / slide 2 line 2",
+              "label": "",
+              "size": {
+                "width": 1920,
+                "height": 1080
+              }
+            },
+            {
+              "enabled": true,
+              "notes": "",
+              "text": "Ancient Gates / Verse 3 / slide 3 line 1",
+              "label": "",
+              "size": {
+                "width": 1920,
+                "height": 1080
+              }
+            }
+          ],
+          "uuid": "678A1837-6A66-46C5-BF35-38CE5AAF8637"
+        },
+        {
+          "name": "Verse 4",
+          "color": {
+            "red": 0,
+            "green": 0.40784314274787903,
+            "blue": 0.7019608020782471,
+            "alpha": 1
+          },
+          "slides": [
+            {
+              "enabled": true,
+              "notes": "",
+              "text": "Ancient Gates / Verse 4 / slide 1 line 1\nAncient Gates / Verse 4 / slide 1 line 2",
+              "label": "",
+              "size": {
+                "width": 1920,
+                "height": 1080
+              }
+            },
+            {
+              "enabled": true,
+              "notes": "",
+              "text": "Ancient Gates / Verse 4 / slide 2 line 1\nAncient Gates / Verse 4 / slide 2 line 2",
+              "label": "",
+              "size": {
+                "width": 1920,
+                "height": 1080
+              }
+            }
+          ],
+          "uuid": "4E1F5F46-DFE2-45D6-B181-EC5037AFCC62"
+        },
+        {
+          "name": "Chorus 1",
+          "color": {
+            "red": 0.800000011920929,
+            "green": 0,
+            "blue": 0.30588236451148987,
+            "alpha": 1
+          },
+          "slides": [
+            {
+              "enabled": true,
+              "notes": "",
+              "text": "Ancient Gates / Chorus 1 / slide 1 line 1\nAncient Gates / Chorus 1 / slide 1 line 2",
+              "label": "",
+              "size": {
+                "width": 1920,
+                "height": 1080
+              }
+            },
+            {
+              "enabled": true,
+              "notes": "",
+              "text": "Ancient Gates / Chorus 1 / slide 2 line 1",
+              "label": "",
+              "size": {
+                "width": 1920,
+                "height": 1080
+              }
+            }
+          ],
+          "uuid": "F4A95E4C-44A0-45FF-8E5E-6B9388096F8E"
+        },
+        {
+          "name": "Chorus 2",
+          "color": {
+            "red": 0.6000000238418579,
+            "green": 0,
+            "blue": 0.23137255012989044,
+            "alpha": 1
+          },
+          "slides": [
+            {
+              "enabled": true,
+              "notes": "",
+              "text": "Ancient Gates / Chorus 2 / slide 1 line 1\nAncient Gates / Chorus 2 / slide 1 line 2",
+              "label": "",
+              "size": {
+                "width": 1920,
+                "height": 1080
+              }
+            },
+            {
+              "enabled": true,
+              "notes": "",
+              "text": "Ancient Gates / Chorus 1 / slide 2 line 1",
+              "label": "",
+              "size": {
+                "width": 1920,
+                "height": 1080
+              }
+            }
+          ],
+          "uuid": "0A072C28-8735-4FF8-BBB8-51DA5A5E2F52"
+        },
+        {
+          "name": "Bridge",
+          "color": {
+            "red": 0.4627451002597809,
+            "green": 0,
+            "blue": 0.800000011920929,
+            "alpha": 1
+          },
+          "slides": [
+            {
+              "enabled": true,
+              "notes": "",
+              "text": "Ancient Gates / Bridge / slide 1 line 1\nAncient Gates / Bridge / slide 1 line 2",
+              "label": "",
+              "size": {
+                "width": 1920,
+                "height": 1080
+              }
+            },
+            {
+              "enabled": true,
+              "notes": "",
+              "text": "Ancient Gates / Bridge / slide 2 line 1",
+              "label": "",
+              "size": {
+                "width": 1920,
+                "height": 1080
+              }
+            }
+          ],
+          "uuid": "7F27DF20-41FB-4178-B270-F175049C7014"
+        },
+        {
+          "name": "Bridge",
+          "color": {
+            "red": 0.4627451002597809,
+            "green": 0,
+            "blue": 0.800000011920929,
+            "alpha": 1
+          },
+          "slides": [
+            {
+              "enabled": true,
+              "notes": "",
+              "text": "Ancient Gates / Bridge / slide 1 line 1\nAncient Gates / Bridge / slide 1 line 2",
+              "label": "",
+              "size": {
+                "width": 1920,
+                "height": 1080
+              }
+            },
+            {
+              "enabled": true,
+              "notes": "",
+              "text": "Ancient Gates / Bridge / slide 2 line 1",
+              "label": "",
+              "size": {
+                "width": 1920,
+                "height": 1080
+              }
+            }
+          ],
+          "uuid": "73D30FD0-810E-4D17-86AF-1556A4DAEEC4"
+        },
+        {
+          "name": "Bridge",
+          "color": {
+            "red": 0.4627451002597809,
+            "green": 0,
+            "blue": 0.800000011920929,
+            "alpha": 1
+          },
+          "slides": [
+            {
+              "enabled": true,
+              "notes": "",
+              "text": "Ancient Gates / Bridge / slide 1 line 1\nAncient Gates / Bridge / slide 1 line 2",
+              "label": "",
+              "size": {
+                "width": 1920,
+                "height": 1080
+              }
+            },
+            {
+              "enabled": true,
+              "notes": "",
+              "text": "Ancient Gates / Bridge / slide 2 line 1",
+              "label": "",
+              "size": {
+                "width": 1920,
+                "height": 1080
+              }
+            }
+          ],
+          "uuid": "5A480841-2DA9-4D95-8946-3045D8A027FF"
+        },
+        {
+          "name": "Bridge",
+          "color": {
+            "red": 0.4627451002597809,
+            "green": 0,
+            "blue": 0.800000011920929,
+            "alpha": 1
+          },
+          "slides": [
+            {
+              "enabled": true,
+              "notes": "",
+              "text": "Ancient Gates / Bridge / slide 1 line 1\nAncient Gates / Bridge / slide 1 line 2",
+              "label": "",
+              "size": {
+                "width": 1920,
+                "height": 1080
+              }
+            },
+            {
+              "enabled": true,
+              "notes": "",
+              "text": "Ancient Gates / Bridge / slide 2 line 1",
+              "label": "",
+              "size": {
+                "width": 1920,
+                "height": 1080
+              }
+            }
+          ],
+          "uuid": "0CFE50BA-B082-480D-90D4-5DFBA4311F28"
+        },
+        {
+          "name": "Chorus 1",
+          "color": {
+            "red": 0.800000011920929,
+            "green": 0,
+            "blue": 0.30588236451148987,
+            "alpha": 1
+          },
+          "slides": [
+            {
+              "enabled": true,
+              "notes": "",
+              "text": "Ancient Gates / Chorus 1 / slide 1 line 1\nAncient Gates / Chorus 1 / slide 1 line 2",
+              "label": "",
+              "size": {
+                "width": 1920,
+                "height": 1080
+              }
+            },
+            {
+              "enabled": true,
+              "notes": "",
+              "text": "Ancient Gates / Chorus 1 / slide 2 line 1",
+              "label": "",
+              "size": {
+                "width": 1920,
+                "height": 1080
+              }
+            }
+          ],
+          "uuid": "2CDA0056-1F26-4A27-B937-E7CDA777FB40"
+        },
+        {
+          "name": "Chorus 2",
+          "color": {
+            "red": 0.6000000238418579,
+            "green": 0,
+            "blue": 0.23137255012989044,
+            "alpha": 1
+          },
+          "slides": [
+            {
+              "enabled": true,
+              "notes": "",
+              "text": "Ancient Gates / Chorus 2 / slide 1 line 1\nAncient Gates / Chorus 2 / slide 1 line 2",
+              "label": "",
+              "size": {
+                "width": 1920,
+                "height": 1080
+              }
+            },
+            {
+              "enabled": true,
+              "notes": "",
+              "text": "Ancient Gates / Chorus 1 / slide 2 line 1",
+              "label": "",
+              "size": {
+                "width": 1920,
+                "height": 1080
+              }
+            }
+          ],
+          "uuid": "D909B5C5-8B1D-4B88-8E1E-8146B274B8DA"
+        },
+        {
+          "name": "Bridge",
+          "color": {
+            "red": 0.4627451002597809,
+            "green": 0,
+            "blue": 0.800000011920929,
+            "alpha": 1
+          },
+          "slides": [
+            {
+              "enabled": true,
+              "notes": "",
+              "text": "Ancient Gates / Bridge / slide 1 line 1\nAncient Gates / Bridge / slide 1 line 2",
+              "label": "",
+              "size": {
+                "width": 1920,
+                "height": 1080
+              }
+            },
+            {
+              "enabled": true,
+              "notes": "",
+              "text": "Ancient Gates / Bridge / slide 2 line 1",
+              "label": "",
+              "size": {
+                "width": 1920,
+                "height": 1080
+              }
+            }
+          ],
+          "uuid": "A6C9FA7F-72E9-4C42-B6A0-FBB310FE8CB3"
+        },
+        {
+          "name": "Bridge",
+          "color": {
+            "red": 0.4627451002597809,
+            "green": 0,
+            "blue": 0.800000011920929,
+            "alpha": 1
+          },
+          "slides": [
+            {
+              "enabled": true,
+              "notes": "",
+              "text": "Ancient Gates / Bridge / slide 1 line 1\nAncient Gates / Bridge / slide 1 line 2",
+              "label": "",
+              "size": {
+                "width": 1920,
+                "height": 1080
+              }
+            },
+            {
+              "enabled": true,
+              "notes": "",
+              "text": "Ancient Gates / Bridge / slide 2 line 1",
+              "label": "",
+              "size": {
+                "width": 1920,
+                "height": 1080
+              }
+            }
+          ],
+          "uuid": "9C36189F-0318-4964-9351-C47BB7F9BA92"
+        },
+        {
+          "name": "Bridge",
+          "color": {
+            "red": 0.4627451002597809,
+            "green": 0,
+            "blue": 0.800000011920929,
+            "alpha": 1
+          },
+          "slides": [
+            {
+              "enabled": true,
+              "notes": "",
+              "text": "Ancient Gates / Bridge / slide 1 line 1\nAncient Gates / Bridge / slide 1 line 2",
+              "label": "",
+              "size": {
+                "width": 1920,
+                "height": 1080
+              }
+            },
+            {
+              "enabled": true,
+              "notes": "",
+              "text": "Ancient Gates / Bridge / slide 2 line 1",
+              "label": "",
+              "size": {
+                "width": 1920,
+                "height": 1080
+              }
+            }
+          ],
+          "uuid": "B2AB3F76-BE38-4032-BC51-85E1BFF607FD"
+        },
+        {
+          "name": "Bridge",
+          "color": {
+            "red": 0.4627451002597809,
+            "green": 0,
+            "blue": 0.800000011920929,
+            "alpha": 1
+          },
+          "slides": [
+            {
+              "enabled": true,
+              "notes": "",
+              "text": "Ancient Gates / Bridge / slide 1 line 1\nAncient Gates / Bridge / slide 1 line 2",
+              "label": "",
+              "size": {
+                "width": 1920,
+                "height": 1080
+              }
+            },
+            {
+              "enabled": true,
+              "notes": "",
+              "text": "Ancient Gates / Bridge / slide 2 line 1",
+              "label": "",
+              "size": {
+                "width": 1920,
+                "height": 1080
+              }
+            },
+            {
+              "enabled": true,
+              "notes": "",
+              "text": "",
+              "label": "",
+              "size": {
+                "width": 1920,
+                "height": 1080
+              }
+            },
+            {
+              "enabled": true,
+              "notes": "",
+              "text": "Ancient Gates / Bridge / slide 1 line 1\nAncient Gates / Bridge / slide 1 line 2",
+              "label": "",
+              "size": {
+                "width": 1920,
+                "height": 1080
+              }
+            },
+            {
+              "enabled": true,
+              "notes": "",
+              "text": "Ancient Gates / Bridge / slide 2 line 1",
+              "label": "",
+              "size": {
+                "width": 1920,
+                "height": 1080
+              }
+            },
+            {
+              "enabled": true,
+              "notes": "",
+              "text": "Ancient Gates / Bridge / slide 1 line 1\nAncient Gates / Bridge / slide 1 line 2",
+              "label": "",
+              "size": {
+                "width": 1920,
+                "height": 1080
+              }
+            },
+            {
+              "enabled": true,
+              "notes": "",
+              "text": "Ancient Gates / Bridge / slide 2 line 1",
+              "label": "",
+              "size": {
+                "width": 1920,
+                "height": 1080
+              }
+            },
+            {
+              "enabled": true,
+              "notes": "",
+              "text": "Ancient Gates / Bridge / slide 1 line 1\nAncient Gates / Bridge / slide 1 line 2",
+              "label": "",
+              "size": {
+                "width": 1920,
+                "height": 1080
+              }
+            },
+            {
+              "enabled": true,
+              "notes": "",
+              "text": "Ancient Gates / Bridge / slide 2 line 1",
+              "label": "",
+              "size": {
+                "width": 1920,
+                "height": 1080
+              }
+            },
+            {
+              "enabled": true,
+              "notes": "",
+              "text": "Ancient Gates / Bridge / slide 1 line 1\nAncient Gates / Bridge / slide 1 line 2",
+              "label": "",
+              "size": {
+                "width": 1920,
+                "height": 1080
+              }
+            },
+            {
+              "enabled": true,
+              "notes": "",
+              "text": "Ancient Gates / Bridge / slide 2 line 1",
+              "label": "",
+              "size": {
+                "width": 1920,
+                "height": 1080
+              }
+            },
+            {
+              "enabled": true,
+              "notes": "",
+              "text": "Ancient Gates / Chorus 1 / slide 1 line 1\nAncient Gates / Chorus 1 / slide 1 line 2",
+              "label": "",
+              "size": {
+                "width": 1920,
+                "height": 1080
+              }
+            },
+            {
+              "enabled": true,
+              "notes": "",
+              "text": "Ancient Gates / Chorus 1 / slide 2 line 1",
+              "label": "",
+              "size": {
+                "width": 1920,
+                "height": 1080
+              }
+            },
+            {
+              "enabled": true,
+              "notes": "",
+              "text": "Ancient Gates / Chorus 2 / slide 1 line 1\nAncient Gates / Chorus 2 / slide 1 line 2",
+              "label": "",
+              "size": {
+                "width": 1920,
+                "height": 1080
+              }
+            },
+            {
+              "enabled": true,
+              "notes": "",
+              "text": "Ancient Gates / Chorus 1 / slide 2 line 1",
+              "label": "",
+              "size": {
+                "width": 1920,
+                "height": 1080
+              }
+            },
+            {
+              "enabled": true,
+              "notes": "",
+              "text": "Ancient Gates / Bridge / slide 1 line 1\nAncient Gates / Bridge / slide 1 line 2",
+              "label": "",
+              "size": {
+                "width": 1920,
+                "height": 1080
+              }
+            },
+            {
+              "enabled": true,
+              "notes": "",
+              "text": "Ancient Gates / Bridge / slide 2 line 1",
+              "label": "",
+              "size": {
+                "width": 1920,
+                "height": 1080
+              }
+            },
+            {
+              "enabled": true,
+              "notes": "",
+              "text": "Ancient Gates / Bridge / slide 1 line 1\nAncient Gates / Bridge / slide 1 line 2",
+              "label": "",
+              "size": {
+                "width": 1920,
+                "height": 1080
+              }
+            },
+            {
+              "enabled": true,
+              "notes": "",
+              "text": "Ancient Gates / Bridge / slide 2 line 1",
+              "label": "",
+              "size": {
+                "width": 1920,
+                "height": 1080
+              }
+            },
+            {
+              "enabled": true,
+              "notes": "",
+              "text": "Ancient Gates / Bridge / slide 1 line 1\nAncient Gates / Bridge / slide 1 line 2",
+              "label": "",
+              "size": {
+                "width": 1920,
+                "height": 1080
+              }
+            },
+            {
+              "enabled": true,
+              "notes": "",
+              "text": "Ancient Gates / Bridge / slide 2 line 1",
+              "label": "",
+              "size": {
+                "width": 1920,
+                "height": 1080
+              }
+            },
+            {
+              "enabled": true,
+              "notes": "",
+              "text": "Ancient Gates / Bridge / slide 1 line 1\nAncient Gates / Bridge / slide 1 line 2",
+              "label": "",
+              "size": {
+                "width": 1920,
+                "height": 1080
+              }
+            },
+            {
+              "enabled": true,
+              "notes": "",
+              "text": "Ancient Gates / Bridge / slide 2 line 1",
+              "label": "",
+              "size": {
+                "width": 1920,
+                "height": 1080
+              }
+            },
+            {
+              "enabled": true,
+              "notes": "",
+              "text": "",
+              "label": "",
+              "size": {
+                "width": 1920,
+                "height": 1080
+              }
+            }
+          ],
+          "uuid": "9F5A5A88-C59E-48BE-A369-5E8B6E7BDE3E"
+        }
+      ],
+      "has_timeline": false,
+      "presentation_path": "ProPresenter/Libraries/Default/Ancient Gates.pro",
+      "destination": "presentation",
+      "arrangements": [
+        {
+          "id": {
+            "uuid": "5A606BC5-9279-4509-983E-88092AE567F0",
+            "name": "Master",
+            "index": 0
+          },
+          "groups": [
+            "DBE05E8C-C786-442A-AFC5-71AB1FE7FEF3",
+            "3C4A21B1-1A06-48AA-9367-B91D064F02FB",
+            "D7F9FB31-C8D8-4C82-8DC6-4ACBE0D7E5CC",
+            "871760B7-7A29-4F16-B33D-4939FCA1F323",
+            "678A1837-6A66-46C5-BF35-38CE5AAF8637",
+            "4E1F5F46-DFE2-45D6-B181-EC5037AFCC62",
+            "F4A95E4C-44A0-45FF-8E5E-6B9388096F8E",
+            "0A072C28-8735-4FF8-BBB8-51DA5A5E2F52",
+            "7F27DF20-41FB-4178-B270-F175049C7014",
+            "73D30FD0-810E-4D17-86AF-1556A4DAEEC4",
+            "5A480841-2DA9-4D95-8946-3045D8A027FF",
+            "0CFE50BA-B082-480D-90D4-5DFBA4311F28",
+            "2CDA0056-1F26-4A27-B937-E7CDA777FB40",
+            "D909B5C5-8B1D-4B88-8E1E-8146B274B8DA",
+            "A6C9FA7F-72E9-4C42-B6A0-FBB310FE8CB3",
+            "9C36189F-0318-4964-9351-C47BB7F9BA92",
+            "B2AB3F76-BE38-4032-BC51-85E1BFF607FD",
+            "9F5A5A88-C59E-48BE-A369-5E8B6E7BDE3E"
+          ],
+          "total_cues": 58
+        }
+      ],
+      "current_arrangement": "5A606BC5-9279-4509-983E-88092AE567F0",
+      "type": "multitracks",
+      "is_authorized": true,
+      "total_cues": 58
+    }
+  }
+}

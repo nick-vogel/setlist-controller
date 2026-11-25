@@ -1,0 +1,599 @@
+{
+ "scenario": "cue-edit-at-console-subscribed",
+ "description": "As cue-edit-at-console, after the app subscribes with /eos/subscribe 1 and waits 2 s: from cue 1/8 completed, Record Cue 1 / 11, then Cue 1 / 11 Move_To Cue 1 / 12, then Delete Cue 1 / 12 with its confirmation, 3 s apart, then the cue count of list 1, then /eos/subscribe 0 3 s later. Every packet Eos sent, to show what it notifies for each edit once subscribed.",
+ "eos_version": "3.3.10 (ETCnomad, macOS)",
+ "transport": "TCP 127.0.0.1:3032, OSC 1.0 packet-length framing",
+ "packets": [
+  {
+   "t_ms": 0,
+   "dir": "app->eos",
+   "address": "/eos/subscribe",
+   "args": [
+    1
+   ],
+   "hex": "2f656f732f73756273637269626500002c69000000000001"
+  },
+  {
+   "t_ms": 2019,
+   "dir": "app->eos",
+   "address": "/eos/newcmd",
+   "args": [
+    "Record Cue 1 / 11#"
+   ],
+   "hex": "2f656f732f6e6577636d64002c7300005265636f7264204375652031202f203131230000"
+  },
+  {
+   "t_ms": 2063,
+   "dir": "eos->app",
+   "address": "/eos/out/user/1/cmd",
+   "args": [
+    "LIVE: Cue  11 : Record Cue 1 / 11 #",
+    0
+   ],
+   "hex": "2f656f732f6f75742f757365722f312f636d64002c7369004c4956453a2043756520203131203a205265636f7264204375652031202f20313120230000000000"
+  },
+  {
+   "t_ms": 2065,
+   "dir": "eos->app",
+   "address": "/eos/out/cmd",
+   "args": [
+    "LIVE: Cue  11 : Record Cue 1 / 11 #",
+    0
+   ],
+   "hex": "2f656f732f6f75742f636d64000000002c7369004c4956453a2043756520203131203a205265636f7264204375652031202f20313120230000000000"
+  },
+  {
+   "t_ms": 2068,
+   "dir": "eos->app",
+   "address": "/eos/out/previous/cue/1/8",
+   "args": [],
+   "hex": "2f656f732f6f75742f70726576696f75732f6375652f312f380000002c000000"
+  },
+  {
+   "t_ms": 2070,
+   "dir": "eos->app",
+   "address": "/eos/out/previous/cue/text",
+   "args": [
+    "1/8 5.0"
+   ],
+   "hex": "2f656f732f6f75742f70726576696f75732f6375652f7465787400002c730000312f3820352e3000"
+  },
+  {
+   "t_ms": 2073,
+   "dir": "eos->app",
+   "address": "/eos/out/active/cue/1/11",
+   "args": [
+    1.0
+   ],
+   "hex": "2f656f732f6f75742f6163746976652f6375652f312f3131000000002c6600003f800000"
+  },
+  {
+   "t_ms": 2075,
+   "dir": "eos->app",
+   "address": "/eos/out/active/cue/text",
+   "args": [
+    "1/11 5.0 100%"
+   ],
+   "hex": "2f656f732f6f75742f6163746976652f6375652f74657874000000002c730000312f313120352e302031303025000000"
+  },
+  {
+   "t_ms": 2114,
+   "dir": "eos->app",
+   "address": "/eos/out/softkey/1",
+   "args": [
+    "Attributes "
+   ],
+   "hex": "2f656f732f6f75742f736f66746b65792f3100002c730000417474726962757465732000"
+  },
+  {
+   "t_ms": 2116,
+   "dir": "eos->app",
+   "address": "/eos/out/softkey/2",
+   "args": [
+    "Fw/Hg"
+   ],
+   "hex": "2f656f732f6f75742f736f66746b65792f3200002c73000046772f4867000000"
+  },
+  {
+   "t_ms": 2119,
+   "dir": "eos->app",
+   "address": "/eos/out/softkey/3",
+   "args": [
+    "Mark"
+   ],
+   "hex": "2f656f732f6f75742f736f66746b65792f3300002c7300004d61726b00000000"
+  },
+  {
+   "t_ms": 2121,
+   "dir": "eos->app",
+   "address": "/eos/out/softkey/4",
+   "args": [
+    "Link/Loop"
+   ],
+   "hex": "2f656f732f6f75742f736f66746b65792f3400002c7300004c696e6b2f4c6f6f70000000"
+  },
+  {
+   "t_ms": 2124,
+   "dir": "eos->app",
+   "address": "/eos/out/softkey/5",
+   "args": [
+    "Execute"
+   ],
+   "hex": "2f656f732f6f75742f736f66746b65792f3500002c7300004578656375746500"
+  },
+  {
+   "t_ms": 2126,
+   "dir": "eos->app",
+   "address": "/eos/out/softkey/6",
+   "args": [
+    "Trace"
+   ],
+   "hex": "2f656f732f6f75742f736f66746b65792f3600002c7300005472616365000000"
+  },
+  {
+   "t_ms": 2128,
+   "dir": "eos->app",
+   "address": "/eos/out/softkey/7",
+   "args": [
+    "Alert Time"
+   ],
+   "hex": "2f656f732f6f75742f736f66746b65792f3700002c730000416c6572742054696d650000"
+  },
+  {
+   "t_ms": 2131,
+   "dir": "eos->app",
+   "address": "/eos/out/softkey/8",
+   "args": [
+    "Timecode"
+   ],
+   "hex": "2f656f732f6f75742f736f66746b65792f3800002c73000054696d65636f646500000000"
+  },
+  {
+   "t_ms": 2133,
+   "dir": "eos->app",
+   "address": "/eos/out/softkey/9",
+   "args": [
+    ""
+   ],
+   "hex": "2f656f732f6f75742f736f66746b65792f3900002c73000000000000"
+  },
+  {
+   "t_ms": 2136,
+   "dir": "eos->app",
+   "address": "/eos/out/softkey/10",
+   "args": [
+    "Assert"
+   ],
+   "hex": "2f656f732f6f75742f736f66746b65792f3130002c7300004173736572740000"
+  },
+  {
+   "t_ms": 2138,
+   "dir": "eos->app",
+   "address": "/eos/out/softkey/11",
+   "args": [
+    "Offset"
+   ],
+   "hex": "2f656f732f6f75742f736f66746b65792f3131002c7300004f66667365740000"
+  },
+  {
+   "t_ms": 2141,
+   "dir": "eos->app",
+   "address": "/eos/out/softkey/12",
+   "args": [
+    "AutoBlk Clean"
+   ],
+   "hex": "2f656f732f6f75742f736f66746b65792f3132002c7300004175746f426c6b20436c65616e000000"
+  },
+  {
+   "t_ms": 3065,
+   "dir": "eos->app",
+   "address": "/eos/out/notify/cue/1/list/0/2",
+   "args": [
+    0,
+    11
+   ],
+   "hex": "2f656f732f6f75742f6e6f746966792f6375652f312f6c6973742f302f3200002c696900000000000000000b"
+  },
+  {
+   "t_ms": 3067,
+   "dir": "eos->app",
+   "address": "/eos/out/notify/cuelist/list/0/2",
+   "args": [
+    1,
+    1
+   ],
+   "hex": "2f656f732f6f75742f6e6f746966792f6375656c6973742f6c6973742f302f32000000002c6969000000000100000001"
+  },
+  {
+   "t_ms": 5084,
+   "dir": "app->eos",
+   "address": "/eos/newcmd",
+   "args": [
+    "Cue 1 / 11 Move_To Cue 1 / 12#"
+   ],
+   "hex": "2f656f732f6e6577636d64002c7300004375652031202f203131204d6f76655f546f204375652031202f203132230000"
+  },
+  {
+   "t_ms": 5124,
+   "dir": "eos->app",
+   "address": "/eos/out/user/1/cmd",
+   "args": [
+    "LIVE: Cue  12 : Cue 1 / 11 Move To Cue 1 / 12 #",
+    0
+   ],
+   "hex": "2f656f732f6f75742f757365722f312f636d64002c7369004c4956453a2043756520203132203a204375652031202f203131204d6f766520546f204375652031202f20313220230000000000"
+  },
+  {
+   "t_ms": 5126,
+   "dir": "eos->app",
+   "address": "/eos/out/cmd",
+   "args": [
+    "LIVE: Cue  12 : Cue 1 / 11 Move To Cue 1 / 12 #",
+    0
+   ],
+   "hex": "2f656f732f6f75742f636d64000000002c7369004c4956453a2043756520203132203a204375652031202f203131204d6f766520546f204375652031202f20313220230000000000"
+  },
+  {
+   "t_ms": 5128,
+   "dir": "eos->app",
+   "address": "/eos/out/active/cue/1/12",
+   "args": [
+    1.0
+   ],
+   "hex": "2f656f732f6f75742f6163746976652f6375652f312f3132000000002c6600003f800000"
+  },
+  {
+   "t_ms": 5131,
+   "dir": "eos->app",
+   "address": "/eos/out/active/cue/text",
+   "args": [
+    "1/12 5.0 100%"
+   ],
+   "hex": "2f656f732f6f75742f6163746976652f6375652f74657874000000002c730000312f313220352e302031303025000000"
+  },
+  {
+   "t_ms": 5133,
+   "dir": "eos->app",
+   "address": "/eos/out/softkey/1",
+   "args": [
+    "Address"
+   ],
+   "hex": "2f656f732f6f75742f736f66746b65792f3100002c7300004164647265737300"
+  },
+  {
+   "t_ms": 5136,
+   "dir": "eos->app",
+   "address": "/eos/out/softkey/2",
+   "args": [
+    "Query"
+   ],
+   "hex": "2f656f732f6f75742f736f66746b65792f3200002c7300005175657279000000"
+  },
+  {
+   "t_ms": 5138,
+   "dir": "eos->app",
+   "address": "/eos/out/softkey/3",
+   "args": [
+    "Snapshot"
+   ],
+   "hex": "2f656f732f6f75742f736f66746b65792f3300002c730000536e617073686f7400000000"
+  },
+  {
+   "t_ms": 5141,
+   "dir": "eos->app",
+   "address": "/eos/out/softkey/4",
+   "args": [
+    "Highlight"
+   ],
+   "hex": "2f656f732f6f75742f736f66746b65792f3400002c730000486967686c69676874000000"
+  },
+  {
+   "t_ms": 5143,
+   "dir": "eos->app",
+   "address": "/eos/out/softkey/5",
+   "args": [
+    "Assert"
+   ],
+   "hex": "2f656f732f6f75742f736f66746b65792f3500002c7300004173736572740000"
+  },
+  {
+   "t_ms": 5145,
+   "dir": "eos->app",
+   "address": "/eos/out/softkey/6",
+   "args": [
+    "Color Path"
+   ],
+   "hex": "2f656f732f6f75742f736f66746b65792f3600002c730000436f6c6f7220506174680000"
+  },
+  {
+   "t_ms": 5148,
+   "dir": "eos->app",
+   "address": "/eos/out/softkey/7",
+   "args": [
+    "Preview"
+   ],
+   "hex": "2f656f732f6f75742f736f66746b65792f3700002c7300005072657669657700"
+  },
+  {
+   "t_ms": 5151,
+   "dir": "eos->app",
+   "address": "/eos/out/softkey/8",
+   "args": [
+    "Fader"
+   ],
+   "hex": "2f656f732f6f75742f736f66746b65792f3800002c7300004661646572000000"
+  },
+  {
+   "t_ms": 5153,
+   "dir": "eos->app",
+   "address": "/eos/out/softkey/9",
+   "args": [
+    "Offset"
+   ],
+   "hex": "2f656f732f6f75742f736f66746b65792f3900002c7300004f66667365740000"
+  },
+  {
+   "t_ms": 5155,
+   "dir": "eos->app",
+   "address": "/eos/out/softkey/10",
+   "args": [
+    ""
+   ],
+   "hex": "2f656f732f6f75742f736f66746b65792f3130002c73000000000000"
+  },
+  {
+   "t_ms": 5158,
+   "dir": "eos->app",
+   "address": "/eos/out/softkey/11",
+   "args": [
+    ""
+   ],
+   "hex": "2f656f732f6f75742f736f66746b65792f3131002c73000000000000"
+  },
+  {
+   "t_ms": 5160,
+   "dir": "eos->app",
+   "address": "/eos/out/softkey/12",
+   "args": [
+    ""
+   ],
+   "hex": "2f656f732f6f75742f736f66746b65792f3132002c73000000000000"
+  },
+  {
+   "t_ms": 6122,
+   "dir": "eos->app",
+   "address": "/eos/out/notify/cue/1/list/0/2",
+   "args": [
+    2,
+    "11-12"
+   ],
+   "hex": "2f656f732f6f75742f6e6f746966792f6375652f312f6c6973742f302f3200002c6973000000000231312d3132000000"
+  },
+  {
+   "t_ms": 6124,
+   "dir": "eos->app",
+   "address": "/eos/out/notify/cuelist/list/0/2",
+   "args": [
+    3,
+    1
+   ],
+   "hex": "2f656f732f6f75742f6e6f746966792f6375656c6973742f6c6973742f302f32000000002c6969000000000300000001"
+  },
+  {
+   "t_ms": 8144,
+   "dir": "app->eos",
+   "address": "/eos/newcmd",
+   "args": [
+    "Delete Cue 1 / 12 Enter Enter"
+   ],
+   "hex": "2f656f732f6e6577636d64002c73000044656c657465204375652031202f20313220456e74657220456e746572000000"
+  },
+  {
+   "t_ms": 8172,
+   "dir": "eos->app",
+   "address": "/eos/out/softkey/1",
+   "args": [
+    "Attributes "
+   ],
+   "hex": "2f656f732f6f75742f736f66746b65792f3100002c730000417474726962757465732000"
+  },
+  {
+   "t_ms": 8176,
+   "dir": "eos->app",
+   "address": "/eos/out/softkey/2",
+   "args": [
+    "Fw/Hg"
+   ],
+   "hex": "2f656f732f6f75742f736f66746b65792f3200002c73000046772f4867000000"
+  },
+  {
+   "t_ms": 8179,
+   "dir": "eos->app",
+   "address": "/eos/out/softkey/3",
+   "args": [
+    "Mark"
+   ],
+   "hex": "2f656f732f6f75742f736f66746b65792f3300002c7300004d61726b00000000"
+  },
+  {
+   "t_ms": 8182,
+   "dir": "eos->app",
+   "address": "/eos/out/softkey/4",
+   "args": [
+    "Link/Loop"
+   ],
+   "hex": "2f656f732f6f75742f736f66746b65792f3400002c7300004c696e6b2f4c6f6f70000000"
+  },
+  {
+   "t_ms": 8184,
+   "dir": "eos->app",
+   "address": "/eos/out/softkey/5",
+   "args": [
+    "Execute"
+   ],
+   "hex": "2f656f732f6f75742f736f66746b65792f3500002c7300004578656375746500"
+  },
+  {
+   "t_ms": 8187,
+   "dir": "eos->app",
+   "address": "/eos/out/softkey/6",
+   "args": [
+    "Trace"
+   ],
+   "hex": "2f656f732f6f75742f736f66746b65792f3600002c7300005472616365000000"
+  },
+  {
+   "t_ms": 8189,
+   "dir": "eos->app",
+   "address": "/eos/out/softkey/7",
+   "args": [
+    "Alert Time"
+   ],
+   "hex": "2f656f732f6f75742f736f66746b65792f3700002c730000416c6572742054696d650000"
+  },
+  {
+   "t_ms": 8192,
+   "dir": "eos->app",
+   "address": "/eos/out/softkey/8",
+   "args": [
+    "Timecode"
+   ],
+   "hex": "2f656f732f6f75742f736f66746b65792f3800002c73000054696d65636f646500000000"
+  },
+  {
+   "t_ms": 8195,
+   "dir": "eos->app",
+   "address": "/eos/out/softkey/9",
+   "args": [
+    ""
+   ],
+   "hex": "2f656f732f6f75742f736f66746b65792f3900002c73000000000000"
+  },
+  {
+   "t_ms": 8197,
+   "dir": "eos->app",
+   "address": "/eos/out/softkey/10",
+   "args": [
+    "Assert"
+   ],
+   "hex": "2f656f732f6f75742f736f66746b65792f3130002c7300004173736572740000"
+  },
+  {
+   "t_ms": 8200,
+   "dir": "eos->app",
+   "address": "/eos/out/softkey/11",
+   "args": [
+    "Offset"
+   ],
+   "hex": "2f656f732f6f75742f736f66746b65792f3131002c7300004f66667365740000"
+  },
+  {
+   "t_ms": 8203,
+   "dir": "eos->app",
+   "address": "/eos/out/softkey/12",
+   "args": [
+    "AutoBlk Clean"
+   ],
+   "hex": "2f656f732f6f75742f736f66746b65792f3132002c7300004175746f426c6b20436c65616e000000"
+  },
+  {
+   "t_ms": 8205,
+   "dir": "eos->app",
+   "address": "/eos/out/user/1/cmd",
+   "args": [
+    "LIVE: Cue  8 : Delete Cue 1 / 12 #",
+    0
+   ],
+   "hex": "2f656f732f6f75742f757365722f312f636d64002c7369004c4956453a20437565202038203a2044656c657465204375652031202f2031322023000000000000"
+  },
+  {
+   "t_ms": 8208,
+   "dir": "eos->app",
+   "address": "/eos/out/cmd",
+   "args": [
+    "LIVE: Cue  8 : Delete Cue 1 / 12 #",
+    0
+   ],
+   "hex": "2f656f732f6f75742f636d64000000002c7369004c4956453a20437565202038203a2044656c657465204375652031202f2031322023000000000000"
+  },
+  {
+   "t_ms": 8210,
+   "dir": "eos->app",
+   "address": "/eos/out/previous/cue/1/7",
+   "args": [],
+   "hex": "2f656f732f6f75742f70726576696f75732f6375652f312f370000002c000000"
+  },
+  {
+   "t_ms": 8213,
+   "dir": "eos->app",
+   "address": "/eos/out/previous/cue/text",
+   "args": [
+    "1/7 Great Are You Lord / Chorus 5.0"
+   ],
+   "hex": "2f656f732f6f75742f70726576696f75732f6375652f7465787400002c730000312f372047726561742041726520596f75204c6f7264202f2043686f72757320352e3000"
+  },
+  {
+   "t_ms": 8215,
+   "dir": "eos->app",
+   "address": "/eos/out/active/cue/1/8",
+   "args": [
+    1.0
+   ],
+   "hex": "2f656f732f6f75742f6163746976652f6375652f312f38002c6600003f800000"
+  },
+  {
+   "t_ms": 8218,
+   "dir": "eos->app",
+   "address": "/eos/out/active/cue/text",
+   "args": [
+    "1/8 5.0 100%"
+   ],
+   "hex": "2f656f732f6f75742f6163746976652f6375652f74657874000000002c730000312f3820352e30203130302500000000"
+  },
+  {
+   "t_ms": 9191,
+   "dir": "eos->app",
+   "address": "/eos/out/notify/cue/1/list/0/2",
+   "args": [
+    4,
+    12
+   ],
+   "hex": "2f656f732f6f75742f6e6f746966792f6375652f312f6c6973742f302f3200002c696900000000040000000c"
+  },
+  {
+   "t_ms": 9194,
+   "dir": "eos->app",
+   "address": "/eos/out/notify/cuelist/list/0/2",
+   "args": [
+    5,
+    1
+   ],
+   "hex": "2f656f732f6f75742f6e6f746966792f6375656c6973742f6c6973742f302f32000000002c6969000000000500000001"
+  },
+  {
+   "t_ms": 11209,
+   "dir": "app->eos",
+   "address": "/eos/get/cue/1/count",
+   "args": [],
+   "hex": "2f656f732f6765742f6375652f312f636f756e74000000002c000000"
+  },
+  {
+   "t_ms": 11220,
+   "dir": "eos->app",
+   "address": "/eos/out/get/cue/1/count",
+   "args": [
+    9
+   ],
+   "hex": "2f656f732f6f75742f6765742f6375652f312f636f756e74000000002c69000000000009"
+  },
+  {
+   "t_ms": 14241,
+   "dir": "app->eos",
+   "address": "/eos/subscribe",
+   "args": [
+    0
+   ],
+   "hex": "2f656f732f73756273637269626500002c69000000000000"
+  }
+ ]
+}

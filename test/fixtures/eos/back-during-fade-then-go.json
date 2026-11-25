@@ -1,0 +1,225 @@
+{
+ "scenario": "back-during-fade-then-go",
+ "description": "From cue 1/6 completed, fire cue 1/7, then Back after 1 s while the 5 s fade runs, then Go 2 s later.",
+ "eos_version": "3.3.10 (ETCnomad, macOS)",
+ "transport": "TCP 127.0.0.1:3032, OSC 1.0 packet-length framing",
+ "packets": [
+  {
+   "t_ms": 0,
+   "dir": "app->eos",
+   "address": "/eos/cue/1/7/fire",
+   "args": [],
+   "hex": "2f656f732f6375652f312f372f666972650000002c000000"
+  },
+  {
+   "t_ms": 29,
+   "dir": "eos->app",
+   "address": "/eos/out/event/cue/1/7/fire",
+   "args": [
+    "Great Are You Lord / Chorus"
+   ],
+   "hex": "2f656f732f6f75742f6576656e742f6375652f312f372f66697265002c73000047726561742041726520596f75204c6f7264202f2043686f72757300"
+  },
+  {
+   "t_ms": 56,
+   "dir": "eos->app",
+   "address": "/eos/out/previous/cue/1/6",
+   "args": [],
+   "hex": "2f656f732f6f75742f70726576696f75732f6375652f312f360000002c000000"
+  },
+  {
+   "t_ms": 60,
+   "dir": "eos->app",
+   "address": "/eos/out/previous/cue/text",
+   "args": [
+    "1/6 Great Are You Lord / Verse 1 5.0"
+   ],
+   "hex": "2f656f732f6f75742f70726576696f75732f6375652f7465787400002c730000312f362047726561742041726520596f75204c6f7264202f205665727365203120352e3000000000"
+  },
+  {
+   "t_ms": 63,
+   "dir": "eos->app",
+   "address": "/eos/out/active/cue/1/7",
+   "args": [
+    0.01
+   ],
+   "hex": "2f656f732f6f75742f6163746976652f6375652f312f37002c6600003c23d70a"
+  },
+  {
+   "t_ms": 65,
+   "dir": "eos->app",
+   "address": "/eos/out/active/cue",
+   "args": [
+    0.01
+   ],
+   "hex": "2f656f732f6f75742f6163746976652f637565002c6600003c23d70a"
+  },
+  {
+   "t_ms": 68,
+   "dir": "eos->app",
+   "address": "/eos/out/active/cue/text",
+   "args": [
+    "1/7 Great Are You Lord / Chorus 4.9 1%"
+   ],
+   "hex": "2f656f732f6f75742f6163746976652f6375652f74657874000000002c730000312f372047726561742041726520596f75204c6f7264202f2043686f72757320342e392031250000"
+  },
+  {
+   "t_ms": 71,
+   "dir": "eos->app",
+   "address": "/eos/out/pending/cue/1/8",
+   "args": [],
+   "hex": "2f656f732f6f75742f70656e64696e672f6375652f312f38000000002c000000"
+  },
+  {
+   "t_ms": 74,
+   "dir": "eos->app",
+   "address": "/eos/out/pending/cue/text",
+   "args": [
+    "1/8 5.0"
+   ],
+   "hex": "2f656f732f6f75742f70656e64696e672f6375652f746578740000002c730000312f3820352e3000"
+  },
+  {
+   "t_ms": 77,
+   "dir": "eos->app",
+   "address": "/eos/out/user/1/cmd",
+   "args": [
+    "LIVE: Cue  7 : ",
+    0
+   ],
+   "hex": "2f656f732f6f75742f757365722f312f636d64002c7369004c4956453a20437565202037203a200000000000"
+  },
+  {
+   "t_ms": 80,
+   "dir": "eos->app",
+   "address": "/eos/out/cmd",
+   "args": [
+    "LIVE: Cue  7 : ",
+    0
+   ],
+   "hex": "2f656f732f6f75742f636d64000000002c7369004c4956453a20437565202037203a200000000000"
+  },
+  {
+   "t_ms": 1087,
+   "dir": "app->eos",
+   "address": "/eos/cues/1/stop",
+   "args": [],
+   "hex": "2f656f732f637565732f312f73746f70000000002c000000"
+  },
+  {
+   "t_ms": 1089,
+   "dir": "eos->app",
+   "address": "/eos/out/active/cue",
+   "args": [
+    0.21
+   ],
+   "hex": "2f656f732f6f75742f6163746976652f637565002c6600003e570a3d"
+  },
+  {
+   "t_ms": 1089,
+   "dir": "eos->app",
+   "address": "/eos/out/active/cue/text",
+   "args": [
+    "1/7 Great Are You Lord / Chorus 3.9 21%"
+   ],
+   "hex": "2f656f732f6f75742f6163746976652f6375652f74657874000000002c730000312f372047726561742041726520596f75204c6f7264202f2043686f72757320332e392032312500"
+  },
+  {
+   "t_ms": 1136,
+   "dir": "eos->app",
+   "address": "/eos/out/event/cue/1/0/stop",
+   "args": [
+    ""
+   ],
+   "hex": "2f656f732f6f75742f6576656e742f6375652f312f302f73746f70002c73000000000000"
+  },
+  {
+   "t_ms": 3152,
+   "dir": "app->eos",
+   "address": "/eos/cues/1/fire",
+   "args": [],
+   "hex": "2f656f732f637565732f312f66697265000000002c000000"
+  },
+  {
+   "t_ms": 3193,
+   "dir": "eos->app",
+   "address": "/eos/out/event/cue/1/0/resume",
+   "args": [
+    ""
+   ],
+   "hex": "2f656f732f6f75742f6576656e742f6375652f312f302f726573756d650000002c73000000000000"
+  },
+  {
+   "t_ms": 4237,
+   "dir": "eos->app",
+   "address": "/eos/out/active/cue",
+   "args": [
+    0.41
+   ],
+   "hex": "2f656f732f6f75742f6163746976652f637565002c6600003ed1eb85"
+  },
+  {
+   "t_ms": 4240,
+   "dir": "eos->app",
+   "address": "/eos/out/active/cue/text",
+   "args": [
+    "1/7 Great Are You Lord / Chorus 2.9 41%"
+   ],
+   "hex": "2f656f732f6f75742f6163746976652f6375652f74657874000000002c730000312f372047726561742041726520596f75204c6f7264202f2043686f72757320322e392034312500"
+  },
+  {
+   "t_ms": 5244,
+   "dir": "eos->app",
+   "address": "/eos/out/active/cue",
+   "args": [
+    0.61
+   ],
+   "hex": "2f656f732f6f75742f6163746976652f637565002c6600003f1c28f6"
+  },
+  {
+   "t_ms": 5247,
+   "dir": "eos->app",
+   "address": "/eos/out/active/cue/text",
+   "args": [
+    "1/7 Great Are You Lord / Chorus 1.9 61%"
+   ],
+   "hex": "2f656f732f6f75742f6163746976652f6375652f74657874000000002c730000312f372047726561742041726520596f75204c6f7264202f2043686f72757320312e392036312500"
+  },
+  {
+   "t_ms": 6244,
+   "dir": "eos->app",
+   "address": "/eos/out/active/cue",
+   "args": [
+    0.81
+   ],
+   "hex": "2f656f732f6f75742f6163746976652f637565002c6600003f4f5c29"
+  },
+  {
+   "t_ms": 6246,
+   "dir": "eos->app",
+   "address": "/eos/out/active/cue/text",
+   "args": [
+    "1/7 Great Are You Lord / Chorus 0.9 81%"
+   ],
+   "hex": "2f656f732f6f75742f6163746976652f6375652f74657874000000002c730000312f372047726561742041726520596f75204c6f7264202f2043686f72757320302e392038312500"
+  },
+  {
+   "t_ms": 7248,
+   "dir": "eos->app",
+   "address": "/eos/out/active/cue",
+   "args": [
+    1.0
+   ],
+   "hex": "2f656f732f6f75742f6163746976652f637565002c6600003f800000"
+  },
+  {
+   "t_ms": 7253,
+   "dir": "eos->app",
+   "address": "/eos/out/active/cue/text",
+   "args": [
+    "1/7 Great Are You Lord / Chorus 5.0 100%"
+   ],
+   "hex": "2f656f732f6f75742f6163746976652f6375652f74657874000000002c730000312f372047726561742041726520596f75204c6f7264202f2043686f72757320352e30203130302500000000"
+  }
+ ]
+}

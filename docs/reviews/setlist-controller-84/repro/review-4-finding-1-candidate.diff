@@ -1,0 +1,45 @@
+diff --git a/src/server/propresenter.ts b/src/server/propresenter.ts
+index ee365a5..a2d169d 100644
+--- a/src/server/propresenter.ts
++++ b/src/server/propresenter.ts
+@@ -234,6 +234,7 @@ function proPresenterTarget({
+   // each press, so only the latest one's answer counts.
+   let commandLine: string | null = null;
+   let presses = 0;
++  let triggers = 0;
+   // The slide text lines the status stream or the live slide read last reported, or null for none.
+   // Each status/slide frame and each clear is counted, so a read that one came after while it was out
+   // shows nothing.
+@@ -552,6 +553,7 @@ function proPresenterTarget({
+       cueOut = out;
+       // A trigger makes a presentation active, so a line about the last command would be stale.
+       presses += 1;
++      triggers += 1;
+       const run = presses;
+       if (commandLine !== null) {
+         commandLine = null;
+@@ -582,6 +584,7 @@ function proPresenterTarget({
+       if (!button) return;
+       presses += 1;
+       const press = presses;
++      const triggered = triggers;
+       // An earlier press that moved ProPresenter is still where it moved from, past BUTTON_FRAME_MS, until
+       // a frame comes: a cold press can move with no frame for seconds.
+       const from = buttonBrings.findLast(({ until, chained }) => chained && until !== -Infinity) ?? showing;
+@@ -590,13 +593,12 @@ function proPresenterTarget({
+       const answer = await command(button.path);
+       const moved = answer !== null && answer.status >= 200 && answer.status < 300;
+       brings.until = moved ? clock.now() + BUTTON_FRAME_MS : -Infinity;
+-      if (!answer || press !== presses) return;
+-      // A Clear slide that ProPresenter accepts has blanked the screen, and the stream may report no
+-      // clear, so the row's slide text goes at once.
+-      if (button.id === 'clear' && moved) {
++      if (button.id === 'clear' && moved && triggered === triggers) {
+         slideChanges += 1;
+         slide = null;
++        if (press !== presses) reportState();
+       }
++      if (!answer || press !== presses) return;
+       commandLine = buttonLineFor(button, answer.status);
+       reportState();
+     },

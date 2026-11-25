@@ -1,0 +1,13 @@
+--- a/src/server/atem.ts
++++ b/src/server/atem.ts
+@@ -144,9 +144,8 @@
+   const connectOnce = async (report: TargetReport) => {
+     try {
+       await switcher.connect(host);
+-      if (!stopped) report.problem(null);
++      report.problem(null);
+     } catch (error) {
+-      if (stopped) return;
+       failed(`connect to ${host}`)(error);
+       report.problem(`The ATEM could not connect: ${sentence(error)}`);
+       const stop = clock.every(RETRY_MS, () => {

@@ -1,0 +1,13 @@
+diff --git a/src/server/fade-out.ts b/src/server/fade-out.ts
+index 8332515..3bdba29 100644
+--- a/src/server/fade-out.ts
++++ b/src/server/fade-out.ts
+@@ -128,7 +128,7 @@ export function startFadeOut({ clock, requestTrackData, requestTrackVolume, setT
+       if (closed) return;
+       const stale = (state.kind === 'reading-tracks' || state.kind === 'reading-volumes') && clock.now() - state.since > READ_TIMEOUT_MS;
+       if (state.kind !== 'idle' && !stale) return;
+-      state = { kind: 'reading-tracks', since: clock.now() };
++      state = { kind: 'reading-tracks', since: state.kind === 'idle' ? clock.now() : state.since };
+       requestTrackData();
+     },
+     fromLive(event) {

@@ -1,0 +1,13 @@
+{
+  "method": "GET",
+  "path": "/v1/libraries",
+  "status": 200,
+  "content_type": "application/json",
+  "body": [
+    {
+      "uuid": "F8FEE980-5EB3-59A0-BD4A-A325D08DA4B7",
+      "name": "Default",
+      "index": 0
+    }
+  ]
+}

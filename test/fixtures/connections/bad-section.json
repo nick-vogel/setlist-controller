@@ -1,0 +1,6 @@
+{
+  "targets": {
+    "fake": { "port": 4031 },
+    "other": { "port": "four" }
+  }
+}

@@ -1,0 +1,13 @@
+diff --git a/src/set-builder/checks.ts b/src/set-builder/checks.ts
+index c39400e..f87faa2 100644
+--- a/src/set-builder/checks.ts
++++ b/src/set-builder/checks.ts
+@@ -79,7 +79,7 @@ export function shortPadProblems(service: (Song | undefined)[], pads: Record<num
+     const position = Number(key);
+     const holder = position < service.length ? service[position] : service[position - 1];
+     const seconds = file.frames / file.sampleRate;
+-    if (!holder || !hasStartingValues(holder) || padBars(holder, seconds) >= 1) return [];
++    if (!hasStartingValues(holder!) || padBars(holder, seconds) >= 1) return [];
+     return [`The pad after song ${position} plays ${file.name}, which lasts ${Number(seconds.toFixed(3))} s, less than one bar of ${holder.folder} at the tempo and meter it starts on.`];
+   });
+ }

@@ -1,0 +1,148 @@
+{
+  "path": "/service_types?per_page=100",
+  "status": 200,
+  "body": {
+    "links": {
+      "self": "https://api.planningcenteronline.com/services/v2/service_types?per_page=100"
+    },
+    "data": [
+      {
+        "type": "ServiceType",
+        "id": "997539",
+        "attributes": {
+          "name": "Service",
+          "sequence": 0
+        },
+        "relationships": {}
+      },
+      {
+        "type": "ServiceType",
+        "id": "1000011",
+        "attributes": {
+          "name": "Hospitality ",
+          "sequence": 1
+        },
+        "relationships": {}
+      },
+      {
+        "type": "ServiceType",
+        "id": "1000012",
+        "attributes": {
+          "name": "Nursery",
+          "sequence": 3
+        },
+        "relationships": {}
+      },
+      {
+        "type": "ServiceType",
+        "id": "1000013",
+        "attributes": {
+          "name": "Sunday Service",
+          "sequence": 1
+        },
+        "relationships": {}
+      },
+      {
+        "type": "ServiceType",
+        "id": "1000014",
+        "attributes": {
+          "name": "Kids Team",
+          "sequence": 5
+        },
+        "relationships": {}
+      },
+      {
+        "type": "ServiceType",
+        "id": "1000015",
+        "attributes": {
+          "name": "Host/Check-In",
+          "sequence": 4
+        },
+        "relationships": {}
+      },
+      {
+        "type": "ServiceType",
+        "id": "1000016",
+        "attributes": {
+          "name": "Youth Night",
+          "sequence": 2
+        },
+        "relationships": {}
+      },
+      {
+        "type": "ServiceType",
+        "id": "1000017",
+        "attributes": {
+          "name": "Prayer - Sunday Service",
+          "sequence": 1
+        },
+        "relationships": {}
+      },
+      {
+        "type": "ServiceType",
+        "id": "1000018",
+        "attributes": {
+          "name": "Life Safety Team",
+          "sequence": 1
+        },
+        "relationships": {}
+      },
+      {
+        "type": "ServiceType",
+        "id": "1000019",
+        "attributes": {
+          "name": "Event",
+          "sequence": 0
+        },
+        "relationships": {}
+      },
+      {
+        "type": "ServiceType",
+        "id": "1000020",
+        "attributes": {
+          "name": "Kids",
+          "sequence": 0
+        },
+        "relationships": {}
+      },
+      {
+        "type": "ServiceType",
+        "id": "1000021",
+        "attributes": {
+          "name": "Youth",
+          "sequence": 0
+        },
+        "relationships": {}
+      },
+      {
+        "type": "ServiceType",
+        "id": "1000022",
+        "attributes": {
+          "name": "YTH - Mid",
+          "sequence": 0
+        },
+        "relationships": {}
+      }
+    ],
+    "included": [],
+    "meta": {
+      "count": 13,
+      "total_count": 13,
+      "can_include": [
+        "time_preference_options"
+      ],
+      "can_filter": [
+        "no_parent"
+      ],
+      "can_order_by": [
+        "sequence",
+        "name"
+      ],
+      "can_query_by": [
+        "id",
+        "name",
+        "parent_id"
+      ]
+    }
+  }
+}

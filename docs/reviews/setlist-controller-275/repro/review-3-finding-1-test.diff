@@ -1,0 +1,26 @@
+diff --git a/test/propresenter.test.ts b/test/propresenter.test.ts
+index a22ae1d..db1c74f 100644
+--- a/test/propresenter.test.ts
++++ b/test/propresenter.test.ts
+@@ -3708,6 +3708,21 @@ describe('the lyric lead', () => {
+ 
+     expect((await sent()).slice(before)).toEqual([trigger(HOLY_FOREVER, 0)]);
+   });
++  it("sends no clear for Ancient Gates' End on the beat it shares with Holy Forever's Count Off, after the slide went early, with a lead of a bar", async () => {
++    const { play, sent, clockTo } = await leadRig(36, { cuePoints: OVERLAP_CUE_POINTS, leadBeats: 4 });
++    await play(3, 39);
++    const reported = rig!.clock.now();
++    const before = (await sent()).length;
++
++    // Holy Forever's Count Off slide on 44 goes 4 beats early, on 40; the Intro's slide on 48 goes on 44.
++    await clockTo(reported, 1 * BEAT_MS + 100);
++    expect((await sent()).slice(before)).toEqual([trigger(HOLY_FOREVER, 0)]);
++    await clockTo(reported, 5 * BEAT_MS + 100);
++    await play(5.1, 44.1);
++    await play(1, 45.1);
++
++    expect((await sent()).slice(before)).toEqual([trigger(HOLY_FOREVER, 0), trigger(HOLY_FOREVER, 0)]);
++  });
+ });
+ 
+ // The slide timing file (slide-timing.ts): per-song exceptions to the even split, the bars each slide

@@ -1,0 +1,28 @@
+diff --git a/test/propresenter.test.ts b/test/propresenter.test.ts
+index 9602bf5..0ab7281 100644
+--- a/test/propresenter.test.ts
++++ b/test/propresenter.test.ts
+@@ -2846,6 +2846,23 @@ describe('the lyric lead', () => {
+     expect(await triggers()).toEqual([trigger(ANCIENT_GATES, 5), trigger(ANCIENT_GATES, 6), trigger(ANCIENT_GATES, 5), trigger(ANCIENT_GATES, 7)]);
+   });
+ 
++  it("review 1 finding 1: brings Chorus 1's first slide back at once when the loop goes on after Verse 3's first slide went early, and sends no later slide", async () => {
++    const { lead, play, triggers, clockTo } = await leadRig(72);
++    await play(8, 80);
++    await play(24, 104);
++    // Verse 3's first slide, on 112, goes on 110, 6 beats after the report at 104.
++    await clockTo(rig!.clock.now(), 6 * BEAT_MS);
++    await play(7, 111);
++    expect(await triggers()).toEqual([trigger(ANCIENT_GATES, 5), trigger(ANCIENT_GATES, 6), trigger(ANCIENT_GATES, 7)]);
++
++    // 111 is past 110, the wrap's send time, and before the wrap on 112.
++    await lead({ kind: 'loop' }, (snapshot) => snapshot.loop?.section?.section === 3);
++    expect(await triggers()).toEqual([trigger(ANCIENT_GATES, 5), trigger(ANCIENT_GATES, 6), trigger(ANCIENT_GATES, 7), trigger(ANCIENT_GATES, 5)]);
++    await play(1.5, 80.5);
++
++    expect(await triggers()).toEqual([trigger(ANCIENT_GATES, 5), trigger(ANCIENT_GATES, 6), trigger(ANCIENT_GATES, 7), trigger(ANCIENT_GATES, 5)]);
++  });
++
+   // Verse 1's change on 32 waits for 30, 14 beats after a report at 16, when the leader fades out.
+   async function fadeOutBeforeChange() {
+     const rigged = await leadRig(8);

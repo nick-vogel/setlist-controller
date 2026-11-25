@@ -1,0 +1,268 @@
+{
+  "method": "GET",
+  "path": "/v1/playlist/6E51EFFD-0E26-43D9-A4AA-DF43A41C18B5",
+  "status": 200,
+  "content_type": "application/json",
+  "body": {
+    "id": {
+      "uuid": "6E51EFFD-0E26-43D9-A4AA-DF43A41C18B5",
+      "name": "Series One - October 11, 2026",
+      "index": 1
+    },
+    "items": [
+      {
+        "id": {
+          "uuid": "1CC76A5C-A2C5-4B15-A3DE-4CC6330A6E24",
+          "name": "PRE-SERVICE",
+          "index": 0
+        },
+        "type": "header",
+        "is_hidden": false,
+        "is_pco": true,
+        "destination": "presentation"
+      },
+      {
+        "id": {
+          "uuid": "A04AA837-7309-43F7-83C9-10EEDBD4682C",
+          "name": "Huddle",
+          "index": 1
+        },
+        "type": "placeholder",
+        "is_hidden": true,
+        "is_pco": true,
+        "destination": "presentation"
+      },
+      {
+        "id": {
+          "uuid": "975EC855-CE64-4AB0-9364-DA94CD26C662",
+          "name": "Loop",
+          "index": 2
+        },
+        "type": "presentation",
+        "is_hidden": false,
+        "is_pco": true,
+        "presentation_info": {
+          "presentation_uuid": "15C678B7-4F41-4CD7-8280-E240623ECBA8",
+          "arrangement_name": "Master",
+          "arrangement_uuid": "15C678B7-4F41-4CD7-8280-E240623ECBA8"
+        },
+        "destination": "presentation"
+      },
+      {
+        "id": {
+          "uuid": "E35160EA-3494-4279-8714-085FDEE4F5C5",
+          "name": "Countdown",
+          "index": 3
+        },
+        "type": "presentation",
+        "is_hidden": false,
+        "is_pco": true,
+        "presentation_info": {
+          "presentation_uuid": "DFF092C1-8840-49DC-9450-6F04A10FA358",
+          "arrangement_name": "Master",
+          "arrangement_uuid": "DFF092C1-8840-49DC-9450-6F04A10FA358"
+        },
+        "destination": "presentation"
+      },
+      {
+        "id": {
+          "uuid": "A86E7B93-E229-48DB-9C45-E8894A8F55D2",
+          "name": "WORSHIP SET",
+          "index": 4
+        },
+        "type": "header",
+        "is_hidden": false,
+        "is_pco": true,
+        "destination": "presentation"
+      },
+      {
+        "id": {
+          "uuid": "E0A3C51E-80C7-4CC2-A953-E472F2E58060",
+          "name": "House of the Lord - [ Full ]",
+          "index": 5
+        },
+        "type": "presentation",
+        "is_hidden": false,
+        "is_pco": true,
+        "presentation_info": {
+          "presentation_uuid": "",
+          "arrangement_name": "",
+          "arrangement_uuid": "297C3E34-4762-41D7-ACA8-3C602B82994B"
+        },
+        "destination": "presentation"
+      },
+      {
+        "id": {
+          "uuid": "F4DD767A-E9D9-4545-B1C5-B4E7FD1B853B",
+          "name": "Goodness of God - [ Full ]",
+          "index": 6
+        },
+        "type": "presentation",
+        "is_hidden": false,
+        "is_pco": true,
+        "presentation_info": {
+          "presentation_uuid": "",
+          "arrangement_name": "",
+          "arrangement_uuid": "92F3830B-3D41-4125-B1F9-3276DDC4F04E"
+        },
+        "destination": "presentation"
+      },
+      {
+        "id": {
+          "uuid": "6C186609-DF63-4F68-ABD8-DF1CEA7276F9",
+          "name": "Reckless Love",
+          "index": 7
+        },
+        "type": "presentation",
+        "is_hidden": false,
+        "is_pco": true,
+        "presentation_info": {
+          "presentation_uuid": "",
+          "arrangement_name": "",
+          "arrangement_uuid": ""
+        },
+        "destination": "presentation"
+      },
+      {
+        "id": {
+          "uuid": "5D73198C-A96D-41C5-89B5-985ACD077CF2",
+          "name": "FACETIME",
+          "index": 8
+        },
+        "type": "header",
+        "is_hidden": false,
+        "is_pco": true,
+        "destination": "presentation"
+      },
+      {
+        "id": {
+          "uuid": "7A51DA66-5FEA-458F-9D56-37F71698496B",
+          "name": "Facetime",
+          "index": 9
+        },
+        "type": "presentation",
+        "is_hidden": false,
+        "is_pco": true,
+        "presentation_info": {
+          "presentation_uuid": "58C14FDA-CBDF-4A9C-900D-FE7D88E0E597",
+          "arrangement_name": "Master",
+          "arrangement_uuid": "58C14FDA-CBDF-4A9C-900D-FE7D88E0E597"
+        },
+        "destination": "presentation"
+      },
+      {
+        "id": {
+          "uuid": "9A9F5C5D-DCBD-4549-9B00-7818C8BF1A42",
+          "name": "SERVICE HOST",
+          "index": 10
+        },
+        "type": "header",
+        "is_hidden": false,
+        "is_pco": true,
+        "destination": "presentation"
+      },
+      {
+        "id": {
+          "uuid": "4639DD1D-3F86-4B16-9D21-398D8724DB5E",
+          "name": "MC",
+          "index": 11
+        },
+        "type": "presentation",
+        "is_hidden": false,
+        "is_pco": true,
+        "presentation_info": {
+          "presentation_uuid": "4CC08029-E3AF-43EB-AC89-DF1065966DA0",
+          "arrangement_name": "Master",
+          "arrangement_uuid": "4CC08029-E3AF-43EB-AC89-DF1065966DA0"
+        },
+        "destination": "presentation"
+      },
+      {
+        "id": {
+          "uuid": "5A08EE71-D379-48E4-885B-C02BEF8D867B",
+          "name": "MESSAGE",
+          "index": 12
+        },
+        "type": "header",
+        "is_hidden": false,
+        "is_pco": true,
+        "destination": "presentation"
+      },
+      {
+        "id": {
+          "uuid": "8FDB997C-DE11-490E-998F-C0A0226B046D",
+          "name": "Scripture Reading",
+          "index": 13
+        },
+        "type": "presentation",
+        "is_hidden": true,
+        "is_pco": true,
+        "presentation_info": {
+          "presentation_uuid": "",
+          "arrangement_name": "",
+          "arrangement_uuid": ""
+        },
+        "destination": "presentation"
+      },
+      {
+        "id": {
+          "uuid": "8BB2B88F-F063-42FC-BD92-D5E5B4DCB524",
+          "name": "Series-One_Part-20_ProPresenter",
+          "index": 14
+        },
+        "type": "presentation",
+        "is_hidden": false,
+        "is_pco": true,
+        "presentation_info": {
+          "presentation_uuid": "18B595F5-3C27-4183-8BAD-11977C33A7E7",
+          "arrangement_name": "Master",
+          "arrangement_uuid": "18B595F5-3C27-4183-8BAD-11977C33A7E7"
+        },
+        "destination": "presentation"
+      },
+      {
+        "id": {
+          "uuid": "E0CA0885-5FB2-4641-BC80-04D63471C9D3",
+          "name": "Sample Message B",
+          "index": 15
+        },
+        "type": "presentation",
+        "is_hidden": true,
+        "is_pco": true,
+        "presentation_info": {
+          "presentation_uuid": "2D24702C-9B33-4140-9D97-72E2701C955C",
+          "arrangement_name": "Master",
+          "arrangement_uuid": "2D24702C-9B33-4140-9D97-72E2701C955C"
+        },
+        "destination": "presentation"
+      },
+      {
+        "id": {
+          "uuid": "58CB3DA2-532C-48A8-AC29-13347CABE79E",
+          "name": "CLOSE",
+          "index": 16
+        },
+        "type": "header",
+        "is_hidden": false,
+        "is_pco": true,
+        "destination": "presentation"
+      },
+      {
+        "id": {
+          "uuid": "BDB672F4-2268-412C-97E0-060B8E0F2CDB",
+          "name": "Dismissal",
+          "index": 17
+        },
+        "type": "presentation",
+        "is_hidden": false,
+        "is_pco": true,
+        "presentation_info": {
+          "presentation_uuid": "1D17EA27-82A0-4706-B6AC-2298AA4112A1",
+          "arrangement_name": "Master",
+          "arrangement_uuid": "1D17EA27-82A0-4706-B6AC-2298AA4112A1"
+        },
+        "destination": "presentation"
+      }
+    ]
+  }
+}

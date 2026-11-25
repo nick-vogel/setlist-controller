@@ -1,0 +1,16 @@
+diff --git a/src/server/playback-controller.ts b/src/server/playback-controller.ts
+index f92d277..847335f 100644
+--- a/src/server/playback-controller.ts
++++ b/src/server/playback-controller.ts
+@@ -679,6 +679,11 @@ export function startPlaybackController(
+           break;
+         }
+         case 'stop':
++          if (!playing && countIn) {
++            clearJump();
++            askStop();
++            break;
++          }
+           // Live reports the stop back, and only then does the snapshot change.
+           askStop();
+           return;

@@ -1,0 +1,23 @@
+diff --git a/test/propresenter.test.ts b/test/propresenter.test.ts
+index 49095f8..d66c4c4 100644
+--- a/test/propresenter.test.ts
++++ b/test/propresenter.test.ts
+@@ -5638,6 +5638,18 @@ describe('the slide timing file', () => {
+         expect(await holyForeverSent(sent)).toEqual([trigger(HOLY_FOREVER, 1)]);
+       });
+ 
++      it("bounds the start by the last change Ancient Gates plays, not by an entry of its own that the check drops", async () => {
++        // Verse 3's entry passes every first-pass rule, but its start of -8 bars lands on 80, Chorus 1's
++        // start, so the check drops it and Verse 3 keeps the even split, its last change on 132. A start
++        // of -5 bars on Holy Forever's Verse 1 lands on 124, before that change.
++        const slideTiming = await timingFile({ 'Ancient Gates': [{ section: 'Verse 3', changes: [1, 2], start: -8 }], 'Holy Forever': [{ section: 'Verse 1', start: -5 }] });
++
++        expect(await problemsAfterWalk(AFTER_NO_END, slideTiming, 120, 150)).toEqual([
++          "Ancient Gates: slide timing Verse 3 1, start -8 passes Chorus 1's last change",
++          'Holy Forever: slide timing Verse 1 1, start -5 passes the last change of Ancient Gates',
++        ]);
++      });
++
+       it('names a start that lands before the End of a song with one as a problem, passing the end of Ancient Gates', async () => {
+         // A start of -1 bar lands on 140, before Ancient Gates' End on 144.
+         const slideTiming = await timingFile({ 'Holy Forever': [{ section: 'Verse 1', start: -1 }] });

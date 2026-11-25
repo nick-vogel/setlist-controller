@@ -1,0 +1,13 @@
+diff --git a/test/build-set-traces.ts b/test/build-set-traces.ts
+index 6339459..65ca4c3 100644
+--- a/test/build-set-traces.ts
++++ b/test/build-set-traces.ts
+@@ -325,7 +325,7 @@ export function sentenceCoverage(traces: Trace[], exempt: Exempt[], skill: strin
+   const sentences = skillSentences(skill);
+   const pinnedBy = (sentence: Sentence) => spans.find(({ start, end }) => start <= sentence.start && sentence.end <= end)?.id;
+   const listed = new Set(exempt.map(({ sentence }) => sentence));
+-  const problems = sentences.filter((sentence) => pinnedBy(sentence) === undefined && !listed.has(sentence.text)).map(({ line, text }) => `SKILL.md:${line}: ${text}`);
++  const problems = sentences.filter((sentence) => pinnedBy(sentence) === undefined && ![...listed].some((entry) => sentence.text.includes(entry))).map(({ line, text }) => `SKILL.md:${line}: ${text}`);
+   const seen = new Set<string>();
+   for (const { sentence, reason } of exempt) {
+     const at = `The exempt list: ${sentence}`;

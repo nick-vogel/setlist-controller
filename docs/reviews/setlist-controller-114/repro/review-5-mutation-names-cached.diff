@@ -1,0 +1,14 @@
+diff --git a/src/server/atem.ts b/src/server/atem.ts
+index acbb5d4..4385f9c 100644
+--- a/src/server/atem.ts
++++ b/src/server/atem.ts
+@@ -186,7 +186,8 @@ function atemTarget(switcher: SwitcherClient, clock: Pick<Clock, 'now' | 'every'
+     // is no change by hand, since nobody can tell who made it. A connect or a disconnect clears the
+     // ATEM's own cuts whose reports have not come, since a report lost to the drop never comes after.
+     async start(report) {
+-      const program = (input: number | null) => report.state(programLine(input, inputs, switcher.inputs()));
++      let names: ReturnType<typeof switcher.inputs> | null = null;
++      const program = (input: number | null) => report.state(programLine(input, inputs, (names ??= switcher.inputs())));
+       switcher.onConnection((connected) => {
+         sent = [];
+         if (connected) {

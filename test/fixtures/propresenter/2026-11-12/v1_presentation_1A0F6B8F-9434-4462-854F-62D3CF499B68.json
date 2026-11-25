@@ -1,0 +1,215 @@
+{
+  "method": "GET",
+  "path": "/v1/presentation/1A0F6B8F-9434-4462-854F-62D3CF499B68",
+  "status": 200,
+  "content_type": "application/json",
+  "body": {
+    "presentation": {
+      "id": {
+        "uuid": "1A0F6B8F-9434-4462-854F-62D3CF499B68",
+        "name": "2023-11-12 Sample Message A",
+        "index": 41
+      },
+      "groups": [
+        {
+          "name": "",
+          "color": {
+            "red": 0.3999999761581421,
+            "green": 0.3999999761581421,
+            "blue": 0.3999999761581421,
+            "alpha": 1
+          },
+          "slides": [
+            {
+              "enabled": true,
+              "notes": "",
+              "text": "",
+              "label": "Sample Message A Title.png",
+              "size": {
+                "width": 1920,
+                "height": 1080
+              }
+            }
+          ],
+          "uuid": "885F17FE-EAD6-4DCC-A364-11A02D2739AD"
+        },
+        {
+          "name": "",
+          "color": {
+            "red": 0.3999999761581421,
+            "green": 0.3999999761581421,
+            "blue": 0.3999999761581421,
+            "alpha": 1
+          },
+          "slides": [
+            {
+              "enabled": true,
+              "notes": "",
+              "text": "2023-11-12 Sample Message A / group 2 / slide 1 line 1\n\n2023-11-12 Sample Message A / group 2 / slide 1 line 3",
+              "label": "",
+              "size": {
+                "width": 1920,
+                "height": 1080
+              }
+            },
+            {
+              "enabled": true,
+              "notes": "",
+              "text": "2023-11-12 Sample Message A / group 2 / slide 2 line 1\n\n2023-11-12 Sample Message A / group 2 / slide 2 line 3",
+              "label": "",
+              "size": {
+                "width": 1920,
+                "height": 1080
+              }
+            },
+            {
+              "enabled": true,
+              "notes": "",
+              "text": "2023-11-12 Sample Message A / group 2 / slide 3 line 1\n\n2023-11-12 Sample Message A / group 2 / slide 3 line 3",
+              "label": "",
+              "size": {
+                "width": 1920,
+                "height": 1080
+              }
+            },
+            {
+              "enabled": true,
+              "notes": "",
+              "text": "2023-11-12 Sample Message A / group 2 / slide 4 line 1\n\n2023-11-12 Sample Message A / group 2 / slide 4 line 3",
+              "label": "",
+              "size": {
+                "width": 1920,
+                "height": 1080
+              }
+            },
+            {
+              "enabled": true,
+              "notes": "",
+              "text": "",
+              "label": "Sample Message A Title.png",
+              "size": {
+                "width": 1920,
+                "height": 1080
+              }
+            },
+            {
+              "enabled": true,
+              "notes": "",
+              "text": "2023-11-12 Sample Message A / group 2 / slide 6 line 1\n\n2023-11-12 Sample Message A / group 2 / slide 6 line 3",
+              "label": "",
+              "size": {
+                "width": 1920,
+                "height": 1080
+              }
+            },
+            {
+              "enabled": true,
+              "notes": "",
+              "text": "2023-11-12 Sample Message A / group 2 / slide 7 line 1\n\n2023-11-12 Sample Message A / group 2 / slide 7 line 3",
+              "label": "",
+              "size": {
+                "width": 1920,
+                "height": 1080
+              }
+            },
+            {
+              "enabled": true,
+              "notes": "",
+              "text": "",
+              "label": "Sample Message A Title.png",
+              "size": {
+                "width": 1920,
+                "height": 1080
+              }
+            },
+            {
+              "enabled": true,
+              "notes": "",
+              "text": "2023-11-12 Sample Message A / group 2 / slide 9 line 1\n\n2023-11-12 Sample Message A / group 2 / slide 9 line 3",
+              "label": "",
+              "size": {
+                "width": 1920,
+                "height": 1080
+              }
+            },
+            {
+              "enabled": true,
+              "notes": "",
+              "text": "2023-11-12 Sample Message A / group 2 / slide 10 line 1\n\n2023-11-12 Sample Message A / group 2 / slide 10 line 3",
+              "label": "",
+              "size": {
+                "width": 1920,
+                "height": 1080
+              }
+            },
+            {
+              "enabled": true,
+              "notes": "",
+              "text": "2023-11-12 Sample Message A / group 2 / slide 11 line 1\n\n2023-11-12 Sample Message A / group 2 / slide 11 line 3",
+              "label": "",
+              "size": {
+                "width": 1920,
+                "height": 1080
+              }
+            },
+            {
+              "enabled": true,
+              "notes": "",
+              "text": "",
+              "label": "Sample Message A Title.png",
+              "size": {
+                "width": 1920,
+                "height": 1080
+              }
+            }
+          ],
+          "uuid": "BCEF06D0-5A81-4376-8714-E6F7645A451B"
+        },
+        {
+          "name": "",
+          "color": {
+            "red": 0.3999999761581421,
+            "green": 0.3999999761581421,
+            "blue": 0.3999999761581421,
+            "alpha": 1
+          },
+          "slides": [
+            {
+              "enabled": true,
+              "notes": "",
+              "text": "",
+              "label": "image1.jpg",
+              "size": {
+                "width": 1920,
+                "height": 1080
+              }
+            }
+          ],
+          "uuid": "DBAEA50C-A13A-477C-88FF-EAC9009830A3"
+        }
+      ],
+      "has_timeline": false,
+      "presentation_path": "ProPresenter/Libraries/Default/2023-11-12 Sample Message A.pro",
+      "destination": "presentation",
+      "arrangements": [
+        {
+          "id": {
+            "uuid": "1A0F6B8F-9434-4462-854F-62D3CF499B68",
+            "name": "Master",
+            "index": 0
+          },
+          "groups": [
+            "885F17FE-EAD6-4DCC-A364-11A02D2739AD",
+            "BCEF06D0-5A81-4376-8714-E6F7645A451B",
+            "DBAEA50C-A13A-477C-88FF-EAC9009830A3"
+          ],
+          "total_cues": 14
+        }
+      ],
+      "current_arrangement": "1A0F6B8F-9434-4462-854F-62D3CF499B68",
+      "type": "standard",
+      "is_authorized": true,
+      "total_cues": 14
+    }
+  }
+}

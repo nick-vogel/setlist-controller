@@ -1,0 +1,239 @@
+{
+ "scenario": "fire-by-hand",
+ "description": "The operator fires a cue at the console by hand (Go To Cue 6 on the virtual keyboard). The app sends nothing.",
+ "eos_version": "3.3.10 (ETCnomad, macOS)",
+ "transport": "TCP 127.0.0.1:3032, OSC 1.0 packet-length framing",
+ "packets": [
+  {
+   "t_ms": 172734,
+   "dir": "eos->app",
+   "address": "/eos/out/user/1/cmd",
+   "args": [
+    "LIVE: Cue  6 : Go To Cue ",
+    0
+   ],
+   "hex": "2f656f732f6f75742f757365722f312f636d64002c7369004c4956453a20437565202036203a20476f20546f204375652000000000000000"
+  },
+  {
+   "t_ms": 172736,
+   "dir": "eos->app",
+   "address": "/eos/out/cmd",
+   "args": [
+    "LIVE: Cue  6 : Go To Cue ",
+    0
+   ],
+   "hex": "2f656f732f6f75742f636d64000000002c7369004c4956453a20437565202036203a20476f20546f204375652000000000000000"
+  },
+  {
+   "t_ms": 172784,
+   "dir": "eos->app",
+   "address": "/eos/out/softkey/1",
+   "args": [
+    "Manual"
+   ],
+   "hex": "2f656f732f6f75742f736f66746b65792f3100002c7300004d616e75616c0000"
+  },
+  {
+   "t_ms": 172786,
+   "dir": "eos->app",
+   "address": "/eos/out/softkey/2",
+   "args": [
+    "Scenes"
+   ],
+   "hex": "2f656f732f6f75742f736f66746b65792f3200002c7300005363656e65730000"
+  },
+  {
+   "t_ms": 172789,
+   "dir": "eos->app",
+   "address": "/eos/out/softkey/3",
+   "args": [
+    "MovesOnly"
+   ],
+   "hex": "2f656f732f6f75742f736f66746b65792f3300002c7300004d6f7665734f6e6c79000000"
+  },
+  {
+   "t_ms": 172791,
+   "dir": "eos->app",
+   "address": "/eos/out/softkey/4",
+   "args": [
+    "Complete"
+   ],
+   "hex": "2f656f732f6f75742f736f66746b65792f3400002c730000436f6d706c65746500000000"
+  },
+  {
+   "t_ms": 172794,
+   "dir": "eos->app",
+   "address": "/eos/out/softkey/5",
+   "args": [
+    "MinusLinks"
+   ],
+   "hex": "2f656f732f6f75742f736f66746b65792f3500002c7300004d696e75734c696e6b730000"
+  },
+  {
+   "t_ms": 172796,
+   "dir": "eos->app",
+   "address": "/eos/out/softkey/6",
+   "args": [
+    "Marks"
+   ],
+   "hex": "2f656f732f6f75742f736f66746b65792f3600002c7300004d61726b73000000"
+  },
+  {
+   "t_ms": 172799,
+   "dir": "eos->app",
+   "address": "/eos/out/softkey/7",
+   "args": [
+    "SingleParam"
+   ],
+   "hex": "2f656f732f6f75742f736f66746b65792f3700002c73000053696e676c65506172616d00"
+  },
+  {
+   "t_ms": 172801,
+   "dir": "eos->app",
+   "address": "/eos/out/softkey/8",
+   "args": [
+    "MultiParam"
+   ],
+   "hex": "2f656f732f6f75742f736f66746b65792f3800002c7300004d756c7469506172616d0000"
+  },
+  {
+   "t_ms": 172804,
+   "dir": "eos->app",
+   "address": "/eos/out/softkey/9",
+   "args": [
+    "Timecode"
+   ],
+   "hex": "2f656f732f6f75742f736f66746b65792f3900002c73000054696d65636f646500000000"
+  },
+  {
+   "t_ms": 174084,
+   "dir": "eos->app",
+   "address": "/eos/out/user/1/cmd",
+   "args": [
+    "LIVE: Cue  6 : Go To Cue 6",
+    0
+   ],
+   "hex": "2f656f732f6f75742f757365722f312f636d64002c7369004c4956453a20437565202036203a20476f20546f204375652036000000000000"
+  },
+  {
+   "t_ms": 174086,
+   "dir": "eos->app",
+   "address": "/eos/out/cmd",
+   "args": [
+    "LIVE: Cue  6 : Go To Cue 6",
+    0
+   ],
+   "hex": "2f656f732f6f75742f636d64000000002c7369004c4956453a20437565202036203a20476f20546f204375652036000000000000"
+  },
+  {
+   "t_ms": 174837,
+   "dir": "eos->app",
+   "address": "/eos/out/user/1/cmd",
+   "args": [
+    "LIVE: Cue  6 : Go To Cue 6 #",
+    0
+   ],
+   "hex": "2f656f732f6f75742f757365722f312f636d64002c7369004c4956453a20437565202036203a20476f20546f20437565203620230000000000000000"
+  },
+  {
+   "t_ms": 174840,
+   "dir": "eos->app",
+   "address": "/eos/out/cmd",
+   "args": [
+    "LIVE: Cue  6 : Go To Cue 6 #",
+    0
+   ],
+   "hex": "2f656f732f6f75742f636d64000000002c7369004c4956453a20437565202036203a20476f20546f20437565203620230000000000000000"
+  },
+  {
+   "t_ms": 174842,
+   "dir": "eos->app",
+   "address": "/eos/out/event/cue/1/6/fire",
+   "args": [
+    "Great Are You Lord / Verse 1"
+   ],
+   "hex": "2f656f732f6f75742f6576656e742f6375652f312f362f66697265002c73000047726561742041726520596f75204c6f7264202f205665727365203100000000"
+  },
+  {
+   "t_ms": 174890,
+   "dir": "eos->app",
+   "address": "/eos/out/softkey/1",
+   "args": [
+    "Address"
+   ],
+   "hex": "2f656f732f6f75742f736f66746b65792f3100002c7300004164647265737300"
+  },
+  {
+   "t_ms": 174893,
+   "dir": "eos->app",
+   "address": "/eos/out/softkey/2",
+   "args": [
+    "Query"
+   ],
+   "hex": "2f656f732f6f75742f736f66746b65792f3200002c7300005175657279000000"
+  },
+  {
+   "t_ms": 174895,
+   "dir": "eos->app",
+   "address": "/eos/out/softkey/3",
+   "args": [
+    "Snapshot"
+   ],
+   "hex": "2f656f732f6f75742f736f66746b65792f3300002c730000536e617073686f7400000000"
+  },
+  {
+   "t_ms": 174897,
+   "dir": "eos->app",
+   "address": "/eos/out/softkey/4",
+   "args": [
+    "Highlight"
+   ],
+   "hex": "2f656f732f6f75742f736f66746b65792f3400002c730000486967686c69676874000000"
+  },
+  {
+   "t_ms": 174900,
+   "dir": "eos->app",
+   "address": "/eos/out/softkey/5",
+   "args": [
+    "Assert"
+   ],
+   "hex": "2f656f732f6f75742f736f66746b65792f3500002c7300004173736572740000"
+  },
+  {
+   "t_ms": 174902,
+   "dir": "eos->app",
+   "address": "/eos/out/softkey/6",
+   "args": [
+    "Color Path"
+   ],
+   "hex": "2f656f732f6f75742f736f66746b65792f3600002c730000436f6c6f7220506174680000"
+  },
+  {
+   "t_ms": 174904,
+   "dir": "eos->app",
+   "address": "/eos/out/softkey/7",
+   "args": [
+    "Preview"
+   ],
+   "hex": "2f656f732f6f75742f736f66746b65792f3700002c7300005072657669657700"
+  },
+  {
+   "t_ms": 174907,
+   "dir": "eos->app",
+   "address": "/eos/out/softkey/8",
+   "args": [
+    "Fader"
+   ],
+   "hex": "2f656f732f6f75742f736f66746b65792f3800002c7300004661646572000000"
+  },
+  {
+   "t_ms": 174909,
+   "dir": "eos->app",
+   "address": "/eos/out/softkey/9",
+   "args": [
+    "Offset"
+   ],
+   "hex": "2f656f732f6f75742f736f66746b65792f3900002c7300004f66667365740000"
+  }
+ ]
+}

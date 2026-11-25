@@ -1,0 +1,32 @@
+diff --git a/test/pre-service-check.test.ts b/test/pre-service-check.test.ts
+index c821c21..f3f2477 100644
+--- a/test/pre-service-check.test.ts
++++ b/test/pre-service-check.test.ts
+@@ -343,6 +343,27 @@ describe("a song's meter", () => {
+     expect(target.meters.slice(checks).map((meters) => Object.fromEntries(meters))).toEqual([{ 1: 3, 2: 4 }]);
+   });
+ 
++  // Stopped, a second click lands within METER_SETTLE_MS of the first, so the first click's meter
++  // still waits when the second click's position arrives.
++  it("gives each of two quick stopped clicks its own song's meter, never the second song the first one's", async () => {
++    const { target, producer } = await checkedRig([], TWO_SONGS);
++    await producer.snapshot(shows(MATCHED));
++    rig!.live.setSignature(6, 8);
++    rig!.live.setPosition(8);
++    await next(producer, (snapshot) => snapshot.position === 8);
++    rig!.clock.advance(METER_SETTLE_MS);
++
++    rig!.live.setPosition(40);
++    rig!.live.setSignature(4, 4);
++    await next(producer, (snapshot) => snapshot.position === 40 && snapshot.now?.bars === 4);
++    rig!.live.setPosition(12);
++    rig!.live.setSignature(6, 8);
++    await next(producer, (snapshot) => snapshot.position === 12 && snapshot.now?.bars === 6);
++    rig!.clock.advance(METER_SETTLE_MS);
++
++    expect(Object.fromEntries(target.meters.at(-1)!)).toEqual({ 1: 3, 2: 4 });
++  });
++
+   // Plays into the second song, which Live reports in 6/8, so a meter waits for Live to stop, then
+   // silences Live until the server counts it lost, as a stall of Live's control surface does while the
+   // music plays on.

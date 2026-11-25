@@ -1,0 +1,528 @@
+{
+  "method": "GET",
+  "path": "/v1/presentation/939B9443-1F81-4A44-9BB3-ED5CB53A895F",
+  "status": 200,
+  "content_type": "application/json",
+  "body": {
+    "presentation": {
+      "id": {
+        "uuid": "939B9443-1F81-4A44-9BB3-ED5CB53A895F",
+        "name": "Yes and Amen",
+        "index": 305
+      },
+      "groups": [
+        {
+          "name": "Verse 1",
+          "color": {
+            "red": 0,
+            "green": 0.46666666865348816,
+            "blue": 0.800000011920929,
+            "alpha": 1
+          },
+          "slides": [
+            {
+              "enabled": true,
+              "notes": "",
+              "text": "",
+              "label": "Blossom_01_4K.mp4",
+              "size": {
+                "width": 1920,
+                "height": 1080
+              }
+            },
+            {
+              "enabled": true,
+              "notes": "",
+              "text": "Yes and Amen / Verse 1 / slide 2 line 1\nYes and Amen / Verse 1 / slide 2 line 2",
+              "label": "",
+              "size": {
+                "width": 1920,
+                "height": 1080
+              }
+            },
+            {
+              "enabled": true,
+              "notes": "",
+              "text": "Yes and Amen / Verse 1 / slide 3 line 1\nYes and Amen / Verse 1 / slide 3 line 2",
+              "label": "",
+              "size": {
+                "width": 1920,
+                "height": 1080
+              }
+            },
+            {
+              "enabled": true,
+              "notes": "",
+              "text": "Yes and Amen / Verse 1 / slide 4 line 1\nYes and Amen / Verse 1 / slide 4 line 2",
+              "label": "",
+              "size": {
+                "width": 1920,
+                "height": 1080
+              }
+            },
+            {
+              "enabled": true,
+              "notes": "",
+              "text": "Yes and Amen / Verse 1 / slide 5 line 1",
+              "label": "",
+              "size": {
+                "width": 1920,
+                "height": 1080
+              }
+            }
+          ],
+          "uuid": "4E3E63D4-2BF4-4CDF-9E6D-CB30B5FFBA18"
+        },
+        {
+          "name": "Chorus",
+          "color": {
+            "red": 0.800000011920929,
+            "green": 0,
+            "blue": 0.30588236451148987,
+            "alpha": 1
+          },
+          "slides": [
+            {
+              "enabled": true,
+              "notes": "",
+              "text": "Yes and Amen / Chorus / slide 1 line 1\nYes and Amen / Chorus / slide 1 line 2",
+              "label": "",
+              "size": {
+                "width": 1920,
+                "height": 1080
+              }
+            },
+            {
+              "enabled": true,
+              "notes": "",
+              "text": "Yes and Amen / Chorus / slide 2 line 1\nYes and Amen / Chorus / slide 2 line 2",
+              "label": "",
+              "size": {
+                "width": 1920,
+                "height": 1080
+              }
+            }
+          ],
+          "uuid": "7B128F1E-49E6-4D02-ADD4-7CB7535424FE"
+        },
+        {
+          "name": "Tag",
+          "color": {
+            "red": 0.800000011920929,
+            "green": 0.16078431904315948,
+            "blue": 0.16078431904315948,
+            "alpha": 1
+          },
+          "slides": [
+            {
+              "enabled": true,
+              "notes": "",
+              "text": "Yes and Amen / Tag / slide 1 line 1\nYes and Amen / Tag / slide 1 line 2",
+              "label": "",
+              "size": {
+                "width": 1920,
+                "height": 1080
+              }
+            },
+            {
+              "enabled": true,
+              "notes": "",
+              "text": "",
+              "label": "",
+              "size": {
+                "width": 1920,
+                "height": 1080
+              }
+            }
+          ],
+          "uuid": "129FD718-CA34-416D-8627-3E9607C9FCF6"
+        },
+        {
+          "name": "Verse 2",
+          "color": {
+            "red": 0,
+            "green": 0.3490196168422699,
+            "blue": 0.6000000238418579,
+            "alpha": 1
+          },
+          "slides": [
+            {
+              "enabled": true,
+              "notes": "",
+              "text": "Yes and Amen / Verse 2 / slide 1 line 1\nYes and Amen / Verse 2 / slide 1 line 2",
+              "label": "",
+              "size": {
+                "width": 1920,
+                "height": 1080
+              }
+            },
+            {
+              "enabled": true,
+              "notes": "",
+              "text": "Yes and Amen / Verse 2 / slide 2 line 1\nYes and Amen / Verse 2 / slide 2 line 2",
+              "label": "",
+              "size": {
+                "width": 1920,
+                "height": 1080
+              }
+            },
+            {
+              "enabled": true,
+              "notes": "",
+              "text": "Yes and Amen / Verse 2 / slide 3 line 1\nYes and Amen / Verse 2 / slide 3 line 2",
+              "label": "",
+              "size": {
+                "width": 1920,
+                "height": 1080
+              }
+            },
+            {
+              "enabled": true,
+              "notes": "",
+              "text": "Yes and Amen / Verse 2 / slide 4 line 1",
+              "label": "",
+              "size": {
+                "width": 1920,
+                "height": 1080
+              }
+            }
+          ],
+          "uuid": "A362B4E7-4DE4-437D-A3F1-9204B70174B8"
+        },
+        {
+          "name": "Chorus",
+          "color": {
+            "red": 0.800000011920929,
+            "green": 0,
+            "blue": 0.30588236451148987,
+            "alpha": 1
+          },
+          "slides": [
+            {
+              "enabled": true,
+              "notes": "",
+              "text": "Yes and Amen / Chorus / slide 1 line 1\nYes and Amen / Chorus / slide 1 line 2",
+              "label": "",
+              "size": {
+                "width": 1920,
+                "height": 1080
+              }
+            },
+            {
+              "enabled": true,
+              "notes": "",
+              "text": "Yes and Amen / Chorus / slide 2 line 1\nYes and Amen / Chorus / slide 2 line 2",
+              "label": "",
+              "size": {
+                "width": 1920,
+                "height": 1080
+              }
+            }
+          ],
+          "uuid": "203A04A3-347C-4E65-84F4-6F0E57D1D901"
+        },
+        {
+          "name": "Tag",
+          "color": {
+            "red": 0.800000011920929,
+            "green": 0.16078431904315948,
+            "blue": 0.16078431904315948,
+            "alpha": 1
+          },
+          "slides": [
+            {
+              "enabled": true,
+              "notes": "",
+              "text": "Yes and Amen / Tag / slide 1 line 1\nYes and Amen / Tag / slide 1 line 2",
+              "label": "",
+              "size": {
+                "width": 1920,
+                "height": 1080
+              }
+            }
+          ],
+          "uuid": "71E2ED94-C4C7-4990-B828-03CE5EDBD01E"
+        },
+        {
+          "name": "Chorus",
+          "color": {
+            "red": 0.800000011920929,
+            "green": 0,
+            "blue": 0.30588236451148987,
+            "alpha": 1
+          },
+          "slides": [
+            {
+              "enabled": true,
+              "notes": "",
+              "text": "Yes and Amen / Chorus / slide 1 line 1\nYes and Amen / Chorus / slide 1 line 2",
+              "label": "",
+              "size": {
+                "width": 1920,
+                "height": 1080
+              }
+            },
+            {
+              "enabled": true,
+              "notes": "",
+              "text": "Yes and Amen / Chorus / slide 2 line 1\nYes and Amen / Chorus / slide 2 line 2",
+              "label": "",
+              "size": {
+                "width": 1920,
+                "height": 1080
+              }
+            }
+          ],
+          "uuid": "2378846C-C60D-4C1A-BC7F-18E203F5E049"
+        },
+        {
+          "name": "Tag",
+          "color": {
+            "red": 0.800000011920929,
+            "green": 0.16078431904315948,
+            "blue": 0.16078431904315948,
+            "alpha": 1
+          },
+          "slides": [
+            {
+              "enabled": true,
+              "notes": "",
+              "text": "Yes and Amen / Tag / slide 1 line 1\nYes and Amen / Tag / slide 1 line 2",
+              "label": "",
+              "size": {
+                "width": 1920,
+                "height": 1080
+              }
+            },
+            {
+              "enabled": true,
+              "notes": "",
+              "text": "",
+              "label": "",
+              "size": {
+                "width": 1920,
+                "height": 1080
+              }
+            }
+          ],
+          "uuid": "4BD80549-4BE3-4676-868A-23F324C409E5"
+        },
+        {
+          "name": "Bridge",
+          "color": {
+            "red": 0.4627451002597809,
+            "green": 0,
+            "blue": 0.800000011920929,
+            "alpha": 1
+          },
+          "slides": [
+            {
+              "enabled": true,
+              "notes": "",
+              "text": "Yes and Amen / Bridge / slide 1 line 1\nYes and Amen / Bridge / slide 1 line 2",
+              "label": "",
+              "size": {
+                "width": 1920,
+                "height": 1080
+              }
+            },
+            {
+              "enabled": true,
+              "notes": "",
+              "text": "Yes and Amen / Bridge / slide 1 line 1\nYes and Amen / Bridge / slide 1 line 2",
+              "label": "",
+              "size": {
+                "width": 1920,
+                "height": 1080
+              }
+            }
+          ],
+          "uuid": "0AC3E569-2341-4663-83F9-16DFA185488A"
+        },
+        {
+          "name": "Bridge",
+          "color": {
+            "red": 0.4627451002597809,
+            "green": 0,
+            "blue": 0.800000011920929,
+            "alpha": 1
+          },
+          "slides": [
+            {
+              "enabled": true,
+              "notes": "",
+              "text": "Yes and Amen / Bridge / slide 1 line 1\nYes and Amen / Bridge / slide 1 line 2",
+              "label": "",
+              "size": {
+                "width": 1920,
+                "height": 1080
+              }
+            },
+            {
+              "enabled": true,
+              "notes": "",
+              "text": "Yes and Amen / Bridge / slide 1 line 1\nYes and Amen / Bridge / slide 1 line 2",
+              "label": "",
+              "size": {
+                "width": 1920,
+                "height": 1080
+              }
+            }
+          ],
+          "uuid": "8B4C5151-EBDB-491A-983A-87DAE5A2D281"
+        },
+        {
+          "name": "Chorus",
+          "color": {
+            "red": 0.800000011920929,
+            "green": 0,
+            "blue": 0.30588236451148987,
+            "alpha": 1
+          },
+          "slides": [
+            {
+              "enabled": true,
+              "notes": "",
+              "text": "Yes and Amen / Chorus / slide 1 line 1\nYes and Amen / Chorus / slide 1 line 2",
+              "label": "",
+              "size": {
+                "width": 1920,
+                "height": 1080
+              }
+            },
+            {
+              "enabled": true,
+              "notes": "",
+              "text": "Yes and Amen / Chorus / slide 2 line 1\nYes and Amen / Chorus / slide 2 line 2",
+              "label": "",
+              "size": {
+                "width": 1920,
+                "height": 1080
+              }
+            }
+          ],
+          "uuid": "D9E25E89-058B-4C4F-BDC2-788A49936E3A"
+        },
+        {
+          "name": "Chorus",
+          "color": {
+            "red": 0.800000011920929,
+            "green": 0,
+            "blue": 0.30588236451148987,
+            "alpha": 1
+          },
+          "slides": [
+            {
+              "enabled": true,
+              "notes": "",
+              "text": "Yes and Amen / Chorus / slide 1 line 1\nYes and Amen / Chorus / slide 1 line 2",
+              "label": "",
+              "size": {
+                "width": 1920,
+                "height": 1080
+              }
+            },
+            {
+              "enabled": true,
+              "notes": "",
+              "text": "Yes and Amen / Chorus / slide 2 line 1\nYes and Amen / Chorus / slide 2 line 2",
+              "label": "",
+              "size": {
+                "width": 1920,
+                "height": 1080
+              }
+            }
+          ],
+          "uuid": "A4CC3F1B-8192-475A-96CE-E8C1DCE857C8"
+        },
+        {
+          "name": "Tag",
+          "color": {
+            "red": 0.800000011920929,
+            "green": 0.16078431904315948,
+            "blue": 0.16078431904315948,
+            "alpha": 1
+          },
+          "slides": [
+            {
+              "enabled": true,
+              "notes": "",
+              "text": "Yes and Amen / Tag / slide 1 line 1\nYes and Amen / Tag / slide 1 line 2",
+              "label": "",
+              "size": {
+                "width": 1920,
+                "height": 1080
+              }
+            }
+          ],
+          "uuid": "C6B329A0-A234-4812-943F-0D6DB865DC40"
+        },
+        {
+          "name": "Tag",
+          "color": {
+            "red": 0.800000011920929,
+            "green": 0.16078431904315948,
+            "blue": 0.16078431904315948,
+            "alpha": 1
+          },
+          "slides": [
+            {
+              "enabled": true,
+              "notes": "",
+              "text": "Yes and Amen / Tag / slide 1 line 1\nYes and Amen / Tag / slide 1 line 2",
+              "label": "",
+              "size": {
+                "width": 1920,
+                "height": 1080
+              }
+            },
+            {
+              "enabled": true,
+              "notes": "",
+              "text": "",
+              "label": "",
+              "size": {
+                "width": 1920,
+                "height": 1080
+              }
+            }
+          ],
+          "uuid": "E248AF21-01B3-4FEA-9F82-9231B497C340"
+        }
+      ],
+      "has_timeline": false,
+      "presentation_path": "ProPresenter/Libraries/Default/Yes and Amen.pro",
+      "destination": "presentation",
+      "arrangements": [
+        {
+          "id": {
+            "uuid": "939B9443-1F81-4A44-9BB3-ED5CB53A895F",
+            "name": "Master",
+            "index": 0
+          },
+          "groups": [
+            "4E3E63D4-2BF4-4CDF-9E6D-CB30B5FFBA18",
+            "7B128F1E-49E6-4D02-ADD4-7CB7535424FE",
+            "129FD718-CA34-416D-8627-3E9607C9FCF6",
+            "A362B4E7-4DE4-437D-A3F1-9204B70174B8",
+            "203A04A3-347C-4E65-84F4-6F0E57D1D901",
+            "71E2ED94-C4C7-4990-B828-03CE5EDBD01E",
+            "2378846C-C60D-4C1A-BC7F-18E203F5E049",
+            "4BD80549-4BE3-4676-868A-23F324C409E5",
+            "0AC3E569-2341-4663-83F9-16DFA185488A",
+            "8B4C5151-EBDB-491A-983A-87DAE5A2D281",
+            "D9E25E89-058B-4C4F-BDC2-788A49936E3A",
+            "A4CC3F1B-8192-475A-96CE-E8C1DCE857C8",
+            "C6B329A0-A234-4812-943F-0D6DB865DC40",
+            "E248AF21-01B3-4FEA-9F82-9231B497C340"
+          ],
+          "total_cues": 31
+        }
+      ],
+      "current_arrangement": "939B9443-1F81-4A44-9BB3-ED5CB53A895F",
+      "type": "multitracks",
+      "is_authorized": true,
+      "total_cues": 31
+    }
+  }
+}

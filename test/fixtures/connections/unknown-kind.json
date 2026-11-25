@@ -1,0 +1,6 @@
+{
+  "targets": {
+    "fake": { "port": 4031 },
+    "lights": { "host": "10.0.0.20" }
+  }
+}

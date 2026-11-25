@@ -1,0 +1,13 @@
+diff --git a/test/set-builder-lights.test.ts b/test/set-builder-lights.test.ts
+index 8739bad..ac2f984 100644
+--- a/test/set-builder-lights.test.ts
++++ b/test/set-builder-lights.test.ts
+@@ -160,7 +160,7 @@ const TEMPLATE_LEVELS: Record<string, Record<number, FakeEosLevels>> = {
+   '11': { ...each([1, 2, 3], { intensity: 70 }), ...each([16, 17, 18], { intensity: 71 }), 4: { colour: [40, 50, 60] } },
+   '22': { ...each([1, 2, 3], { intensity: 80 }), ...each([16, 17, 18], { intensity: 81 }), 24: { intensity: 20 } },
+   '35': { 1: { intensity: 0 }, 16: { intensity: 0 }, 17: { intensity: 59 }, 18: { intensity: 71 }, 24: { intensity: 100 } },
+-  '36': { 2: { intensity: 46 }, 3: { intensity: 46 }, 16: { intensity: 50, colour: FRONT } },
++  '36': { 16: { intensity: 50, colour: FRONT } },
+ };
+ 
+ // A song's line of the summary, read: its number, title and cue, its colour as hue and as red, green and blue, and the

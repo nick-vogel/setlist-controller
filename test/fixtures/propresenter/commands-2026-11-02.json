@@ -1,0 +1,188 @@
+[
+  {
+    "label": "index trigger 0 (Ancient Gates, unnamed title slide)",
+    "method": "GET",
+    "path": "/v1/presentation/5A606BC5-9279-4509-983E-88092AE567F0/0/trigger",
+    "status": 204,
+    "sent": 1646,
+    "answered": 1684,
+    "body": ""
+  },
+  {
+    "label": "slide index after index 0",
+    "method": "GET",
+    "path": "/v1/presentation/slide_index",
+    "status": 200,
+    "sent": 2888,
+    "answered": 2892,
+    "body": {
+      "presentation_index": {
+        "index": 0,
+        "presentation_id": {
+          "uuid": "5A606BC5-9279-4509-983E-88092AE567F0",
+          "name": "Ancient Gates",
+          "index": 63
+        },
+        "total_cues": 58,
+        "remaining_cues": 57
+      }
+    }
+  },
+  {
+    "label": "index trigger 1 (Ancient Gates, Verse 1 slide 1)",
+    "method": "GET",
+    "path": "/v1/presentation/5A606BC5-9279-4509-983E-88092AE567F0/1/trigger",
+    "status": 204,
+    "sent": 4097,
+    "answered": 4159,
+    "body": ""
+  },
+  {
+    "label": "index trigger 2 (Ancient Gates, Verse 1 slide 2)",
+    "method": "GET",
+    "path": "/v1/presentation/5A606BC5-9279-4509-983E-88092AE567F0/2/trigger",
+    "status": 204,
+    "sent": 5361,
+    "answered": 5417,
+    "body": ""
+  },
+  {
+    "label": "index trigger 2 again (same slide)",
+    "method": "GET",
+    "path": "/v1/presentation/5A606BC5-9279-4509-983E-88092AE567F0/2/trigger",
+    "status": 204,
+    "sent": 6622,
+    "answered": 6672,
+    "body": ""
+  },
+  {
+    "label": "slide index after index 2",
+    "method": "GET",
+    "path": "/v1/presentation/slide_index",
+    "status": 200,
+    "sent": 7876,
+    "answered": 7881,
+    "body": {
+      "presentation_index": {
+        "index": 2,
+        "presentation_id": {
+          "uuid": "5A606BC5-9279-4509-983E-88092AE567F0",
+          "name": "Ancient Gates",
+          "index": 63
+        },
+        "total_cues": 58,
+        "remaining_cues": 55
+      }
+    }
+  },
+  {
+    "label": "index trigger 57 (Ancient Gates, last slide)",
+    "method": "GET",
+    "path": "/v1/presentation/5A606BC5-9279-4509-983E-88092AE567F0/57/trigger",
+    "status": 204,
+    "sent": 9085,
+    "answered": 9145,
+    "body": ""
+  },
+  {
+    "label": "index trigger 58 (Ancient Gates, one past the last slide)",
+    "method": "GET",
+    "path": "/v1/presentation/5A606BC5-9279-4509-983E-88092AE567F0/58/trigger",
+    "status": 404,
+    "sent": 10350,
+    "answered": 10362,
+    "body": ""
+  },
+  {
+    "label": "index trigger 9999 (out of range)",
+    "method": "GET",
+    "path": "/v1/presentation/5A606BC5-9279-4509-983E-88092AE567F0/9999/trigger",
+    "status": 404,
+    "sent": 11563,
+    "answered": 11572,
+    "body": ""
+  },
+  {
+    "label": "index trigger -1",
+    "method": "GET",
+    "path": "/v1/presentation/5A606BC5-9279-4509-983E-88092AE567F0/-1/trigger",
+    "status": 404,
+    "sent": 12775,
+    "answered": 12776,
+    "body": "can not parse \"-1\" to a u32"
+  },
+  {
+    "label": "index trigger on unknown presentation",
+    "method": "GET",
+    "path": "/v1/presentation/00000000-0000-0000-0000-000000000000/0/trigger",
+    "status": 404,
+    "sent": 13980,
+    "answered": 13982,
+    "body": ""
+  },
+  {
+    "label": "index trigger 4 (Worthy Of It All, Chorus 1 slide 1)",
+    "method": "GET",
+    "path": "/v1/presentation/AA8F2F17-09BE-44ED-A618-C645D5EC8AAB/4/trigger",
+    "status": 204,
+    "sent": 15187,
+    "answered": 15250,
+    "body": ""
+  },
+  {
+    "label": "index trigger 9 (Worthy Of It All, second Verse 1 slide 1)",
+    "method": "GET",
+    "path": "/v1/presentation/AA8F2F17-09BE-44ED-A618-C645D5EC8AAB/9/trigger",
+    "status": 204,
+    "sent": 16455,
+    "answered": 16506,
+    "body": ""
+  },
+  {
+    "label": "index trigger 0 (Holy Forever, Intro)",
+    "method": "GET",
+    "path": "/v1/presentation/27B59282-5C91-478D-B677-23BE463959BB/0/trigger",
+    "status": 204,
+    "sent": 17711,
+    "answered": 17772,
+    "body": ""
+  },
+  {
+    "label": "next slide after index trigger",
+    "method": "GET",
+    "path": "/v1/presentation/active/next/trigger",
+    "status": 204,
+    "sent": 18977,
+    "answered": 19027,
+    "body": ""
+  },
+  {
+    "label": "clear slide",
+    "method": "GET",
+    "path": "/v1/clear/layer/slide",
+    "status": 204,
+    "sent": 20228,
+    "answered": 20231,
+    "body": ""
+  },
+  {
+    "label": "slide index after clear",
+    "method": "GET",
+    "path": "/v1/presentation/slide_index",
+    "status": 200,
+    "sent": 21436,
+    "answered": 21437,
+    "body": {
+      "presentation_index": null
+    }
+  },
+  {
+    "label": "index trigger 0 on unauthorized (There Is Freedom)",
+    "method": "GET",
+    "path": "/v1/presentation/894B40A0-42FE-411E-B915-F1919C6DA33E/0/trigger",
+    "status": 403,
+    "sent": 22641,
+    "answered": 22666,
+    "body": ""
+  }
+]

@@ -1,0 +1,121 @@
+{
+ "scenario": "back-first-cue-wrap",
+ "description": "Back on cue list 1 with the first cue, 1/1, completed and no fade running, and Back From First set to Wrap: /eos/cues/1/stop.",
+ "eos_version": "3.3.10 (ETCnomad, macOS)",
+ "transport": "TCP 127.0.0.1:3032, OSC 1.0 packet-length framing",
+ "packets": [
+  {
+   "t_ms": 0,
+   "dir": "app->eos",
+   "address": "/eos/cues/1/stop",
+   "args": [],
+   "hex": "2f656f732f637565732f312f73746f70000000002c000000"
+  },
+  {
+   "t_ms": 52,
+   "dir": "eos->app",
+   "address": "/eos/out/event/cue/1/8/fire",
+   "args": [
+    ""
+   ],
+   "hex": "2f656f732f6f75742f6576656e742f6375652f312f382f66697265002c73000000000000"
+  },
+  {
+   "t_ms": 77,
+   "dir": "eos->app",
+   "address": "/eos/out/user/1/cmd",
+   "args": [
+    "LIVE: Cue  8 : Go To Cue 1 / 1 Time 0:00 #",
+    0
+   ],
+   "hex": "2f656f732f6f75742f757365722f312f636d64002c7369004c4956453a20437565202038203a20476f20546f204375652031202f20312054696d6520303a30302023000000000000"
+  },
+  {
+   "t_ms": 79,
+   "dir": "eos->app",
+   "address": "/eos/out/cmd",
+   "args": [
+    "LIVE: Cue  8 : Go To Cue 1 / 1 Time 0:00 #",
+    0
+   ],
+   "hex": "2f656f732f6f75742f636d64000000002c7369004c4956453a20437565202038203a20476f20546f204375652031202f20312054696d6520303a30302023000000000000"
+  },
+  {
+   "t_ms": 82,
+   "dir": "eos->app",
+   "address": "/eos/out/previous/cue/1/7",
+   "args": [],
+   "hex": "2f656f732f6f75742f70726576696f75732f6375652f312f370000002c000000"
+  },
+  {
+   "t_ms": 84,
+   "dir": "eos->app",
+   "address": "/eos/out/previous/cue/text",
+   "args": [
+    "1/7 Great Are You Lord / Chorus 5.0"
+   ],
+   "hex": "2f656f732f6f75742f70726576696f75732f6375652f7465787400002c730000312f372047726561742041726520596f75204c6f7264202f2043686f72757320352e3000"
+  },
+  {
+   "t_ms": 87,
+   "dir": "eos->app",
+   "address": "/eos/out/active/cue/1/8",
+   "args": [
+    0.07
+   ],
+   "hex": "2f656f732f6f75742f6163746976652f6375652f312f38002c6600003d8f5c29"
+  },
+  {
+   "t_ms": 90,
+   "dir": "eos->app",
+   "address": "/eos/out/active/cue",
+   "args": [
+    0.07
+   ],
+   "hex": "2f656f732f6f75742f6163746976652f637565002c6600003d8f5c29"
+  },
+  {
+   "t_ms": 92,
+   "dir": "eos->app",
+   "address": "/eos/out/active/cue/text",
+   "args": [
+    "1/8 0.9 7%"
+   ],
+   "hex": "2f656f732f6f75742f6163746976652f6375652f74657874000000002c730000312f3820302e392037250000"
+  },
+  {
+   "t_ms": 94,
+   "dir": "eos->app",
+   "address": "/eos/out/pending/cue/1/1",
+   "args": [],
+   "hex": "2f656f732f6f75742f70656e64696e672f6375652f312f31000000002c000000"
+  },
+  {
+   "t_ms": 97,
+   "dir": "eos->app",
+   "address": "/eos/out/pending/cue/text",
+   "args": [
+    "1/1 Goodness of God / Intro 5.0"
+   ],
+   "hex": "2f656f732f6f75742f70656e64696e672f6375652f746578740000002c730000312f3120476f6f646e657373206f6620476f64202f20496e74726f20352e3000"
+  },
+  {
+   "t_ms": 1088,
+   "dir": "eos->app",
+   "address": "/eos/out/active/cue",
+   "args": [
+    1.0
+   ],
+   "hex": "2f656f732f6f75742f6163746976652f637565002c6600003f800000"
+  },
+  {
+   "t_ms": 1090,
+   "dir": "eos->app",
+   "address": "/eos/out/active/cue/text",
+   "args": [
+    "1/8 5.0 100%"
+   ],
+   "hex": "2f656f732f6f75742f6163746976652f6375652f74657874000000002c730000312f3820352e30203130302500000000"
+  }
+ ]
+}

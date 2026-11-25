@@ -1,0 +1,546 @@
+{
+  "path": "/service_types/997539/plans?filter=past&order=-sort_date&per_page=25",
+  "status": 200,
+  "body": {
+    "links": {
+      "self": "https://api.planningcenteronline.com/services/v2/service_types/997539/plans?filter=past&order=-sort_date&per_page=25",
+      "next": "https://api.planningcenteronline.com/services/v2/service_types/997539/plans?filter=past&offset=25&order=-sort_date&per_page=25"
+    },
+    "data": [
+      {
+        "type": "Plan",
+        "id": "90897395",
+        "attributes": {
+          "title": null,
+          "dates": "October 18, 2026",
+          "short_dates": "Oct 18",
+          "sort_date": "2026-10-18T10:30:00Z",
+          "last_time_at": "2026-10-18T10:30:00Z",
+          "items_count": 18
+        },
+        "relationships": {
+          "service_type": {
+            "data": {
+              "type": "ServiceType",
+              "id": "997539"
+            }
+          }
+        }
+      },
+      {
+        "type": "Plan",
+        "id": "90897394",
+        "attributes": {
+          "title": null,
+          "dates": "October 11, 2026",
+          "short_dates": "Oct 11",
+          "sort_date": "2026-10-11T10:30:00Z",
+          "last_time_at": "2026-10-11T10:30:00Z",
+          "items_count": 18
+        },
+        "relationships": {
+          "service_type": {
+            "data": {
+              "type": "ServiceType",
+              "id": "997539"
+            }
+          }
+        }
+      },
+      {
+        "type": "Plan",
+        "id": "90897393",
+        "attributes": {
+          "title": null,
+          "dates": "October 4, 2026",
+          "short_dates": "Oct 4",
+          "sort_date": "2026-10-04T10:30:00Z",
+          "last_time_at": "2026-10-04T10:30:00Z",
+          "items_count": 18
+        },
+        "relationships": {
+          "service_type": {
+            "data": {
+              "type": "ServiceType",
+              "id": "997539"
+            }
+          }
+        }
+      },
+      {
+        "type": "Plan",
+        "id": "89838396",
+        "attributes": {
+          "title": null,
+          "dates": "September 27, 2026",
+          "short_dates": "Sept 27",
+          "sort_date": "2026-09-27T10:30:00Z",
+          "last_time_at": "2026-09-27T10:30:00Z",
+          "items_count": 18
+        },
+        "relationships": {
+          "service_type": {
+            "data": {
+              "type": "ServiceType",
+              "id": "997539"
+            }
+          }
+        }
+      },
+      {
+        "type": "Plan",
+        "id": "89838395",
+        "attributes": {
+          "title": null,
+          "dates": "September 20, 2026",
+          "short_dates": "Sept 20",
+          "sort_date": "2026-09-20T10:30:00Z",
+          "last_time_at": "2026-09-20T10:30:00Z",
+          "items_count": 18
+        },
+        "relationships": {
+          "service_type": {
+            "data": {
+              "type": "ServiceType",
+              "id": "997539"
+            }
+          }
+        }
+      },
+      {
+        "type": "Plan",
+        "id": "89838394",
+        "attributes": {
+          "title": null,
+          "dates": "September 13, 2026",
+          "short_dates": "Sept 13",
+          "sort_date": "2026-09-13T10:30:00Z",
+          "last_time_at": "2026-09-13T10:30:00Z",
+          "items_count": 19
+        },
+        "relationships": {
+          "service_type": {
+            "data": {
+              "type": "ServiceType",
+              "id": "997539"
+            }
+          }
+        }
+      },
+      {
+        "type": "Plan",
+        "id": "89838393",
+        "attributes": {
+          "title": null,
+          "dates": "September 6, 2026",
+          "short_dates": "Sept 6",
+          "sort_date": "2026-09-06T10:30:00Z",
+          "last_time_at": "2026-09-06T10:30:00Z",
+          "items_count": 18
+        },
+        "relationships": {
+          "service_type": {
+            "data": {
+              "type": "ServiceType",
+              "id": "997539"
+            }
+          }
+        }
+      },
+      {
+        "type": "Plan",
+        "id": "88000616",
+        "attributes": {
+          "title": null,
+          "dates": "August 30, 2026",
+          "short_dates": "Aug 30",
+          "sort_date": "2026-08-30T10:30:00Z",
+          "last_time_at": "2026-08-30T10:30:00Z",
+          "items_count": 19
+        },
+        "relationships": {
+          "service_type": {
+            "data": {
+              "type": "ServiceType",
+              "id": "997539"
+            }
+          }
+        }
+      },
+      {
+        "type": "Plan",
+        "id": "88000615",
+        "attributes": {
+          "title": null,
+          "dates": "August 23, 2026",
+          "short_dates": "Aug 23",
+          "sort_date": "2026-08-23T10:30:00Z",
+          "last_time_at": "2026-08-23T10:30:00Z",
+          "items_count": 18
+        },
+        "relationships": {
+          "service_type": {
+            "data": {
+              "type": "ServiceType",
+              "id": "997539"
+            }
+          }
+        }
+      },
+      {
+        "type": "Plan",
+        "id": "88000614",
+        "attributes": {
+          "title": "Message 16",
+          "dates": "August 16, 2026",
+          "short_dates": "Aug 16",
+          "sort_date": "2026-08-16T10:30:00Z",
+          "last_time_at": "2026-08-16T10:30:00Z",
+          "items_count": 18
+        },
+        "relationships": {
+          "service_type": {
+            "data": {
+              "type": "ServiceType",
+              "id": "997539"
+            }
+          }
+        }
+      },
+      {
+        "type": "Plan",
+        "id": "88000613",
+        "attributes": {
+          "title": "Message 15",
+          "dates": "August 9, 2026",
+          "short_dates": "Aug 9",
+          "sort_date": "2026-08-09T10:30:00Z",
+          "last_time_at": "2026-08-09T10:30:00Z",
+          "items_count": 18
+        },
+        "relationships": {
+          "service_type": {
+            "data": {
+              "type": "ServiceType",
+              "id": "997539"
+            }
+          }
+        }
+      },
+      {
+        "type": "Plan",
+        "id": "88000612",
+        "attributes": {
+          "title": "Message 14",
+          "dates": "August 2, 2026",
+          "short_dates": "Aug 2",
+          "sort_date": "2026-08-02T10:30:00Z",
+          "last_time_at": "2026-08-02T10:30:00Z",
+          "items_count": 18
+        },
+        "relationships": {
+          "service_type": {
+            "data": {
+              "type": "ServiceType",
+              "id": "997539"
+            }
+          }
+        }
+      },
+      {
+        "type": "Plan",
+        "id": "88000611",
+        "attributes": {
+          "title": "Message 13",
+          "dates": "July 26, 2026",
+          "short_dates": "Jul 26",
+          "sort_date": "2026-07-26T10:30:00Z",
+          "last_time_at": "2026-07-26T10:30:00Z",
+          "items_count": 19
+        },
+        "relationships": {
+          "service_type": {
+            "data": {
+              "type": "ServiceType",
+              "id": "997539"
+            }
+          }
+        }
+      },
+      {
+        "type": "Plan",
+        "id": "88000610",
+        "attributes": {
+          "title": "Message 12",
+          "dates": "July 19, 2026",
+          "short_dates": "Jul 19",
+          "sort_date": "2026-07-19T10:30:00Z",
+          "last_time_at": "2026-07-19T10:30:00Z",
+          "items_count": 18
+        },
+        "relationships": {
+          "service_type": {
+            "data": {
+              "type": "ServiceType",
+              "id": "997539"
+            }
+          }
+        }
+      },
+      {
+        "type": "Plan",
+        "id": "88000609",
+        "attributes": {
+          "title": "Message 11",
+          "dates": "July 12, 2026",
+          "short_dates": "Jul 12",
+          "sort_date": "2026-07-12T10:30:00Z",
+          "last_time_at": "2026-07-12T10:30:00Z",
+          "items_count": 18
+        },
+        "relationships": {
+          "service_type": {
+            "data": {
+              "type": "ServiceType",
+              "id": "997539"
+            }
+          }
+        }
+      },
+      {
+        "type": "Plan",
+        "id": "88000608",
+        "attributes": {
+          "title": "Message 10",
+          "dates": "July 5, 2026",
+          "short_dates": "Jul 5",
+          "sort_date": "2026-07-05T10:30:00Z",
+          "last_time_at": "2026-07-05T10:30:00Z",
+          "items_count": 18
+        },
+        "relationships": {
+          "service_type": {
+            "data": {
+              "type": "ServiceType",
+              "id": "997539"
+            }
+          }
+        }
+      },
+      {
+        "type": "Plan",
+        "id": "87744100",
+        "attributes": {
+          "title": "Message 9",
+          "dates": "June 28, 2026",
+          "short_dates": "Jun 28",
+          "sort_date": "2026-06-28T10:30:00Z",
+          "last_time_at": "2026-06-28T10:30:00Z",
+          "items_count": 18
+        },
+        "relationships": {
+          "service_type": {
+            "data": {
+              "type": "ServiceType",
+              "id": "997539"
+            }
+          }
+        }
+      },
+      {
+        "type": "Plan",
+        "id": "87744099",
+        "attributes": {
+          "title": "Message 8",
+          "dates": "June 21, 2026",
+          "short_dates": "Jun 21",
+          "sort_date": "2026-06-21T10:30:00Z",
+          "last_time_at": "2026-06-21T10:30:00Z",
+          "items_count": 19
+        },
+        "relationships": {
+          "service_type": {
+            "data": {
+              "type": "ServiceType",
+              "id": "997539"
+            }
+          }
+        }
+      },
+      {
+        "type": "Plan",
+        "id": "87744098",
+        "attributes": {
+          "title": "Message 7",
+          "dates": "June 14, 2026",
+          "short_dates": "Jun 14",
+          "sort_date": "2026-06-14T10:30:00Z",
+          "last_time_at": "2026-06-14T10:30:00Z",
+          "items_count": 18
+        },
+        "relationships": {
+          "service_type": {
+            "data": {
+              "type": "ServiceType",
+              "id": "997539"
+            }
+          }
+        }
+      },
+      {
+        "type": "Plan",
+        "id": "87744097",
+        "attributes": {
+          "title": "Message 6",
+          "dates": "June 7, 2026",
+          "short_dates": "Jun 7",
+          "sort_date": "2026-06-07T10:30:00Z",
+          "last_time_at": "2026-06-07T10:30:00Z",
+          "items_count": 19
+        },
+        "relationships": {
+          "service_type": {
+            "data": {
+              "type": "ServiceType",
+              "id": "997539"
+            }
+          }
+        }
+      },
+      {
+        "type": "Plan",
+        "id": "87744096",
+        "attributes": {
+          "title": "Message 5",
+          "dates": "May 31, 2026",
+          "short_dates": "May 31",
+          "sort_date": "2026-05-31T10:30:00Z",
+          "last_time_at": "2026-05-31T10:30:00Z",
+          "items_count": 18
+        },
+        "relationships": {
+          "service_type": {
+            "data": {
+              "type": "ServiceType",
+              "id": "997539"
+            }
+          }
+        }
+      },
+      {
+        "type": "Plan",
+        "id": "87744095",
+        "attributes": {
+          "title": "Message 4",
+          "dates": "May 24, 2026",
+          "short_dates": "May 24",
+          "sort_date": "2026-05-24T10:30:00Z",
+          "last_time_at": "2026-05-24T10:30:00Z",
+          "items_count": 18
+        },
+        "relationships": {
+          "service_type": {
+            "data": {
+              "type": "ServiceType",
+              "id": "997539"
+            }
+          }
+        }
+      },
+      {
+        "type": "Plan",
+        "id": "87744094",
+        "attributes": {
+          "title": "Message 3",
+          "dates": "May 17, 2026",
+          "short_dates": "May 17",
+          "sort_date": "2026-05-17T10:30:00Z",
+          "last_time_at": "2026-05-17T10:30:00Z",
+          "items_count": 18
+        },
+        "relationships": {
+          "service_type": {
+            "data": {
+              "type": "ServiceType",
+              "id": "997539"
+            }
+          }
+        }
+      },
+      {
+        "type": "Plan",
+        "id": "87744093",
+        "attributes": {
+          "title": "Message 2",
+          "dates": "May 10, 2026",
+          "short_dates": "May 10",
+          "sort_date": "2026-05-10T10:30:00Z",
+          "last_time_at": "2026-05-10T10:30:00Z",
+          "items_count": 18
+        },
+        "relationships": {
+          "service_type": {
+            "data": {
+              "type": "ServiceType",
+              "id": "997539"
+            }
+          }
+        }
+      },
+      {
+        "type": "Plan",
+        "id": "87744092",
+        "attributes": {
+          "title": "Message 1",
+          "dates": "May 3, 2026",
+          "short_dates": "May 3",
+          "sort_date": "2026-05-03T10:30:00Z",
+          "last_time_at": "2026-05-03T10:30:00Z",
+          "items_count": 18
+        },
+        "relationships": {
+          "service_type": {
+            "data": {
+              "type": "ServiceType",
+              "id": "997539"
+            }
+          }
+        }
+      }
+    ],
+    "included": [],
+    "meta": {
+      "count": 25,
+      "total_count": 295,
+      "next": {
+        "offset": 25
+      },
+      "can_include": [
+        "contributors",
+        "my_schedules",
+        "plan_times",
+        "series"
+      ],
+      "can_filter": [
+        "future",
+        "past",
+        "after",
+        "before",
+        "no_dates"
+      ],
+      "can_order_by": [
+        "title",
+        "created_at",
+        "updated_at",
+        "sort_date"
+      ],
+      "can_query_by": [
+        "id",
+        "created_at",
+        "updated_at",
+        "series_title",
+        "title"
+      ]
+    }
+  }
+}

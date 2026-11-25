@@ -1,0 +1,21 @@
+diff --git a/src/server/propresenter.ts b/src/server/propresenter.ts
+index e65c2bf..acb5ca7 100644
+--- a/src/server/propresenter.ts
++++ b/src/server/propresenter.ts
+@@ -491,6 +491,7 @@ function proPresenterTarget({
+       expected = new Set(triggered.group.slides);
+       triggeredIn = triggered.presentation;
+       buttonBrings = [];
++      showing = { slides: new Set(triggered.group.slides) };
+       // A trigger makes a presentation active, so a line about the last press would be stale.
+       presses += 1;
+       if (buttonLine !== null) {
+@@ -510,7 +511,7 @@ function proPresenterTarget({
+       const press = presses;
+       // An earlier press that moved ProPresenter is still where it moved from, past BUTTON_FRAME_MS, until
+       // a frame comes: a cold press can move with no frame for seconds.
+-      const from = buttonBrings.findLast(({ until, chained }) => chained && until !== -Infinity) ?? showing;
++      const from = buttonBrings.findLast(({ until, chained }) => chained && until !== -Infinity) ?? showing ?? (expected && { slides: expected });
+       const brings = { slides: new Set(slidesBrought(button.id, from, triggeredIn)), until: Infinity, chained: true };
+       buttonBrings.push(brings);
+       const answer = await command(button.path);

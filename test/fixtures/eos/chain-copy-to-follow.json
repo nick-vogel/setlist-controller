@@ -1,0 +1,400 @@
+{
+ "scenario": "chain-copy-to-follow",
+ "description": "After /eos/subscribe 1 and 2 s, cue 1/22, with its follow of 3 s, is copied to a new cue 1/23 (Cue 1 / 22 Copy_To Cue 1 / 23), and 1/23 is read: arguments 19 to 21 show whether the copy takes the follow. Then the follow is taken off the copy (Cue 1 / 23 Follow, with no time), 1/23 is read again, then /eos/subscribe 0.",
+ "eos_version": "3.3.10 (ETCnomad, macOS)",
+ "transport": "TCP 127.0.0.1:3032, OSC 1.0 packet-length framing",
+ "packets": [
+  {
+   "t_ms": 0,
+   "dir": "app->eos",
+   "address": "/eos/subscribe",
+   "args": [
+    1
+   ],
+   "hex": "2f656f732f73756273637269626500002c69000000000001"
+  },
+  {
+   "t_ms": 2018,
+   "dir": "app->eos",
+   "address": "/eos/newcmd",
+   "args": [
+    "Cue 1 / 22 Copy_To Cue 1 / 23#"
+   ],
+   "hex": "2f656f732f6e6577636d64002c7300004375652031202f20323220436f70795f546f204375652031202f203233230000"
+  },
+  {
+   "t_ms": 2076,
+   "dir": "eos->app",
+   "address": "/eos/out/user/1/cmd",
+   "args": [
+    "LIVE: Cue  23 : Cue 1 / 22 Copy To Cue 1 / 23 #",
+    0
+   ],
+   "hex": "2f656f732f6f75742f757365722f312f636d64002c7369004c4956453a2043756520203233203a204375652031202f20323220436f707920546f204375652031202f20323320230000000000"
+  },
+  {
+   "t_ms": 2079,
+   "dir": "eos->app",
+   "address": "/eos/out/cmd",
+   "args": [
+    "LIVE: Cue  23 : Cue 1 / 22 Copy To Cue 1 / 23 #",
+    0
+   ],
+   "hex": "2f656f732f6f75742f636d64000000002c7369004c4956453a2043756520203233203a204375652031202f20323220436f707920546f204375652031202f20323320230000000000"
+  },
+  {
+   "t_ms": 2081,
+   "dir": "eos->app",
+   "address": "/eos/out/previous/cue/1/23",
+   "args": [],
+   "hex": "2f656f732f6f75742f70726576696f75732f6375652f312f323300002c000000"
+  },
+  {
+   "t_ms": 2084,
+   "dir": "eos->app",
+   "address": "/eos/out/previous/cue/text",
+   "args": [
+    "1/23 Worthy Of It All 2.0"
+   ],
+   "hex": "2f656f732f6f75742f70726576696f75732f6375652f7465787400002c730000312f323320576f72746879204f6620497420416c6c20322e30000000"
+  },
+  {
+   "t_ms": 3073,
+   "dir": "eos->app",
+   "address": "/eos/out/notify/cue/1/list/0/2",
+   "args": [
+    2,
+    23
+   ],
+   "hex": "2f656f732f6f75742f6e6f746966792f6375652f312f6c6973742f302f3200002c6969000000000200000017"
+  },
+  {
+   "t_ms": 3075,
+   "dir": "eos->app",
+   "address": "/eos/out/notify/cuelist/list/0/2",
+   "args": [
+    3,
+    1
+   ],
+   "hex": "2f656f732f6f75742f6e6f746966792f6375656c6973742f6c6973742f302f32000000002c6969000000000300000001"
+  },
+  {
+   "t_ms": 5091,
+   "dir": "app->eos",
+   "address": "/eos/get/cue/1/23",
+   "args": [],
+   "hex": "2f656f732f6765742f6375652f312f32330000002c000000"
+  },
+  {
+   "t_ms": 5098,
+   "dir": "eos->app",
+   "address": "/eos/out/get/cue/1/23/0/list/0/31",
+   "args": [
+    -1,
+    "293D09A2-C192-4222-A476-1E3590F0973E",
+    "Worthy Of It All",
+    2000,
+    0,
+    -1,
+    -1,
+    -1,
+    -1,
+    -1,
+    -1,
+    -1,
+    -1,
+    false,
+    "0",
+    100,
+    "",
+    "",
+    "",
+    0,
+    3000,
+    -1,
+    false,
+    -1,
+    false,
+    "",
+    0,
+    "",
+    "",
+    false,
+    -1
+   ],
+   "hex": "2f656f732f6f75742f6765742f6375652f312f32332f302f6c6973742f302f33310000002c6973736969696969696969696946736973737369696946694673697373466900000000ffffffff32393344303941322d433139322d343232322d413437362d31453335393046303937334500000000576f72746879204f6620497420416c6c00000000000007d000000000ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff30000000000000640000000000000000000000000000000000000bb8ffffffffffffffff00000000000000000000000000000000ffffffff"
+  },
+  {
+   "t_ms": 5100,
+   "dir": "eos->app",
+   "address": "/eos/out/get/cue/1/23/0/fx/list/0/2",
+   "args": [
+    -1,
+    "293D09A2-C192-4222-A476-1E3590F0973E"
+   ],
+   "hex": "2f656f732f6f75742f6765742f6375652f312f32332f302f66782f6c6973742f302f32002c697300ffffffff32393344303941322d433139322d343232322d413437362d31453335393046303937334500000000"
+  },
+  {
+   "t_ms": 5103,
+   "dir": "eos->app",
+   "address": "/eos/out/get/cue/1/23/0/links/list/0/2",
+   "args": [
+    -1,
+    "293D09A2-C192-4222-A476-1E3590F0973E"
+   ],
+   "hex": "2f656f732f6f75742f6765742f6375652f312f32332f302f6c696e6b732f6c6973742f302f3200002c697300ffffffff32393344303941322d433139322d343232322d413437362d31453335393046303937334500000000"
+  },
+  {
+   "t_ms": 5105,
+   "dir": "eos->app",
+   "address": "/eos/out/get/cue/1/23/0/actions/list/0/2",
+   "args": [
+    -1,
+    "293D09A2-C192-4222-A476-1E3590F0973E"
+   ],
+   "hex": "2f656f732f6f75742f6765742f6375652f312f32332f302f616374696f6e732f6c6973742f302f32000000002c697300ffffffff32393344303941322d433139322d343232322d413437362d31453335393046303937334500000000"
+  },
+  {
+   "t_ms": 6114,
+   "dir": "app->eos",
+   "address": "/eos/newcmd",
+   "args": [
+    "Cue 1 / 23 Follow#"
+   ],
+   "hex": "2f656f732f6e6577636d64002c7300004375652031202f20323320466f6c6c6f77230000"
+  },
+  {
+   "t_ms": 6175,
+   "dir": "eos->app",
+   "address": "/eos/out/softkey/1",
+   "args": [
+    "Attributes "
+   ],
+   "hex": "2f656f732f6f75742f736f66746b65792f3100002c730000417474726962757465732000"
+  },
+  {
+   "t_ms": 6177,
+   "dir": "eos->app",
+   "address": "/eos/out/softkey/2",
+   "args": [
+    "Fw/Hg"
+   ],
+   "hex": "2f656f732f6f75742f736f66746b65792f3200002c73000046772f4867000000"
+  },
+  {
+   "t_ms": 6179,
+   "dir": "eos->app",
+   "address": "/eos/out/softkey/3",
+   "args": [
+    "Mark"
+   ],
+   "hex": "2f656f732f6f75742f736f66746b65792f3300002c7300004d61726b00000000"
+  },
+  {
+   "t_ms": 6182,
+   "dir": "eos->app",
+   "address": "/eos/out/softkey/4",
+   "args": [
+    "Link/Loop"
+   ],
+   "hex": "2f656f732f6f75742f736f66746b65792f3400002c7300004c696e6b2f4c6f6f70000000"
+  },
+  {
+   "t_ms": 6184,
+   "dir": "eos->app",
+   "address": "/eos/out/softkey/5",
+   "args": [
+    "Execute"
+   ],
+   "hex": "2f656f732f6f75742f736f66746b65792f3500002c7300004578656375746500"
+  },
+  {
+   "t_ms": 6187,
+   "dir": "eos->app",
+   "address": "/eos/out/softkey/6",
+   "args": [
+    "Trace"
+   ],
+   "hex": "2f656f732f6f75742f736f66746b65792f3600002c7300005472616365000000"
+  },
+  {
+   "t_ms": 6189,
+   "dir": "eos->app",
+   "address": "/eos/out/softkey/7",
+   "args": [
+    "Alert Time"
+   ],
+   "hex": "2f656f732f6f75742f736f66746b65792f3700002c730000416c6572742054696d650000"
+  },
+  {
+   "t_ms": 6192,
+   "dir": "eos->app",
+   "address": "/eos/out/softkey/8",
+   "args": [
+    "Timecode"
+   ],
+   "hex": "2f656f732f6f75742f736f66746b65792f3800002c73000054696d65636f646500000000"
+  },
+  {
+   "t_ms": 6194,
+   "dir": "eos->app",
+   "address": "/eos/out/softkey/9",
+   "args": [
+    ""
+   ],
+   "hex": "2f656f732f6f75742f736f66746b65792f3900002c73000000000000"
+  },
+  {
+   "t_ms": 6197,
+   "dir": "eos->app",
+   "address": "/eos/out/softkey/10",
+   "args": [
+    "Assert"
+   ],
+   "hex": "2f656f732f6f75742f736f66746b65792f3130002c7300004173736572740000"
+  },
+  {
+   "t_ms": 6199,
+   "dir": "eos->app",
+   "address": "/eos/out/softkey/11",
+   "args": [
+    "Offset"
+   ],
+   "hex": "2f656f732f6f75742f736f66746b65792f3131002c7300004f66667365740000"
+  },
+  {
+   "t_ms": 6202,
+   "dir": "eos->app",
+   "address": "/eos/out/softkey/12",
+   "args": [
+    "AutoBlk Clean"
+   ],
+   "hex": "2f656f732f6f75742f736f66746b65792f3132002c7300004175746f426c6b20436c65616e000000"
+  },
+  {
+   "t_ms": 6204,
+   "dir": "eos->app",
+   "address": "/eos/out/user/1/cmd",
+   "args": [
+    "LIVE: Cue  23 : Cue 1 / 23 Follow #",
+    0
+   ],
+   "hex": "2f656f732f6f75742f757365722f312f636d64002c7369004c4956453a2043756520203233203a204375652031202f20323320466f6c6c6f7720230000000000"
+  },
+  {
+   "t_ms": 6207,
+   "dir": "eos->app",
+   "address": "/eos/out/cmd",
+   "args": [
+    "LIVE: Cue  23 : Cue 1 / 23 Follow #",
+    0
+   ],
+   "hex": "2f656f732f6f75742f636d64000000002c7369004c4956453a2043756520203233203a204375652031202f20323320466f6c6c6f7720230000000000"
+  },
+  {
+   "t_ms": 7195,
+   "dir": "eos->app",
+   "address": "/eos/out/notify/cue/1/list/0/2",
+   "args": [
+    4,
+    23
+   ],
+   "hex": "2f656f732f6f75742f6e6f746966792f6375652f312f6c6973742f302f3200002c6969000000000400000017"
+  },
+  {
+   "t_ms": 7197,
+   "dir": "eos->app",
+   "address": "/eos/out/notify/cuelist/list/0/2",
+   "args": [
+    5,
+    1
+   ],
+   "hex": "2f656f732f6f75742f6e6f746966792f6375656c6973742f6c6973742f302f32000000002c6969000000000500000001"
+  },
+  {
+   "t_ms": 9116,
+   "dir": "app->eos",
+   "address": "/eos/get/cue/1/23",
+   "args": [],
+   "hex": "2f656f732f6765742f6375652f312f32330000002c000000"
+  },
+  {
+   "t_ms": 9145,
+   "dir": "eos->app",
+   "address": "/eos/out/get/cue/1/23/0/list/0/31",
+   "args": [
+    -1,
+    "293D09A2-C192-4222-A476-1E3590F0973E",
+    "Worthy Of It All",
+    2000,
+    0,
+    -1,
+    -1,
+    -1,
+    -1,
+    -1,
+    -1,
+    -1,
+    -1,
+    false,
+    "0",
+    100,
+    "",
+    "",
+    "",
+    0,
+    -1,
+    -1,
+    false,
+    -1,
+    false,
+    "",
+    0,
+    "",
+    "",
+    false,
+    -1
+   ],
+   "hex": "2f656f732f6f75742f6765742f6375652f312f32332f302f6c6973742f302f33310000002c6973736969696969696969696946736973737369696946694673697373466900000000ffffffff32393344303941322d433139322d343232322d413437362d31453335393046303937334500000000576f72746879204f6620497420416c6c00000000000007d000000000ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff300000000000006400000000000000000000000000000000ffffffffffffffffffffffff00000000000000000000000000000000ffffffff"
+  },
+  {
+   "t_ms": 9147,
+   "dir": "eos->app",
+   "address": "/eos/out/get/cue/1/23/0/fx/list/0/2",
+   "args": [
+    -1,
+    "293D09A2-C192-4222-A476-1E3590F0973E"
+   ],
+   "hex": "2f656f732f6f75742f6765742f6375652f312f32332f302f66782f6c6973742f302f32002c697300ffffffff32393344303941322d433139322d343232322d413437362d31453335393046303937334500000000"
+  },
+  {
+   "t_ms": 9150,
+   "dir": "eos->app",
+   "address": "/eos/out/get/cue/1/23/0/links/list/0/2",
+   "args": [
+    -1,
+    "293D09A2-C192-4222-A476-1E3590F0973E"
+   ],
+   "hex": "2f656f732f6f75742f6765742f6375652f312f32332f302f6c696e6b732f6c6973742f302f3200002c697300ffffffff32393344303941322d433139322d343232322d413437362d31453335393046303937334500000000"
+  },
+  {
+   "t_ms": 9152,
+   "dir": "eos->app",
+   "address": "/eos/out/get/cue/1/23/0/actions/list/0/2",
+   "args": [
+    -1,
+    "293D09A2-C192-4222-A476-1E3590F0973E"
+   ],
+   "hex": "2f656f732f6f75742f6765742f6375652f312f32332f302f616374696f6e732f6c6973742f302f32000000002c697300ffffffff32393344303941322d433139322d343232322d413437362d31453335393046303937334500000000"
+  },
+  {
+   "t_ms": 10161,
+   "dir": "app->eos",
+   "address": "/eos/subscribe",
+   "args": [
+    0
+   ],
+   "hex": "2f656f732f73756273637269626500002c69000000000000"
+  }
+ ]
+}

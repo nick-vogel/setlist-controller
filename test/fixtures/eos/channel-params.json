@@ -1,0 +1,162 @@
+{
+ "scenario": "channel-params",
+ "description": "Go To Cue 1/1 in no time, then the live levels of channel 1, an RGB fixture, and of channel 24, a dimmer: /eos/get/params/<chan>, each sent once the reply to the one before came.",
+ "eos_version": "3.3.10 (ETCnomad, macOS)",
+ "transport": "TCP 127.0.0.1:3032, OSC 1.0 packet-length framing",
+ "packets": [
+  {
+   "t_ms": 0,
+   "dir": "app->eos",
+   "address": "/eos/newcmd",
+   "args": [
+    "Go_To_Cue 1 / 1 Time 0#"
+   ],
+   "hex": "2f656f732f6e6577636d64002c730000476f5f546f5f4375652031202f20312054696d6520302300"
+  },
+  {
+   "t_ms": 52,
+   "dir": "eos->app",
+   "address": "/eos/out/event/cue/1/1/fire",
+   "args": [
+    "Ancient Gates"
+   ],
+   "hex": "2f656f732f6f75742f6576656e742f6375652f312f312f66697265002c730000416e6369656e74204761746573000000"
+  },
+  {
+   "t_ms": 76,
+   "dir": "eos->app",
+   "address": "/eos/out/user/1/cmd",
+   "args": [
+    "LIVE: Cue  1 : Go To Cue 1 / 1 Time 0:00 #",
+    0
+   ],
+   "hex": "2f656f732f6f75742f757365722f312f636d64002c7369004c4956453a20437565202031203a20476f20546f204375652031202f20312054696d6520303a30302023000000000000"
+  },
+  {
+   "t_ms": 78,
+   "dir": "eos->app",
+   "address": "/eos/out/cmd",
+   "args": [
+    "LIVE: Cue  1 : Go To Cue 1 / 1 Time 0:00 #",
+    0
+   ],
+   "hex": "2f656f732f6f75742f636d64000000002c7369004c4956453a20437565202031203a20476f20546f204375652031202f20312054696d6520303a30302023000000000000"
+  },
+  {
+   "t_ms": 81,
+   "dir": "eos->app",
+   "address": "/eos/out/previous/cue/1/0.5",
+   "args": [],
+   "hex": "2f656f732f6f75742f70726576696f75732f6375652f312f302e35002c000000"
+  },
+  {
+   "t_ms": 83,
+   "dir": "eos->app",
+   "address": "/eos/out/previous/cue/text",
+   "args": [
+    "1/0.5 Walk-in 2.0"
+   ],
+   "hex": "2f656f732f6f75742f70726576696f75732f6375652f7465787400002c730000312f302e352057616c6b2d696e20322e30000000"
+  },
+  {
+   "t_ms": 85,
+   "dir": "eos->app",
+   "address": "/eos/out/active/cue/1/1",
+   "args": [
+    1.0
+   ],
+   "hex": "2f656f732f6f75742f6163746976652f6375652f312f31002c6600003f800000"
+  },
+  {
+   "t_ms": 87,
+   "dir": "eos->app",
+   "address": "/eos/out/active/cue/text",
+   "args": [
+    "1/1 Ancient Gates 2.0 100%"
+   ],
+   "hex": "2f656f732f6f75742f6163746976652f6375652f74657874000000002c730000312f3120416e6369656e7420476174657320322e3020313030250000"
+  },
+  {
+   "t_ms": 90,
+   "dir": "eos->app",
+   "address": "/eos/out/pending/cue/1/11",
+   "args": [],
+   "hex": "2f656f732f6f75742f70656e64696e672f6375652f312f31310000002c000000"
+  },
+  {
+   "t_ms": 92,
+   "dir": "eos->app",
+   "address": "/eos/out/pending/cue/text",
+   "args": [
+    "1/11 Holy Forever 2.0"
+   ],
+   "hex": "2f656f732f6f75742f70656e64696e672f6375652f746578740000002c730000312f313120486f6c7920466f726576657220322e30000000"
+  },
+  {
+   "t_ms": 1000,
+   "dir": "app->eos",
+   "address": "/eos/get/params/1",
+   "args": [],
+   "hex": "2f656f732f6765742f706172616d732f310000002c000000"
+  },
+  {
+   "t_ms": 1026,
+   "dir": "eos->app",
+   "address": "/eos/out/get/params/1",
+   "args": [
+    "ETC Fixtures",
+    "D22 Studio RGB Str",
+    "Intens",
+    0.0,
+    0.0,
+    100.0,
+    "Red",
+    100.0,
+    0.0,
+    100.0,
+    "Green",
+    100.0,
+    0.0,
+    100.0,
+    "Blue",
+    100.0,
+    0.0,
+    100.0,
+    "Hue",
+    0.0,
+    0.0,
+    360.0,
+    "Saturation",
+    0.0,
+    0.0,
+    100.0,
+    "Shutter Strobe",
+    0.0,
+    0.0,
+    0.0
+   ],
+   "hex": "2f656f732f6f75742f6765742f706172616d732f310000002c73737366666673666666736666667366666673666666736666667366666600455443204669787475726573000000004432322053747564696f20524742205374720000496e74656e730000000000000000000042c800005265640042c800000000000042c80000477265656e00000042c800000000000042c80000426c75650000000042c800000000000042c8000048756500000000000000000043b4000053617475726174696f6e0000000000000000000042c8000053687574746572205374726f62650000000000000000000000000000"
+  },
+  {
+   "t_ms": 1026,
+   "dir": "app->eos",
+   "address": "/eos/get/params/24",
+   "args": [],
+   "hex": "2f656f732f6765742f706172616d732f323400002c000000"
+  },
+  {
+   "t_ms": 1052,
+   "dir": "eos->app",
+   "address": "/eos/out/get/params/24",
+   "args": [
+    "Generic",
+    "Dimmer",
+    "Intens",
+    75.0,
+    0.0,
+    100.0
+   ],
+   "hex": "2f656f732f6f75742f6765742f706172616d732f323400002c7373736666660047656e657269630044696d6d65720000496e74656e730000429600000000000042c80000"
+  }
+ ]
+}

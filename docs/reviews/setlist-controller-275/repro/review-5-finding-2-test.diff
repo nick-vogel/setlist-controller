@@ -1,0 +1,50 @@
+diff --git a/test/propresenter.test.ts b/test/propresenter.test.ts
+index fb646b7..c45fb62 100644
+--- a/test/propresenter.test.ts
++++ b/test/propresenter.test.ts
+@@ -4248,6 +4248,45 @@ describe('the slide timing file', () => {
+   // A slide timing entry's start: slide 1 of its section goes up that many bars before the section's
+   // start, less the lead, for a sung line that starts on a pickup.
+   describe('the pickup start', () => {
++    it("keeps a start that lands after the section before as it will play, once that section's entry is dropped for its own start", async () => {
++      pro = await startFakeProPresenter();
++      pro.listNovember8();
++      // Verse 1's own entry is dropped for passing the start of the set, so Verse 1 plays the even split,
++      // its second slide on beat 16, and its change on bar 7, beat 28, never goes. Verse 3's start of -1
++      // lands on beat 28, after beat 16.
++      const slideTiming = await timingFile({
++        'Ancient Gates': [
++          { section: 'Verse 1', start: -1, changes: [7] },
++          { section: 'Verse 3', start: -1 },
++        ],
++      });
++
++      const { shown } = await pickedRig(NOVEMBER_8.id, TIMING_CHECKED, slideTiming);
++
++      expect(shown.check.kind === 'unmatched' ? shown.check.problems.filter((line) => line.includes('slide timing')) : []).toEqual(['Ancient Gates: slide timing Verse 1 1, start -1 passes the start of the set']);
++    });
++
++    it("judges each start against the section before as it will play, once a broken entry for that section is dropped, and names what it passes", async () => {
++      pro = await startFakeProPresenter();
++      pro.listNovember8();
++      // Verse 1, from 0 to 32, is the song's first section, so a start of -1 passes the start of the set
++      // and its entry is dropped whole: Verse 1 plays the even split, its second slide on beat 16. Verse
++      // 3's start of -5 lands on beat 12, before that change.
++      const slideTiming = await timingFile({
++        'Ancient Gates': [
++          { section: 'Verse 1', start: -1, changes: [2] },
++          { section: 'Verse 3', start: -5 },
++        ],
++      });
++
++      const { shown } = await pickedRig(NOVEMBER_8.id, TIMING_CHECKED, slideTiming);
++
++      expect(shown.check.kind === 'unmatched' ? shown.check.problems.filter((line) => line.includes('slide timing')) : []).toEqual([
++        'Ancient Gates: slide timing Verse 1 1, start -1 passes the start of the set',
++        "Ancient Gates: slide timing Verse 3 1, start -5 passes Verse 1's last change",
++      ]);
++    });
++
+     it("names a start of 0, of 1, a start that is not a number, and one that passes Verse 1's last change as problems, in file order", async () => {
+       pro = await startFakeProPresenter();
+       pro.listNovember8();

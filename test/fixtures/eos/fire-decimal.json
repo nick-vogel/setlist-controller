@@ -1,0 +1,193 @@
+{
+ "scenario": "fire-decimal",
+ "description": "The app fires cue 1/3.5 (Goodness of God / Bridge), no argument.",
+ "eos_version": "3.3.10 (ETCnomad, macOS)",
+ "transport": "TCP 127.0.0.1:3032, OSC 1.0 packet-length framing",
+ "packets": [
+  {
+   "t_ms": 0,
+   "dir": "app->eos",
+   "address": "/eos/cue/1/3.5/fire",
+   "args": [],
+   "hex": "2f656f732f6375652f312f332e352f6669726500000000002c000000"
+  },
+  {
+   "t_ms": 45,
+   "dir": "eos->app",
+   "address": "/eos/out/event/cue/1/3.5/fire",
+   "args": [
+    "Goodness of God / Bridge"
+   ],
+   "hex": "2f656f732f6f75742f6576656e742f6375652f312f332e352f666972650000002c730000476f6f646e657373206f6620476f64202f2042726964676500000000"
+  },
+  {
+   "t_ms": 68,
+   "dir": "eos->app",
+   "address": "/eos/out/user/1/cmd",
+   "args": [
+    "LIVE: Cue  3.5 : ",
+    0
+   ],
+   "hex": "2f656f732f6f75742f757365722f312f636d64002c7369004c4956453a204375652020332e35203a2000000000000000"
+  },
+  {
+   "t_ms": 71,
+   "dir": "eos->app",
+   "address": "/eos/out/cmd",
+   "args": [
+    "LIVE: Cue  3.5 : ",
+    0
+   ],
+   "hex": "2f656f732f6f75742f636d64000000002c7369004c4956453a204375652020332e35203a2000000000000000"
+  },
+  {
+   "t_ms": 73,
+   "dir": "eos->app",
+   "address": "/eos/out/previous/cue/1/3",
+   "args": [],
+   "hex": "2f656f732f6f75742f70726576696f75732f6375652f312f330000002c000000"
+  },
+  {
+   "t_ms": 77,
+   "dir": "eos->app",
+   "address": "/eos/out/previous/cue/text",
+   "args": [
+    "1/3 Goodness of God / Chorus 5.0"
+   ],
+   "hex": "2f656f732f6f75742f70726576696f75732f6375652f7465787400002c730000312f3320476f6f646e657373206f6620476f64202f2043686f72757320352e3000000000"
+  },
+  {
+   "t_ms": 79,
+   "dir": "eos->app",
+   "address": "/eos/out/active/cue/1/3.5",
+   "args": [
+    0.0
+   ],
+   "hex": "2f656f732f6f75742f6163746976652f6375652f312f332e350000002c66000000000000"
+  },
+  {
+   "t_ms": 82,
+   "dir": "eos->app",
+   "address": "/eos/out/active/cue",
+   "args": [
+    0.0
+   ],
+   "hex": "2f656f732f6f75742f6163746976652f637565002c66000000000000"
+  },
+  {
+   "t_ms": 85,
+   "dir": "eos->app",
+   "address": "/eos/out/active/cue/text",
+   "args": [
+    "1/3.5 Goodness of God / Bridge 5.0 0%"
+   ],
+   "hex": "2f656f732f6f75742f6163746976652f6375652f74657874000000002c730000312f332e3520476f6f646e657373206f6620476f64202f2042726964676520352e30203025000000"
+  },
+  {
+   "t_ms": 87,
+   "dir": "eos->app",
+   "address": "/eos/out/pending/cue/1/4",
+   "args": [],
+   "hex": "2f656f732f6f75742f70656e64696e672f6375652f312f34000000002c000000"
+  },
+  {
+   "t_ms": 90,
+   "dir": "eos->app",
+   "address": "/eos/out/pending/cue/text",
+   "args": [
+    "1/4 Goodness of God / End 5.0"
+   ],
+   "hex": "2f656f732f6f75742f70656e64696e672f6375652f746578740000002c730000312f3420476f6f646e657373206f6620476f64202f20456e6420352e30000000"
+  },
+  {
+   "t_ms": 1069,
+   "dir": "eos->app",
+   "address": "/eos/out/active/cue",
+   "args": [
+    0.19
+   ],
+   "hex": "2f656f732f6f75742f6163746976652f637565002c6600003e428f5c"
+  },
+  {
+   "t_ms": 1072,
+   "dir": "eos->app",
+   "address": "/eos/out/active/cue/text",
+   "args": [
+    "1/3.5 Goodness of God / Bridge 4.0 19%"
+   ],
+   "hex": "2f656f732f6f75742f6163746976652f6375652f74657874000000002c730000312f332e3520476f6f646e657373206f6620476f64202f2042726964676520342e30203139250000"
+  },
+  {
+   "t_ms": 2086,
+   "dir": "eos->app",
+   "address": "/eos/out/active/cue",
+   "args": [
+    0.41
+   ],
+   "hex": "2f656f732f6f75742f6163746976652f637565002c6600003ed1eb85"
+  },
+  {
+   "t_ms": 2089,
+   "dir": "eos->app",
+   "address": "/eos/out/active/cue/text",
+   "args": [
+    "1/3.5 Goodness of God / Bridge 2.9 41%"
+   ],
+   "hex": "2f656f732f6f75742f6163746976652f6375652f74657874000000002c730000312f332e3520476f6f646e657373206f6620476f64202f2042726964676520322e39203431250000"
+  },
+  {
+   "t_ms": 3093,
+   "dir": "eos->app",
+   "address": "/eos/out/active/cue",
+   "args": [
+    0.61
+   ],
+   "hex": "2f656f732f6f75742f6163746976652f637565002c6600003f1c28f6"
+  },
+  {
+   "t_ms": 3097,
+   "dir": "eos->app",
+   "address": "/eos/out/active/cue/text",
+   "args": [
+    "1/3.5 Goodness of God / Bridge 1.9 61%"
+   ],
+   "hex": "2f656f732f6f75742f6163746976652f6375652f74657874000000002c730000312f332e3520476f6f646e657373206f6620476f64202f2042726964676520312e39203631250000"
+  },
+  {
+   "t_ms": 4114,
+   "dir": "eos->app",
+   "address": "/eos/out/active/cue",
+   "args": [
+    0.81
+   ],
+   "hex": "2f656f732f6f75742f6163746976652f637565002c6600003f4f5c29"
+  },
+  {
+   "t_ms": 4116,
+   "dir": "eos->app",
+   "address": "/eos/out/active/cue/text",
+   "args": [
+    "1/3.5 Goodness of God / Bridge 0.9 81%"
+   ],
+   "hex": "2f656f732f6f75742f6163746976652f6375652f74657874000000002c730000312f332e3520476f6f646e657373206f6620476f64202f2042726964676520302e39203831250000"
+  },
+  {
+   "t_ms": 5130,
+   "dir": "eos->app",
+   "address": "/eos/out/active/cue",
+   "args": [
+    1.0
+   ],
+   "hex": "2f656f732f6f75742f6163746976652f637565002c6600003f800000"
+  },
+  {
+   "t_ms": 5133,
+   "dir": "eos->app",
+   "address": "/eos/out/active/cue/text",
+   "args": [
+    "1/3.5 Goodness of God / Bridge 5.0 100%"
+   ],
+   "hex": "2f656f732f6f75742f6163746976652f6375652f74657874000000002c730000312f332e3520476f6f646e657373206f6620476f64202f2042726964676520352e30203130302500"
+  }
+ ]
+}

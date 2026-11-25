@@ -1,0 +1,34 @@
+diff --git a/test/propresenter.test.ts b/test/propresenter.test.ts
+index fb646b7..6644b95 100644
+--- a/test/propresenter.test.ts
++++ b/test/propresenter.test.ts
+@@ -4619,6 +4619,29 @@ describe('the slide timing file', () => {
+       return timingRig(84, { cuePoints: VAMP_CUE_POINTS, slideTiming, leadBeats });
+     };
+ 
++    it("blanks the screen when the playhead is dragged back inside the Vamp after the Chorus's first slide went early, and sends that slide once more on its lead", async () => {
++      const slideTiming = await timingFile({});
++      const { next, play, sent, clockTo } = await timingRig(84, { cuePoints: VAMP_CUE_POINTS, slideTiming, leadBeats: 'default' });
++      await play(12.25, 96.25);
++      const reported = rig!.clock.now();
++      const before = (await sent()).length;
++      expect((await sent()).at(-1)).toBe(CLEAR);
++
++      // The Chorus on 100 goes 2 beats early, on 98, 1.75 beats after the report at 96.25.
++      await clockTo(reported, 1.75 * BEAT_MS);
++      expect((await sent()).slice(before)).toEqual([trigger(WORTHY_OF_IT_ALL, 12)]);
++      await play(2, 98.25);
++
++      // A drag at the laptop back to 96.5, inside the Vamp, which clears.
++      const dragged = next((snapshot) => near(snapshot.position, 96.5));
++      rig!.live.setPosition(96.5);
++      await dragged;
++      expect((await sent()).slice(before)).toEqual([trigger(WORTHY_OF_IT_ALL, 12), CLEAR]);
++      await play(4, 100.5);
++
++      expect((await sent()).slice(before)).toEqual([trigger(WORTHY_OF_IT_ALL, 12), CLEAR, trigger(WORTHY_OF_IT_ALL, 12)]);
++    });
++
+     it("sends the Chorus's first slide 4.5 beats before it at 71 BPM, before the Vamp's downbeat, and never the Vamp's clear", async () => {
+       const { next, sent, clockTo } = await vampRig(-0.625);
+       const beatMs = 60_000 / 71;

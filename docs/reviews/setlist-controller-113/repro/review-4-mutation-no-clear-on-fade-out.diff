@@ -1,0 +1,12 @@
+diff --git a/src/server/connections.ts b/src/server/connections.ts
+index 52a5667..2aca6ba 100644
+--- a/src/server/connections.ts
++++ b/src/server/connections.ts
+@@ -227,7 +227,6 @@ export function startConnections({
+       }
+     },
+     fadeOut() {
+-      musicBack = false;
+       for (const entry of entries) {
+         if (entry.arm === 'armed' && entry.target.pausesOnFade) set(entry, { arm: 'paused', pause: 'fade-out' });
+       }

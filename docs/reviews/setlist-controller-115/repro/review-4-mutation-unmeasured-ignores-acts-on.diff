@@ -1,0 +1,13 @@
+diff --git a/src/server/connections.ts b/src/server/connections.ts
+index d3e7a8a..05ff23c 100644
+--- a/src/server/connections.ts
++++ b/src/server/connections.ts
+@@ -200,7 +200,7 @@ export function startConnections({
+   // gives, and changes neither the row nor the cue waiting to be acted on, which it settles. A cue
+   // the target does not act on is handed over with no line, and settles nothing.
+   const hand = (entry: Entry, cue: Cue, due: number | null, unmeasured: UnmeasuredReason) => {
+-    if (!(entry.target.actsOn?.(cue) ?? true)) {
++    if (due !== null && !(entry.target.actsOn?.(cue) ?? true)) {
+       safely(entry, 'take a cue', () => entry.target.cue(cue));
+       return;
+     }

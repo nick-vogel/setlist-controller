@@ -1,0 +1,11 @@
+--- a/web/src/App.tsx
++++ b/web/src/App.tsx
+@@ -37,7 +37,7 @@
+   send(command: PageCommand): void;
+ }) {
+   // The panel does not wait for a set: the connections are not Live's.
+-  const connections = role === 'producer' && 'connections' in snapshot && (
++  const connections = 'connections' in snapshot && (
+     <ConnectionsPanel connections={snapshot.connections} problems={snapshot.connectionProblems} connected={connected} send={send} />
+   );
+ 

@@ -1,0 +1,13 @@
+diff --git a/src/set-builder/plan-reader.ts b/src/set-builder/plan-reader.ts
+index bb39af5..39184ae 100644
+--- a/src/set-builder/plan-reader.ts
++++ b/src/set-builder/plan-reader.ts
+@@ -188,7 +188,7 @@ export async function readPlan({
+   const itemsPath = `${plansPath}/${encodeURIComponent(plan.id)}/items`;
+   const items = await list(`${itemsPath}?include=song,key,arrangement&per_page=100`);
+   if (!items.ok) return items;
+-  const withNotes = await list(`${itemsPath}?include=item_notes&per_page=100`);
++  const withNotes = await list(`${itemsPath}?include=item_notes&per_page=100`, () => true);
+   if (!withNotes.ok) return withNotes;
+   const { included } = items;
+   const related = (item: ApiRecord, name: string) => {

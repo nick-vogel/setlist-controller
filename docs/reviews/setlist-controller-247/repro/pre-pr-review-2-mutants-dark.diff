@@ -1,0 +1,13 @@
+diff --git a/src/set-builder/colour.ts b/src/set-builder/colour.ts
+index c635a2e..09d5377 100644
+--- a/src/set-builder/colour.ts
++++ b/src/set-builder/colour.ts
+@@ -68,7 +68,7 @@ export function pictureHue(rgba: Buffer): number | undefined {
+   }
+   // Of the large groups that are not near black, the most saturated, the first of them on a tie. Five groups cannot all
+   // hold under 5%, but every large one can be near black.
+-  const large = groups.filter(({ count, colour }) => count >= LARGE * pixels.length && Math.max(...colour) >= DARK).map(({ colour }) => hueAndSaturation(colour));
++  const large = groups.filter(({ count, colour }) => count >= LARGE * pixels.length && Math.min(...colour) >= DARK).map(({ colour }) => hueAndSaturation(colour));
+   if (large.length === 0) return undefined;
+   const chosen = large.reduce((best, group) => (group.saturation > best.saturation ? group : best));
+   return chosen.saturation < COLOURED ? undefined : Math.round(chosen.hue) % 360;

@@ -1,0 +1,1632 @@
+/* System fonts only: nothing loads from the internet at runtime. */
+:root {
+  font-family: -apple-system, BlinkMacSystemFont, 'Helvetica Neue', sans-serif;
+  background: #111;
+  color: #eee;
+}
+
+body {
+  margin: 0;
+  padding: max(1rem, env(safe-area-inset-top)) 1rem 2rem;
+}
+
+.status {
+  font-size: 1.25rem;
+  color: #aaa;
+}
+
+.song + .song {
+  margin-top: 1.5rem;
+}
+
+.song h2 {
+  margin: 0 0 0.5rem;
+  font-size: 1.5rem;
+}
+
+.sections {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.sections li {
+  padding: 0.5rem 0.75rem;
+  border-radius: 0.5rem;
+  background: #2a2a2a;
+  font-size: 1.125rem;
+}
+
+.sections li.current,
+.chart-block.current {
+  background: #2f6fd6;
+}
+
+.now-playing {
+  margin-bottom: 1.5rem;
+  padding: 1rem;
+  border-radius: 0.75rem;
+  background: #1c1c1c;
+}
+
+/* Each line's own class, not `.now-playing p`, which would outrank the margins set below. */
+.between,
+.now-song,
+.now-next,
+.now-jump,
+.now-loop {
+  margin: 0;
+}
+
+.between {
+  font-size: 1.25rem;
+  color: #aaa;
+}
+
+.now-song {
+  font-size: 1.125rem;
+  color: #aaa;
+}
+
+.now-section {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-top: 0.25rem;
+}
+
+.now-section-name {
+  font-size: 2rem;
+  font-weight: 700;
+}
+
+.now-bar {
+  font-size: 1.25rem;
+  font-variant-numeric: tabular-nums;
+  color: #ccc;
+}
+
+.progress {
+  height: 0.25rem;
+  margin-top: 0.5rem;
+  border-radius: 0.125rem;
+  background: #333;
+  overflow: hidden;
+}
+
+.progress-fill {
+  height: 100%;
+  background: #2f6fd6;
+}
+
+.now-next {
+  margin-top: 0.75rem;
+  font-size: 1.25rem;
+}
+
+.label {
+  margin-right: 0.5rem;
+  font-size: 0.875rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: #888;
+}
+
+/* The section the leader asked for, until Live lands on it. */
+.sections li.waiting,
+.chart-block.waiting {
+  outline: 2px dashed #f0b429;
+  outline-offset: -2px;
+}
+
+.now-jump {
+  margin-top: 0.75rem;
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: #f0b429;
+  /* One line whatever the section name, so its height never changes. */
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* The loop while one is on, under the jump line. */
+.now-loop {
+  margin-top: 0.25rem;
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: #46a758;
+  /* One line whatever the section name, so its height never changes. */
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* The section the loop braces. Solid green, apart from the blue of the current section and the
+   dashed amber of a waiting jump. */
+.sections li.looping,
+.chart-block.looping {
+  outline: 2px solid #46a758;
+  outline-offset: -2px;
+}
+
+/* A jump waiting for the looped section keeps both marks: the dashed amber outline, and the green
+   inside it. */
+.sections li.waiting.looping,
+.chart-block.waiting.looping {
+  outline: 2px dashed #f0b429;
+  box-shadow: inset 0 0 0 4px #46a758;
+}
+
+/* The band member's part, first on every view-only page, and on the chart page the display, the chord
+   names, the view and the font size after it, and each song's capo:
+   each a label and a select as tall as a tap target, in the page's own font, which a browser does not
+   give a select by itself. */
+.part-picker,
+.display-picker,
+.chord-names-picker,
+.view-picker,
+.font-size-picker,
+.capo-picker {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+}
+
+.part-picker-label,
+.display-picker-label,
+.chord-names-picker-label,
+.view-picker-label,
+.font-size-picker-label,
+.capo-picker-label {
+  color: #aaa;
+}
+
+.part-select,
+.display-select,
+.chord-names-select,
+.view-select,
+.font-size-select,
+.capo-select {
+  min-height: 3rem;
+  padding: 0.5rem 0.75rem;
+  border: 2px solid #444;
+  border-radius: 0.75rem;
+  background: #1b1b1b;
+  color: inherit;
+  font: inherit;
+  touch-action: manipulation;
+}
+
+/* The Auto-Lock tip, once per device after the pickers on the view-only page: a quiet note in the
+   page's grey, not a panel that asks for a tap. */
+.auto-lock-tip {
+  margin: 0 0 1rem;
+  padding: 0.75rem 1rem;
+  border-left: 4px solid #8ab4f8;
+  border-radius: 0.5rem;
+  background: #1c1c1c;
+  color: #aaa;
+}
+
+/* The chart view: the shown song, then one block per locator down the page, the current one in the
+   setlist's blue, a waiting jump and the loop marked as the setlist marks them (above). Every chart
+   text size is scaled by the font size the device picked, which the chart page sets as
+   --chart-font-scale; Medium sets none and reads 1. */
+.chart-song {
+  margin: 0 0 0.75rem;
+  font-size: calc(1.5rem * var(--chart-font-scale, 1));
+}
+
+/* The pinned strip: the next section and the bars until it starts, held to the top of the screen
+   over the blocks, opaque so they scroll under it. The current block scrolls to its bottom edge. */
+.chart-strip {
+  position: sticky;
+  top: 0;
+  z-index: 1;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0.25rem 0.75rem;
+  margin: 0 0 0.75rem;
+  padding: 0.75rem 1rem;
+  border-bottom: 2px solid #333;
+  background: #1c1c1c;
+  font-size: calc(1.25rem * var(--chart-font-scale, 1));
+}
+
+.chart-strip .label {
+  color: #aaa;
+}
+
+.chart-strip-song {
+  color: #8ab4f8;
+  font-weight: 600;
+}
+
+.chart-strip-section,
+.chart-strip-loop {
+  font-weight: 700;
+}
+
+.chart-strip-loop {
+  color: #46a758;
+}
+
+.chart-strip-bars {
+  margin-left: auto;
+  white-space: nowrap;
+}
+
+/* A song's capo, under its name: the select, and once a capo is on, "Capo n" in the setlist's blue,
+   at a chart text size, so a guitarist sees it from the stand. */
+.chart-capo {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.25rem 1rem;
+  margin: 0 0 0.75rem;
+}
+
+.chart-capo .capo-picker {
+  margin-bottom: 0;
+}
+
+.chart-capo-label {
+  color: #8ab4f8;
+  font-weight: 700;
+  font-size: calc(1.25rem * var(--chart-font-scale, 1));
+}
+
+/* A song the set's charts hold no chart for, said under its name, in the page's grey. */
+.chart-missing {
+  margin: 0 0 0.75rem;
+  font-size: calc(1rem * var(--chart-font-scale, 1));
+  color: #aaa;
+}
+
+/* A viewport of space under the last block, so even it can scroll to the top of a tall screen. */
+.chart-blocks {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  margin: 0;
+  padding: 0;
+  padding-bottom: 100vh;
+  list-style: none;
+}
+
+/* The whole-set view: the viewport of space goes under the set's last song alone, so no song's blocks
+   sit a screen apart from the next song's, and the set's last block can still scroll to the top. */
+.chart-set {
+  padding-bottom: 100vh;
+}
+
+.chart-set .chart-blocks {
+  padding-bottom: 0;
+}
+
+.chart-set .chart + .chart {
+  margin-top: 1.5rem;
+}
+
+/* A block's chart lines wrap onto their own row under its name and bar count. */
+.chart-block {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 0.5rem 1rem;
+  padding: 0.75rem 1rem;
+  border-radius: 0.75rem;
+  background: #1c1c1c;
+}
+
+.chart-block-name {
+  font-size: calc(1.5rem * var(--chart-font-scale, 1));
+  font-weight: 600;
+}
+
+.chart-block-bars {
+  font-size: calc(1.125rem * var(--chart-font-scale, 1));
+  color: #aaa;
+  white-space: nowrap;
+}
+
+.chart-block.current .chart-block-bars {
+  color: #eee;
+}
+
+.chart-lines {
+  flex-basis: 100%;
+  font-size: calc(1.25rem * var(--chart-font-scale, 1));
+  line-height: 1.3;
+}
+
+.chart-line,
+.chart-note {
+  margin: 0;
+}
+
+/* One chunk is its chord over the words it falls on, so a line wraps between chunks and the chord
+   stays over its syllable. The words keep their spaces, which would collapse at a chunk's edge. */
+.chart-chunk {
+  display: inline-flex;
+  flex-direction: column;
+}
+
+/* The chords in a light tint of the highlight's blue, and white on the current block's blue, as its
+   bar count goes light. */
+.chart-chord {
+  padding-right: 0.25em;
+  font-weight: 700;
+  color: #8ab4f8;
+  white-space: pre;
+}
+
+.chart-block.current .chart-chord {
+  color: #fff;
+}
+
+.chart-lyric {
+  white-space: break-spaces;
+}
+
+.chart-note {
+  font-style: italic;
+  color: #aaa;
+}
+
+.chart-block.current .chart-note {
+  color: #eee;
+}
+
+.chart-gap {
+  height: calc(0.75rem * var(--chart-font-scale, 1));
+}
+
+/* The leader's Previous, Loop and Next, a row of three over the tap targets. */
+.section-controls {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 0.75rem;
+  margin-bottom: 0.75rem;
+}
+
+.section-control {
+  min-height: 4.5rem;
+  padding: 0.75rem;
+  border: 2px solid #444;
+  border-radius: 0.75rem;
+  background: #2a2a2a;
+  color: inherit;
+  font: inherit;
+  font-size: 1.375rem;
+  font-weight: 600;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+  cursor: pointer;
+}
+
+.section-control:active {
+  background: #3a3a3a;
+}
+
+.section-control.on {
+  border-color: #46a758;
+  background: #173a20;
+}
+
+.section-control.unavailable,
+.jump-target.unavailable,
+.stop.unavailable,
+.fade-out.unavailable,
+.song-step.unavailable,
+.play-from-start.unavailable,
+.count-in.unavailable,
+.end-choice.unavailable {
+  opacity: 0.4;
+  cursor: default;
+}
+
+/* The leader's tap targets, sized for a finger on an iPad on a music stand. */
+.jump-targets {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(10rem, 1fr));
+  gap: 0.75rem;
+  margin-bottom: 1.5rem;
+}
+
+.jump-target {
+  min-height: 4.5rem;
+  padding: 0.75rem;
+  border: 2px solid transparent;
+  border-radius: 0.75rem;
+  background: #2a2a2a;
+  color: inherit;
+  font: inherit;
+  font-size: 1.375rem;
+  font-weight: 600;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+  cursor: pointer;
+}
+
+.jump-target:active {
+  background: #3a3a3a;
+}
+
+.jump-target.current {
+  background: #2f6fd6;
+}
+
+.jump-target.waiting {
+  border-color: #f0b429;
+  border-style: dashed;
+}
+
+.jump-target.looping {
+  border-color: #46a758;
+}
+
+.jump-target.waiting.looping {
+  border-color: #f0b429;
+  border-style: dashed;
+  box-shadow: inset 0 0 0 4px #46a758;
+}
+
+/* Live is not answering. A warning colour and a border, so it never reads as a stopped song or the
+   grey "Between songs." line. */
+.now-playing.live-lost {
+  border: 2px solid #e5484d;
+  background: #2a1215;
+}
+
+/* Over the chart view, the panel holds to the top of the screen, since the page is scrolled down to
+   the block that was current when Live went. */
+.chart-page > .live-lost {
+  position: sticky;
+  top: 0;
+}
+
+.live-lost-title,
+.live-lost-detail {
+  margin: 0;
+}
+
+.live-lost-title {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #ff6369;
+}
+
+.live-lost-detail {
+  margin-top: 0.25rem;
+  font-size: 1.125rem;
+  color: #eee;
+}
+
+/* The server is out of reach. Fixed over the top of the page, so nothing under it moves while it
+   shows or when it goes, and over the chart view's pinned strip, which holds to the same place. */
+.server-lost {
+  position: fixed;
+  inset: 0 0 auto;
+  z-index: 2;
+  margin: 0;
+  padding: max(0.5rem, env(safe-area-inset-top)) 1rem 0.5rem;
+  border-bottom: 2px solid #f0b429;
+  background: #2a1f05;
+  color: #f0b429;
+  font-size: 1.25rem;
+  font-weight: 600;
+  text-align: center;
+}
+
+/* The setup screen, on the playback laptop. */
+.setup h1 {
+  margin: 0 0 1rem;
+  font-size: 1.75rem;
+}
+
+.live-status {
+  margin: 0 0 1rem;
+  font-size: 1.25rem;
+  font-weight: 600;
+}
+
+.live-status.connected {
+  color: #46a758;
+}
+
+.live-status.not-connected {
+  color: #ff6369;
+}
+
+.setup-section {
+  margin-bottom: 1.5rem;
+}
+
+.setup-section h2 {
+  margin: 0 0 0.5rem;
+  font-size: 1.25rem;
+}
+
+.warnings {
+  margin: 0;
+  padding-left: 1.25rem;
+  font-size: 1.125rem;
+  color: #f0b429;
+}
+
+.warnings li + li {
+  margin-top: 0.25rem;
+}
+
+/* The foot pedal: the config file's state, the mappings, and the MIDI monitor. */
+.pedal-config {
+  margin: 0 0 0.5rem;
+  font-size: 1.125rem;
+}
+
+.pedal-path {
+  margin: 0 0 0.5rem;
+  color: #ccc;
+}
+
+.pedal-path code {
+  font-family: ui-monospace, Menlo, monospace;
+}
+
+.pedal-config.loaded {
+  color: #46a758;
+}
+
+.pedal-config.invalid {
+  color: #ff6369;
+}
+
+.pedal-problems {
+  margin: 0 0 0.5rem;
+  padding-left: 1.25rem;
+  font-size: 1.125rem;
+  color: #f0b429;
+}
+
+.pedal-mappings,
+.midi-monitor {
+  margin: 0 0 0.5rem;
+  padding: 0;
+  list-style: none;
+  font-size: 1.125rem;
+}
+
+.pedal-mappings li + li,
+.midi-monitor li + li,
+.pedal-problems li + li {
+  margin-top: 0.25rem;
+}
+
+.pedal-mappings li code,
+.midi-monitor li code {
+  font-family: ui-monospace, Menlo, monospace;
+}
+
+.midi-monitor-heading {
+  margin: 1rem 0 0.5rem;
+  font-size: 1.125rem;
+}
+
+.midi-unmapped {
+  color: #aaa;
+}
+
+.join-codes {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 2rem;
+}
+
+.join-code {
+  margin: 0;
+}
+
+.qr {
+  display: block;
+  width: 16rem;
+  height: 16rem;
+}
+
+.join-code figcaption {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  margin-top: 0.5rem;
+}
+
+.join-label {
+  font-size: 1.125rem;
+  font-weight: 600;
+}
+
+/* The leader's URL carries its secret and has no space to break at. */
+.join-url {
+  font-family: ui-monospace, Menlo, monospace;
+  color: #ccc;
+  overflow-wrap: anywhere;
+}
+
+/* The leader's Refresh, in its own row between the tap targets and the setlist. */
+.set-actions {
+  display: flex;
+  margin-bottom: 1.5rem;
+}
+
+.refresh {
+  min-height: 3.5rem;
+  padding: 0.5rem 1.5rem;
+  border: 2px solid #444;
+  border-radius: 0.75rem;
+  background: #2a2a2a;
+  color: inherit;
+  font: inherit;
+  font-size: 1.125rem;
+  font-weight: 600;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+  cursor: pointer;
+}
+
+.refresh:active {
+  background: #3a3a3a;
+}
+
+.refresh.unavailable {
+  opacity: 0.4;
+  cursor: default;
+}
+
+/* The leader's transport row, under the now-playing block: Stop, Fade out, Count in, Play from start,
+   Previous song and Next song. On a phone the six are wider than the screen, so the row wraps onto
+   more than one line. */
+.transport {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  margin-bottom: 1.5rem;
+}
+
+/* Stop needs a one-second hold. The fill bar grows over the hold and snaps back on release. */
+.stop {
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-width: 12rem;
+  min-height: 4.5rem;
+  padding: 0.75rem 1.5rem;
+  border: 2px solid #e5484d;
+  border-radius: 0.75rem;
+  background: #2a1215;
+  color: inherit;
+  font: inherit;
+  cursor: pointer;
+  touch-action: none;
+  user-select: none;
+  -webkit-user-select: none;
+  -webkit-touch-callout: none;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.stop .stop-fill {
+  position: absolute;
+  inset: 0;
+  background: #e5484d;
+  transform: scaleX(0);
+  transform-origin: left;
+}
+
+/* Matches STOP_HOLD_MS in web/src/hold.ts. */
+.stop.holding .stop-fill {
+  transform: scaleX(1);
+  transition: transform 1000ms linear;
+}
+
+.stop-label,
+.stop-hint {
+  position: relative;
+}
+
+.stop-label {
+  font-size: 1.5rem;
+  font-weight: 700;
+}
+
+.stop-hint {
+  font-size: 0.875rem;
+  color: #ccc;
+}
+
+/* Fade out sits beside Stop, as tall, and takes a single tap. Grey like the other controls, so the
+   red stays Stop's alone and the amber stays a waiting jump's. Previous song and Next song take the
+   same box and grey, so the green stays for the buttons that play. */
+.fade-out,
+.song-step {
+  min-width: 12rem;
+  min-height: 4.5rem;
+  padding: 0.75rem 1.5rem;
+  border: 2px solid #444;
+  border-radius: 0.75rem;
+  background: #2a2a2a;
+  color: inherit;
+  font: inherit;
+  font-size: 1.5rem;
+  font-weight: 700;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+  cursor: pointer;
+}
+
+.fade-out:active,
+.song-step:active {
+  background: #3a3a3a;
+}
+
+/* A song's heading: its title, and what happens at its End. The leader page adds Play from start
+   and the end toggle's two choices. */
+.song-heading {
+  margin-bottom: 0.5rem;
+}
+
+.song-controls {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  margin-bottom: 0.75rem;
+}
+
+.play-from-start,
+.count-in,
+.end-choice {
+  min-height: 3.5rem;
+  padding: 0.5rem 1rem;
+  border: 2px solid transparent;
+  border-radius: 0.75rem;
+  background: #2a2a2a;
+  color: inherit;
+  font: inherit;
+  font-size: 1.125rem;
+  font-weight: 600;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+  cursor: pointer;
+}
+
+.play-from-start {
+  border-color: #46a758;
+}
+
+/* Count in sits beside Play from start, as tall and in the same green, with its reason under its label
+   in a song with no Count Off, as Stop carries "Hold to stop". */
+.count-in {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  border-color: #46a758;
+}
+
+/* The transport row's Count in, beside Fade out, and its Play from start, beside that Count in, take
+   Fade out's size and keep their green. */
+.transport .count-in,
+.transport .play-from-start {
+  min-width: 12rem;
+  min-height: 4.5rem;
+  padding: 0.75rem 1.5rem;
+  font-size: 1.5rem;
+  font-weight: 700;
+}
+
+.count-in-hint {
+  font-size: 0.875rem;
+  font-weight: 400;
+  color: #ccc;
+}
+
+.end-toggle {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.end-toggle .end-choice.chosen {
+  border-color: #eee;
+  background: #3a3a3a;
+}
+
+.end-toggle-text {
+  margin: 0 0 0.5rem;
+  font-size: 1rem;
+  color: #aaa;
+}
+
+/* The setup screen's Connections section: what the server made of the connections config file, then
+   each target's label, whether it is online, and its pre-service check or its problems. */
+.connections-config,
+.connections-path {
+  margin: 0 0 0.5rem;
+  font-size: 1.125rem;
+}
+
+.connections-config.loaded {
+  color: #46a758;
+}
+
+.connections-config.invalid {
+  color: #ff6369;
+}
+
+.connections-path code {
+  font-family: ui-monospace, Menlo, monospace;
+}
+
+.setup-connection-status {
+  color: #aaa;
+}
+
+.setup-connections {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.setup-connection-label {
+  font-size: 1.125rem;
+  font-weight: 700;
+}
+
+/* The producer's Connections panel, below the leader's controls. */
+.connections {
+  margin-bottom: 1.5rem;
+}
+
+.connections h2 {
+  margin: 0 0 0.5rem;
+  font-size: 1.25rem;
+}
+
+.connection-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+/* One target: its label, its state, and its buttons on the right: Arm, Disarm, Fire again and the
+   target's own, which wrap onto more lines when they outgrow the row. */
+.connection {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem 1rem;
+  padding: 0.5rem 0.75rem;
+  border: 2px solid #444;
+  border-radius: 0.75rem;
+  background: #2a2a2a;
+  font-size: 1.125rem;
+}
+
+.connection-label {
+  font-weight: 700;
+}
+
+.connection-status,
+.connection-arm {
+  color: #aaa;
+}
+
+.connection-buttons {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: 0.5rem;
+  margin-left: auto;
+}
+
+.connection-button {
+  min-height: 3rem;
+  padding: 0.5rem 1.25rem;
+  border: 2px solid #444;
+  border-radius: 0.75rem;
+  background: #1b1b1b;
+  color: inherit;
+  font: inherit;
+  font-weight: 600;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+  cursor: pointer;
+}
+
+.connection-button:active {
+  background: #3a3a3a;
+}
+
+.connection-button.unavailable {
+  opacity: 0.4;
+  cursor: default;
+}
+
+/* The choice a target asks the producer to pick, such as ProPresenter's playlist: its label and a
+   select as tall as the row's buttons, on the right beside them, and on its own line under them the
+   pick it names. */
+.connection-pick {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-left: auto;
+}
+
+.connection-pick-label {
+  color: #aaa;
+}
+
+.connection-pick-select {
+  min-height: 3rem;
+  max-width: 100%;
+  padding: 0.5rem 0.75rem;
+  border: 2px solid #444;
+  border-radius: 0.75rem;
+  background: #1b1b1b;
+  color: inherit;
+  font: inherit;
+  touch-action: manipulation;
+}
+
+.connection-pick-select.unavailable {
+  opacity: 0.4;
+}
+
+.connection-picked {
+  flex-basis: 100%;
+  margin: 0;
+  font-size: 1.125rem;
+}
+
+/* A target that cannot be reached, or that the connections config file disabled, in the red of Live
+   not connected. */
+.connection.offline,
+.connection.not-configured {
+  border: 2px solid #e5484d;
+  background: #2a1215;
+}
+
+.connection.offline .connection-status,
+.connection.not-configured .connection-status,
+.setup-connections .not-configured .setup-connection-status {
+  color: #ff6369;
+}
+
+/* What is wrong with the connections config file, with one target's section of it, or with reaching
+   a configured target, as the target reported it, in the pedal problems' style. Under a row, on a
+   line of its own. */
+.connection-problems {
+  flex-basis: 100%;
+  margin: 0 0 0.5rem;
+  padding-left: 1.25rem;
+  font-size: 1.125rem;
+  color: #f0b429;
+}
+
+.connection .connection-problems,
+.setup-connections .connection-problems {
+  margin: 0.25rem 0 0;
+}
+
+.connection-problem + .connection-problem {
+  margin-top: 0.25rem;
+}
+
+/* A target's pre-service check, on its own line under the row's buttons, and on the setup screen.
+   A file check's problems, such as no playlist picked or a cue that never fires, and the names it
+   cannot match, under their headings, and a device check's problems, are in the setup screen's
+   warning colour. A device check's notes, and a file check's notes under their own heading, are
+   grey, as the check's status line, since the producer need not fix them. */
+.check {
+  flex-basis: 100%;
+  font-size: 1.125rem;
+}
+
+.check-status {
+  margin: 0;
+  color: #aaa;
+}
+
+.check.matched .check-status {
+  color: #46a758;
+}
+
+.check.unmatched .check-status,
+.check-unmatched,
+.check-problems {
+  color: #f0b429;
+}
+
+.check-notes-heading {
+  margin: 0;
+  color: #aaa;
+}
+
+.check-notes {
+  color: #aaa;
+}
+
+.check-unmatched,
+.check-problems,
+.check-notes {
+  margin: 0.25rem 0 0;
+  padding-left: 1.25rem;
+}
+
+.check-unmatched li + li,
+.check-problems li + li,
+.check-notes li + li {
+  margin-top: 0.25rem;
+}
+
+/* A target's read-only lines, such as its live cue, in full, the read-only list under them, such as
+   its cue list, and how late the cues reach it, each on lines of its own under the check. */
+.connection-state,
+.connection-state-list,
+.connection-lateness {
+  flex-basis: 100%;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  font-size: 1.125rem;
+  color: #aaa;
+}
+
+/* The list is capped at about eight lines and scrolls, so a cue list of hundreds of cues keeps the
+   rows below it, and the live cue line above it, on the screen. */
+.connection-state-list {
+  max-height: 15rem;
+  overflow-y: auto;
+}
+
+/* The list line the target marks, such as the live cue's, in the blue of the current section. */
+.connection-state-list li.current {
+  background: #2f6fd6;
+  color: #fff;
+}
+
+/* The leader page's Setlist / Timeline switcher, on the leader page only. */
+.leader-mode-bar {
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: 1rem;
+}
+
+.leader-mode-switcher {
+  display: inline-flex;
+  gap: 0.25rem;
+  padding: 0.25rem;
+  border: 2px solid #333;
+  border-radius: 0.75rem;
+  background: #1a1a1a;
+  flex-shrink: 0;
+}
+
+.leader-mode-choice {
+  min-height: 2.75rem;
+  padding: 0.375rem 1rem;
+  border: 0;
+  border-radius: 0.5rem;
+  background: transparent;
+  color: #aaa;
+  font: inherit;
+  font-size: 1rem;
+  font-weight: 600;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+  cursor: pointer;
+}
+
+.leader-mode-choice.active {
+  background: #2f6fd6;
+  color: #fff;
+}
+
+.timeline-view {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.timeline-top {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem 1rem;
+}
+
+.timeline-top .now-playing.live-lost {
+  flex: 1 1 18rem;
+  margin-bottom: 0;
+}
+
+.timeline-readout {
+  flex: 1 1 18rem;
+  min-width: 0;
+  padding: 0.75rem 1rem;
+  border-radius: 0.75rem;
+  background: #1c1c1c;
+}
+
+.timeline-readout-primary {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0.25rem 0.75rem;
+}
+
+.timeline-readout-song {
+  font-size: 1rem;
+  color: #aaa;
+}
+
+.timeline-readout-section {
+  font-size: 1.5rem;
+  font-weight: 700;
+}
+
+.timeline-readout-bar {
+  margin-left: auto;
+  font-size: 1.125rem;
+  font-variant-numeric: tabular-nums;
+  color: #ccc;
+}
+
+.timeline-readout-between {
+  font-size: 1.25rem;
+  color: #aaa;
+}
+
+.timeline-readout-status {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.25rem 1rem;
+  margin-top: 0.25rem;
+  font-size: 1rem;
+  font-weight: 600;
+}
+
+.timeline-readout-jump {
+  color: #f0b429;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.timeline-readout-loop {
+  color: #46a758;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.timeline-song-tabs {
+  display: flex;
+  gap: 0.5rem;
+  overflow-x: auto;
+  padding-bottom: 0.25rem;
+  -webkit-overflow-scrolling: touch;
+}
+
+.timeline-song-tab {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex-shrink: 0;
+  min-height: 3rem;
+  padding: 0.5rem 1rem;
+  border: 2px solid #333;
+  border-radius: 0.75rem;
+  background: #1c1c1c;
+  color: #ccc;
+  font: inherit;
+  font-size: 1rem;
+  font-weight: 600;
+  white-space: nowrap;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+  cursor: pointer;
+}
+
+.timeline-song-tab:active {
+  background: #2c2c2c;
+}
+
+.timeline-song-tab.current {
+  border-color: #2f6fd6;
+  background: #1b2f4d;
+  color: #fff;
+}
+
+.timeline-song-tab-number {
+  font-size: 0.875rem;
+  color: #8ab4f8;
+}
+
+.timeline-viewport {
+  position: relative;
+  border: 2px solid #2c2c32;
+  border-radius: 0.75rem;
+  background: #0d0d0f;
+  overflow: hidden;
+}
+
+.timeline-playhead {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: var(--playhead-x, 25%);
+  width: 2px;
+  background: #ff6369;
+  box-shadow: 0 0 8px rgba(255, 99, 105, 0.55);
+  z-index: 6;
+  pointer-events: none;
+}
+
+.timeline-playhead-cap {
+  position: absolute;
+  top: 0;
+  left: -5px;
+  border-left: 6px solid transparent;
+  border-right: 6px solid transparent;
+  border-top: 8px solid #ff6369;
+}
+
+.timeline-follow {
+  position: absolute;
+  top: 0.5rem;
+  right: 0.5rem;
+  z-index: 7;
+  min-height: 2.5rem;
+  padding: 0.375rem 0.875rem;
+  border: 2px solid #8ab4f8;
+  border-radius: 999px;
+  background: #1b2f4d;
+  color: #fff;
+  font: inherit;
+  font-size: 0.9375rem;
+  font-weight: 700;
+  touch-action: manipulation;
+  cursor: pointer;
+}
+
+.timeline-scroll {
+  overflow-x: auto;
+  overflow-y: hidden;
+  scrollbar-width: thin;
+  touch-action: pan-x;
+  user-select: none;
+  -webkit-user-select: none;
+  cursor: grab;
+}
+
+.timeline-scroll.dragging {
+  cursor: grabbing;
+}
+
+.timeline-canvas {
+  display: inline-block;
+  box-sizing: content-box;
+  vertical-align: top;
+}
+
+.timeline-track {
+  position: relative;
+}
+
+.timeline-song-rail {
+  position: relative;
+  height: 2.25rem;
+  border-bottom: 1px solid #26262c;
+  background: #141418;
+}
+
+.timeline-song-header {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  display: flex;
+  align-items: center;
+  padding: 0 0.625rem;
+  border-left: 2px solid #3a3d45;
+  box-sizing: border-box;
+  overflow: hidden;
+}
+
+.timeline-song-header.current {
+  border-left-color: #2f6fd6;
+  background: rgba(47, 111, 214, 0.16);
+}
+
+.timeline-song-header-title {
+  font-size: 0.875rem;
+  font-weight: 700;
+  color: #ccc;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.timeline-song-header.current .timeline-song-header-title {
+  color: #fff;
+}
+
+.timeline-lane {
+  position: relative;
+  height: 11.5rem;
+  background: #0d0d0f;
+}
+
+/* Silent gaps between songs read as empty recessed space, never as a section or pad. */
+.timeline-gap {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  background: #09090b;
+  pointer-events: none;
+}
+
+.timeline-section {
+  position: absolute;
+  top: 0.5rem;
+  bottom: 0.5rem;
+  padding: 0;
+  border: 0;
+  border-left: 2px solid #454852;
+  border-right: 1px solid #1c1d22;
+  border-radius: 0.375rem;
+  background: #23252a;
+  color: #eee;
+  font: inherit;
+  text-align: left;
+  overflow: hidden;
+  box-sizing: border-box;
+  cursor: pointer;
+  touch-action: pan-x;
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* Pad and Pad Out carry an unmistakable ambient fill and diagonal texture so they never read as
+   dead silence or regular band sections. */
+.timeline-section.pad {
+  border-left-color: #38b2ac;
+  background-color: #122c30;
+  background-image: repeating-linear-gradient(
+    -45deg,
+    rgba(56, 178, 172, 0.22) 0,
+    rgba(56, 178, 172, 0.22) 8px,
+    rgba(18, 44, 48, 0.12) 8px,
+    rgba(18, 44, 48, 0.12) 16px
+  );
+}
+
+/* Count Off stands out as a cue boundary ahead of the song's first musical downbeat. */
+.timeline-section.count-off {
+  border-left-color: #f0b429;
+  background: #2d2310;
+}
+
+.timeline-section.skipped {
+  border-left-color: #444;
+  background-color: #19191b;
+  color: #8a8a8a;
+}
+
+.timeline-section.current {
+  border-left-color: #8ab4f8;
+  background-color: #2f6fd6;
+  color: #fff;
+}
+
+.timeline-section.pad.current {
+  background-color: #1f5c63;
+}
+
+.timeline-section.waiting {
+  outline: 2px dashed #f0b429;
+  outline-offset: -2px;
+  z-index: 3;
+}
+
+.timeline-section.count-in-target {
+  box-shadow: inset 0 0 0 2px rgba(240, 180, 41, 0.35);
+}
+
+.timeline-section.looping {
+  border-top: 2px solid #46a758;
+}
+
+.timeline-section.unavailable {
+  opacity: 0.45;
+  cursor: default;
+}
+
+/* Clean reserved background layer ready for precomputed audio waveforms later. */
+.timeline-waveform-layer {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+}
+
+.timeline-bar-grid {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+}
+
+.timeline-bar-tick {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 1px;
+  background: rgba(255, 255, 255, 0.12);
+}
+
+.timeline-bar-tick.first {
+  background: transparent;
+}
+
+.timeline-bar-number {
+  position: absolute;
+  bottom: 0.375rem;
+  left: 0.375rem;
+  font-size: 0.75rem;
+  font-variant-numeric: tabular-nums;
+  color: rgba(255, 255, 255, 0.45);
+}
+
+.timeline-section-content {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 0.375rem;
+  padding: 0.5rem 0.625rem;
+  pointer-events: none;
+}
+
+.timeline-section-name {
+  font-size: 1.0625rem;
+  font-weight: 700;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.timeline-section-badge {
+  flex-shrink: 0;
+  padding: 0.125rem 0.375rem;
+  border-radius: 0.25rem;
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+}
+
+.timeline-section-badge.waiting {
+  background: #f0b429;
+  color: #111;
+}
+
+.timeline-section-badge.skipped {
+  border: 1px solid #666;
+  color: #8a8a8a;
+}
+
+.timeline-end {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 2px;
+  margin-left: -1px;
+  background: #777;
+  z-index: 4;
+  pointer-events: none;
+}
+
+.timeline-end.waiting {
+  background: #f0b429;
+  box-shadow: 0 0 8px rgba(240, 180, 41, 0.6);
+}
+
+.timeline-end-label {
+  position: absolute;
+  top: 0.25rem;
+  left: 0.25rem;
+  padding: 0.0625rem 0.3125rem;
+  border-radius: 0.25rem;
+  background: #2b2b30;
+  color: #ccc;
+  font-size: 0.6875rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  white-space: nowrap;
+}
+
+.timeline-end.waiting .timeline-end-label {
+  background: #f0b429;
+  color: #111;
+}
+
+/* Live's active arrangement loop brace shaded directly over the looped range. */
+.timeline-loop-brace {
+  position: absolute;
+  top: 0.125rem;
+  bottom: 0.125rem;
+  border-top: 4px solid #46a758;
+  border-left: 2px solid #46a758;
+  border-right: 2px solid #46a758;
+  border-radius: 0.25rem 0.25rem 0 0;
+  background: rgba(70, 167, 88, 0.2);
+  box-sizing: border-box;
+  z-index: 5;
+  pointer-events: none;
+}
+
+.timeline-transport {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(8.5rem, 1fr));
+  gap: 0.75rem;
+}
+
+.timeline-pause {
+  min-height: 4.5rem;
+  padding: 0.75rem 1.25rem;
+  border: 2px solid #e5484d;
+  border-radius: 0.75rem;
+  background: #2a1215;
+  color: inherit;
+  font: inherit;
+  font-size: 1.5rem;
+  font-weight: 700;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+  cursor: pointer;
+}
+
+.timeline-pause:active {
+  background: #471c20;
+}
+
+.timeline-pause.unavailable {
+  opacity: 0.4;
+  cursor: default;
+}
+
+.timeline-transport .count-in,
+.timeline-transport .fade-out {
+  min-width: 0;
+  min-height: 4.5rem;
+  padding: 0.75rem 1rem;
+  font-size: 1.375rem;
+  font-weight: 600;
+}

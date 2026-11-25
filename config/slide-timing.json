@@ -1,0 +1,54 @@
+{
+  "This Is Amazing Grace": [
+    { "section": "Verse 1", "occurrence": 1, "changes": [2, 4, 8, 10, 12] },
+    { "section": "Verse 2", "occurrence": 1, "changes": [2, 4, 6, 8, 10] },
+    { "section": "Chorus", "occurrence": 1, "start": -0.75, "changes": [3.25, 7, 10.5] },
+    { "section": "Chorus", "occurrence": 2, "start": -0.75, "changes": [3.25, 7, 10.5] },
+    { "section": "Chorus", "occurrence": 3, "start": -0.75, "changes": [3.25, 7, 10.5] }
+  ],
+  "I Speak Jesus": [
+    { "section": "Bridge", "occurrence": 1, "changes": [2, 4] },
+    { "section": "Bridge", "occurrence": 2, "changes": [2, 4] },
+    { "section": "Bridge", "occurrence": 3, "changes": [2, 4] },
+    { "section": "Bridge", "occurrence": 4, "changes": [2, 4] },
+    { "section": "Chorus", "occurrence": 1, "start": -0.25, "changes": [3.75] },
+    { "section": "Chorus", "occurrence": 2, "start": -0.25, "changes": [3.75] },
+    { "section": "Chorus", "occurrence": 3, "start": -0.25, "changes": [3.75] },
+    { "section": "Chorus", "occurrence": 4, "start": -0.25, "changes": [3.75] },
+    { "section": "Chorus", "occurrence": 5, "start": -0.25, "changes": [3.75] }
+  ],
+  "Holy Forever": [
+    { "section": "Chorus 1", "occurrence": 1, "start": -0.625, "changes": [3.5] },
+    { "section": "Chorus 1", "occurrence": 2, "start": -0.625, "changes": [3.5] },
+    { "section": "Chorus 1", "occurrence": 3, "start": -0.625, "changes": [3.5] },
+    { "section": "Chorus 2", "occurrence": 1, "start": -0.625, "changes": [3.5] },
+    { "section": "Chorus 2", "occurrence": 2, "start": -0.625, "changes": [3.5] }
+  ],
+  "House of the Lord": [
+    { "section": "Chorus", "occurrence": 1, "changes": [1.25, 2.25, 4.25, 5.25, 6.25] },
+    { "section": "Chorus", "occurrence": 2, "changes": [1.25, 2.25, 4.25, 5.25, 6.25] },
+    { "section": "Chorus", "occurrence": 3, "changes": [1.25, 2.25, 4.25, 5.25, 6.25] },
+    { "section": "Chorus", "occurrence": 4, "changes": [1.25, 2.25, 4.25, 5.25, 6.25] },
+    { "section": "Chorus", "occurrence": 5, "changes": [1.25, 2.25, 4.25, 5.25, 6.25] }
+  ],
+  "God I'm Just Grateful": [
+    { "section": "Chorus 1", "occurrence": 1, "changes": [2, 4, 6] },
+    { "section": "Verse 2", "occurrence": 1, "changes": [3, 5, 7] },
+    { "section": "Bridge", "occurrence": 1, "changes": [2.5, 4, 6.5] },
+    { "section": "Bridge", "occurrence": 2, "changes": [2.5, 4, 6.5] },
+    { "section": "Bridge", "occurrence": 3, "changes": [2.5, 4, 6.5] }
+  ],
+  "Yes and Amen": [
+    { "section": "Verse 1", "occurrence": 1, "changes": [2, 4, 7] },
+    { "section": "Verse 2", "occurrence": 1, "changes": [2, 4, 7] }
+  ],
+  "Worthy Of It All": [
+    { "section": "Verse 1", "occurrence": 1, "changes": [4, 6.5] },
+    { "section": "Verse 1", "occurrence": 2, "changes": [4, 6.5] },
+    { "section": "Chorus", "occurrence": 1, "start": -0.625, "changes": [3.5, 5.5, 7.5] },
+    { "section": "Chorus", "occurrence": 2, "start": -0.625, "changes": [3.5, 5.5] },
+    { "section": "Chorus", "occurrence": 3, "start": -0.625, "changes": [3.5, 5.5, 7.5] },
+    { "section": "Chorus", "occurrence": 4, "start": -0.625, "changes": [3.5, 5.5] },
+    { "section": "Chorus", "occurrence": 5, "start": -0.625, "group": 9, "changes": [3.5, 5.5] }
+  ]
+}

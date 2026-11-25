@@ -1,0 +1,11 @@
+--- a/src/server/playback-controller.ts	2026-10-21 19:04:57
++++ b/src/server/playback-controller.ts	2026-10-21 19:04:57
+@@ -424,7 +424,7 @@
+             waitingJump = null;
+             heldEnd = null;
+           } else if (waitingJump && playing && end) heldEnd = end;
+-          const before = wrapFrom ? wrapFrom.from : now(position);
++          const before = wrapFrom ? (wrapFrom.from ?? now(position)) : now(position);
+           position = event.beats;
+           wrapFrom = wrapping ? { from: before } : null;
+           if (!wrapping) enteredCountOff(before, now(position), event.beats);

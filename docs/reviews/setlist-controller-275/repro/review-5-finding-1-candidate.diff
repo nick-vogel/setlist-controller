@@ -1,0 +1,12 @@
+diff --git a/src/server/connections.ts b/src/server/connections.ts
+index 82cc934..2ab7c97 100644
+--- a/src/server/connections.ts
++++ b/src/server/connections.ts
+@@ -704,6 +704,7 @@ export function startConnections({
+     entry.early = null;
+     const landed = due ? due.cue : { ...cue, slide: at(to)?.slide };
+     if (landed.slide !== undefined && (showing?.song !== landed.song || showing.slide !== landed.slide)) hand(entry, landed, null, 'not-played-across');
++    else if (!due && plan.length === 0 && early) hand(entry, landed, null, 'not-played-across');
+     if (due && landing !== null) entry.early = { ...due, from: landing };
+     if (start === null) {
+       unschedule(entry);

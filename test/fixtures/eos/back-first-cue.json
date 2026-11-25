@@ -1,0 +1,103 @@
+{
+ "scenario": "back-first-cue",
+ "description": "Back on cue list 1 with the first cue, 1/1, completed and no fade running: /eos/cues/1/stop.",
+ "eos_version": "3.3.10 (ETCnomad, macOS)",
+ "transport": "TCP 127.0.0.1:3032, OSC 1.0 packet-length framing",
+ "packets": [
+  {
+   "t_ms": 0,
+   "dir": "app->eos",
+   "address": "/eos/cues/1/stop",
+   "args": [],
+   "hex": "2f656f732f637565732f312f73746f70000000002c000000"
+  },
+  {
+   "t_ms": 38,
+   "dir": "eos->app",
+   "address": "/eos/out/active/cue",
+   "args": [
+    0.0
+   ],
+   "hex": "2f656f732f6f75742f6163746976652f637565002c66000000000000"
+  },
+  {
+   "t_ms": 40,
+   "dir": "eos->app",
+   "address": "/eos/out/active/cue",
+   "args": [
+    0.0
+   ],
+   "hex": "2f656f732f6f75742f6163746976652f637565002c66000000000000"
+  },
+  {
+   "t_ms": 44,
+   "dir": "eos->app",
+   "address": "/eos/out/active/cue/text",
+   "args": [
+    " 2.0 0%"
+   ],
+   "hex": "2f656f732f6f75742f6163746976652f6375652f74657874000000002c73000020322e3020302500"
+  },
+  {
+   "t_ms": 46,
+   "dir": "eos->app",
+   "address": "/eos/out/pending/cue/1/1",
+   "args": [],
+   "hex": "2f656f732f6f75742f70656e64696e672f6375652f312f31000000002c000000"
+  },
+  {
+   "t_ms": 49,
+   "dir": "eos->app",
+   "address": "/eos/out/pending/cue/text",
+   "args": [
+    "1/1 Goodness of God / Intro 5.0"
+   ],
+   "hex": "2f656f732f6f75742f70656e64696e672f6375652f746578740000002c730000312f3120476f6f646e657373206f6620476f64202f20496e74726f20352e3000"
+  },
+  {
+   "t_ms": 52,
+   "dir": "eos->app",
+   "address": "/eos/out/event/cue/1/0/fire",
+   "args": [
+    ""
+   ],
+   "hex": "2f656f732f6f75742f6576656e742f6375652f312f302f66697265002c73000000000000"
+  },
+  {
+   "t_ms": 1045,
+   "dir": "eos->app",
+   "address": "/eos/out/active/cue",
+   "args": [
+    0.5
+   ],
+   "hex": "2f656f732f6f75742f6163746976652f637565002c6600003f000000"
+  },
+  {
+   "t_ms": 1047,
+   "dir": "eos->app",
+   "address": "/eos/out/active/cue/text",
+   "args": [
+    " 1.0 50%"
+   ],
+   "hex": "2f656f732f6f75742f6163746976652f6375652f74657874000000002c73000020312e302035302500000000"
+  },
+  {
+   "t_ms": 2057,
+   "dir": "eos->app",
+   "address": "/eos/out/active/cue",
+   "args": [
+    1.0
+   ],
+   "hex": "2f656f732f6f75742f6163746976652f637565002c6600003f800000"
+  },
+  {
+   "t_ms": 2060,
+   "dir": "eos->app",
+   "address": "/eos/out/active/cue/text",
+   "args": [
+    " 0.0 100%"
+   ],
+   "hex": "2f656f732f6f75742f6163746976652f6375652f74657874000000002c73000020302e302031303025000000"
+  }
+ ]
+}

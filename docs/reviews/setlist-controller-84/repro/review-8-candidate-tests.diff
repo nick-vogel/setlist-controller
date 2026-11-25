@@ -1,0 +1,40 @@
+diff --git a/test/propresenter.test.ts b/test/propresenter.test.ts
+index 73c402c..221b610 100644
+--- a/test/propresenter.test.ts
++++ b/test/propresenter.test.ts
+@@ -896,13 +896,14 @@ describe('a reconnect while armed', () => {
+ 
+   it('pauses on a slide beside the last slide shown but not beside the slide showing, after a cold Previous slide with a frame since the open', async () => {
+     vi.spyOn(console, 'error').mockImplementation(() => {});
+-    const { play, producer, clock, row, triggers } = await armedRig({ position: 24, playlist: OCTOBER_25.id });
++    const { play, producer, clock, row, latest, triggers } = await armedRig({ position: 24, playlist: OCTOBER_25.id });
+     await pro!.streaming();
+     await play(8, 32);
+     expect(await triggers()).toEqual([trigger(THERE_IS_FREEDOM, 6)]);
+     await pro!.sendSlide(THERE_IS_FREEDOM, 7);
+     clock.advance(PAST_WINDOW_MS);
+     await press(producer, 'previous');
++    expect(await latest()).toMatchObject({ arm: 'armed', pause: null, state: [expect.stringContaining('Chorus / slide 2'), expect.any(String)] });
+     clock.advance(COLD_BUTTON_FRAME_MS);
+     await pro!.sendSlide(THERE_IS_FREEDOM, 5);
+ 
+@@ -918,6 +919,19 @@ describe('a reconnect while armed', () => {
+ 
+     expect(await row((row) => row.arm === 'paused')).toMatchObject({ arm: 'paused', pause: 'by-hand' });
+   });
++
++  it.each([
++    ['next', 9],
++    ['previous', 11],
++  ] as const)("pauses on the slide beside the last slide shown on the other side, pressed by hand inside a cold %s's frame time after a reconnect over a slide with no words", async (button, index) => {
++    const { producer, clock, row } = await reconnectArmedOnTurnaround();
++
++    await press(producer, button);
++    clock.advance(COLD_BUTTON_FRAME_MS);
++    await pro!.sendSlide(THERE_IS_FREEDOM, index);
++
++    expect(await row((row) => row.arm === 'paused')).toMatchObject({ arm: 'paused', pause: 'by-hand' });
++  });
+ });
+ 
+ const OCTOBER_25 = { id: '49F3C197-E743-45AB-8670-C53959B82BDC', label: 'Series One - October 25, 2026' };
