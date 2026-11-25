@@ -15,6 +15,26 @@ body {
   color: #aaa;
 }
 
+/* The playback Mac's battery warning, at the top of the leader, producer and setup pages: amber at
+   or below 80% on battery, red at or below 30%, in dark text on the colour so it reads from across
+   the stage. */
+.power-warning {
+  margin: 0 0 1rem;
+  padding: 0.75rem 1rem;
+  border-radius: 0.5rem;
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: #111;
+}
+
+.power-warning.low {
+  background: #f0b429;
+}
+
+.power-warning.urgent {
+  background: #ff6369;
+}
+
 .song + .song {
   margin-top: 1.5rem;
 }
