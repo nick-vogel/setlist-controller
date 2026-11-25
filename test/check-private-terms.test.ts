@@ -129,6 +129,18 @@ describe('pnpm check:private', () => {
     expect(check(['--range', `${before}..HEAD`]).status).toBe(0);
   });
 
+  it('reads the lines of a root commit even where git is set not to show one', async () => {
+    const root = await scratch();
+    await writeFile(join(dir, 'terms.txt'), `${TERMS}\nsetlist controller`);
+    const result = spawnSync('node', [SCRIPT, '--range', root], {
+      cwd: dir,
+      encoding: 'utf8',
+      env: { ...process.env, PRIVATE_TERMS_FILE: join(dir, 'terms.txt'), GIT_CONFIG_COUNT: '1', GIT_CONFIG_KEY_0: 'log.showRoot', GIT_CONFIG_VALUE_0: 'false' },
+    });
+    expect(result.status).toBe(1);
+    expect(result.stderr).toContain(', README.md holds the term on line 6');
+  });
+
   it('fails a range whose commit message holds a term', async () => {
     const first = await scratch();
     await commit('notes.md', 'clean\n', 'Lights for Example Fellowship');
@@ -168,6 +180,12 @@ describe('pnpm check:private', () => {
     { args: ['--rang', 'HEAD~1..HEAD'] },
     { args: ['--stdin', '--range', 'HEAD~1..HEAD'] },
     { args: ['--range', ''] },
+    { args: ['--range=--stdin'] },
+    { args: ['--range=--branches=nope'] },
+    { args: ['--range', 'HEAD~1..HEAD', '--range', 'HEAD..HEAD'] },
+    { args: ['--stdin', '--stdin'] },
+    { args: ['--'] },
+    { args: ['--range', 'no-such-ref..HEAD'] },
   ])(
     'refuses $args with exit 2 and checks nothing, even with no terms file',
     async ({ args }) => {

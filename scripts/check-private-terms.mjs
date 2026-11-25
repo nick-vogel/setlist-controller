@@ -20,14 +20,31 @@ const refuse = (problem) => {
   console.error(`check:private: ${problem}`);
   process.exit(2);
 };
-let values;
+const git = (...args) => execFileSync('git', args, { encoding: 'utf8', maxBuffer: 1024 * 1024 * 1024 });
+let parsed;
 try {
-  ({ values } = parseArgs({ options: { stdin: { type: 'boolean', default: false }, range: { type: 'string' } } }));
+  parsed = parseArgs({ options: { stdin: { type: 'boolean', multiple: true }, range: { type: 'string', multiple: true } }, tokens: true });
 } catch (error) {
   refuse(error instanceof Error ? error.message : String(error));
 }
-if (values.stdin && values.range !== undefined) refuse('pass --stdin or --range, not both');
-if (values.range === '') refuse('--range needs a range, such as origin/main..HEAD');
+const stdins = parsed.values.stdin ?? [];
+const ranges = parsed.values.range ?? [];
+if (parsed.tokens.some((token) => token.kind === 'option-terminator')) refuse('"--" is not taken: pass the flags straight to the check');
+if (stdins.length > 1 || ranges.length > 1) refuse('pass --stdin or --range once');
+if (stdins.length > 0 && ranges.length > 0) refuse('pass --stdin or --range, not both');
+const range = ranges[0];
+if (range === '') refuse('--range needs a range, such as origin/main..HEAD');
+if (range?.startsWith('-')) refuse(`--range ${range} is no range: a range cannot start with "-"`);
+let commits = [];
+if (range !== undefined) {
+  try {
+    commits = execFileSync('git', ['rev-list', '--end-of-options', range], { encoding: 'utf8', stdio: ['ignore', 'pipe', 'pipe'] })
+      .split('\n')
+      .filter(Boolean);
+  } catch (error) {
+    refuse(`git cannot read --range ${range}: ${String(error.stderr ?? '').trim().split('\n')[0]}`);
+  }
+}
 
 const termsFile = process.env.PRIVATE_TERMS_FILE || join(homedir(), '.config/setlist-controller/private-terms.txt');
 if (!existsSync(termsFile)) {
@@ -46,16 +63,15 @@ const terms = readFileSync(termsFile, 'utf8')
     return { number, pattern: new RegExp(word ? `(?<![\\p{L}\\p{N}_])${escape(term)}(?![\\p{L}\\p{N}_])` : escape(term), 'iu') };
   });
 
-const git = (...args) => execFileSync('git', args, { encoding: 'utf8', maxBuffer: 1024 * 1024 * 1024 });
 const found = [];
 const scan = (where, text) => {
   for (const { number, pattern } of terms) if (pattern.test(text)) found.push(`${where} holds the term on line ${number} of ${termsFile}`);
 };
 
-if (values.stdin) {
+if (stdins.length > 0) {
   scan('stdin', readFileSync(0, 'utf8'));
-} else if (values.range !== undefined) {
-  for (const sha of git('rev-list', values.range).split('\n').filter(Boolean)) {
+} else if (range !== undefined) {
+  for (const sha of commits) {
     const short = sha.slice(0, 7);
     scan(`commit ${short}'s message`, git('show', '-s', '--format=%B', sha));
     scan(`commit ${short}'s author and committer`, git('show', '-s', '--format=%an <%ae>%n%cn <%ce>', sha));
@@ -64,7 +80,7 @@ if (values.stdin) {
     }
     let file = '';
     let inHunk = false;
-    for (const line of git('show', '--format=', '--unified=0', '--no-color', '--no-ext-diff', sha).split('\n')) {
+    for (const line of git('show', '--root', '--format=', '--unified=0', '--no-color', '--no-ext-diff', sha).split('\n')) {
       if (line.startsWith('diff ')) {
         file = '';
         inHunk = false;
