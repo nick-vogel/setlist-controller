@@ -4,6 +4,7 @@ import { renderToStaticMarkup } from 'react-dom/server';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import type { CuePoint } from '../src/fake-live/fake-live.ts';
 import type { Command } from '../src/shared/command.ts';
+import { activeSong } from '../src/shared/safe-mode.ts';
 import type { ProducerSnapshot, SetList, Snapshot } from '../src/shared/snapshot.ts';
 import { Page } from '../web/src/App.tsx';
 import { STOP_HOLD_MS } from '../web/src/hold.ts';
@@ -283,6 +284,16 @@ const BASE_SNAPSHOT: ProducerSnapshot = {
   connections: [],
   connectionProblems: [],
 };
+
+describe('activeSong', () => {
+  it('guards the held count-in song even when now points elsewhere or nowhere, and ignores a waiting jump outside a count-in', () => {
+    const inSong1 = BASE_SNAPSHOT.now;
+    expect(activeSong(true, { song: 2, section: 1 }, inSong1)).toBe(2);
+    expect(activeSong(true, { song: 2, section: 1 }, null)).toBe(2);
+    expect(activeSong(false, { song: 2, section: 0 }, inSong1)).toBe(1);
+    expect(activeSong(false, null, null)).toBeNull();
+  });
+});
 
 const stylesheet = readStylesheet(resolve(import.meta.dirname, '../web/src/styles.css'));
 
