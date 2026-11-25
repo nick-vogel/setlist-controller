@@ -34,6 +34,10 @@ export type ServerOptions = {
   webRoot?: string;
   // Times the bridge's probe of Live and the poll of the set. Tests pass a clock they move by hand.
   clock?: Clock;
+  // Times the hub's position-only broadcast pacing (~20 Hz). Defaults to real time, as the hub's
+  // heartbeat does, so tests that step Live without advancing `clock` still receive trailing flushes;
+  // tests of the hub's pacing pass a manual clock here.
+  hubClock?: Clock;
   // Where the foot pedal's messages come from. With none, the pedal does nothing. Production passes
   // the CoreMIDI adapter, which start-up.ts opens through the loader main.ts hands it from
   // native-loaders.ts, so the server itself never loads it.
@@ -82,6 +86,7 @@ export const DEFAULTS = {
   oscReceivePort: 11001,
   webRoot: resolve(import.meta.dirname, '../../dist/web'),
   clock: realClock,
+  hubClock: realClock,
 } satisfies Required<Omit<ServerOptions, 'midiInput' | 'pedalConfigPath' | 'targets' | 'connectionsConfigPath' | 'targetKinds' | 'setManifestPath' | 'leaderSecret' | 'producerSecret' | 'latenessLog'>>;
 
 // AbletonOSC has no cue point listener, so the set is read again on this beat. The controller sends
@@ -95,7 +100,7 @@ const SET_POLL_MS = 5000;
 const CANCELS_SCHEDULE = new Set<Command['kind']>(['stop', 'jump', 'next', 'previous', 'play-from-start', 'count-in']);
 
 export async function startServer(options: ServerOptions): Promise<Server> {
-  const { httpHost, httpPort, oscSendPort, oscReceivePort, webRoot, clock } = { ...DEFAULTS, ...options };
+  const { httpHost, httpPort, oscSendPort, oscReceivePort, webRoot, clock, hubClock } = { ...DEFAULTS, ...options };
   const { midiInput, pedalConfigPath, targets = [], connectionsConfigPath, targetKinds = {}, setManifestPath, leaderSecret, producerSecret, latenessLog } = options;
   const log = latenessLog ? openLatenessLog(latenessLog) : null;
   const secrets: HubSecrets = { leader: leaderSecret, producer: producerSecret };
@@ -303,6 +308,7 @@ export async function startServer(options: ServerOptions): Promise<Server> {
     secrets,
     (given) => (given.kind === 'refresh' ? refresh() : command(given)),
     (command) => connections.command(command),
+    hubClock,
   );
   const live = await startLiveBridge({
     sendPort: oscSendPort,

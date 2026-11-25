@@ -24,11 +24,16 @@ export type Proxy = {
   // Stops forwarding on every open connection, both ways, but keeps it open: a half-open socket, as
   // a phone that slept often holds. New connections forward as normal.
   freeze(): void;
+  // Stops reading from the server on every open connection, so TCP flow control pushes backpressure
+  // onto the server's socket without dropping bytes, as a congested Wi-Fi link does.
+  pause(): void;
+  // Resumes reading from the server on every paused connection.
+  resume(): void;
   close(): Promise<void>;
 };
 
 export async function startProxy(targetPort: number): Promise<Proxy> {
-  const open = new Set<{ client: Socket; upstream: Socket; frozen: boolean }>();
+  const open = new Set<{ client: Socket; upstream: Socket; frozen: boolean; paused: boolean }>();
   const held = new Set<Socket>();
   let mode: 'forward' | 'drop' | 'stall' = 'forward';
   const acceptedAt: number[] = [];
@@ -46,7 +51,7 @@ export async function startProxy(targetPort: number): Promise<Proxy> {
       return;
     }
     const upstream = connectTcp(targetPort, '127.0.0.1');
-    const pair = { client, upstream, frozen: false };
+    const pair = { client, upstream, frozen: false, paused: false };
     open.add(pair);
     const forward = (from: Socket, to: Socket) =>
       from.on('data', (data) => {
@@ -109,6 +114,19 @@ export async function startProxy(targetPort: number): Promise<Proxy> {
     },
     freeze() {
       for (const pair of open) pair.frozen = true;
+    },
+    pause() {
+      for (const pair of open) {
+        pair.paused = true;
+        pair.upstream.pause();
+      }
+    },
+    resume() {
+      for (const pair of open) {
+        if (!pair.paused) continue;
+        pair.paused = false;
+        pair.upstream.resume();
+      }
     },
     close() {
       mode = 'drop';
