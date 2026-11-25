@@ -492,10 +492,13 @@ describe('preserving Live edits across build-set edit', () => {
     expect(mixerVolume(root, 'PAD')).toBe('0.62');
     expect(mainTrackVolume(root)).toBe('0.91');
 
-    const pianoClip = slots(root, 'KEYS')
-      .flatMap(arrangementClips)
-      .find((clip) => value(clip, 'SampleRef', 'FileRef', 'RelativePath') === 'Songs/Goodness of God/Piano.wav');
-    expect(pianoClip && value(pianoClip, 'SampleVolume')).toBe('0.77');
+    const pianoVolume = (set: typeof root) => {
+      const clip = slots(set, 'KEYS')
+        .flatMap(arrangementClips)
+        .find((candidate) => value(candidate, 'SampleRef', 'FileRef', 'RelativePath') === 'Songs/Goodness of God/Piano.wav');
+      return clip && value(clip, 'SampleVolume');
+    };
+    expect(pianoVolume(root)).toBe('0.77');
 
     // 2. Drop song 2 (Great Are You Lord): Song 3 (Grace) shifts to Song 2 and keeps its +LOOP on Bridge!
     const dropped = await run(['edit', projectFolder(workspace), '--drop', '2']);
@@ -518,6 +521,7 @@ describe('preserving Live edits across build-set edit', () => {
     expect(mixerVolume(root, 'GUIDE')).toBe('0.55');
     expect(mixerVolume(root, 'PAD')).toBe('0.62');
     expect(mainTrackVolume(root)).toBe('0.91');
+    expect(pianoVolume(root)).toBe('0.77');
 
     // 3. Add Trust In God at position 1 (--at 1): Goodness shifts 1 -> 2, Grace shifts 2 -> 3, all flags & volumes preserved!
     const added = await run(['edit', projectFolder(workspace), '--add', 'trust', '--at', '1']);
@@ -542,6 +546,7 @@ describe('preserving Live edits across build-set edit', () => {
     expect(mixerVolume(root, 'KEYS')).toBe('0.72');
     expect(mixerVolume(root, 'PAD')).toBe('0.62');
     expect(mainTrackVolume(root)).toBe('0.91');
+    expect(pianoVolume(root)).toBe('0.77');
     // Verify PAD clip exists on PAD track.
     expect(arrangementClips(singleTrack(root, 'PAD')).map(stemOf)).toEqual(['A']);
   }, 20_000);
@@ -929,6 +934,29 @@ describe('validation errors and atomic failure safety', () => {
     expect(edited.stderr.trim().split('\n')).toHaveLength(1);
     expect(edited.stderr).toMatch(/EACCES.*before edit/);
     expect(await snapshotFolder(folder)).toEqual(folderBefore);
+  }, 20_000);
+
+  it('an edit whose set manifest cannot be written keeps the updated set, reports the manifest error, and exits 1', async () => {
+    const workspace = await createWorkspace();
+    const manifestFolder = join(workspace.dir, 'manifest');
+    await mkdir(manifestFolder);
+    const setManifest = join(manifestFolder, 'set-manifest.json');
+    const paths = buildPaths(workspace).map((arg) => (arg === workspace.setManifest ? setManifest : arg));
+    const built = await run(['grace', 'goodness', '--date', DATE, ...paths]);
+    expect(built.code).toBe(0);
+    const folder = projectFolder(workspace);
+    const manifestBefore = await readFile(setManifest, 'utf8');
+    await chmod(manifestFolder, 0o555);
+
+    const added = await run(['edit', folder, '--add', 'trust']).finally(() => chmod(manifestFolder, 0o755));
+
+    expect(added.code).toBe(1);
+    expect(added.stdout).toContain('3. Trust In God');
+    expect(added.stderr.trim().split('\n')).toHaveLength(1);
+    expect(added.stderr).toMatch(/^The set is updated, but the set manifest .* cannot be written: .*EACCES/);
+    expect((await readRecipeJson(folder)).songs.map((song) => song.folder)).toEqual([GRACE, GOODNESS, TRUST]);
+    expect(parseSet(locatorList(await readSet(setPath(workspace)))).songs.map((song) => song.title)).toEqual(['This Is Amazing Grace', 'Goodness of God', 'Trust In God']);
+    expect(await readFile(setManifest, 'utf8')).toBe(manifestBefore);
   }, 20_000);
 
   it('an edit carrying a read-only folder still updates set-manifest.json and exits 0', async () => {
