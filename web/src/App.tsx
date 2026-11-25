@@ -52,6 +52,7 @@ import { connectToServer, type ServerConnection } from './server-connection.ts';
 import { Setup } from './Setup.tsx';
 import { SongHeading } from './SongHeading.tsx';
 import { SongStepButton } from './SongStepButton.tsx';
+import { StageStatusLine } from './StageStatusLine.tsx';
 import { StopButton } from './StopButton.tsx';
 import { TimelineView } from './TimelineView.tsx';
 import { ViewPicker } from './ViewPicker.tsx';
@@ -235,13 +236,19 @@ export function Page({
   // After the pickers, on the view-only page only.
   const autoLockTip = role === 'viewer' && tip && <AutoLockTip onShown={onTipShown} />;
 
+  // The leader page opens on the stage status line, which also says the server is out of reach.
+  // Every other page shows the Reconnecting banner for that.
+  const stageStatusLine = role === 'leader' && <StageStatusLine snapshot={snapshot} connected={connected} />;
+  const reconnecting = !connected && role !== 'leader' && <Reconnecting />;
+
   if (!snapshot.set || snapshot.set.songs.length === 0) {
     return (
       <main>
         {powerBanner}
         {picker}
         {autoLockTip}
-        {!connected && <Reconnecting />}
+        {reconnecting}
+        {stageStatusLine}
         {snapshot.live === 'not-connected' ? (
           <LiveNotConnected />
         ) : (
@@ -273,7 +280,7 @@ export function Page({
         <ViewPicker view={view} onView={onView} />
         <FontSizePicker fontSize={fontSize} onFontSize={onFontSize} />
         {autoLockTip}
-        {!connected && <Reconnecting />}
+        {reconnecting}
         {live === 'not-connected' && <LiveNotConnected />}
         <ChartView
           set={snapshot.set}
@@ -297,7 +304,7 @@ export function Page({
     return (
       <main className="timeline-page">
         {powerBanner}
-        {!connected && <Reconnecting />}
+        {stageStatusLine}
         <TimelineView
           set={snapshot.set}
           snapshot={snapshot}
@@ -315,7 +322,8 @@ export function Page({
       {powerBanner}
       {picker}
       {autoLockTip}
-      {!connected && <Reconnecting />}
+      {reconnecting}
+      {stageStatusLine}
       {role === 'leader' && (
         <div className="leader-mode-bar">
           <LeaderViewSwitcher leaderView={leaderView} onLeaderView={onLeaderView} />
