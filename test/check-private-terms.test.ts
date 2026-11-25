@@ -73,7 +73,9 @@ describe('pnpm check:private', () => {
   it('matches a word: term as a whole word only', async () => {
     await scratch();
     await commit('notes.md', 'Ready for the EXF band.\n');
-    expect(check([]).status).toBe(1);
+    const result = check([]);
+    expect(result.status).toBe(1);
+    expect(result.stderr).toContain('notes.md:1 holds the term on line 4');
   });
 
   it('fails a range in which one commit adds a term and a later one removes it, since the history is public too', async () => {
@@ -130,19 +132,33 @@ describe('pnpm check:private', () => {
   it('fails a range whose commit message holds a term', async () => {
     const first = await scratch();
     await commit('notes.md', 'clean\n', 'Lights for Example Fellowship');
-    expect(check(['--range', `${first}..HEAD`]).status).toBe(1);
+    const result = check(['--range', `${first}..HEAD`]);
+    expect(result.status).toBe(1);
+    expect(result.stderr).toContain("'s message holds the term on line 3");
   });
 
-  it('fails a range with a commit whose author address holds a term', async () => {
+  it('fails a range with a commit whose author or committer address holds a term', async () => {
     const first = await scratch();
     git('config', 'user.email', 'me@retired-host-01.example');
     await commit('notes.md', 'clean\n');
-    expect(check(['--range', `${first}..HEAD`]).status).toBe(1);
+    const author = check(['--range', `${first}..HEAD`]);
+    expect(author.status).toBe(1);
+    expect(author.stderr).toContain("'s author and committer holds the term on line 5");
+
+    git('config', 'user.email', 'maintainer@users.noreply.github.com');
+    const before = git('rev-parse', 'HEAD');
+    const committed = spawnSync('git', ['commit', '-q', '--allow-empty', '-m', 'Clean'], { cwd: dir, encoding: 'utf8', env: { ...process.env, GIT_COMMITTER_EMAIL: 'ops@retired-host-01.example' } });
+    expect(committed.status).toBe(0);
+    const committer = check(['--range', `${before}..HEAD`]);
+    expect(committer.status).toBe(1);
+    expect(committer.stderr).toContain("'s author and committer holds the term on line 5");
   });
 
   it('fails text on stdin that holds a term, for a pull request title and body', async () => {
     await scratch();
-    expect(check(['--stdin'], { input: 'Fix the cue lights\n\nFor Example Fellowship.' }).status).toBe(1);
+    const dirty = check(['--stdin'], { input: 'Fix the cue lights\n\nFor Example Fellowship.' });
+    expect(dirty.status).toBe(1);
+    expect(dirty.stderr).toContain('stdin holds the term on line 3');
     expect(check(['--stdin'], { input: 'Fix the cue lights' }).status).toBe(0);
   });
 
