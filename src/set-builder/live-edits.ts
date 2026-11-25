@@ -26,7 +26,8 @@ export type LiveEdits = {
 export type LocatorCarry = {
   // Each untouched song's NEW 1-based song number, mapped to its OLD 1-based song number.
   untouched: Map<number, number>;
-  // The NEW song numbers whose End region the new build decides: the song just before the edited position.
+  // The NEW song numbers whose End region the new build decides: a song before the edited position whose transition is a
+  // pad or changed by the edit.
   boundary: Set<number>;
   // Each OLD song number's start beat in the old set.
   oldStarts: Map<number, number>;

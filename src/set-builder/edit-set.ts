@@ -218,7 +218,7 @@ async function planEdit(recipe: SetRecipe, action: EditAction): Promise<{ ok: tr
       replacement.folder === songs[target.position - 1]!.folder
         ? [`Song ${target.position} is rebuilt from ${replacement.folder} in the library, so its locators and clip gains start as the library has them.`]
         : padKeyWarnings(nextTransitions, nextSongs, target.position, true);
-    return { ok: true, songs: nextSongs, transitions: nextTransitions, untouched, boundary: before(target.position), warnings };
+    return { ok: true, songs: nextSongs, transitions: nextTransitions, untouched, boundary: boundaryBefore(target.position, transitions, nextTransitions), warnings };
   }
 
   if (action.kind === 'add') {
@@ -241,7 +241,7 @@ async function planEdit(recipe: SetRecipe, action: EditAction): Promise<{ ok: tr
     for (let oldPos = 1; oldPos <= songs.length; oldPos++) {
       untouched.set(oldPos >= at ? oldPos + 1 : oldPos, oldPos);
     }
-    return { ok: true, songs: nextSongs, transitions: nextTransitions, untouched, boundary: before(at), warnings: padKeyWarnings(nextTransitions, nextSongs, at) };
+    return { ok: true, songs: nextSongs, transitions: nextTransitions, untouched, boundary: boundaryBefore(at, transitions, nextTransitions), warnings: padKeyWarnings(nextTransitions, nextSongs, at) };
   }
 
   const target = resolveRecipeSong(songs, action.song);
@@ -270,7 +270,7 @@ async function planEdit(recipe: SetRecipe, action: EditAction): Promise<{ ok: tr
     songs: nextSongs,
     transitions: nextTransitions,
     untouched,
-    boundary: before(target.position),
+    boundary: boundaryBefore(target.position, transitions, nextTransitions),
     warnings: padKeyWarnings(nextTransitions, nextSongs, target.position),
   };
 }
@@ -291,8 +291,12 @@ function padKeyWarnings(transitions: Partial<Record<number, Transition>>, songs:
   return warnings;
 }
 
-function before(position: number): Set<number> {
-  return new Set(position > 1 ? [position - 1] : []);
+function boundaryBefore(position: number, oldTransitions: Partial<Record<number, Transition>>, nextTransitions: Partial<Record<number, Transition>>): Set<number> {
+  if (position <= 1) return new Set();
+  const prev = position - 1;
+  const beforeType = oldTransitions[prev]?.type ?? 'gap';
+  const afterType = nextTransitions[prev]?.type ?? 'gap';
+  return new Set(beforeType === 'pad' || afterType === 'pad' || beforeType !== afterType ? [prev] : []);
 }
 
 function listedSongs(songs: RecipeSong[]): string {

@@ -607,6 +607,32 @@ describe('the song before the edited position', () => {
     expect(songTwo.at(-1)).toBe('2 - End');
     expect(parseSet(locatorList(root)).warnings).toEqual([]);
   }, 20_000);
+
+  it('a song with an unchanged gap before an edit keeps deleted and moved locators verbatim', async () => {
+    const workspace = await createWorkspace();
+    const built = await run(['goodness', 'trust', 'grace', '--date', DATE, ...buildPaths(workspace)]);
+    expect(built.code).toBe(0);
+    const songOne = (locators: { time: number; name: string }[]) => locators.filter((locator) => locator.name.startsWith('1 - '));
+    const verse = songOne(locatorList(await readSet(setPath(workspace)))).find((locator) => locator.name === '1 - Verse 1')!;
+    await mutateAlsXml(setPath(workspace), (xml) =>
+      xml
+        .replace(/<Locator Id="\d+">(?:(?!<\/Locator>)[\s\S])*?<Name Value="1 - Intro" \/>[\s\S]*?<\/Locator>/, '')
+        .replace(
+          new RegExp(`(<Locator Id="\\d+">(?:(?!</Locator>)[\\s\\S])*?<Time Value=")${verse.time}(" />(?:(?!</Locator>)[\\s\\S])*?<Name Value="1 - Verse 1" />)`),
+          `$1${verse.time - 4}$2`,
+        ),
+    );
+    const edited = songOne(locatorList(await readSet(setPath(workspace))));
+
+    const swapped = await run(['edit', projectFolder(workspace), '--swap', '2', 'great are']);
+
+    expect(swapped.stderr).toBe('');
+    expect(swapped.code).toBe(0);
+    const after = songOne(locatorList(await readSet(setPath(workspace))));
+    expect(after.map((locator) => locator.name)).not.toContain('1 - Intro');
+    expect(after.filter((locator) => locator.name === '1 - Verse 1')).toEqual([{ time: verse.time - 4, name: '1 - Verse 1' }]);
+    expect(after).toEqual(edited);
+  }, 20_000);
 });
 
 describe('Eos lighting cue regeneration on build-set edit', () => {
