@@ -1,12 +1,13 @@
 import { existsSync } from 'node:fs';
-import { readFile } from 'node:fs/promises';
+import { stat } from 'node:fs/promises';
 import { homedir } from 'node:os';
-import { join, resolve } from 'node:path';
+import { dirname, join, resolve } from 'node:path';
 import { parseArgs, type ParseArgsOptionsConfig } from 'node:util';
 import { APP_SUPPORT } from '../server/app-support.ts';
 import { SET_MANIFEST_FILE } from '../shared/set-manifest.ts';
 import { valueOf } from './als.ts';
 import { buildSet, setFolder, setName, setProblems, type SongSummary, type StemMap, type SummaryTransition, type Transition } from './build-set.ts';
+import { editSet, EDIT_USAGE, LIGHTS_UNRECORDED, type EditAction } from './edit-set.ts';
 import { matchSongs, TEMPLATE_FOLDER } from './library.ts';
 import { EOS_LIMITS, type EosLimits } from './eos.ts';
 import { lightsStep } from './lights.ts';
@@ -18,6 +19,7 @@ import { existingSetLine, listingHasProblems, planListing } from './plan-list.ts
 import { API_BASE, readPlan, readToken, tokenFilePath, type Plan, type PlanSong } from './plan-reader.ts';
 import { chartWarnings, planWarnings, startingMeter } from './plan-warnings.ts';
 import { transitionsWithFlags, type FlagTransition } from './plan-transitions.ts';
+import { DEFAULT_STEM_MAP_PATH, readRecipe, readStemMapFile, updateRecipe } from './recipe.ts';
 import { defaultSetDate } from './set-date.ts';
 import { buildManifest, writeSetManifest } from './set-manifest.ts';
 import { leftOutNote, skeletonLines, songSkeleton } from './skeleton.ts';
@@ -39,6 +41,7 @@ const USAGE = `Usage:
   pnpm build-set --skeleton <song> [<song> ...] [--library <folder>] [--pads <folder>]
   pnpm build-set --plan --skeleton [--service-type <name or id>] [--plan-id <id>] [--date YYYY-MM-DD] [--library <folder>] [--pads <folder>]
   pnpm build-set --lights [--date YYYY-MM-DD] [--output-root <folder>] [--show-folder <folder>] [--connections-config <path>] [--playlist <name>]
+  pnpm build-set edit [<set folder>] [--date YYYY-MM-DD] [--output-root <folder>] (--swap <song> <replacement> | --add <song> [--at <pos>] | --drop <song>)
 
 Name the songs in service order. A song is any part of its folder name in the library, in any letter case, that
 names that one folder: "grace" for "This Is Amazing Grace-The Ascension-D-98.00bpm". A song's whole folder name, in
@@ -242,9 +245,15 @@ const PLAN_SKELETON_OPTIONS: string[] = ['skeleton', 'plan', 'library', 'pads', 
 // take the songs' colours from when the date does not name one.
 const LIGHTS_OPTIONS: string[] = ['lights', 'date', 'output-root', 'show-folder', 'connections-config', 'playlist'];
 
+function editUsage(problem: string): never {
+  console.error(`${problem}\n\n${EDIT_USAGE}`);
+  process.exit(2);
+}
+
+const isEdit = process.argv[2] === 'edit';
 let parsed;
 try {
-  parsed = parseArgs({ allowPositionals: true, options: OPTIONS });
+  parsed = parseArgs({ args: isEdit ? [] : process.argv.slice(2), allowPositionals: true, options: OPTIONS });
 } catch (error) {
   usage(error instanceof Error ? error.message : String(error));
 }
@@ -253,7 +262,9 @@ const from = (process.env.npm_lifecycle_event === 'build-set' && process.env.INI
 const library = resolve(from, values.library ?? join(homedir(), 'Music/MultiTracks'));
 const padsPath = values.pads === undefined ? undefined : resolve(from, values.pads);
 
-if (values.skeleton === true) {
+if (isEdit) {
+  await edit(process.argv.slice(3));
+} else if (values.skeleton === true) {
   await skeleton();
 } else if (values.list === true && values.plan === true) {
   await planList();
@@ -263,6 +274,114 @@ if (values.skeleton === true) {
   await lights();
 } else {
   await build();
+}
+
+async function edit(args: string[]): Promise<void> {
+  const { folder, action } = await parseEditArgs(args);
+  let result: Awaited<ReturnType<typeof editSet>>;
+  try {
+    result = await editSet({
+      folder,
+      action,
+      limits: eosLimits(),
+      proPresenterTimeoutMs: proPresenterTimeout(),
+      proPresenterAgainMs: proPresenterAgain(),
+    });
+  } catch (error) {
+    console.error(error instanceof Error ? error.message : String(error));
+    process.exitCode = 1;
+    return;
+  }
+  if (!result.ok) {
+    fail(result.problems);
+    return;
+  }
+  console.log(summary(result.date, result.songs, result.warnings, result.setPath));
+  for (const line of result.lightsLines) console.log(line);
+  if (result.manifestProblem !== undefined) {
+    console.error(result.manifestProblem);
+    process.exitCode = 1;
+  }
+  if (result.lightsProblem !== undefined) {
+    console.error(result.lightsProblem);
+    process.exitCode = 1;
+  }
+}
+
+async function parseEditArgs(args: string[]): Promise<{ folder: string; action: EditAction }> {
+  let action: EditAction | undefined;
+  let atRaw: string | undefined;
+  let date: string | undefined;
+  let editOutputRoot: string | undefined;
+  let folderArg: string | undefined;
+
+  const setAction = (next: EditAction) => {
+    if (action !== undefined) editUsage('Give one edit action per command: --swap, --add, or --drop.');
+    action = next;
+  };
+
+  const nextArg = (index: number, flag: string): string => {
+    const value = args[index];
+    if (value === undefined || value.startsWith('--')) editUsage(`${flag} requires a value.`);
+    return value;
+  };
+
+  for (let i = 0; i < args.length; i++) {
+    const token = args[i]!;
+    if (token === '--swap') {
+      const song = args[i + 1];
+      const replacement = args[i + 2];
+      if (song === undefined || song.startsWith('--') || replacement === undefined || replacement.startsWith('--')) {
+        editUsage('--swap requires two arguments: --swap <song> <replacement>.');
+      }
+      setAction({ kind: 'swap', song, replacement });
+      i += 2;
+    } else if (token === '--add' || token.startsWith('--add=')) {
+      const song = token === '--add' ? nextArg(++i, '--add') : token.slice('--add='.length);
+      if (song === '') editUsage('--add requires a song name.');
+      setAction({ kind: 'add', song });
+    } else if (token === '--at' || token.startsWith('--at=')) {
+      if (atRaw !== undefined) editUsage('--at may only be given once.');
+      atRaw = token === '--at' ? nextArg(++i, '--at') : token.slice('--at='.length);
+    } else if (token === '--drop' || token.startsWith('--drop=')) {
+      const song = token === '--drop' ? nextArg(++i, '--drop') : token.slice('--drop='.length);
+      if (song === '') editUsage('--drop requires a song name or position.');
+      setAction({ kind: 'drop', song });
+    } else if (token === '--date' || token.startsWith('--date=')) {
+      date = token === '--date' ? nextArg(++i, '--date') : token.slice('--date='.length);
+    } else if (token === '--output-root' || token.startsWith('--output-root=')) {
+      editOutputRoot = token === '--output-root' ? nextArg(++i, '--output-root') : token.slice('--output-root='.length);
+    } else if (token.startsWith('--')) {
+      editUsage(`Unknown option for build-set edit: ${token}.`);
+    } else if (folderArg === undefined) {
+      folderArg = token;
+    } else {
+      editUsage(`Unexpected extra argument "${token}".`);
+    }
+  }
+
+  if (action === undefined) editUsage('Give one edit action: --swap <song> <replacement>, --add <song> [--at <pos>], or --drop <song>.');
+  if (atRaw !== undefined) {
+    if (action.kind !== 'add') editUsage('--at can only be used with --add.');
+    if (!/^[1-9]\d*$/.test(atRaw)) editUsage(`--at must be a positive whole number, not "${atRaw}".`);
+    action = { ...action, at: Number(atRaw) };
+  }
+  if (date !== undefined && !isDate(date)) editUsage(`--date must be a real date written YYYY-MM-DD, not ${date}.`);
+  if (folderArg !== undefined && (date !== undefined || editOutputRoot !== undefined)) {
+    editUsage('Give either a set folder path or --date/--output-root, not both.');
+  }
+
+  let folder: string;
+  if (folderArg !== undefined) {
+    const resolved = resolve(from, folderArg);
+    const info = await stat(resolved).catch(() => undefined);
+    folder = info?.isFile() && resolved.endsWith('.als') ? dirname(resolved) : resolved;
+  } else {
+    const root = resolve(from, editOutputRoot ?? join(homedir(), 'Music/Ableton/Sets'));
+    folder = setFolder(root, date ?? defaultSetDate(new Date()));
+  }
+
+  return { folder, action };
 }
 
 // The lights mode: for the set built for the date, the song cues of the weekly show file open in Eos labelled and given
@@ -276,18 +395,39 @@ async function lights(): Promise<void> {
   if (flag !== undefined) usage(`--lights takes only --date, --output-root, --show-folder, --connections-config and --playlist, not --${flag}.`);
   if (values.date !== undefined && !isDate(values.date)) usage(`--date must be a real date written YYYY-MM-DD, not ${values.date}.`);
   if (values.playlist?.trim() === '') usage("--playlist names no playlist. Give it the playlist's name: --playlist <name>.");
+  const date = values.date ?? defaultSetDate(new Date());
+  const outRoot = outputRoot();
+  const showDir = showFolder();
+  const connConfig = connectionsConfigPath();
+  const recorded = await readRecipe(setFolder(outRoot, date));
   const run = await lightsStep({
-    date: values.date ?? defaultSetDate(new Date()),
-    outputRoot: outputRoot(),
-    showFolder: showFolder(),
-    connectionsConfig: connectionsConfigPath(),
+    date,
+    outputRoot: outRoot,
+    showFolder: showDir,
+    connectionsConfig: connConfig,
     limits: eosLimits(),
     proPresenterTimeoutMs: proPresenterTimeout(),
     proPresenterAgainMs: proPresenterAgain(),
     playlist: values.playlist,
+    previousTitles: recorded.ok ? recorded.recipe.lights?.labelled : undefined,
   });
   for (const line of run.lines) console.log(line);
-  if (run.problem !== undefined) fail([run.problem]);
+  if (run.problem !== undefined) {
+    fail([run.problem]);
+  } else {
+    await updateRecipe(setFolder(outRoot, date), (recipe) => ({
+      ...recipe,
+      lights: {
+        showFolder: showDir,
+        connectionsConfig: connConfig,
+        ...(values.playlist === undefined ? {} : { playlist: values.playlist }),
+        labelled: run.labelled,
+      },
+    })).catch((error: unknown) => {
+      console.error(`${LIGHTS_UNRECORDED} ${oneLine(error)}`);
+      process.exitCode = 1;
+    });
+  }
 }
 
 // Each song folder's line, or the library's problem alone with exit 1. After the song lines, when the set folder for the
@@ -456,6 +596,7 @@ async function build(): Promise<void> {
     const stemMap = await stemMapFile();
     // Read before anything is written, so a lights config that is missing or broken is the build's one problem line.
     const lights = await readLightsConfig();
+    const manifest = setManifestPath();
     const result = await buildSet({
       library,
       template: templatePath(),
@@ -466,10 +607,24 @@ async function build(): Promise<void> {
       replace,
       transitions,
       pads: padsPath,
+      recipe: {
+        stemMapPath: DEFAULT_STEM_MAP_PATH,
+        setManifest: manifest,
+        showFolder: showFolder(),
+        ...(values.plan === true
+          ? { plan: { serviceType: values['service-type'] ?? 'Service', ...(values['plan-id'] === undefined ? {} : { planId: values['plan-id'] }) } }
+          : {}),
+        ...(planSongs === undefined
+          ? {}
+          : {
+              charts: planSongs.map((song) =>
+                song.chartText === undefined ? undefined : { ...(song.chartKey === undefined ? {} : { chartKey: song.chartKey }), chartText: song.chartText },
+              ),
+            }),
+      },
     });
     if (result.ok) {
       const warnings = planSongs === undefined ? [] : planWarnings(planSongs, result.songs.map(({ folder }) => folder), result.songs.map(({ meter }) => meter));
-      const manifest = setManifestPath();
       // The set is built either way, so its summary prints; a manifest left unwritten would keep last week's charts on
       // this week's set, so it is one line on stderr and exit 1.
       const written = await writeSetManifest(manifest, buildManifest(result.songs, planSongs)).then(() => undefined, oneLine);
@@ -684,49 +839,8 @@ function existingSet(date: string, replace: boolean): { folder: string; replace:
 // The stem map at config/stem-map.json in this repository. A file it cannot read, or one that is not valid JSON, throws
 // one line that names the file and keeps the cause's own message, such as the line and column of a stray comma. A map
 // of the wrong shape throws one line that names the file too, before the build walks the map (stemMapShape).
-async function stemMapFile(): Promise<StemMap> {
-  let text: string;
-  try {
-    text = await readFile(join(import.meta.dirname, '../../config/stem-map.json'), 'utf8');
-  } catch (error) {
-    throw new Error(`config/stem-map.json cannot be read: ${oneLine(error)}`, { cause: error });
-  }
-  let value: unknown;
-  try {
-    value = JSON.parse(text);
-  } catch (error) {
-    throw new Error(`config/stem-map.json is not valid JSON: ${oneLine(error)}`, { cause: error });
-  }
-  return stemMapShape(value);
-}
-
-// The parsed stem map, once its top level is a plain object and each group's value is a list of stem names. A top level
-// that is anything else throws one line that names the file and says what the top level is instead; then a group whose
-// value is not a list of strings throws one line that names the file and every such group, in map order.
-function stemMapShape(value: unknown): StemMap {
-  if (typeof value !== 'object' || value === null || Array.isArray(value)) {
-    throw new Error(`config/stem-map.json must be an object that lists each group's stem names, and its top level is ${jsonKind(value)}.`);
-  }
-  const entries: [string, string[]][] = [];
-  const groups: string[] = [];
-  for (const [group, stems] of Object.entries(value as Record<string, unknown>)) {
-    if (Array.isArray(stems) && stems.every((stem): stem is string => typeof stem === 'string')) entries.push([group, stems]);
-    else groups.push(group);
-  }
-  if (groups.length > 0) {
-    const names = groups.length === 1 ? groups[0] : `${groups.slice(0, -1).join(', ')} and ${groups.at(-1)}`;
-    throw new Error(
-      `config/stem-map.json lists the stems of ${names} as something other than a list of stem names. Put each group's stems in brackets: "${groups[0]}": ["<stem>"].`,
-    );
-  }
-  return Object.fromEntries(entries);
-}
-
-// A parsed JSON value that is not a plain object, as the stem map's top-level line names it.
-function jsonKind(value: unknown): string {
-  if (Array.isArray(value)) return 'a list';
-  if (value === null || typeof value === 'boolean') return String(value);
-  return `a ${typeof value}`;
+function stemMapFile(): Promise<StemMap> {
+  return readStemMapFile(DEFAULT_STEM_MAP_PATH);
 }
 
 // The set's name, each song with the bar it starts on, the tempo and meter it starts in and the transition after it,

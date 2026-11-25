@@ -86,7 +86,7 @@ async function newestShow(showFolder: string, showName: string): Promise<string 
 }
 
 // A time as Eos writes it in a show file's name: YYYY-MM-DD HH-MM-SS, in local time.
-function saveTime(time: Date): string {
+export function saveTime(time: Date): string {
   const two = (value: number) => String(value).padStart(2, '0');
   const day = [time.getFullYear(), two(time.getMonth() + 1), two(time.getDate())].join('-');
   return `${day} ${[time.getHours(), time.getMinutes(), time.getSeconds()].map(two).join('-')}`;

@@ -1,9 +1,11 @@
 import { constants, existsSync } from 'node:fs';
-import { cp, mkdir } from 'node:fs/promises';
+import { cp, mkdir, readdir } from 'node:fs/promises';
 import { basename, join } from 'node:path';
+import { setTimeout as wait } from 'node:timers/promises';
 import type { Element } from './als.ts';
 import { padProjectFile, type PadFile } from './pads.ts';
 import { fileInSong, type Song } from './song.ts';
+import { saveTime } from './weekly-show.ts';
 
 // The built set is a self-contained Live project: each song's audio is copied into Songs/<title>/ in the
 // project folder, so that songs whose files share a name ("Bass.wav", "Click Track.wav") never collide, and each pad
@@ -103,4 +105,26 @@ export async function copyProjectInfo(library: string, songs: Song[], projectFol
   const target = join(projectFolder, PROJECT_INFO);
   if (source && existsSync(source)) await cp(source, target, { ...COPY, recursive: true });
   else await mkdir(target);
+}
+
+export async function carryOver(fromFolder: string, projectFolder: string): Promise<void> {
+  for (const name of await readdir(fromFolder)) {
+    if (!existsSync(join(projectFolder, name))) await cp(join(fromFolder, name), join(projectFolder, name), { ...COPY, recursive: true });
+  }
+}
+
+export async function keepReplacedSet(alsPath: string, projectFolder: string, name: string, now: () => Date = () => new Date()): Promise<void> {
+  await mkdir(join(projectFolder, 'Backup'), { recursive: true });
+  for (;;) {
+    const at = now();
+    const kept = await cp(alsPath, join(projectFolder, 'Backup', `${name} (before edit ${saveTime(at)}).als`), COPY).then(
+      () => true,
+      (error: unknown) => {
+        if ((error as NodeJS.ErrnoException).code === 'ERR_FS_CP_EEXIST') return false;
+        throw error;
+      },
+    );
+    if (kept) return;
+    await wait(1000 - at.getMilliseconds());
+  }
 }
