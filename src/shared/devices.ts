@@ -7,7 +7,9 @@ import type { Role } from './routes.ts';
 // band phone cannot list itself as the producer.
 
 // A client ID, as the page makes it (web/src/device-settings.ts): letters, digits and dashes.
-const CLIENT_ID = /^[A-Za-z0-9-]{1,64}$/;
+export function isClientId(value: unknown): value is string {
+  return typeof value === 'string' && /^[A-Za-z0-9-]{1,64}$/.test(value);
+}
 
 // The longest device name the hub keeps. A longer one is cut, never refused, so a page always shows.
 export const MAX_DEVICE_NAME = 40;
@@ -43,7 +45,7 @@ export function parseHello(data: unknown): DeviceHello | null {
   }
   if (typeof value !== 'object' || value === null) return null;
   const { kind, client, name, battery } = value as Record<string, unknown>;
-  if (kind !== 'hello' || typeof client !== 'string' || !CLIENT_ID.test(client) || typeof name !== 'string') return null;
+  if (kind !== 'hello' || !isClientId(client) || typeof name !== 'string') return null;
   const trimmed = name.trim().slice(0, MAX_DEVICE_NAME).trim();
   if (trimmed === '') return null;
   const percent = Number.isInteger(battery) && (battery as number) >= 0 && (battery as number) <= 100 ? (battery as number) : null;

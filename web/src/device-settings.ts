@@ -1,5 +1,7 @@
 import { MAX_CAPO } from '../../src/shared/chart.ts';
+import { isClientId } from '../../src/shared/devices.ts';
 import { nameKey } from '../../src/shared/match-name.ts';
+import type { Role } from '../../src/shared/routes.ts';
 
 // What a band member's device remembers between visits, in the browser's own storage: no account and
 // nothing on the server. The part comes first; later settings take keys of their own beside it. A
@@ -241,4 +243,66 @@ export function storeLeaderView(storage: DeviceStorage | undefined, view: Leader
   } catch {
     // A device that cannot store keeps the leader view for this visit only.
   }
+}
+
+// The ID the hub knows the device by (src/shared/devices.ts), made on its first visit and kept, so the
+// producer's Devices panel shows one row for it across reloads and reconnects. Every page on the
+// device shares it, since the browser's storage is the device's.
+const CLIENT_ID_KEY = 'setlist-controller.client-id';
+
+// 128 random bits as hex. getRandomValues, not randomUUID: a band phone joins over plain HTTP on the
+// stage network, and randomUUID is only there in a secure context.
+export function newClientId(): string {
+  return Array.from(crypto.getRandomValues(new Uint8Array(16)), (byte) => byte.toString(16).padStart(2, '0')).join('');
+}
+
+// The stored client ID, else a new one, stored: nothing stored, or a value the hub would refuse. A
+// device that cannot store gets a new one for this visit.
+export function readClientId(storage: DeviceStorage | undefined, make: () => string = newClientId): string {
+  try {
+    const value = storage?.getItem(CLIENT_ID_KEY);
+    if (isClientId(value)) return value;
+  } catch {
+    // Made for this visit below.
+  }
+  const made = make();
+  try {
+    storage?.setItem(CLIENT_ID_KEY, made);
+  } catch {
+    // A device that cannot store is a new device at its next visit.
+  }
+  return made;
+}
+
+// The name the device goes by on the Devices panel, as its user typed it. With none, it goes by its
+// default, which follows the part picked until a name is typed.
+const DEVICE_NAME_KEY = 'setlist-controller.device-name';
+
+// The stored name, trimmed, or null for none: nothing stored, a blank value, or no storage.
+export function readDeviceName(storage: DeviceStorage | undefined): string | null {
+  try {
+    const value = storage?.getItem(DEVICE_NAME_KEY)?.trim();
+    return value ? value : null;
+  } catch {
+    return null;
+  }
+}
+
+// Stores the name, or forgets it for a blank one, so the device goes by its default again.
+export function storeDeviceName(storage: DeviceStorage | undefined, name: string): void {
+  try {
+    const trimmed = name.trim();
+    if (trimmed === '') storage?.removeItem(DEVICE_NAME_KEY);
+    else storage?.setItem(DEVICE_NAME_KEY, trimmed);
+  } catch {
+    // A device that cannot store keeps the name for this visit only.
+  }
+}
+
+// The name a device goes by until its user types one: the leader's or the producer's role, else the
+// band part picked, else View only.
+export function defaultDeviceName(role: Role, part: Part | null): string {
+  if (role === 'leader') return 'Leader';
+  if (role === 'producer') return 'Producer';
+  return part ?? 'View only';
 }

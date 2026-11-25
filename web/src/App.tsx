@@ -4,17 +4,22 @@ import type { PageCommand } from '../../src/shared/command.ts';
 import { CHARTS_API, controls, isSetupPage, pageRole, type Role } from '../../src/shared/routes.ts';
 import { activeSong } from '../../src/shared/safe-mode.ts';
 import type { SetCharts } from '../../src/shared/set-manifest.ts';
+import type { DeviceHello } from '../../src/shared/devices.ts';
 import type { ProducerSnapshot, Snapshot } from '../../src/shared/snapshot.ts';
 import { AutoLockTip } from './AutoLockTip.tsx';
+import { watchBattery, type BatteryNavigator } from './battery.ts';
 import { ChartView } from './ChartView.tsx';
 import { ChordNamesPicker } from './ChordNamesPicker.tsx';
 import { ConnectionsPanel } from './ConnectionsPanel.tsx';
 import { CountInButton } from './CountInButton.tsx';
 import {
   FONT_SIZES,
+  defaultDeviceName,
   defaultDisplay,
   readCapo,
   readChordNames,
+  readClientId,
+  readDeviceName,
   readDisplay,
   readFontSize,
   readLeaderView,
@@ -23,6 +28,7 @@ import {
   readView,
   storeCapo,
   storeChordNames,
+  storeDeviceName,
   storeDisplay,
   storeFontSize,
   storeLeaderView,
@@ -37,6 +43,8 @@ import {
   type Part,
   type View,
 } from './device-settings.ts';
+import { DeviceNameField } from './DeviceNameField.tsx';
+import { DevicesPanel } from './DevicesPanel.tsx';
 import { DisplayPicker } from './DisplayPicker.tsx';
 import { FadeOutButton } from './FadeOutButton.tsx';
 import { FontSizePicker } from './FontSizePicker.tsx';
@@ -61,9 +69,16 @@ import { ViewPicker } from './ViewPicker.tsx';
 
 export function App() {
   const { role, socketPath } = pageRole(location.pathname);
-  const { snapshot, connected, send } = useServer(socketPath);
-  // Only the view-only page draws the chart view, so only it fetches the charts.
-  const charts = useCharts(role === 'viewer' && !isSetupPage(location.pathname), snapshot?.chartRevision, connected);
+  const setup = isSetupPage(location.pathname);
+  // The device's client ID and the name it goes by, read once from the device, the name stored on
+  // every change. A device with no name typed goes by its role or its part.
+  const [clientId] = useState(() => readClientId(deviceStorage()));
+  const [deviceName, setDeviceName] = useState(() => readDeviceName(deviceStorage()) ?? '');
+  const onDeviceName = useCallback((typed: string) => {
+    setDeviceName(typed);
+    storeDeviceName(deviceStorage(), typed);
+  }, []);
+  const battery = useBattery(!setup);
   // The band member's part, read once from the device and stored on every change, and the display
   // the device keeps for that part, read again for each part picked.
   const [part, setPart] = useState(() => readPart(deviceStorage()));
@@ -129,7 +144,14 @@ export function App() {
   const [tip] = useState(() => role === 'viewer' && !isSetupPage(location.pathname) && !readTipShown(deviceStorage()));
   const onTipShown = useCallback(() => storeTipShown(deviceStorage()), []);
 
-  if (isSetupPage(location.pathname)) return <Setup snapshot={snapshot} connected={connected} />;
+  // Every page but the setup screen says hello on each socket, so the producer's Devices panel lists
+  // it. The setup screen is the laptop's own, not a device on the stage.
+  const hello: DeviceHello | null = setup ? null : { kind: 'hello', client: clientId, name: deviceName.trim() || defaultDeviceName(role, part), battery };
+  const { snapshot, connected, send } = useServer(socketPath, hello);
+  // Only the view-only page draws the chart view, so only it fetches the charts.
+  const charts = useCharts(role === 'viewer' && !setup, snapshot?.chartRevision, connected);
+
+  if (setup) return <Setup snapshot={snapshot} connected={connected} />;
   if (!snapshot) return <p className="status">Connecting to the server.</p>;
   return (
     <Page
@@ -154,6 +176,9 @@ export function App() {
       onTipShown={onTipShown}
       leaderView={leaderView}
       onLeaderView={onLeaderView}
+      clientId={clientId}
+      deviceName={deviceName}
+      onDeviceName={onDeviceName}
     />
   );
 }
@@ -195,6 +220,9 @@ export function Page({
   onTipShown = () => {},
   leaderView = 'setlist',
   onLeaderView = () => {},
+  clientId = '',
+  deviceName = '',
+  onDeviceName = () => {},
 }: {
   role: Role;
   snapshot: Snapshot | ProducerSnapshot;
@@ -224,12 +252,24 @@ export function Page({
   // The leader page's Setlist / Timeline view choice. Ignored on the producer and view-only pages.
   leaderView?: LeaderView;
   onLeaderView?(view: LeaderView): void;
+  // The device's client ID, which the producer's own row is known by, and the name it goes by as
+  // typed, empty for its default.
+  clientId?: string;
+  deviceName?: string;
+  onDeviceName?(name: string): void;
 }) {
   // The panel does not wait for a set: the connections are not Live's. A pick does, since it is kept
   // for the set, and the server drops one while it has read none.
+  // Then the Devices panel, and under it the producer's own device name.
   const connections = role === 'producer' && 'connections' in snapshot && (
-    <ConnectionsPanel connections={snapshot.connections} problems={snapshot.connectionProblems} connected={connected} setKnown={snapshot.set !== null} send={send} />
+    <>
+      <ConnectionsPanel connections={snapshot.connections} problems={snapshot.connectionProblems} connected={connected} setKnown={snapshot.set !== null} send={send} />
+      <DevicesPanel devices={snapshot.devices} producer={{ self: clientId, connected, send }} />
+    </>
   );
+  // The name field: after the part picker on the view-only page, under the Devices panel on the
+  // producer page, and last on the leader's Setlist page.
+  const nameField = <DeviceNameField name={deviceName} placeholder={defaultDeviceName(role, part)} onName={onDeviceName} />;
 
   // The playback Mac's battery warning, at the top of the leader's and producer's pages, never the
   // band's.
@@ -248,6 +288,7 @@ export function Page({
       <main>
         {powerBanner}
         {picker}
+        {role === 'viewer' && nameField}
         {autoLockTip}
         {reconnecting}
         {stageStatusLine}
@@ -262,6 +303,7 @@ export function Page({
           <p className="status">{snapshot.set ? 'The set in Live has no songs.' : 'Waiting for Live.'}</p>
         )}
         {connections}
+        {controls(role) && nameField}
       </main>
     );
   }
@@ -286,6 +328,7 @@ export function Page({
         {shownDisplay === 'chords-over-lyrics' && <ChordNamesPicker chordNames={chordNames} onChordNames={onChordNames} />}
         <ViewPicker view={view} onView={onView} />
         <FontSizePicker fontSize={fontSize} onFontSize={onFontSize} />
+        {nameField}
         {autoLockTip}
         {reconnecting}
         {live === 'not-connected' && <LiveNotConnected />}
@@ -328,6 +371,7 @@ export function Page({
     <main>
       {powerBanner}
       {picker}
+      {role === 'viewer' && nameField}
       {autoLockTip}
       {reconnecting}
       {stageStatusLine}
@@ -356,6 +400,7 @@ export function Page({
         </section>
       )}
       {connections}
+      {role === 'producer' && nameField}
       {snapshot.set.songs.map((song) => (
         <section className="song" key={song.number}>
           {/* The server holds a toggle for every song in the set. */}
@@ -383,6 +428,7 @@ export function Page({
           </ol>
         </section>
       ))}
+      {role === 'leader' && nameField}
     </main>
   );
 }
@@ -426,8 +472,9 @@ function useCharts(enabled: boolean, revision: number | undefined, connected: bo
   return held?.charts ?? null;
 }
 
-// The leader's and producer's socket paths carry the secret from the page's own path.
-function useServer(socketPath: string): { snapshot: Snapshot | ProducerSnapshot | null; connected: boolean; send(command: PageCommand): void } {
+// The leader's and producer's socket paths carry the secret from the page's own path. The hello, when
+// there is one, goes on every socket and again on each change.
+function useServer(socketPath: string, hello: DeviceHello | null): { snapshot: Snapshot | ProducerSnapshot | null; connected: boolean; send(command: PageCommand): void } {
   const [snapshot, setSnapshot] = useState<Snapshot | ProducerSnapshot | null>(null);
   const [connected, setConnected] = useState(false);
   const connection = useRef<ServerConnection | null>(null);
@@ -448,7 +495,20 @@ function useServer(socketPath: string): { snapshot: Snapshot | ProducerSnapshot 
     };
   }, [socketPath]);
 
+  // Declared after the connection's effect, so a first hello reaches the connection it made.
+  const helloJson = hello && JSON.stringify(hello);
+  useEffect(() => {
+    if (helloJson) connection.current?.introduce(JSON.parse(helloJson) as DeviceHello);
+  }, [helloJson, socketPath]);
+
   const send = useCallback((command: PageCommand) => connection.current?.send(command), []);
 
   return { snapshot, connected, send };
+}
+
+// The device's battery for its hello, watched while enabled.
+function useBattery(enabled: boolean): number | null {
+  const [percent, setPercent] = useState<number | null>(null);
+  useEffect(() => (enabled ? watchBattery(navigator as unknown as BatteryNavigator, setPercent) : undefined), [enabled]);
+  return percent;
 }
