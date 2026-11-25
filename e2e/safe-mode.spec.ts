@@ -175,3 +175,60 @@ test('Timeline Pause requires a one-second press-and-hold while Safe Mode is ON,
   await expect.poll(() => e2e?.rig.received(STOP).length).toBe(2);
   await watcher.snapshot((s) => !s.playing && watcher.received.indexOf(s) > from);
 });
+
+test('Timeline Pause empties its hold bar when Safe Mode turns off mid-press and on again, and the next presses behave', async ({ browser }) => {
+  e2e = await startE2eRig({ playing: true, position: 4 }, SET);
+  const watcher = await e2e.rig.connectViewer();
+  await watcher.snapshot((s) => loaded(s) && s.playing);
+
+  // Separate contexts, so the producer's clicks cannot blur the leader's button.
+  const leaderContext = await browser.newContext();
+  const producerContext = await browser.newContext();
+  try {
+    const leader = await leaderContext.newPage();
+    const producer = await producerContext.newPage();
+    await leader.goto(e2e.leaderUrl);
+    await leader.getByRole('group', { name: 'Leader view' }).getByRole('button', { name: 'Timeline' }).click();
+    await expect(leader.locator('.timeline-view')).toBeVisible();
+    await producer.goto(e2e.producerUrl);
+
+    const leaderToggle = leader.getByRole('button', { name: /Safe Mode/ });
+    const producerToggle = producer.getByRole('button', { name: /Safe Mode/ });
+    await expect(leaderToggle).toHaveText('Safe Mode: On');
+
+    const pause = leader.locator('button.timeline-pause');
+    await pause.hover();
+    await leader.mouse.down();
+    await expect(pause).toHaveClass(/holding/);
+    await leader.waitForTimeout(300);
+
+    await producerToggle.click();
+    await expect(leaderToggle).toHaveText('Safe Mode: Off');
+    await leader.mouse.up();
+    await leader.mouse.move(1, 1);
+
+    await producerToggle.click();
+    await expect(leaderToggle).toHaveText('Safe Mode: On');
+    await leader.waitForTimeout(1200);
+    expect(e2e.rig.received(STOP)).toEqual([]);
+    await expect(pause).not.toHaveClass(/holding/);
+    expect(await pause.locator('.stop-fill').evaluate((element) => getComputedStyle(element).transform)).toBe('matrix(0, 0, 0, 1, 0, 0)');
+
+    await pause.hover();
+    await leader.mouse.down();
+    await leader.waitForTimeout(300);
+    await leader.mouse.up();
+    await expect(pause).not.toHaveClass(/holding/);
+    await leader.waitForTimeout(1100);
+    expect(e2e.rig.received(STOP)).toEqual([]);
+
+    await leader.mouse.down();
+    await expect(pause).toHaveClass(/holding/);
+    await leader.waitForTimeout(1200);
+    await leader.mouse.up();
+    await expect.poll(() => e2e?.rig.received(STOP).length).toBe(1);
+  } finally {
+    await leaderContext.close();
+    await producerContext.close();
+  }
+});

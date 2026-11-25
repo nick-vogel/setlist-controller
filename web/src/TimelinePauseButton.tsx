@@ -17,6 +17,12 @@ export function TimelinePauseButton({
 }) {
   const [holding, setHolding] = useState(false);
   const hold = useRef<Hold | null>(null);
+  const guarded = safeMode && available;
+  const [wasGuarded, setWasGuarded] = useState(guarded);
+  if (wasGuarded !== guarded) {
+    setWasGuarded(guarded);
+    setHolding(false);
+  }
 
   useEffect(() => {
     if (!safeMode || !available) {
