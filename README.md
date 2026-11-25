@@ -150,6 +150,14 @@ Eos is sent the colour through each channel's red, green and blue parameters, an
 
 When the build's checks find a problem, it prints each problem on its own line on stderr, exits 1, and writes nothing. An error during the build also prints one line and exits 1. A usage error, such as no song named or a `--date` that is not a real date, prints the problem and the usage text and exits 2.
 
+Every build also writes a `set-recipe.json` file beside the built `.als` recording the resolved song list, transitions, paths, and optional plan and lighting settings. To change one song in an already-built set without rebuilding from scratch or losing rehearsal edits saved in Live, close the set in Live and run `pnpm build-set edit` on the set folder (or with `--date` and `--output-root`):
+
+- `--swap <song> <replacement>`: replaces `<song>` (by 1-based position or song name) with `<replacement>` from the library.
+- `--add <song>` with optional `--at <pos>`: inserts `<song>` at position `<pos>` (or appends it at the end when `--at` is omitted).
+- `--drop <song>`: removes `<song>` from the set.
+
+`pnpm build-set edit` reads the existing `.als` first to carry every untouched song's locators as Live has them, renamed and added ones included, and its track mixer volumes and clip gains, atomically re-materializes the set with APFS clones, updates `set-manifest.json` (preserving Planning Center charts on untouched songs so connected band devices reload automatically), updates any pad files, and regenerates Eos lighting cues when `--lights` was run on the set. Any validation error leaves the existing `.als` and `set-manifest.json` untouched.
+
 The build expects four things:
 
 - Every song saved in Live 12. A song saved by an older Live stops the build: open it in Live 12 and save it, then build again.

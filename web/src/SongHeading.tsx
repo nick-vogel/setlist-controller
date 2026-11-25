@@ -25,6 +25,8 @@ export function SongHeading({
   playing,
   now,
   seconds,
+  safeMode,
+  activeSong,
   send,
 }: {
   song: Song;
@@ -35,10 +37,13 @@ export function SongHeading({
   playing: boolean;
   now: NowPlaying | null;
   seconds: number | null;
+  safeMode: boolean;
+  activeSong: number | null;
   send(command: Command): void;
 }) {
   const title = songTitle(song);
   const duration = seconds !== null && <p className="song-duration">{formatSeconds(seconds)}</p>;
+  const canPlayFromStart = playable && (!safeMode || !playing || song.number === activeSong);
 
   if (!controls(role)) {
     return (
@@ -55,7 +60,7 @@ export function SongHeading({
       <h2>{title}</h2>
       {duration}
       <div className="song-controls">
-        <PlayFromStartButton song={song} playable={playable} send={send} />
+        <PlayFromStartButton song={song} playable={canPlayFromStart} send={send} />
         <CountInButton song={song} now={now} playable={playable} playing={playing} send={send} />
         {song.end === null ? (
           <p className="end-toggle-text">{NO_END}</p>

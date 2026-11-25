@@ -67,6 +67,7 @@ it('waits for the bar line on a second press once Live reports the start the fir
   controller.fromLive({ kind: 'cue-points', cuePoints: SET });
   controller.fromLive({ kind: 'playing', playing: true });
   controller.fromLive({ kind: 'position', beats: 8 });
+  controller.command({ kind: 'set-safe-mode', enabled: false });
 
   controller.command({ kind: 'stop' });
   controller.fromLive({ kind: 'playing', playing: false });

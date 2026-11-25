@@ -293,6 +293,7 @@ describe('a refused count-in', () => {
   // that jump, it holds all Live will get of the press before it. The barrier itself is the only
   // transport message Live may hold, and no client may ever have seen a count-in.
   async function sentNothingBefore(leader: Client, ...clients: Client[]) {
+    leader.send({ kind: 'set-safe-mode', enabled: false });
     leader.send({ kind: 'jump', song: 2, section: 1 });
     await vi.waitFor(() => expect(rig?.received(JUMP).length).toBeGreaterThan(0));
     expect(transport()).toEqual([{ address: JUMP, args: [SONG_2_VERSE_CUE], types: 'i' }]);
@@ -373,6 +374,7 @@ describe('a count-in to the top of the song', () => {
     leader.send(command);
     await viewer.snapshot((snapshot) => snapshot.playing && snapshot.position === 0);
     // The barrier of a refused count-in: Live holds every message the press sent before it.
+    leader.send({ kind: 'set-safe-mode', enabled: false });
     leader.send({ kind: 'jump', song: 2, section: 1 });
     await vi.waitFor(() => expect(rig?.received(JUMP).at(-1)?.args).toEqual([SONG_2_VERSE_CUE]));
     const messages = (rig.live.received ?? [])

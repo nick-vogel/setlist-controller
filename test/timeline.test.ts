@@ -47,6 +47,7 @@ const SNAPSHOT: ProducerSnapshot = {
   countIn: false,
   endToggles: { 1: 'stop', 2: 'stop' },
   loop: null,
+  safeMode: true,
   fade: null,
   chartRevision: 1,
   songMeters: { 1: 4, 2: 3 },

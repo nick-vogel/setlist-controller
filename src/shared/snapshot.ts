@@ -121,6 +121,10 @@ export type PlaybackState = {
   endToggles: Record<number, EndToggle>;
   // Null while Live's loop is off, and while Live is not connected.
   loop: Loop | null;
+  // Server-wide Safe Mode. Always starts true on every server start and is never persisted across
+  // restarts. While true and Live plays, jumps to a different song are refused and Timeline view's
+  // Pause button requires a one-second press-and-hold.
+  safeMode: boolean;
 };
 
 // Where the leader's fade is: stepping the music out, holding it silent while Live plays on, or

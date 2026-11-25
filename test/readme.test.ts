@@ -46,8 +46,11 @@ describe('the README', () => {
 
     expect(usage.code).toBe(2);
     expect(flags(usage.stderr.slice(usage.stderr.indexOf('Usage:')))).toEqual([
+      '--add',
+      '--at',
       '--connections-config',
       '--date',
+      '--drop',
       '--gap',
       '--library',
       '--lights',
@@ -64,6 +67,7 @@ describe('the README', () => {
       '--set-manifest',
       '--show-folder',
       '--skeleton',
+      '--swap',
       '--template',
     ]);
     expect(flags(section)).toEqual(flags(usage.stderr.slice(usage.stderr.indexOf('Usage:'))));

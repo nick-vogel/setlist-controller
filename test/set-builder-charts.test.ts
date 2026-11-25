@@ -140,7 +140,9 @@ const PHASE_0_SONGS = [
   charted('Fall Like Rain', 'E', '4/4', FALL_LIKE_RAIN_ARRANGEMENT),
 ];
 
-describe('pnpm build-set --plan and the set manifest', () => {
+// Each test here spawns pnpm build-set, which a loaded CI runner can take past vitest's 5 s default, so every describe
+// gives its tests 30 s, as set-builder-lights.test.ts does. A build that hangs still fails, at 30 s.
+describe('pnpm build-set --plan and the set manifest', { timeout: 30_000 }, () => {
   it("writes each song's title, stems key, starting meter, and its arrangement's chart key and chart text, in set order", async () => {
     const workspace = await phase0Workspace();
     const fake = await planningCenter();
@@ -206,7 +208,7 @@ function chartsMissing(items: ItemsBody): void {
   arrangement(items, FALL_LIKE_RAIN_ARRANGEMENT).attributes.chord_chart = 'VERSE\nMade up words with no chords [ ]\n\nCHORUS\nA made up chorus line';
 }
 
-describe('pnpm build-set --plan --list and the charts', () => {
+describe('pnpm build-set --plan --list and the charts', { timeout: 30_000 }, () => {
   it('warns for a song with no chart text and for one whose chart has no chords in square brackets, after the BPM and meter warnings, and exits 0 as it does with every chart', async () => {
     const workspace = await phase0Workspace();
     const token = await tokenFile(workspace);
@@ -248,7 +250,7 @@ describe('pnpm build-set --plan --list and the charts', () => {
   });
 });
 
-describe('the commands that write nothing and --set-manifest', () => {
+describe('the commands that write nothing and --set-manifest', { timeout: 30_000 }, () => {
   it.each([
     { mode: '--list', args: ['--list'], problem: '--list takes only --library, --pads, --date, --replace and --output-root, not --set-manifest.' },
     {
@@ -268,7 +270,7 @@ describe('the commands that write nothing and --set-manifest', () => {
   });
 });
 
-describe('a manifest the build writes, read by the server', () => {
+describe('a manifest the build writes, read by the server', { timeout: 30_000 }, () => {
   // The Count Off and the first section of each Phase 0 song, as the built set names its locators.
   const SET = [
     { name: '1 - Count Off (WELCOME HOME)', time: 0 },
@@ -296,7 +298,7 @@ describe('a manifest the build writes, read by the server', () => {
   });
 });
 
-describe('pnpm build-set by song names and the set manifest', () => {
+describe('pnpm build-set by song names and the set manifest', { timeout: 30_000 }, () => {
   it("writes each song's title and stems key with no chart key and no chart text, replacing a --plan build's manifest", async () => {
     const workspace = await phase0Workspace();
     const fake = await planningCenter();
@@ -333,7 +335,7 @@ describe('pnpm build-set by song names and the set manifest', () => {
   });
 });
 
-describe('where a build writes the set manifest', () => {
+describe('where a build writes the set manifest', { timeout: 30_000 }, () => {
   it("writes it by default to set-manifest.json in the app's support folder in the home folder, the server's own default", async () => {
     const workspace = await phase0Workspace();
     const fake = await planningCenter();

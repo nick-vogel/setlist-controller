@@ -139,6 +139,7 @@ const SNAPSHOT: Snapshot = {
   songMeters: { 1: 4, 2: 4 },
   songTimings: {},
   power: { source: 'ac', percent: 100 },
+  safeMode: true,
 };
 const PRODUCER_SNAPSHOT: ProducerSnapshot = { ...SNAPSHOT, connections: [], connectionProblems: [] };
 

@@ -290,6 +290,7 @@ describe('Play from start, and a start from the start of a section', () => {
   it('fires nothing on the tap and the Count Off on the bar line while playing', async () => {
     const { target, lead, liveHas, play } = await armedRig(TWO_SONGS, { playing: true, position: 28 });
 
+    await lead({ kind: 'set-safe-mode', enabled: false }, (snapshot) => !snapshot.safeMode);
     await lead({ kind: 'play-from-start', song: 2 }, (snapshot) => snapshot.jump?.song === 2);
     await liveHas(JUMP, 1);
     expect(target.cues).toEqual([]);

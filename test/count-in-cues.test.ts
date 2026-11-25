@@ -247,6 +247,7 @@ describe('a count-in to a later section', () => {
   // A stop at the laptop drops Play from start's waiting jump, and no command tells the cues of it.
   it('delivers no Count Off as Play from start after a Play from start Live dropped, when Live reports the start before the jump', async () => {
     const { target, lead, liveHas, play, moveTo, setPlaying } = await armedRig(OVERLAP_SET, { playing: true, position: 4 });
+    await lead({ kind: 'set-safe-mode', enabled: false }, (snapshot) => !snapshot.safeMode);
     await lead({ kind: 'play-from-start', song: 2 }, (snapshot) => snapshot.jump?.song === 2);
     await liveHas(JUMP, 1);
     await setPlaying(false);
@@ -437,6 +438,7 @@ describe('a count-in after a Fade out', () => {
       await fadeOutAndStop(armed);
 
       const press = start === 'count-in' ? countIn(1, BRIDGE) : { kind: 'play-from-start', song: 1 };
+      await lead({ kind: 'set-safe-mode', enabled: false }, (snapshot) => !snapshot.safeMode);
       await lead(press, (snapshot) => snapshot.playing && near(snapshot.position, 0));
       await liveHas(JUMP, 1);
       await play(2, 2);
@@ -455,6 +457,7 @@ describe('a count-in after a Fade out', () => {
       await fadeOutAndStop(armed);
 
       const press = start === 'count-in' ? countIn(2, BRIDGE) : { kind: 'play-from-start', song: 2 };
+      await lead({ kind: 'set-safe-mode', enabled: false }, (snapshot) => !snapshot.safeMode);
       await lead(press, (snapshot) => snapshot.playing && near(snapshot.position, 64));
       await liveHas(JUMP, 1);
       await play(2, 66);

@@ -109,6 +109,7 @@ describe('while Live plays', () => {
     rig.live.setPosition(32.5);
     await viewer.snapshot(at(32.5));
     // A jump as the barrier: it leaves the server's OSC socket after any stop the End would send.
+    leader.send({ kind: 'set-safe-mode', enabled: false });
     leader.send({ kind: 'jump', song: 1, section: 0 });
     await vi.waitFor(() => expect(rig?.received(JUMP)).toHaveLength(1));
 

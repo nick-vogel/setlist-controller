@@ -170,6 +170,8 @@ describe("a move on into song 2's Count Off after a report on the brace end of a
 
   it('brings the music back when a jump to the Count Off lands on the brace end while Live still reports the loop on', async () => {
     const leader = await loopedAndSilent();
+    leader.send({ kind: 'set-safe-mode', enabled: false });
+    await next(leader, (snapshot) => !snapshot.safeMode);
     await moveTo(leader, 37);
     // The loop off the jump sends is lost on its way, so Live keeps reporting the loop on.
     rig!.live.loseNext('/live/song/set/loop');

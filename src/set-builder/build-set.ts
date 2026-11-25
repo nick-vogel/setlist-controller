@@ -2,11 +2,13 @@ import { existsSync } from 'node:fs';
 import { mkdir, mkdtemp, rename, rm } from 'node:fs/promises';
 import { basename, dirname, join } from 'node:path';
 import { child, readAls, valueOf, writeAls, type AlsDocument } from './als.ts';
-import { audioCopies, audioProblems, copyAudio, copyPads, copyProjectInfo } from './audio.ts';
+import { audioCopies, audioProblems, carryOver, copyAudio, copyPads, copyProjectInfo, keepReplacedSet } from './audio.ts';
 import { introProblems, overlapProblems, padProblems, padTrackProblems, stemProblems, templateProblems } from './checks.ts';
 import { matchSongs, padsFolder, type SongMatch } from './library.ts';
 import { timeSignature } from './meter.ts';
+import { applyLiveEdits, type LiveEdits, type LocatorCarry } from './live-edits.ts';
 import { isKey, readPads, type Pad, type PadsReading } from './pads.ts';
+import { buildRecipe, SET_RECIPE_FILE, writeRecipe, type RecipeExtras } from './recipe.ts';
 import { mainEvents, readSong, type Song, type SongReading } from './song.ts';
 import { sharedTargetNames, templateTargets, type Target } from './template.ts';
 import type { SongDurations } from '../shared/set-manifest.ts';
@@ -59,6 +61,14 @@ export type BuildOptions = CheckOptions & {
   outputRoot: string;
   // Replace the set folder for the date when it already exists. Without it, an existing folder stops the build.
   replace?: boolean;
+  // With replace, an edit's own: every top-level entry of the old set folder the new project does not hold is carried
+  // into it, and the replaced .als is kept in its Backup folder, so an edit loses nothing of the set it did not write.
+  carryOver?: boolean;
+  // Optional metadata recorded into set-recipe.json alongside the built set.
+  recipe?: RecipeExtras;
+  // Optional preserved Live edits (untouched songs' locators, track mixer volumes, clip volumes) to reapply after
+  // materializing the set.
+  liveEdits?: { edits: LiveEdits } & Omit<LocatorCarry, 'placed'>;
 };
 
 // One song of a built set, as the command's summary shows it.
@@ -111,14 +121,35 @@ export async function buildSet(options: BuildOptions): Promise<BuildResult> {
   const padFiles = Object.fromEntries(Object.entries(padsRead).map(([position, pad]) => [position, pad.file]));
   const placed = placeSongs(songs, transitions);
   writeSet(set, targets, placed, options.stemMap, { projectFolder: folder }, padFiles);
+  if (options.liveEdits !== undefined) {
+    const { edits, untouched, boundary, oldStarts } = options.liveEdits;
+    applyLiveEdits(set, edits, { untouched, boundary, oldStarts, placed });
+  }
   const copies = audioCopies(songs);
+  const recipe = buildRecipe({
+    date: options.date,
+    library: options.library,
+    template: options.template,
+    outputRoot: options.outputRoot,
+    stemMap: options.stemMap,
+    pads: options.pads,
+    songs: placed.map(({ song, offset }) => ({ folder: song.folder, title: song.title, start: offset })),
+    transitions,
+    extras: options.recipe,
+  });
   // Nothing is written until every song is read and placed. The project folder must be new, so a build never
-  // writes into one that exists, and the set is written last, once every file it refers to is in place.
+  // writes into one that exists, and the set is written once every file it refers to is in place, then the recipe beside
+  // it, then, for an edit (carryOver), what the old set folder holds that the new project does not.
   const writeProject = async (into: string) => {
     await copyProjectInfo(options.library, songs, into);
     await copyAudio(options.library, into, copies);
     await copyPads(into, Object.values(padFiles));
     await writeAls(join(into, `${name}.als`), set);
+    await writeRecipe(join(into, SET_RECIPE_FILE), recipe);
+    if (options.carryOver === true && existsSync(folder)) {
+      await carryOver(folder, into);
+      await keepReplacedSet(setPath, into, name);
+    }
   };
   await mkdir(options.outputRoot, { recursive: true });
   if (options.replace) {
@@ -210,9 +241,11 @@ function checkTransitions({ songs, transitions = {} }: CheckOptions): void {
 }
 
 // A build that replaces writes the new project into a hidden folder beside the old one, and only once it is whole puts
-// it in the old folder's place and removes the old folder whole. Nothing of the old set (its audio, a file added by hand,
-// Live's Backup folder) is left among the new one, and a build that fails part way through writing, such as on a WAV
-// the library holds but cannot read, removes what it wrote and leaves the old set as it was.
+// it in the old folder's place and removes the old folder. The new set is in place by then, so a file that cannot be
+// removed leaves the hidden folder behind rather than failing the build. For a full --replace build, nothing of the old
+// set (its audio, a file added by hand, Live's Backup folder) is left among the new one; an edit opts in to carryOver
+// inside writeProject to clone untouched entries and the replaced .als across. A build that fails part way through
+// writing, such as on a WAV the library holds but cannot read, removes what it wrote and leaves the old set as it was.
 async function replaceFolder(folder: string, writeProject: (into: string) => Promise<void>): Promise<void> {
   const work = await mkdtemp(join(dirname(folder), `.${basename(folder)} replacing `));
   const next = join(work, 'new');
@@ -220,12 +253,12 @@ async function replaceFolder(folder: string, writeProject: (into: string) => Pro
     await mkdir(next);
     await writeProject(next);
   } catch (error) {
-    await rm(work, { recursive: true, force: true });
+    await rm(work, { recursive: true, force: true }).catch(() => undefined);
     throw error;
   }
   if (existsSync(folder)) await rename(folder, join(work, 'old'));
   await rename(next, folder);
-  await rm(work, { recursive: true, force: true });
+  await rm(work, { recursive: true, force: true }).catch(() => undefined);
 }
 
 // The template's problems, for a build whose library cannot be listed. The default template lives in the library, so a

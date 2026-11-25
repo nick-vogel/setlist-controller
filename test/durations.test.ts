@@ -175,6 +175,7 @@ const SNAPSHOT: Snapshot = {
   endToggles: { 1: 'stop', 2: 'stop', 3: 'stop' },
   fade: null,
   loop: null,
+  safeMode: false,
   chartRevision: 1,
   songMeters: { 1: 4, 2: 4, 3: 4 },
   songTimings: TIMINGS,

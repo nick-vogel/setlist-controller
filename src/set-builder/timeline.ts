@@ -167,9 +167,9 @@ export function introOf(song: Song): number {
   return intro;
 }
 
-// The last song's transition: its pad, when one follows it. buildSet has already thrown on any other transition after
-// the last song (checkTransitions).
-function padAfterLast(transition: Transition | undefined): Transition | undefined {
+// The last song's transition: its pad, when one follows it, and otherwise none, since the build places no other
+// transition after the last song. buildSet throws on one (checkTransitions); a hand-edited recipe can still hold one.
+export function padAfterLast(transition: Transition | undefined): Transition | undefined {
   return transition?.type === 'pad' ? transition : undefined;
 }
 

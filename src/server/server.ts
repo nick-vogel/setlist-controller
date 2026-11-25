@@ -37,6 +37,10 @@ export type ServerOptions = {
   webRoot?: string;
   // Times the bridge's probe of Live and the poll of the set. Tests pass a clock they move by hand.
   clock?: Clock;
+  // Times the hub's position-only broadcast pacing (~20 Hz). Defaults to real time, as the hub's
+  // heartbeat does, so tests that step Live without advancing `clock` still receive trailing flushes;
+  // tests of the hub's pacing pass a manual clock here.
+  hubClock?: Clock;
   // Where the foot pedal's messages come from. With none, the pedal does nothing. Production passes
   // the CoreMIDI adapter, which start-up.ts opens through the loader main.ts hands it from
   // native-loaders.ts, so the server itself never loads it.
@@ -91,6 +95,7 @@ export const DEFAULTS = {
   oscReceivePort: 11001,
   webRoot: resolve(import.meta.dirname, '../../dist/web'),
   clock: realClock,
+  hubClock: realClock,
 } satisfies Required<Omit<ServerOptions, 'midiInput' | 'pedalConfigPath' | 'targets' | 'connectionsConfigPath' | 'targetKinds' | 'setManifestPath' | 'leaderSecret' | 'producerSecret' | 'latenessLog' | 'powerSource'>>;
 
 // AbletonOSC has no cue point listener, so the set is read again on this beat. The controller sends
@@ -104,7 +109,7 @@ const SET_POLL_MS = 5000;
 const CANCELS_SCHEDULE = new Set<Command['kind']>(['stop', 'jump', 'next', 'previous', 'play-from-start', 'count-in']);
 
 export async function startServer(options: ServerOptions): Promise<Server> {
-  const { httpHost, httpPort, oscSendPort, oscReceivePort, webRoot, clock } = { ...DEFAULTS, ...options };
+  const { httpHost, httpPort, oscSendPort, oscReceivePort, webRoot, clock, hubClock } = { ...DEFAULTS, ...options };
   const { midiInput, pedalConfigPath, targets = [], connectionsConfigPath, targetKinds = {}, setManifestPath, leaderSecret, producerSecret, latenessLog, powerSource } = options;
   const log = latenessLog ? openLatenessLog(latenessLog) : null;
   const secrets: HubSecrets = { leader: leaderSecret, producer: producerSecret };
@@ -276,13 +281,16 @@ export async function startServer(options: ServerOptions): Promise<Server> {
     (cue, from, to) => connections.moved(cue, from, to),
   );
   // Every command for the controller, from the hub, the setup Refresh route, the poll and the pedal.
-  // The cues hear of it first, accepted or not, since only the command tells Play from start's jump
-  // from a jump to the song's first section. Stop and every jump request drop every slide change the
-  // targets have scheduled ahead of its beat, accepted or not, before the controller sees them. A
+  // A command Safe Mode refuses goes no further, so the cues never hear of it and the targets keep
+  // every slide change they have scheduled. Every other command reaches the cues first, accepted or
+  // not, since only the command tells Play from start's jump from a jump to the song's first section.
+  // Stop and every other jump request drop every slide change the targets have scheduled ahead of its
+  // beat, accepted or not, before the controller sees them. A
   // Loop press the controller took changes the loop it asked for, which the targets with a lead see
   // at once, before Live reports the loop, so no slide past the section's end goes for a vamp that
   // stays in it.
   const command = (command: Command) => {
+    if (controller.refuses(command)) return;
     cues.command(command);
     if (CANCELS_SCHEDULE.has(command.kind)) connections.cancel();
     controller.command(command);
@@ -329,6 +337,7 @@ export async function startServer(options: ServerOptions): Promise<Server> {
     secrets,
     (given) => (given.kind === 'refresh' ? refresh() : command(given)),
     (command) => connections.command(command),
+    hubClock,
   );
   const live = await startLiveBridge({
     sendPort: oscSendPort,

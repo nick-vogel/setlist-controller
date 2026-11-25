@@ -110,7 +110,9 @@ async function newWeekly(workspace: Workspace, before: string[]): Promise<{ name
   return { name, bytes: await readFile(join(workspace.showFolder, name)) };
 }
 
-describe('pnpm build-set, the weekly show file', () => {
+// Each test here spawns pnpm build-set, which a loaded CI runner can take past vitest's 5 s default, so every describe
+// gives its tests 30 s, as set-builder-lights.test.ts does. A build that hangs still fails, at 30 s.
+describe('pnpm build-set, the weekly show file', { timeout: 30_000 }, () => {
   it('copies the template show file to a weekly show file named for the date of the set and the time of the copy, and names it and the three steps to open it after the set path', async () => {
     const workspace = await createWorkspace();
     const bytes = showBytes('the template show file');
@@ -193,7 +195,7 @@ describe('pnpm build-set, the weekly show file', () => {
   });
 });
 
-describe('pnpm build-set --replace, the weekly show file of a rebuild', () => {
+describe('pnpm build-set --replace, the weekly show file of a rebuild', { timeout: 30_000 }, () => {
   it('makes a newer weekly show file from the newest template and leaves the older weekly show file in place', async () => {
     const workspace = await createWorkspace();
     await addTemplateShow(workspace, '2026-11-10 09-00-00', showBytes('the template as first saved'));
@@ -241,7 +243,7 @@ describe('pnpm build-set --replace, the weekly show file of a rebuild', () => {
   });
 });
 
-describe('pnpm build-set, a show folder with no template show file', () => {
+describe('pnpm build-set, a show folder with no template show file', { timeout: 30_000 }, () => {
   it.each([
     { name: 'is not there', showFolder: async () => {} },
     { name: 'is empty', showFolder: async (workspace: Workspace) => void (await mkdir(workspace.showFolder)) },
@@ -276,7 +278,7 @@ describe('pnpm build-set, a show folder with no template show file', () => {
   });
 });
 
-describe('pnpm build-set, a weekly show file that cannot be made', () => {
+describe('pnpm build-set, a weekly show file that cannot be made', { timeout: 30_000 }, () => {
   it('builds the set, prints its summary, then one line on stderr that names the show folder and the cause, exit 1, when the show folder is a file', async () => {
     const workspace = await createWorkspace();
     await writeFile(workspace.showFolder, 'a file where the show folder should be\n');
@@ -314,7 +316,7 @@ describe('pnpm build-set, a weekly show file that cannot be made', () => {
   });
 });
 
-describe('the commands that make no weekly show file', () => {
+describe('the commands that make no weekly show file', { timeout: 30_000 }, () => {
   it.each([
     { name: 'a song name that matches no song folder', args: ['no such song', '--date', DATE], code: 1, problem: /^"no such song" matches no song folder/ },
     { name: 'a set folder that already exists, with no --replace', args: ['grace', '--date', DATE], code: 1, problem: /already exists\. Build with --replace / },
@@ -367,7 +369,7 @@ describe('the commands that make no weekly show file', () => {
   });
 });
 
-describe('pnpm build-set --show-folder', () => {
+describe('pnpm build-set --show-folder', { timeout: 30_000 }, () => {
   it('is a flag a build takes', async () => {
     const workspace = await createWorkspace();
 
@@ -403,7 +405,7 @@ describe('pnpm build-set --show-folder', () => {
 // The command reads config/lights.json beside its own source, as it reads the stem map, so each case runs a copy of src/
 // in the workspace with its own config/ beside it: the repo's stem map, and the lights config of the case. node finds
 // the packages up the tree, in the repo's node_modules.
-describe('pnpm build-set, the lights config', () => {
+describe('pnpm build-set, the lights config', { timeout: 30_000 }, () => {
   const SHAPE = 'config/lights.json must give templateShowName and weeklyShowNamePrefix each as a show name in quotes, not empty and with no "/" in it:';
   const lights = (value: unknown) => async (config: string) => writeFile(join(config, 'lights.json'), `${JSON.stringify(value, null, 2)}\n`);
 
@@ -455,7 +457,7 @@ describe('pnpm build-set, the lights config', () => {
   });
 });
 
-describe('the usage text and the README, on the weekly show file', () => {
+describe('the usage text and the README, on the weekly show file', { timeout: 30_000 }, () => {
   // The usage text, as the command prints it on a usage error: with no song named, it stops before it reads or writes
   // anything.
   async function usageText(): Promise<string> {
@@ -469,7 +471,7 @@ describe('the usage text and the README, on the weekly show file', () => {
     const usage = await usageText();
 
     const synopsis = usage.split('\n').filter((line) => line.startsWith('  pnpm build-set'));
-    expect(synopsis).toHaveLength(7);
+    expect(synopsis).toHaveLength(8);
     expect(synopsis.filter((line) => line.endsWith(' [--set-manifest <path>] [--show-folder <folder>]')).map((line) => line.split(' [')[0])).toEqual([
       '  pnpm build-set <song>',
       '  pnpm build-set --plan',

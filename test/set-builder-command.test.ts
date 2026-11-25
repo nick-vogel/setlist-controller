@@ -67,7 +67,9 @@ function utcDay(date: string): number {
   return Date.UTC(Number(parts[1]), Number(parts[2]) - 1, Number(parts[3]));
 }
 
-describe('pnpm build-set', () => {
+// Each test here spawns pnpm build-set, which a loaded CI runner can take past vitest's 5 s default, so every describe
+// gives its tests 30 s, as set-builder-lights.test.ts does. A build that hangs still fails, at 30 s.
+describe('pnpm build-set', { timeout: 30_000 }, () => {
   it('builds the song a short name names into <output root>/<date> Sunday and prints the summary, the set path last, then the line of the lights step', async () => {
     const workspace = await createWorkspace();
 
@@ -767,7 +769,7 @@ function listedLines(stdout: string): { shortName: string; key: string; folder: 
     });
 }
 
-describe('pnpm build-set --list', () => {
+describe('pnpm build-set --list', { timeout: 30_000 }, () => {
   it("prints each song folder of the library with its short name and key, in the build's order, and writes nothing", async () => {
     const workspace = await createWorkspace();
     const before = await snapshotFolder(workspace.dir);
@@ -1118,7 +1120,7 @@ describe('pnpm build-set --list', () => {
   });
 });
 
-describe('the usage text on --plan', () => {
+describe('the usage text on --plan', { timeout: 30_000 }, () => {
   // The usage text, as a build with no song named prints it.
   async function usageText(): Promise<string> {
     const workspace = await createWorkspace();

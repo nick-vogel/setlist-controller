@@ -24,7 +24,9 @@ import {
 // The chart skeleton: each song's locator names, each once in first-played order, as the headings Nick pastes into the
 // song's chord chart in Planning Center.
 
-describe('the chart skeleton of a song', () => {
+// Each test here spawns pnpm build-set, which a loaded CI runner can take past vitest's 5 s default, so every describe
+// gives its tests 30 s, as set-builder-lights.test.ts does. A build that hangs still fails, at 30 s.
+describe('the chart skeleton of a song', { timeout: 30_000 }, () => {
   it('gives each locator name the heading rule reads once, in first-played order, in upper case', () => {
     const names = ['Count Off', 'Intro', 'Verse 1', 'Chorus', 'Intro', 'Verse 2', 'Chorus', 'Bridge', 'Bridge', 'Chorus', 'Ending', ' '];
 
@@ -54,7 +56,7 @@ describe('the chart skeleton of a song', () => {
   });
 });
 
-describe('the skeleton as printed', () => {
+describe('the skeleton as printed', { timeout: 30_000 }, () => {
   it('gives each song its number and title, its headings one per line, and one blank line between songs', () => {
     const lines = skeletonLines([
       { number: 1, title: 'This Is Amazing Grace', headings: ['INTRO', 'VERSE 1'] },
@@ -140,7 +142,7 @@ async function planEnv(workspace: Workspace, fake: PlanningCenter): Promise<Reco
   return { PCO_API_BASE: fake.base, PCO_ENV: file };
 }
 
-describe('pnpm build-set --skeleton', () => {
+describe('pnpm build-set --skeleton', { timeout: 30_000 }, () => {
   it('prints the skeleton of each song named, in the order named, each locator name once in first-played order, and the note on stderr', async () => {
     const workspace = await createWorkspace();
 
@@ -257,7 +259,7 @@ describe('pnpm build-set --skeleton', () => {
   });
 });
 
-describe('pnpm build-set --plan --skeleton', () => {
+describe('pnpm build-set --plan --skeleton', { timeout: 30_000 }, () => {
   // The Phase 0 workspace: a folder for each of the plan's songs in its key.
   async function phase0Workspace(): Promise<Workspace> {
     const workspace = await createWorkspace();

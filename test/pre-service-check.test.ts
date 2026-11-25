@@ -316,6 +316,7 @@ describe("a song's meter", () => {
     const leader = await rig!.connectLeader();
     await leader.snapshot(loaded);
     // The second song's Verse, on 48, from the first song's Intro: Live jumps on the bar line on 15.
+    leader.send({ kind: 'set-safe-mode', enabled: false });
     leader.send({ kind: 'jump', song: 2, section: 1 });
     await next(producer, (snapshot) => snapshot.jump !== null);
 
