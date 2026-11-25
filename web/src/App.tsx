@@ -51,6 +51,7 @@ import { connectToServer, type ServerConnection } from './server-connection.ts';
 import { Setup } from './Setup.tsx';
 import { SongHeading } from './SongHeading.tsx';
 import { SongStepButton } from './SongStepButton.tsx';
+import { StageStatusLine } from './StageStatusLine.tsx';
 import { StopButton } from './StopButton.tsx';
 import { TimelineView } from './TimelineView.tsx';
 import { ViewPicker } from './ViewPicker.tsx';
@@ -231,12 +232,25 @@ export function Page({
   // After the pickers, on the view-only page only.
   const autoLockTip = role === 'viewer' && tip && <AutoLockTip onShown={onTipShown} />;
 
+  const stageStatusBar = role === 'leader' && (
+    <StageStatusLine
+      connected={connected}
+      live={snapshot.live}
+      set={snapshot.set}
+      playing={snapshot.playing}
+      now={snapshot.now}
+      jump={snapshot.jump}
+      countIn={snapshot.countIn}
+    />
+  );
+
   if (!snapshot.set || snapshot.set.songs.length === 0) {
     return (
       <main>
         {picker}
         {autoLockTip}
         {!connected && <Reconnecting />}
+        {stageStatusBar}
         {snapshot.live === 'not-connected' ? (
           <LiveNotConnected />
         ) : (
@@ -292,6 +306,7 @@ export function Page({
     return (
       <main className="timeline-page">
         {!connected && <Reconnecting />}
+        {stageStatusBar}
         <TimelineView
           set={snapshot.set}
           snapshot={snapshot}
@@ -309,6 +324,7 @@ export function Page({
       {picker}
       {autoLockTip}
       {!connected && <Reconnecting />}
+      {stageStatusBar}
       {role === 'leader' && (
         <div className="leader-mode-bar">
           <LeaderViewSwitcher leaderView={leaderView} onLeaderView={onLeaderView} />
