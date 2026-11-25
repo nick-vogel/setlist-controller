@@ -1,3 +1,5 @@
+import type { PowerState } from './power.ts';
+
 // The state the hub sends to every client, whole, on connect and on every change. Between them the
 // hub also sends a heartbeat, which is not a snapshot (see heartbeat.ts). The foot pedal's status is
 // the laptop's alone, so it is never in the snapshot.
@@ -123,11 +125,13 @@ export type FadePhase = 'out' | 'silent' | 'in';
 // the server reads a changed set manifest, from 1 at its start. Each song's meter comes from the
 // set manifest's per-song meter, falling back to Live's meter for that song or Live's current time
 // signature (4 for 4/4 before Live reports one), so the whole-set timeline draws accurate bar grids
-// before Live visits later songs. Empty until the set is known.
+// before Live visits later songs. Empty until the set is known. The power is the playback Mac's, as
+// the server last read it, which the leader, producer and setup pages warn on (power.ts).
 export type Snapshot = PlaybackState & {
   fade: FadePhase | null;
   chartRevision: number;
   songMeters: Record<number, number>;
+  power: PowerState;
 };
 
 // Whether the producer has a connection target following the set. Every target starts disarmed on

@@ -8,6 +8,7 @@ import type { TargetKind } from '../src/server/connections-config.ts';
 import { serverJob } from '../src/install/server-job.ts';
 import { DEFAULT_LATENESS_LOG, openLatenessLog } from '../src/server/lateness-log.ts';
 import { manualMidiInput, noMidiInput, type MidiInput } from '../src/server/midi-input.ts';
+import { manualPowerSource, type PowerSource } from '../src/server/power.ts';
 import type { Server } from '../src/server/server.ts';
 import { laptopAddress } from '../src/server/setup.ts';
 import { startUp } from '../src/server/start-up.ts';
@@ -69,11 +70,13 @@ afterEach(async () => {
 type Natives = {
   loadAtemKind?: () => Promise<TargetKind>;
   openMidiInput?: () => Promise<MidiInput>;
+  openPowerSource?: () => PowerSource;
 };
 
 // Starts the wiring with every port flag given, the fake Live's port to talk to and 0 for the rest, the
 // lateness log in the test's folder, and the stand-ins given. The ATEM kind defaults to one whose
-// every section is disabled with ATEM_REASON, and the MIDI input to none. Extra flags go after these.
+// every section is disabled with ATEM_REASON, the MIDI input to none, and the power source to one on
+// mains power that the test sets by hand, so no test runs pmset. Extra flags go after these.
 // `latenessLog: false` leaves the lateness log flag out, for the test of the path the server opens
 // when no flag names one; that test queues a stand-in log first, since the default is under ~/Library.
 async function start(natives: Natives = {}, flags: string[] = [], { latenessLog = true, cuePoints = [] }: { latenessLog?: boolean; cuePoints?: CuePoint[] } = {}) {
@@ -93,6 +96,7 @@ async function start(natives: Natives = {}, flags: string[] = [], { latenessLog 
       adverts.push(advert);
       return { stop: () => {} };
     },
+    openPowerSource: natives.openPowerSource ?? (() => manualPowerSource()),
   });
   return { ...started, appSupport, adverts };
 }
@@ -108,6 +112,7 @@ describe('the target kinds the server starts with', () => {
     expect(status.connections).toEqual([
       expect.objectContaining({ name: 'atem', label: 'ATEM', configured: false, problems: [ATEM_REASON] }),
       expect.objectContaining({ name: 'charts', label: 'Charts', configured: true }),
+      expect.objectContaining({ name: 'power', label: 'Playback Mac', configured: true }),
     ]);
   });
 
@@ -147,6 +152,7 @@ describe('ProPresenter', () => {
     expect(status.connections).toEqual([
       expect.objectContaining({ name: 'propresenter', label: 'ProPresenter', configured: true }),
       expect.objectContaining({ name: 'charts', label: 'Charts', configured: true }),
+      expect.objectContaining({ name: 'power', label: 'Playback Mac', configured: true }),
     ]);
 
     const secret = (await readFile(join(appSupport, 'producer-secret'), 'utf8')).trim();
@@ -237,10 +243,25 @@ describe('the start-up log', () => {
     const { server, appSupport } = await start();
 
     const status = await readSetup<ConnectionsStatus>(server.httpPort, SETUP_CONNECTIONS_API, 'a connections status');
-    expect(status.connections.map(({ name }) => name)).toEqual(['charts']);
+    expect(status.connections.map(({ name }) => name)).toEqual(['charts', 'power']);
     await vi.waitFor(async () => {
       const charts = (await readSetup<ConnectionsStatus>(server.httpPort, SETUP_CONNECTIONS_API, 'a connections status')).connections[0];
       expect(charts?.check).toEqual({ kind: 'unmatched', names: [], problems: [`No set manifest at ${join(appSupport, SET_MANIFEST_FILE)}. pnpm build-set writes it.`], notes: [] });
+    });
+  });
+
+  it('reads the power from the source it is handed, so every page and the Playback Mac row follow it', async () => {
+    const power = manualPowerSource({ source: 'ac', percent: 100 });
+    const { server, appSupport } = await start({ openPowerSource: () => power }, [], { cuePoints: [{ name: '1 - Intro', time: 0 }, { name: '1 - End', time: 16 }] });
+    const secret = (await readFile(join(appSupport, 'producer-secret'), 'utf8')).trim();
+    producer = await connect<ProducerSnapshot>(`ws://127.0.0.1:${server.httpPort}${producerSocketPath(secret)}`);
+
+    power.set({ source: 'battery', percent: 95 });
+    const snapshot = await producer.snapshot((given) => given.power.source === 'battery');
+    expect(snapshot.power).toEqual({ source: 'battery', percent: 95 });
+    await vi.waitFor(async () => {
+      const row = (await readSetup<ConnectionsStatus>(server.httpPort, SETUP_CONNECTIONS_API, 'a connections status')).connections.find(({ name }) => name === 'power');
+      expect(row?.check).toEqual({ kind: 'device', problems: ["On battery at 95%. Plug in the playback Mac's power before the set starts."], notes: [] });
     });
   });
 

@@ -4,6 +4,7 @@ import { createServer, type IncomingMessage, type ServerResponse } from 'node:ht
 import { extname, join, normalize, resolve, sep } from 'node:path';
 import type { Command } from '../shared/command.ts';
 import { CHARTS_API, SETUP_API, SETUP_CONNECTIONS_API, SETUP_PEDAL_API, SETUP_REFRESH_API, SETUP_REFUSED } from '../shared/routes.ts';
+import { UNKNOWN_POWER } from '../shared/power.ts';
 import { meterForSong, type SetCharts } from '../shared/set-manifest.ts';
 import type { ConnectionsStatus, PedalStatus } from '../shared/setup.ts';
 import type { ConnectionsPart, Snapshot } from '../shared/snapshot.ts';
@@ -19,6 +20,7 @@ import { startLiveBridge } from './live-bridge.ts';
 import { noMidiInput, type MidiInput } from './midi-input.ts';
 import { loadPedalConfig, startPedal } from './pedal.ts';
 import { LOOP_REPORT_MS, startPlaybackController } from './playback-controller.ts';
+import { powerTarget, type PowerSource } from './power.ts';
 import { startSetManifest } from './set-manifest.ts';
 import { setupInfo } from './setup.ts';
 import type { Target } from './target.ts';
@@ -66,6 +68,12 @@ export type ServerOptions = {
   // The lateness log, one JSON line per cue per target, and the size it rotates at (5 MB by
   // default). With none, no line is written; production always passes it, from start-up.ts.
   latenessLog?: { path: string; maxBytes?: number };
+  // Where the playback Mac's power comes from, which the snapshot carries. Given, the server adds the
+  // Playback Mac target (power.ts) after the Charts target, whose check fails while the Mac is on
+  // battery. With none, the power is not known and there is no Playback Mac row. Production passes
+  // the pmset reader, which start-up.ts takes from main.ts, so no test shells out; the server closes
+  // it, as it closes the MIDI input.
+  powerSource?: PowerSource;
 };
 
 export type Server = {
@@ -82,7 +90,7 @@ export const DEFAULTS = {
   oscReceivePort: 11001,
   webRoot: resolve(import.meta.dirname, '../../dist/web'),
   clock: realClock,
-} satisfies Required<Omit<ServerOptions, 'midiInput' | 'pedalConfigPath' | 'targets' | 'connectionsConfigPath' | 'targetKinds' | 'setManifestPath' | 'leaderSecret' | 'producerSecret' | 'latenessLog'>>;
+} satisfies Required<Omit<ServerOptions, 'midiInput' | 'pedalConfigPath' | 'targets' | 'connectionsConfigPath' | 'targetKinds' | 'setManifestPath' | 'leaderSecret' | 'producerSecret' | 'latenessLog' | 'powerSource'>>;
 
 // AbletonOSC has no cue point listener, so the set is read again on this beat. The controller sends
 // the read only while Live is stopped, as it does for the leader's Refresh.
@@ -96,7 +104,7 @@ const CANCELS_SCHEDULE = new Set<Command['kind']>(['stop', 'jump', 'next', 'prev
 
 export async function startServer(options: ServerOptions): Promise<Server> {
   const { httpHost, httpPort, oscSendPort, oscReceivePort, webRoot, clock } = { ...DEFAULTS, ...options };
-  const { midiInput, pedalConfigPath, targets = [], connectionsConfigPath, targetKinds = {}, setManifestPath, leaderSecret, producerSecret, latenessLog } = options;
+  const { midiInput, pedalConfigPath, targets = [], connectionsConfigPath, targetKinds = {}, setManifestPath, leaderSecret, producerSecret, latenessLog, powerSource } = options;
   const log = latenessLog ? openLatenessLog(latenessLog) : null;
   const secrets: HubSecrets = { leader: leaderSecret, producer: producerSecret };
   // Read once at start, so the setup screen's first read of the pedal already says what is wrong with it.
@@ -115,6 +123,14 @@ export async function startServer(options: ServerOptions): Promise<Server> {
     },
   });
   const charts = setManifestPath === undefined ? null : chartsTarget({ path: setManifestPath, manifest });
+  const power = powerSource ? powerTarget(powerSource) : null;
+  // Each change of the power reaches every page, and runs the Playback Mac check again, by late
+  // reference as the manifest's change does. The source reports no change before the hub starts,
+  // since nothing runs between here and there.
+  powerSource?.onChange(() => {
+    publish();
+    power?.changed();
+  });
 
   const http = createServer(
     (request, response) =>
@@ -221,9 +237,10 @@ export async function startServer(options: ServerOptions): Promise<Server> {
   });
   // Each target's status and arm state, which only the producer's snapshot carries. The targets
   // start once HTTP listens: the ones given directly, then the ones the connections config file
-  // names, its disabled ones included as rows, then the Charts target when there is a manifest path.
+  // names, its disabled ones included as rows, then the Charts target when there is a manifest path,
+  // then the Playback Mac target when there is a power source.
   const connections = startConnections({
-    targets: [...targets.map((target) => ({ kind: 'ready' as const, target })), ...connectionsConfig.targets, ...(charts ? [{ kind: 'ready' as const, target: charts }] : [])],
+    targets: [...targets.map((target) => ({ kind: 'ready' as const, target })), ...connectionsConfig.targets, ...(charts ? [{ kind: 'ready' as const, target: charts }] : []), ...(power ? [{ kind: 'ready' as const, target: power }] : [])],
     clock,
     log,
     set: () => controller.snapshot().set,
@@ -294,7 +311,7 @@ export async function startServer(options: ServerOptions): Promise<Server> {
   };
   const snapshot = (): Snapshot => {
     const state = controller.snapshot();
-    return { ...state, fade: fade.phase(), chartRevision: manifest.revision(), songMeters: songMeters(state.set) };
+    return { ...state, fade: fade.phase(), chartRevision: manifest.revision(), songMeters: songMeters(state.set), power: powerSource?.current() ?? UNKNOWN_POWER };
   };
   const publish = () => hub.publish(snapshot(), connectionsPart());
   const hub = startHub(
@@ -335,6 +352,7 @@ export async function startServer(options: ServerOptions): Promise<Server> {
     await hub.close();
     await live.close();
     await midiInput?.close();
+    await powerSource?.close();
     throw error;
   }
 
@@ -354,6 +372,7 @@ export async function startServer(options: ServerOptions): Promise<Server> {
       manifest.close();
       fade.close();
       await midiInput?.close();
+      await powerSource?.close();
       // Stopping the targets writes the lines still waiting on an acknowledgement, so the log closes after.
       await connections.stop();
       await log?.close();
