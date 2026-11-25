@@ -41,6 +41,7 @@ export type EditResult =
       date: string;
       setPath: string;
       songs: SongSummary[];
+      warnings: string[];
       lightsLines: string[];
       lightsProblem?: string;
       manifestProblem?: string;
@@ -172,6 +173,7 @@ export async function editSet(options: EditOptions): Promise<EditResult> {
     date: recipe.date,
     setPath: built.setPath,
     songs: built.songs,
+    warnings: planned.warnings,
     lightsLines,
     ...(lightsProblem === undefined ? {} : { lightsProblem }),
     ...(manifestProblem === undefined ? {} : { manifestProblem }),
@@ -184,6 +186,7 @@ type PlannedEdit = {
   // Maps each untouched song's NEW 1-based song number to its OLD 1-based song number.
   untouched: Map<number, number>;
   boundary: Set<number>;
+  warnings: string[];
 };
 
 async function planEdit(recipe: SetRecipe, action: EditAction): Promise<{ ok: true } & PlannedEdit | { ok: false; problems: string[] }> {
@@ -201,7 +204,9 @@ async function planEdit(recipe: SetRecipe, action: EditAction): Promise<{ ok: tr
     for (let position = 1; position <= songs.length; position++) {
       if (position !== target.position) untouched.set(position, position);
     }
-    return { ok: true, songs: nextSongs, transitions: { ...transitions }, untouched, boundary: before(target.position) };
+    const nextTransitions = { ...transitions };
+    const warnings = padKeyWarnings(nextTransitions, nextSongs, target.position);
+    return { ok: true, songs: nextSongs, transitions: nextTransitions, untouched, boundary: before(target.position), warnings };
   }
 
   if (action.kind === 'add') {
@@ -224,7 +229,7 @@ async function planEdit(recipe: SetRecipe, action: EditAction): Promise<{ ok: tr
     for (let oldPos = 1; oldPos <= songs.length; oldPos++) {
       untouched.set(oldPos >= at ? oldPos + 1 : oldPos, oldPos);
     }
-    return { ok: true, songs: nextSongs, transitions: nextTransitions, untouched, boundary: before(at) };
+    return { ok: true, songs: nextSongs, transitions: nextTransitions, untouched, boundary: before(at), warnings: padKeyWarnings(nextTransitions, nextSongs, at) };
   }
 
   // Drop.
@@ -249,7 +254,21 @@ async function planEdit(recipe: SetRecipe, action: EditAction): Promise<{ ok: tr
     if (oldPos === target.position) continue;
     untouched.set(oldPos > target.position ? oldPos - 1 : oldPos, oldPos);
   }
-  return { ok: true, songs: nextSongs, transitions: nextTransitions, untouched, boundary: before(target.position) };
+  return {
+    ok: true,
+    songs: nextSongs,
+    transitions: nextTransitions,
+    untouched,
+    boundary: before(target.position),
+    warnings: padKeyWarnings(nextTransitions, nextSongs, target.position),
+  };
+}
+
+function padKeyWarnings(transitions: Partial<Record<number, Transition>>, songs: { title: string }[], position: number): string[] {
+  const pad = transitions[position - 1];
+  if (pad?.type !== 'pad' || pad.key === undefined) return [];
+  const next = songs[position - 1];
+  return [`The pad after song ${position - 1} keeps its own key, ${pad.key}, and now ${next === undefined ? 'ends the set' : `leads into ${next.title}`}.`];
 }
 
 function before(position: number): Set<number> {

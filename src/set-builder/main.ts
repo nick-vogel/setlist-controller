@@ -299,7 +299,7 @@ async function edit(args: string[]): Promise<void> {
     fail(result.problems);
     return;
   }
-  console.log(summary(result.date, result.songs, [], result.setPath));
+  console.log(summary(result.date, result.songs, result.warnings, result.setPath));
   for (const line of result.lightsLines) console.log(line);
   if (result.manifestProblem !== undefined) {
     console.error(result.manifestProblem);

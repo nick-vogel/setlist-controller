@@ -301,6 +301,7 @@ describe('build-set edit (--swap, --add, --drop)', () => {
     expect(swapped.code).toBe(0);
     expect(swapped.stdout).toContain('1. This Is Amazing Grace');
     expect(swapped.stdout).toContain('pad in D');
+    expect(swapped.stdout).not.toContain('keeps its own key');
     expect(swapped.stdout).toContain('2. Great Are You Lord');
     expect(swapped.stdout).toContain('3. Goodness of God');
 
@@ -354,6 +355,31 @@ describe('build-set edit (--swap, --add, --drop)', () => {
     const manifest = await readManifestJson(workspace.setManifest);
     expect(manifest.songs.map((song) => song.title)).toEqual(['Trust In God', 'This Is Amazing Grace', 'Goodness of God', 'Great Are You Lord']);
   }, 20_000);
+
+  it('an edit that changes the song after an explicit-key pad says the pad keeps its key', async () => {
+    const workspace = await createWorkspace();
+    await addPadTrack(workspace);
+    await addPad(workspace, 'A', 120);
+    await addPad(workspace, 'D', 120);
+    const built = await run(['goodness', 'trust', 'grace', '--pad', '1=A', '--date', DATE, ...buildPaths(workspace)]);
+    expect(built.code).toBe(0);
+    const folder = projectFolder(workspace);
+    const steps: { args: string[]; warning: string }[] = [
+      { args: ['--swap', '2', 'great are'], warning: 'The pad after song 1 keeps its own key, A, and now leads into Great Are You Lord.' },
+      { args: ['--add', 'trust', '--at', '2'], warning: 'The pad after song 1 keeps its own key, A, and now leads into Trust In God.' },
+      { args: ['--drop', '2'], warning: 'The pad after song 1 keeps its own key, A, and now leads into Great Are You Lord.' },
+      { args: ['--drop', '2'], warning: 'The pad after song 1 keeps its own key, A, and now leads into This Is Amazing Grace.' },
+      { args: ['--drop', '2'], warning: 'The pad after song 1 keeps its own key, A, and now ends the set.' },
+    ];
+
+    for (const { args, warning } of steps) {
+      const edited = await run(['edit', folder, ...args]);
+      expect(edited.stderr, args.join(' ')).toBe('');
+      expect(edited.code, args.join(' ')).toBe(0);
+      expect(edited.stdout.split('\n'), args.join(' ')).toContain(warning);
+      expect((await readRecipeJson(folder)).transitions, args.join(' ')).toEqual({ 1: { type: 'pad', key: 'A' } });
+    }
+  }, 30_000);
 
   it('drops a song by position or name, removes its audio, and drops a dangling overlap if the last song is dropped', async () => {
     const workspace = await createWorkspace();
