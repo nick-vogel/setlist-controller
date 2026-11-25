@@ -75,7 +75,7 @@ if (values.stdin) {
   }
 } else {
   for (const file of git('ls-files', '-z').split('\0').filter(Boolean)) scan(`path ${file}`, file);
-  for (const file of git('grep', '-I', '--name-only', '-e', '', '--', '.', ':!pnpm-lock.yaml').split('\n').filter(Boolean)) {
+  for (const file of git('grep', '-I', '-z', '--name-only', '-e', '', '--', '.', ':!pnpm-lock.yaml').split('\0').filter(Boolean)) {
     readFileSync(file, 'utf8')
       .split('\n')
       .forEach((line, index) => scan(`${file}:${index + 1}`, line));

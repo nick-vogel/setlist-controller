@@ -59,6 +59,16 @@ describe('pnpm check:private', () => {
     expect(result.stderr).toContain('notes.md:2');
   });
 
+  it('reads a tracked file whose name is not ASCII', async () => {
+    await scratch();
+    await commit('café.md', 'clean\n');
+    expect(check([]).status).toBe(0);
+    await commit('café.md', 'clean\nExample Fellowship\n');
+    const result = check([]);
+    expect(result.status).toBe(1);
+    expect(result.stderr).toContain('café.md:2 holds the term on line 3');
+  });
+
   it('matches a word: term as a whole word only', async () => {
     await scratch();
     await commit('notes.md', 'Ready for the EXF band.\n');
