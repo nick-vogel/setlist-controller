@@ -606,6 +606,7 @@ describe('Eos lighting cue regeneration on build-set edit', () => {
     expect(recipe.lights).toEqual({
       showFolder: workspace.showFolder,
       connectionsConfig,
+      labelled: ['This Is Amazing Grace', 'Yes and Amen', 'Trust In God'],
     });
     expect(eos.cues().filter((cue) => ['1', '11', '22'].includes(cue.number)).map((cue) => cue.label)).toEqual([
       'This Is Amazing Grace',
@@ -650,6 +651,51 @@ describe('Eos lighting cue regeneration on build-set edit', () => {
       'I Speak Jesus',
       'Yes and Amen',
     ]);
+  }, 45_000);
+
+  it('a --lights retry after an edit whose lights step failed relabels the swapped song\'s cue', async () => {
+    const workspace = await createWorkspace();
+    const THREE_PICTURES = '2026-11-15';
+    await copySongAs(workspace, GREAT_ARE, 'Yes and Amen-Housefires-D-72.00bpm');
+    await copySongAs(workspace, GOODNESS, 'I Speak Jesus-Here Be Lions-A-63.00bpm');
+    const built = await run(['grace', 'yes and', 'trust', '--date', THREE_PICTURES, ...buildPaths(workspace)]);
+    expect(built.code).toBe(0);
+    const weekly = await addWeeklyShow(workspace, THREE_PICTURES, '2026-11-10 10-00-00', 'weekly-show');
+    const eos = await startFakeEos();
+    fakes.push(eos);
+    const pro = await startFakeProPresenter();
+    fakes.push(pro);
+    pro.serveNovember12();
+    eos.setShow(CHURCH_SHOW);
+    eos.setShowPath(weekly);
+    const connectionsConfig = await writeConnectionsConfig(workspace, eos.port, pro.port);
+    const fastEnv = { EOS_TIMEOUT_MS: '2000', EOS_SETTLE_MS: '0', PROPRESENTER_TIMEOUT_MS: '2000', PROPRESENTER_AGAIN_MS: '0' };
+    const lit = await run(['--lights', '--date', THREE_PICTURES, ...lightsPaths(workspace, connectionsConfig)], fastEnv);
+    expect(lit.code).toBe(0);
+    await writeFile(eos.showPath()!, 'saved-show-1');
+    const folder = projectFolder(workspace, THREE_PICTURES);
+
+    await eos.refuse();
+    const swapped = await run(['edit', folder, '--swap', '3', 'i speak'], fastEnv);
+    expect(swapped.code).toBe(1);
+    expect(swapped.stderr).toMatch(/The lights step is not done/);
+    let recipe = await readRecipeJson(folder);
+    expect(recipe.songs.map((song) => song.title)).toEqual(['This Is Amazing Grace', 'Yes and Amen', 'I Speak Jesus']);
+    expect(recipe.lights?.labelled).toEqual(['This Is Amazing Grace', 'Yes and Amen', 'Trust In God']);
+
+    await eos.accept();
+    const retry = await run(['--lights', '--date', THREE_PICTURES, ...lightsPaths(workspace, connectionsConfig)], fastEnv);
+
+    expect(retry.stderr).toBe('');
+    expect(retry.code).toBe(0);
+    expect(retry.stdout).toContain('3. I Speak Jesus  cue 1/22');
+    expect(eos.cues().filter((cue) => ['1', '11', '22'].includes(cue.number)).map((cue) => cue.label)).toEqual([
+      'This Is Amazing Grace',
+      'Yes and Amen',
+      'I Speak Jesus',
+    ]);
+    recipe = await readRecipeJson(folder);
+    expect(recipe.lights?.labelled).toEqual(['This Is Amazing Grace', 'Yes and Amen', 'I Speak Jesus']);
   }, 45_000);
 });
 

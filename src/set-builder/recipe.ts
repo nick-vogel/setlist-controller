@@ -31,6 +31,8 @@ export type RecipeLights = {
   showFolder: string;
   connectionsConfig: string;
   playlist?: string;
+  // The song titles, in set order, that Eos took as its song cue labels on the last lights run that succeeded.
+  labelled?: string[];
 };
 
 export type RecipeSongChart = {
@@ -257,7 +259,8 @@ export function parseRecipe(text: string, path: string): { ok: true; recipe: Set
       !isObject(raw.lights) ||
       !isNonEmptyString(raw.lights.showFolder) ||
       !isNonEmptyString(raw.lights.connectionsConfig) ||
-      (raw.lights.playlist !== undefined && !isNonEmptyString(raw.lights.playlist))
+      (raw.lights.playlist !== undefined && !isNonEmptyString(raw.lights.playlist)) ||
+      (raw.lights.labelled !== undefined && (!Array.isArray(raw.lights.labelled) || !raw.lights.labelled.every(isNonEmptyString)))
     ) {
       return { ok: false, problem: `${path} has an invalid "lights" section.` };
     }
@@ -265,6 +268,7 @@ export function parseRecipe(text: string, path: string): { ok: true; recipe: Set
       showFolder: raw.lights.showFolder,
       connectionsConfig: raw.lights.connectionsConfig,
       ...(raw.lights.playlist === undefined ? {} : { playlist: raw.lights.playlist }),
+      ...(raw.lights.labelled === undefined ? {} : { labelled: raw.lights.labelled as string[] }),
     };
   }
   return {

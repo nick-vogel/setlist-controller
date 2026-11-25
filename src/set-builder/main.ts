@@ -19,7 +19,7 @@ import { existingSetLine, listingHasProblems, planListing } from './plan-list.ts
 import { API_BASE, readPlan, readToken, tokenFilePath, type Plan, type PlanSong } from './plan-reader.ts';
 import { chartWarnings, planWarnings, startingMeter } from './plan-warnings.ts';
 import { transitionsWithFlags, type FlagTransition } from './plan-transitions.ts';
-import { DEFAULT_STEM_MAP_PATH, readStemMapFile, updateRecipe } from './recipe.ts';
+import { DEFAULT_STEM_MAP_PATH, readRecipe, readStemMapFile, updateRecipe } from './recipe.ts';
 import { defaultSetDate } from './set-date.ts';
 import { buildManifest, writeSetManifest } from './set-manifest.ts';
 import { leftOutNote, skeletonLines, songSkeleton } from './skeleton.ts';
@@ -402,6 +402,7 @@ async function lights(): Promise<void> {
   const outRoot = outputRoot();
   const showDir = showFolder();
   const connConfig = connectionsConfigPath();
+  const recorded = await readRecipe(setFolder(outRoot, date));
   const run = await lightsStep({
     date,
     outputRoot: outRoot,
@@ -411,6 +412,7 @@ async function lights(): Promise<void> {
     proPresenterTimeoutMs: proPresenterTimeout(),
     proPresenterAgainMs: proPresenterAgain(),
     playlist: values.playlist,
+    previousTitles: recorded.ok ? recorded.recipe.lights?.labelled : undefined,
   });
   for (const line of run.lines) console.log(line);
   if (run.problem !== undefined) {
@@ -422,6 +424,7 @@ async function lights(): Promise<void> {
         showFolder: showDir,
         connectionsConfig: connConfig,
         ...(values.playlist === undefined ? {} : { playlist: values.playlist }),
+        labelled: recipe.songs.map((song) => song.title),
       },
     })).catch(() => {});
   }

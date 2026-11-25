@@ -7,7 +7,7 @@ import { matchSongs } from './library.ts';
 import { lightsStep } from './lights.ts';
 import { extractLiveEdits } from './live-edits.ts';
 import { PROPRESENTER_AGAIN_MS, PROPRESENTER_TIMEOUT_MS } from './propresenter.ts';
-import { readRecipe, readStemMapFile, type RecipeSong, type RecipeSongChart, type SetRecipe } from './recipe.ts';
+import { readRecipe, readStemMapFile, updateRecipe, type RecipeSong, type RecipeSongChart, type SetRecipe } from './recipe.ts';
 import { buildManifest, writeSetManifest } from './set-manifest.ts';
 import { songTitle } from './song.ts';
 
@@ -162,10 +162,14 @@ export async function editSet(options: EditOptions): Promise<EditResult> {
       proPresenterTimeoutMs: options.proPresenterTimeoutMs ?? PROPRESENTER_TIMEOUT_MS,
       proPresenterAgainMs: options.proPresenterAgainMs ?? PROPRESENTER_AGAIN_MS,
       playlist: recipe.lights.playlist,
-      previousTitles: recipe.songs.map((song) => song.title),
+      previousTitles: recipe.lights.labelled ?? recipe.songs.map((song) => song.title),
     });
     lightsLines = run.lines;
     lightsProblem = run.problem;
+    if (run.problem === undefined) {
+      const labelled = built.songs.map((song) => song.title);
+      await updateRecipe(folder, (next) => (next.lights === undefined ? next : { ...next, lights: { ...next.lights, labelled } }));
+    }
   }
 
   return {
