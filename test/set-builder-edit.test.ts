@@ -1,6 +1,6 @@
 import { spawn, type ChildProcessWithoutNullStreams } from 'node:child_process';
 import { existsSync } from 'node:fs';
-import { chmod, mkdir, readdir, readFile, rm, writeFile } from 'node:fs/promises';
+import { chmod, cp, mkdir, readdir, readFile, rm, writeFile } from 'node:fs/promises';
 import { join } from 'node:path';
 import { gzipSync } from 'node:zlib';
 import { afterEach, describe, expect, it } from 'vitest';
@@ -553,6 +553,24 @@ describe('Eos lighting cue regeneration on build-set edit', () => {
 });
 
 describe('validation errors and atomic failure safety', () => {
+  it('an edit of a copied set folder is refused and changes neither folder', async () => {
+    const workspace = await createWorkspace();
+    const built = await run(['grace', 'goodness', 'trust', '--date', DATE, ...buildPaths(workspace)]);
+    expect(built.code).toBe(0);
+    const original = projectFolder(workspace);
+    const copy = `${original} copy`;
+    await cp(original, copy, { recursive: true });
+    const originalBefore = await snapshotFolder(original);
+    const copyBefore = await snapshotFolder(copy);
+
+    const edited = await run(['edit', copy, '--drop', '1']);
+
+    expect(edited.code).toBe(1);
+    expect(edited.stderr).toContain(`which is ${original}.`);
+    expect(await snapshotFolder(original)).toEqual(originalBefore);
+    expect(await snapshotFolder(copy)).toEqual(copyBefore);
+  }, 20_000);
+
   it('fails cleanly with no partial overwrite of the .als, project folder, or set-manifest.json', async () => {
     const workspace = await createWorkspace();
     await addPadTrack(workspace);

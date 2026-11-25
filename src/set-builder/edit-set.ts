@@ -1,7 +1,7 @@
 import { existsSync } from 'node:fs';
 import { dirname, join, resolve } from 'node:path';
 import { readAls } from './als.ts';
-import { buildSet, setName, type SongSummary, type StemMap, type Transition } from './build-set.ts';
+import { buildSet, setFolder, setName, type SongSummary, type StemMap, type Transition } from './build-set.ts';
 import { EOS_LIMITS, type EosLimits } from './eos.ts';
 import { matchSongs } from './library.ts';
 import { lightsStep } from './lights.ts';
@@ -78,6 +78,10 @@ export async function editSet(options: EditOptions): Promise<EditResult> {
   const reading = await readRecipe(folder);
   if (!reading.ok) return { ok: false, problems: [reading.problem] };
   const recipe = reading.recipe;
+  const expectedFolder = setFolder(dirname(folder), recipe.date);
+  if (folder !== expectedFolder) {
+    return { ok: false, problems: [`${folder} is not the set folder for ${recipe.date}, which is ${expectedFolder}. Run build-set edit on that folder.`] };
+  }
 
   const name = setName(recipe.date);
   const existingAlsPath = join(folder, `${name}.als`);
