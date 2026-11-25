@@ -531,6 +531,24 @@ describe('preserving Live edits across build-set edit', () => {
   }, 20_000);
 });
 
+describe('swapping a song for itself', () => {
+  it('swapping a song for its own folder rebuilds it from the library and says so', async () => {
+    const workspace = await createWorkspace();
+    const built = await run(['goodness', 'trust', 'grace', '--date', DATE, ...buildPaths(workspace)]);
+    expect(built.code).toBe(0);
+    const songTwo = (root: Awaited<ReturnType<typeof readSet>>) => locatorList(root).map((locator) => locator.name).filter((name) => name.startsWith('2 - '));
+    const library = songTwo(await readSet(setPath(workspace)));
+    await mutateAlsXml(setPath(workspace), (xml) => renameLocator(xml, '2 - Verse 1', '2 - Verse 1 (soft)'));
+
+    const swapped = await run(['edit', projectFolder(workspace), '--swap', '2', 'trust']);
+
+    expect(swapped.stderr).toBe('');
+    expect(swapped.code).toBe(0);
+    expect(swapped.stdout).toContain(`Song 2 is rebuilt from ${TRUST} in the library, so its locators and clip gains start as the library has them.`);
+    expect(songTwo(await readSet(setPath(workspace)))).toEqual(library);
+  }, 20_000);
+});
+
 describe('the song before the edited position', () => {
   it('the song before a dropped last song keeps its renamed sections and gets back the sections its overlap had cut', async () => {
     const workspace = await createWorkspace();

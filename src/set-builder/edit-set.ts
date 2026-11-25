@@ -205,7 +205,10 @@ async function planEdit(recipe: SetRecipe, action: EditAction): Promise<{ ok: tr
       if (position !== target.position) untouched.set(position, position);
     }
     const nextTransitions = { ...transitions };
-    const warnings = padKeyWarnings(nextTransitions, nextSongs, target.position);
+    const warnings =
+      replacement.folder === songs[target.position - 1]!.folder
+        ? [`Song ${target.position} is rebuilt from ${replacement.folder} in the library, so its locators and clip gains start as the library has them.`]
+        : padKeyWarnings(nextTransitions, nextSongs, target.position);
     return { ok: true, songs: nextSongs, transitions: nextTransitions, untouched, boundary: before(target.position), warnings };
   }
 
