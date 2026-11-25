@@ -371,7 +371,9 @@ describe('20 Hz position-only broadcast cap and immediate state flush', () => {
     await holdPosition(74, 75);
     const beforeStop = leader.received.length;
     rig.live.setPlaying(false);
-    const stopped = await leader.snapshot((snapshot) => leader.received.indexOf(snapshot) >= beforeStop && !snapshot.playing);
+    const stopped = await leader.snapshot(
+      (snapshot) => leader.received.indexOf(snapshot) >= beforeStop && !snapshot.playing && snapshot.fade === null,
+    );
     expect(stopped.position).toBeCloseTo(75, 3);
     const countAfterStop = leader.received.length;
     hubClock.advance(POSITION_BROADCAST_MS);
