@@ -182,6 +182,8 @@ describe('building one song into a set on the Sunday template', () => {
 
     expect(result).toEqual({
       ok: true,
+      // test/set-builder-durations.test.ts checks them.
+      durations: expect.any(Array),
       setPath: setPath(workspace),
       songs: [{ folder: GOODNESS, title: 'Goodness of God', startBar: 1, tempo: 63, meter: '4/4' }],
     });
@@ -1424,6 +1426,8 @@ describe('the summary a build gives', () => {
     // 2/4), and Trust In God starts 4 bars of 6/8 later, on bar 157.
     expect(result).toEqual({
       ok: true,
+      // test/set-builder-durations.test.ts checks them.
+      durations: expect.any(Array),
       setPath: setPath(workspace),
       songs: [
         { folder: GRACE, title: 'This Is Amazing Grace', startBar: 1, tempo: 98, meter: '4/4', transition: { type: 'gap' } },
