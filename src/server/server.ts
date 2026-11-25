@@ -258,9 +258,11 @@ export async function startServer(options: ServerOptions): Promise<Server> {
     (cue, from, to) => connections.moved(cue, from, to),
   );
   // Every command for the controller, from the hub, the setup Refresh route, the poll and the pedal.
-  // The cues hear of it first, accepted or not, since only the command tells Play from start's jump
-  // from a jump to the song's first section. Stop and every jump request drop every slide change the
-  // targets have scheduled ahead of its beat, accepted or not, before the controller sees them. A
+  // A command Safe Mode refuses goes no further, so the cues never hear of it and the targets keep
+  // every slide change they have scheduled. Every other command reaches the cues first, accepted or
+  // not, since only the command tells Play from start's jump from a jump to the song's first section.
+  // Stop and every other jump request drop every slide change the targets have scheduled ahead of its
+  // beat, accepted or not, before the controller sees them. A
   // Loop press the controller took changes the loop it asked for, which the targets with a lead see
   // at once, before Live reports the loop, so no slide past the section's end goes for a vamp that
   // stays in it.

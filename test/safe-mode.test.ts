@@ -10,6 +10,7 @@ import { STOP_HOLD_MS } from '../web/src/hold.ts';
 import { SafeModeToggle } from '../web/src/SafeModeToggle.tsx';
 import { TimelinePauseButton } from '../web/src/TimelinePauseButton.tsx';
 import { readStylesheet, type Element } from './css.ts';
+import { fakeTarget, type FakeTarget } from './fake-target.ts';
 import { loaded, startRig, type Rig } from './harness.ts';
 
 let rig: Rig | undefined;
@@ -124,6 +125,37 @@ describe('safe mode (server rig)', () => {
     leader.send({ kind: 'play-from-start', song: 1 });
     await vi.waitFor(() => expect(rig?.received(CONTINUE)).toHaveLength(1));
     expect((await viewer.snapshot((s) => s.jump?.song === 1 && s.jump.section === 0)).jump).toEqual({ song: 1, section: 0 });
+  });
+
+  it('keeps the slide change a target with a lead has scheduled when Safe Mode refuses a cross-song jump or Play from start', async () => {
+    const lead = 2;
+    const introChange = 16;
+    const target: FakeTarget = {
+      ...fakeTarget({ name: 'propresenter', label: 'ProPresenter' }),
+      lead,
+      plan: (cue) => (cue.section === 'end' ? [{ beat: 0, slide: 0 }] : [{ beat: 0, slide: 0 }, { beat: 8, slide: 1 }]),
+    };
+    rig = await startRig(SET, { playing: true, position: 6 }, { targets: [target] });
+    const producer = await rig.connectProducer();
+    const leader = await rig.connectLeader();
+    await producer.snapshot((s) => at(6)(s) && s.connections[0]?.connection === 'online');
+    producer.send({ kind: 'arm', target: 'propresenter' });
+    await producer.snapshot((s) => s.connections[0]?.arm === 'armed');
+    rig.live.advance(4 * BEAT_MS);
+    await producer.snapshot(at(10));
+    const reported = rig.clock.now();
+    expect(target.cues.map(({ song, section, slide }) => ({ song, section, slide }))).toEqual([{ song: 1, section: 1, slide: 0 }]);
+
+    leader.send({ kind: 'jump', song: 2, section: 0 });
+    leader.send({ kind: 'play-from-start', song: 2 });
+    leader.send({ kind: 'set-end-toggle', song: 2, toggle: 'continue' });
+    const after = await leader.snapshot((s) => s.endToggles[2] === 'continue');
+    expect(after.jump).toBeNull();
+    const cuesBefore = target.cues.length;
+
+    await rig.advanceConnected(reported + (introChange - lead - 10) * BEAT_MS - rig.clock.now());
+    expect(target.cues.slice(cuesBefore).map(({ song, section, slide }) => ({ song, section, slide }))).toEqual([{ song: 1, section: 1, slide: 1 }]);
+    expect(target.cues.filter((cue) => cue.song === 2)).toEqual([]);
   });
 
   it('refuses cross-song jumps while playing in a gap between songs or during a held count-in when Safe Mode is on', async () => {
