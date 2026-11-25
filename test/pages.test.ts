@@ -1504,7 +1504,8 @@ describe('the producer page', () => {
 
   it("shows every leader control", () => {
     const leaderAll = buttons(page('leader', SNAPSHOT));
-    const producerButtons = buttons(page('producer', PRODUCER));
+    // Clear offline is the Devices panel's, the producer's own.
+    const producerButtons = buttons(page('producer', PRODUCER)).filter((label) => label !== 'Clear offline');
     expect(leaderAll).toEqual(expect.arrayContaining(['Setlist', 'Timeline']));
     expect(producerButtons).not.toContain('Setlist');
     expect(producerButtons).not.toContain('Timeline');
