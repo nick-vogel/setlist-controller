@@ -5,7 +5,7 @@ import { gapAfter, type NowPlaying, type SetList, type Snapshot, type Song, type
 // Each song's timing for the snapshot (SongTiming). A song the set manifest times takes the build's seconds, exact across
 // its tempo changes, as long as the manifest's beats still match Live's locators: a set moved by hand after the build is
 // timed by Live instead. Any other song is timed by its beats at Live's tempo the first time Live plays in it, once Live
-// has reported a tempo, and keeps that timing until its locators move. The first moment is the song's own tempo: later,
+// has reported a tempo, and keeps that timing until the set changes. The first moment is the song's own tempo: later,
 // a pad at its end already plays at the next song's. A song Live has not played in has no timing: Live reports only the
 // tempo it plays now.
 
@@ -19,10 +19,16 @@ export type TimeSongs = (set: SetList | null, manifestSongs: readonly ManifestSo
 
 // The server keeps one, so a song keeps the timing Live first played it at.
 export function createSongTimer(): TimeSongs {
-  // The timings by Live's tempo, by song number, each with the song's locators it was taken for.
-  const played = new Map<number, { layout: string; timing: SongTiming }>();
+  // The timings by Live's tempo, by song number, for the set they were taken in.
+  const played = new Map<number, SongTiming>();
+  let playedIn: string | null = null;
 
   return (set, manifestSongs, { now, playing, tempo }) => {
+    const key = set && setKey(set);
+    if (key !== playedIn) {
+      played.clear();
+      playedIn = key;
+    }
     if (!set) return {};
     const timings: Snapshot['songTimings'] = {};
     set.songs.forEach((song, index) => {
@@ -31,15 +37,14 @@ export function createSongTimer(): TimeSongs {
         timings[song.number] = built;
         return;
       }
-      const layout = layoutOf(song);
       const kept = played.get(song.number);
-      if (kept && kept.layout === layout) {
-        timings[song.number] = kept.timing;
+      if (kept) {
+        timings[song.number] = kept;
         return;
       }
       if (now?.song !== song.number || !playing || tempo === null) return;
       const timing = tempoTiming(song, tempo);
-      played.set(song.number, { layout, timing });
+      played.set(song.number, timing);
       timings[song.number] = timing;
     });
     return timings;
@@ -76,8 +81,10 @@ function tempoTiming(song: Song, tempo: number): SongTiming {
   return { sections: song.sections.map((section) => (section.end === null ? null : ((section.end - section.time) * 60) / tempo)), gap: null, source: 'tempo' };
 }
 
-function layoutOf(song: Song): string {
-  return JSON.stringify([song.sections.map((section) => [section.time, section.end]), song.end]);
+// Live names no set, so a set whose songs, titles or locators differ is another set, as the controller treats a read that
+// finds the set changed.
+function setKey(set: SetList): string {
+  return JSON.stringify(set.songs.map((song) => [song.number, song.title, song.sections.map((section) => [section.time, section.end]), song.end]));
 }
 
 function sameBeats(a: number, b: number): boolean {

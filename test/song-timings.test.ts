@@ -119,6 +119,16 @@ describe('the song timer', () => {
     expect(timeSongs(set, [], { ...playingIn(1), tempo: 96 })).toEqual({ 1: { sections: [5, 10], gap: null, source: 'tempo' } });
   });
 
+  it('forgets every timing by tempo when Live opens another set, even one whose songs have the same beats', () => {
+    const timeSongs = createSongTimer();
+    timeSongs(set, [], { ...playingIn(1), tempo: 96 });
+    const other = parseSet(SET.map((cue) => ({ ...cue, name: cue.name.replace('Built Song', 'Other Song') })));
+    expect(timeSongs(other, [], { now: null, playing: false, tempo: 140 })).toEqual({});
+    expect(timeSongs(other, [], { ...playingIn(1), tempo: 120 })[1]).toEqual({ sections: [4, 8], gap: null, source: 'tempo' });
+    expect(timeSongs(null, [], { now: null, playing: false, tempo: 120 })).toEqual({});
+    expect(timeSongs(other, [], { now: null, playing: false, tempo: 120 })).toEqual({});
+  });
+
   it('keeps the first tempo it timed a song at while Live plays on in it, and times it again once its locators move', () => {
     const timeSongs = createSongTimer();
     timeSongs(set, [], { ...playingIn(1), tempo: 96 });
