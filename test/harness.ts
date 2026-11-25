@@ -5,6 +5,7 @@ import { startFakeLive, type CuePoint, type FakeLive, type FakeLiveOptions } fro
 import { manualClock, type Clock, type ManualClock } from '../src/server/clock.ts';
 import { PROBE_INTERVAL_MS } from '../src/server/live-bridge.ts';
 import { manualMidiInput, type ManualMidiInput } from '../src/server/midi-input.ts';
+import type { ManualPowerSource } from '../src/server/power.ts';
 import { startServer, type Server } from '../src/server/server.ts';
 import type { TargetKinds } from '../src/server/connections-config.ts';
 import type { Target } from '../src/server/target.ts';
@@ -99,12 +100,16 @@ export type RigOptions = {
   // Times the hub's position-only broadcast pacing (~20 Hz). Defaults to real time, matching
   // production, while tests of the pacing pass a manual clock they move by hand.
   hubClock?: Clock;
+  // The playback Mac's power source, such as manualPowerSource() (power.ts), which the test sets by
+  // hand. Given, the server adds the Playback Mac row after the others. None by default, so the power
+  // is not known and no test's rows change.
+  power?: ManualPowerSource;
 };
 
 export async function startRig(
   cuePoints: CuePoint[],
   setup: LiveSetup = {},
-  { liveRunning = true, pedalConfig, targets, connectionsConfig, targetKinds, latenessLog, setManifest, hubClock }: RigOptions = {},
+  { liveRunning = true, pedalConfig, targets, connectionsConfig, targetKinds, latenessLog, setManifest, hubClock, power }: RigOptions = {},
 ): Promise<Rig> {
   let live = await startFakeLive({ cuePoints, ...setup });
   let running = true;
@@ -135,6 +140,7 @@ export async function startRig(
     leaderSecret,
     producerSecret,
     latenessLog,
+    powerSource: power,
   });
   const clients: { close(): void }[] = [];
   const open = async <S extends Snapshot = Snapshot>(path: string) => {
