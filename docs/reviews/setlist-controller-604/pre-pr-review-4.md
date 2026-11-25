@@ -443,3 +443,31 @@ Tests added: 8 (`test/check-private-terms.test.ts`) · green against `$BASE` (as
 ## Verdict
 
 **Not ready to merge as-is.** Gate before merging PR #17: fix **Finding 1 (HIGH)** and **Findings 2–5 (MEDIUM)** (all verified with red-before-green repros in `docs/reviews/setlist-controller-604/repro/review-4-findings.mjs`). **Finding 6 (LOW)** is a two-character fix worth taking alongside Finding 5, and **Finding 7 (LOW)** should be applied to the local out-of-tree `.git/hooks/pre-push`.
+
+## Remediation — 2026-11-25
+| Finding | Commit | Proof | Comments added | Verify verdict |
+| --- | --- | --- | --- | --- |
+| 1 (HIGH) | `5208d43` finding 1: an argument the check does not know makes it check the tree and pass; `43c88a9` type follow-up; `4ca098b` rework; `67a93e4` rework follow-up | red→green: six new cases in `test/check-private-terms.test.ts`, then seven more in the rework; repro "finding 1" | 0 | half-fixed at first (a `--range=-x` value reached `git rev-list` as an option, a second `--range` replaced the first, a bare `--` passed); fixed after the rework, by the scoped re-verify |
+| 2 (MEDIUM) | `6e48ae5` finding 2: the check's tests crash where dist/ does not exist yet | red→green: with `dist/` moved aside, 19 of 19 failed, then passed; repro "finding 2" | 0 | proved by execution |
+| 3 (MEDIUM) | `0490c65` finding 3: four of the check's tests pass when the script is missing | red→green: with the script moved away, 19 of 19 fail (3 passed before); a committer-only case fails when the committer scan is removed; repro "finding 3" | 0 | proved by execution |
+| 4 (MEDIUM) | `98e9e5d` finding 4: an added line that starts with "++ " reads as a file header; `4ca098b` rework (`--root`) | red→green: new test; a merge resolution adding a "+ <term>" line still fails, checked by hand; repro "finding 4" | 0 | fixed, plus a gap the verify pass found (no lines read from a root commit under `log.showRoot=false`), fixed in the rework |
+| 5 (MEDIUM) | `bce2395` finding 5: the check reads no file names | red→green: tree mode with a binary file, range mode with an added and a renamed file; a deletion still passes; repro "finding 5" | 0 | fixed (verify pass) |
+| 6 (LOW) | `608f172` finding 6: the tree mode crashes on a file name that is not ASCII | red→green: a tracked `café.md`; repro "finding 6" | 0 | proved by execution |
+| 7 (LOW) | local `.git/hooks/pre-push`, not in the tree | red→green: repro "finding 7"; a dry-run push to the archive still passes the hook untouched | 0 | proved by execution |
+
+Also `1ac11fd`, from Minor / nits: the rule no longer gives Eos a scrub script.
+
+Full checks after the round: `pnpm lint` and `pnpm typecheck` clean; `test/check-private-terms.test.ts` 26 of 26; all seven repros in `repro/review-4-findings.mjs` pass; `pnpm check:private` and `--range origin/main..HEAD` pass with the real list. The local full suite was not run at a load average above 600; CI on the public runner runs it.
+
+### Known regressions, deferred
+None. Open from the re-verify, pre-existing and LOW: a range git can read but that lists no commits (`--range HEAD..HEAD`) passes silently, as before this PR.
+
+### Rework briefs
+- Finding 1: refuse, before the terms file, a range that starts with "-", a repeated `--range` or `--stdin`, a bare `--`, and a range git cannot read (exit 2, git's message on one line); pass `--end-of-options` to `rev-list`. Preserve every valid form and the no-list note. Proof: seven new refused cases red, then 26 of 26.
+- Finding 4: read a root commit's lines under `log.showRoot=false`. Preserve the hunk tracking. Proof: a new test with that setting through `GIT_CONFIG_*`, red, then green.
+- Rework follow-up (scoped re-verify, one line): keep the 1 GB `maxBuffer` on the new `rev-list` call, and show git's first `fatal:` or `error:` line.
+
+## Approach decisions (remediation)
+- The argument parsing mirrors `scripts/record-pco-fixtures.mjs` (`parseArgs`, strict), with `tokens: true` and `multiple: true` so a terminator or a repeated flag is refused rather than ignored.
+- The range is listed and checked before the terms file is read, so a malformed range fails the same way in a contributor's clone.
+- The local hook's fixes stay out of the tree, as the review asked: it is the maintainer's guard, not the repository's.
