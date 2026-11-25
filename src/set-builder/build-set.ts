@@ -253,7 +253,7 @@ async function replaceFolder(folder: string, writeProject: (into: string) => Pro
   }
   if (existsSync(folder)) await rename(folder, join(work, 'old'));
   await rename(next, folder);
-  await rm(work, { recursive: true, force: true });
+  await rm(work, { recursive: true, force: true }).catch(() => undefined);
 }
 
 // The template's problems, for a build whose library cannot be listed. The default template lives in the library, so a

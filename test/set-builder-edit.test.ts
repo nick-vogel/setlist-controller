@@ -858,6 +858,33 @@ describe('validation errors and atomic failure safety', () => {
     expect(await snapshotFolder(folder)).toEqual(folderBefore);
   }, 20_000);
 
+  it('an edit carrying a read-only folder still updates set-manifest.json and exits 0', async () => {
+    const workspace = await createWorkspace();
+    const built = await run(['grace', 'goodness', '--date', DATE, ...buildPaths(workspace)]);
+    expect(built.code).toBe(0);
+    const folder = projectFolder(workspace);
+    const recorded = join(folder, 'Samples', 'Recorded');
+    await mkdir(recorded, { recursive: true });
+    await writeFile(join(recorded, 'take 1.wav'), 'a take recorded in rehearsal');
+    await chmod(recorded, 0o555);
+
+    const added = await run(['edit', folder, '--add', 'trust']).finally(() => spawnSync('chmod', ['-R', 'u+w', workspace.outputRoot]));
+
+    expect(added.stderr).toBe('');
+    expect(added.code).toBe(0);
+    expect((await readRecipeJson(folder)).songs.map((song) => song.folder)).toEqual([GRACE, GOODNESS, TRUST]);
+    expect((await readManifestJson(workspace.setManifest)).songs.map((song) => song.title)).toEqual(['This Is Amazing Grace', 'Goodness of God', 'Trust In God']);
+    expect(await readFile(join(recorded, 'take 1.wav'), 'utf8')).toBe('a take recorded in rehearsal');
+    const left = (await readdir(workspace.outputRoot)).filter((entry) => entry !== `${DATE} Sunday`);
+    expect(left).toHaveLength(1);
+    expect(left[0]).toMatch(new RegExp(`^\\.${DATE} Sunday replacing `));
+
+    const dropped = await run(['edit', folder, '--drop', '1']);
+    expect(dropped.stderr).toBe('');
+    expect(dropped.code).toBe(0);
+    expect((await readManifestJson(workspace.setManifest)).songs.map((song) => song.title)).toEqual(['Goodness of God', 'Trust In God']);
+  }, 30_000);
+
   it('keeps a second replaced set from the same second under the next second, and never overwrites the first', async () => {
     const workspace = await createWorkspace();
     const project = join(workspace.dir, 'project');
