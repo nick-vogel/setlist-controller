@@ -1,5 +1,5 @@
 import { spawnSync } from 'node:child_process';
-import { mkdtemp, rm, writeFile } from 'node:fs/promises';
+import { mkdir, mkdtemp, rm, writeFile } from 'node:fs/promises';
 import { join } from 'node:path';
 import { afterEach, describe, expect, it } from 'vitest';
 import { REPO_ROOT } from './set-builder-harness.ts';
@@ -21,6 +21,7 @@ function git(...args: string[]) {
 }
 
 async function scratch(email = 'maintainer@users.noreply.github.com') {
+  await mkdir(join(REPO_ROOT, 'dist'), { recursive: true });
   dir = await mkdtemp(join(REPO_ROOT, 'dist/private-terms-'));
   git('init', '-q', '-b', 'main');
   git('config', 'user.name', 'Maintainer');
