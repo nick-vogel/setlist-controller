@@ -5996,7 +5996,9 @@ describe('the slide timing file', () => {
     const slideTiming = await timingFile('{ "Ancient Gates": [{ "section": "Verse 3", "changes": [2.5, 6] }]');
     const { play, triggers, row } = await timingRig(104, { slideTiming });
 
-    const shown = await row((row) => row.check.kind === 'unmatched' && row.check.problems.length > 0 && !row.check.problems.includes('no playlist picked'));
+    // A check that runs before the fake ProPresenter answers the playlist's read says the playlist
+    // could not be read, as well as the file's problem, so the row is read once that check is past.
+    const shown = await row((row) => row.check.kind === 'unmatched' && row.check.problems.length > 0 && !row.check.problems.includes('no playlist picked') && !row.check.problems.some((problem) => problem.endsWith('could not be read from ProPresenter')));
     expect(shown.check.kind === 'unmatched' && shown.check.problems).toEqual([expect.stringMatching(new RegExp(`^slide timing file ${escaped(slideTiming)}: is not valid JSON: .+`))]);
     await play(8, 112);
     await play(12, 124);
