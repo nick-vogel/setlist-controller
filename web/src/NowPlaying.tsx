@@ -43,7 +43,7 @@ export function NowPlaying({
   const looped = loop?.section && sectionAt(set, loop.section);
   const loopLine = <p className="now-loop">{looped ? `Looping ${looped.name}.` : loop ? 'Loop on.' : '\u00a0'}</p>;
   // The same for the time left, which is not known for a set the build did not time until Live plays in it.
-  const timeLine = <p className="now-time-left">{timeLeftText(timeLeft(set, timings, now, position, loop)) || '\u00a0'}</p>;
+  const timeLine = <p className="now-time-left">{timeLeftText(timeLeft(set, timings, { now, position, jump, countIn, loop })) || '\u00a0'}</p>;
 
   if (!now || !song || !section) {
     return (
@@ -89,8 +89,8 @@ export function NowPlaying({
 function timeLeftText({ song, set, approximate }: TimeLeft): string {
   const about = approximate ? '~' : '';
   const parts = [
-    song !== null && `${about}${formatSeconds(song)} left in song`,
-    set !== null && `${set.atLeast ? 'at least ' : ''}${about}${formatSeconds(set.seconds)} left in set`,
+    song !== null && `${about}${formatSeconds(song, 'up')} left in song`,
+    set !== null && `${set.atLeast ? 'at least ' : ''}${about}${formatSeconds(set.seconds, 'up')} left in set`,
   ];
   return parts.filter(Boolean).join(' \u00b7 ');
 }

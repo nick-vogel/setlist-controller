@@ -2,6 +2,7 @@ import type { Command } from '../shared/command.ts';
 import { COUNT_OFF, countInFor, isPad } from '../shared/count-in.ts';
 import {
   sameSection,
+  gapAfter,
   sectionAt,
   type EndToggle,
   type JumpTarget,
@@ -38,6 +39,9 @@ export type PlaybackController = {
   predict(beat: number): number | null;
   // Live's tempo in BPM, 120 until Live reports it. Kept out of the snapshot.
   tempo(): number;
+  // Live's tempo in BPM once Live has reported one, and null before, for a reader that must not take the 120 BPM
+  // stand-in for Live's own. Kept out of the snapshot, as the tempo is.
+  reportedTempo(): number | null;
   // The beats in a bar, from the time signature Live last reported: 4 for 4/4 until it reports one.
   // Kept out of the snapshot, as the tempo is.
   barLength(): number;
@@ -134,6 +138,7 @@ export function startPlaybackController(
   let stopSettle: (() => void) | null = null;
   // Live's tempo, which turns a time into beats. 120 BPM until Live reports it.
   let tempo = 120;
+  let tempoReported = false;
   // The playhead's position and the clock time it held it: each report of the playhead, and Live going
   // from stopped to playing, since a start's cue comes on that report and a position reported while
   // stopped, maybe minutes before, would make it minutes late. Null while the position is not known.
@@ -738,7 +743,10 @@ export function startPlaybackController(
         case 'tempo':
           // Song time is in beats, so the tempo moves the playhead but never changes the bar count,
           // and the snapshot stays the same. It is kept only to tell a late tap.
-          if (event.bpm > 0) tempo = event.bpm;
+          if (event.bpm > 0) {
+            tempo = event.bpm;
+            tempoReported = true;
+          }
           return;
         // The fade's reads, which change nothing on any page.
         case 'track-data':
@@ -947,6 +955,7 @@ export function startPlaybackController(
       return anchor.at + ((beat - anchor.position) * 60_000) / tempo;
     },
     tempo: () => tempo,
+    reportedTempo: () => (tempoReported ? tempo : null),
     barLength,
     meters: () => meters,
     loop: intended,
@@ -960,8 +969,8 @@ export function startPlaybackController(
 function defaultEndToggles(set: SetList): Record<number, EndToggle> {
   return Object.fromEntries(
     set.songs.map((song, index): [number, EndToggle] => {
-      const next = set.songs[index + 1]?.sections[0]?.time;
-      const flows = song.end !== null && next !== undefined && Math.abs(song.end - next) < EPSILON;
+      const gap = gapAfter(set.songs, index);
+      const flows = gap !== null && Math.abs(gap.end - gap.start) < EPSILON;
       return [song.number, flows ? 'continue' : 'stop'];
     }),
   );

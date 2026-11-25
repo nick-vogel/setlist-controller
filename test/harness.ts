@@ -1,5 +1,7 @@
 import { randomBytes } from 'node:crypto';
+import { mkdir, mkdtemp, rm, writeFile } from 'node:fs/promises';
 import { request } from 'node:http';
+import { join, resolve } from 'node:path';
 import WebSocket from 'ws';
 import { startFakeLive, type CuePoint, type FakeLive, type FakeLiveOptions } from '../src/fake-live/fake-live.ts';
 import { manualClock, type ManualClock } from '../src/server/clock.ts';
@@ -10,6 +12,7 @@ import { startServer, type Server } from '../src/server/server.ts';
 import type { TargetKinds } from '../src/server/connections-config.ts';
 import type { Target } from '../src/server/target.ts';
 import { PROBE } from '../src/shared/abletonosc.ts';
+import { SET_MANIFEST_FILE, type ManifestSong } from '../src/shared/set-manifest.ts';
 import { isHeartbeat } from '../src/shared/heartbeat.ts';
 import type { OscMessage } from '../src/shared/osc.ts';
 import { leaderSocketPath, producerSocketPath, SETUP_CONNECTIONS_API, SETUP_PEDAL_API, SOCKET_PATHS } from '../src/shared/routes.ts';
@@ -334,4 +337,23 @@ export function connect<S extends Snapshot = Snapshot>(url: string): Promise<Cli
       }),
     );
   });
+}
+
+// The folders writeManifestFile made, which removeManifestFiles removes.
+const manifestFolders: string[] = [];
+
+// Writes a set manifest of these songs to a new folder under dist/, for a rig's setManifest, and gives its path.
+export async function writeManifestFile(songs: ManifestSong[]): Promise<string> {
+  const dist = resolve(import.meta.dirname, '../dist');
+  await mkdir(dist, { recursive: true });
+  const folder = await mkdtemp(join(dist, 'set-manifest-'));
+  manifestFolders.push(folder);
+  const path = join(folder, SET_MANIFEST_FILE);
+  await writeFile(path, JSON.stringify({ songs }));
+  return path;
+}
+
+// Removes every folder writeManifestFile made, for a test's clean-up.
+export async function removeManifestFiles(): Promise<void> {
+  await Promise.all(manifestFolders.splice(0).map((folder) => rm(folder, { recursive: true, force: true })));
 }

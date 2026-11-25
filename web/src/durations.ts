@@ -1,11 +1,15 @@
-import type { Loop, NowPlaying, SetList, Song, SongTiming } from '../../src/shared/snapshot.ts';
+import { gapAfter, type SetList, type Snapshot, type Song, type SongTiming } from '../../src/shared/snapshot.ts';
 
 // How long the songs and the set play, and how long is left while Live plays, from each song's timing in the snapshot.
-// A section marked to be skipped (+SKIP) is not played, so no total counts it, unless the playhead is in it. The set
-// counts the gaps between songs. A total that is missing a song or a gap is a minimum, and the page says "at least". While
-// a loop is on, the time left is approximate, since the loop plays for as long as the leader keeps it.
+// A section marked to be skipped (+SKIP) is not played, so no total counts it, unless the playhead is in it or a jump
+// waits for it. The set counts the gaps between songs. A total that is missing a song or a gap is a minimum, and the page
+// says "at least". While a loop is on, the time left is approximate, since the loop plays for as long as the leader keeps
+// it.
 
-export type Timings = Record<number, SongTiming>;
+type Timings = Snapshot['songTimings'];
+
+// Where the playhead is, and what waits to move it.
+export type Playhead = Pick<Snapshot, 'now' | 'position' | 'jump' | 'countIn' | 'loop'>;
 
 // Seconds, and whether they are a minimum: some part of what they count is not known.
 export type Total = { seconds: number; atLeast: boolean };
@@ -16,100 +20,120 @@ export type TimeLeft = { song: number | null; set: Total | null; approximate: bo
 
 // The seconds a song plays, its skipped sections left out, or null when any section it plays is not timed.
 export function songSeconds(song: Song, timing: SongTiming | undefined): number | null {
-  if (!timing) return null;
-  let seconds = 0;
-  for (const [index, section] of song.sections.entries()) {
-    if (section.skip) continue;
-    const part = timing.sections[index];
-    if (part === null || part === undefined) return null;
-    seconds += part;
-  }
-  return seconds;
+  const first = song.sections.findIndex((section) => !section.skip);
+  return first === -1 ? (timing ? 0 : null) : playedFrom(song, timing, first, 1);
 }
 
-// The seconds the whole set plays, songs and the gaps between them, or null when no song is timed.
+// The seconds the whole set plays, songs and the gaps between them, or null when no song is timed. Each song and each gap
+// is rounded to whole seconds first, so the total is the sum of the song durations the setlist shows and its gaps.
 export function setSeconds(set: SetList, timings: Timings): Total | null {
-  return sumFrom(set, timings, 0);
+  return sumFrom(set, timings, 0, Math.round);
 }
 
 // What is left at the playhead: of the song it is in, through the song's End, and of the set, through its last song's
-// End. Between songs, only the set has time left. Before the first song, all of the set is left.
-export function timeLeft(set: SetList, timings: Timings, now: NowPlaying | null, position: number | null, loop: Loop | null): TimeLeft {
+// End. A jump that waits lands before long, on the next bar line or at the end of a count-in's Count Off, so the time left
+// counts from where it lands: a count-in also counts the rest of the Count Off. Between songs, only the set has time left.
+// Before the first song, all of the set is left.
+//
+// The rest of the section the playhead is in is its share of the section's beats. Across a tempo change inside that one
+// section, the share of seconds differs a little, which the per-section timings cannot tell.
+export function timeLeft(set: SetList, timings: Timings, { now, position, jump, countIn, loop }: Playhead): TimeLeft {
   const approximate = loop !== null;
-  if (position === null) return { song: null, set: null, approximate };
-  const index = now ? set.songs.findIndex((song) => song.number === now.song) : set.songs.findIndex((song) => songStart(song) > position);
-  if (index === -1 && !now) return { song: null, set: null, approximate };
-  if (now) {
+  const nothing = { song: null, set: null, approximate };
+  if (position === null) return nothing;
+  if (jump) {
+    const index = set.songs.findIndex((song) => song.number === jump.song);
     const song = set.songs[index];
-    if (!song) return { song: null, set: null, approximate };
-    const left = songLeft(song, timings[song.number], now, position);
-    const after = afterSong(set, timings, index);
-    return { song: left, set: combine(left, after), approximate };
+    if (!song) return nothing;
+    const timing = timings[song.number];
+    const landed = jump.section === 'end' ? 0 : playedFrom(song, timing, jump.section, 1);
+    const lead = countIn && now ? restOfSection(set, timings, now.song, now.section, position) : 0;
+    const left = landed === null || lead === null ? null : lead + landed;
+    return { song: left, set: combine(left, afterSong(set, timings, index)), approximate };
   }
-  const next = set.songs[index]!;
+  if (now) {
+    const index = set.songs.findIndex((song) => song.number === now.song);
+    const song = set.songs[index];
+    if (!song) return nothing;
+    const rest = restOfSection(set, timings, now.song, now.section, position);
+    const later = playedAfter(song, timings[song.number], now.section);
+    const left = rest === null || later === null ? null : rest + later;
+    return { song: left, set: combine(left, afterSong(set, timings, index)), approximate };
+  }
+  const index = set.songs.findIndex((song) => songStart(song) > position);
+  if (index === -1) return nothing;
   const later = sumFrom(set, timings, index);
-  const previous = set.songs[index - 1];
-  if (!previous) return { song: null, set: later, approximate };
+  if (index === 0) return { song: null, set: later, approximate };
   // Between two songs: what is left of the gap.
+  const previous = set.songs[index - 1]!;
   const gap = timings[previous.number]?.gap ?? null;
-  const gapLeft = gap === null || previous.end === null ? null : gap * ahead(position, previous.end, songStart(next));
+  const stretch = gapAfter(set.songs, index - 1);
+  const gapLeft = gap === null || !stretch ? null : gap * ahead(position, stretch.start, stretch.end);
   return { song: null, set: combine(gapLeft, later), approximate };
 }
 
-// "4:05", "1:02:05": whole seconds, the minutes in two digits once there are hours.
-export function formatSeconds(seconds: number): string {
-  const whole = Math.max(0, Math.round(seconds));
+// "4:05", "1:02:05": whole seconds, the minutes in two digits once there are hours. A time left rounds up, so it reads
+// 0:00 only once nothing is left; a duration rounds to the nearest second.
+export function formatSeconds(seconds: number, rounding: 'nearest' | 'up' = 'nearest'): string {
+  const whole = Math.max(0, rounding === 'up' ? Math.ceil(seconds - 1e-9) : Math.round(seconds));
   const hours = Math.floor(whole / 3600);
   const minutes = Math.floor((whole % 3600) / 60);
   const rest = String(whole % 60).padStart(2, '0');
   return hours > 0 ? `${hours}:${String(minutes).padStart(2, '0')}:${rest}` : `${minutes}:${rest}`;
 }
 
-// The seconds left of the song from the playhead in the section `now` names: the rest of that section, by its share of
-// beats still to play, and every later section the song plays.
-function songLeft(song: Song, timing: SongTiming | undefined, now: NowPlaying, position: number): number | null {
+// The seconds from the section at `from`, `share` of it still to play, through the song's End: that section whatever its
+// skip mark, since the playhead is in it or a jump lands on it, and every later section the song plays. Null when any of
+// them is not timed.
+function playedFrom(song: Song, timing: SongTiming | undefined, from: number, share: number): number | null {
+  const first = timing?.sections[from];
+  if (first === null || first === undefined) return null;
+  const later = playedAfter(song, timing, from);
+  return later === null ? null : first * share + later;
+}
+
+// The seconds of the sections after the one at `index` that the song plays, or null when any of them is not timed.
+function playedAfter(song: Song, timing: SongTiming | undefined, index: number): number | null {
   if (!timing) return null;
-  const section = song.sections[now.section];
-  const current = timing.sections[now.section];
-  if (!section || current === null || current === undefined) return null;
-  const rest = section.end === null ? (now.fraction === null ? null : 1 - now.fraction) : ahead(position, section.time, section.end);
-  if (rest === null) return null;
-  let seconds = current * rest;
-  for (const [index, later] of song.sections.entries()) {
-    if (index <= now.section || later.skip) continue;
-    const part = timing.sections[index];
+  let seconds = 0;
+  for (const [at, section] of song.sections.entries()) {
+    if (at <= index || section.skip) continue;
+    const part = timing.sections[at];
     if (part === null || part === undefined) return null;
     seconds += part;
   }
   return seconds;
 }
 
-// The seconds of the set after the song at `index` ends: the gap after it, and every later song with its own gap.
-function afterSong(set: SetList, timings: Timings, index: number): Total | null {
-  const song = set.songs[index]!;
-  if (index === set.songs.length - 1) return { seconds: 0, atLeast: false };
-  const gap = timings[song.number]?.gap ?? null;
-  return combine(gap, sumFrom(set, timings, index + 1));
+// The seconds left of a section from the playhead, by its share of beats still to play, or null when it is not timed.
+function restOfSection(set: SetList, timings: Timings, songNumber: number, index: number, position: number): number | null {
+  const section = set.songs.find((song) => song.number === songNumber)?.sections[index];
+  const seconds = timings[songNumber]?.sections[index];
+  if (!section || section.end === null || seconds === null || seconds === undefined) return null;
+  return seconds * ahead(position, section.time, section.end);
 }
 
-// The seconds of the songs from `index` on, each with the gap after it but the last.
-function sumFrom(set: SetList, timings: Timings, index: number): Total | null {
+// The seconds of the set after the song at `index` ends: the gap after it, and every later song with its own gap.
+function afterSong(set: SetList, timings: Timings, index: number): Total | null {
+  if (index === set.songs.length - 1) return { seconds: 0, atLeast: false };
+  return combine(timings[set.songs[index]!.number]?.gap ?? null, sumFrom(set, timings, index + 1));
+}
+
+// The seconds of the songs from `index` on, each with the gap after it but the last, each part rounded by `round`.
+function sumFrom(set: SetList, timings: Timings, index: number, round: (seconds: number) => number = (seconds) => seconds): Total | null {
   let seconds = 0;
   let known = 0;
   let atLeast = false;
   set.songs.slice(index).forEach((song, offset) => {
-    const played = songSeconds(song, timings[song.number]);
-    if (played === null) atLeast = true;
-    else {
-      seconds += played;
-      known += 1;
+    const last = index + offset === set.songs.length - 1;
+    const timing = timings[song.number];
+    for (const part of [songSeconds(song, timing), ...(last ? [] : [timing?.gap ?? null])]) {
+      if (part === null) atLeast = true;
+      else seconds += round(part);
     }
-    if (index + offset === set.songs.length - 1) return;
-    const gap = timings[song.number]?.gap ?? null;
-    if (gap === null) atLeast = true;
-    else seconds += gap;
+    if (songSeconds(song, timing) !== null) known += 1;
   });
-  return known === 0 && atLeast ? null : { seconds, atLeast };
+  return known === 0 ? null : { seconds, atLeast };
 }
 
 // Seconds that may not be known, then a total after them.

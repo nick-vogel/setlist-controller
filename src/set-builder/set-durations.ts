@@ -1,5 +1,6 @@
 import { parseSet } from '../server/set-parser.ts';
 import type { Span, SongDurations } from '../shared/set-manifest.ts';
+import { gapAfter } from '../shared/snapshot.ts';
 import { child, childElements, valueOf, type AlsDocument } from './als.ts';
 import { mainEnvelope } from './song.ts';
 import { secondsThrough, tempoPoints, type TempoPoint } from './tempo.ts';
@@ -17,10 +18,10 @@ export function setDurations(set: AlsDocument): SongDurations[] {
   const { songs } = parseSet(locators.map((locator) => ({ name: valueOf(locator, 'Name'), time: Number(valueOf(locator, 'Time')) })));
   const tempo = tempoPoints(childElements(child(mainEnvelope(child(liveSet, 'MainTrack'), 'Tempo'), 'Automation', 'Events'), 'FloatEvent'));
   return songs.map((song, index) => {
-    const nextStart = songs[index + 1]?.sections[0]?.time;
+    const gap = gapAfter(songs, index);
     return {
       sections: song.sections.flatMap((section) => (section.end === null ? [] : [spanOf(tempo, section.time, section.end)])),
-      gap: song.end === null || nextStart === undefined ? null : spanOf(tempo, song.end, nextStart),
+      gap: gap && spanOf(tempo, gap.start, gap.end),
     };
   });
 }

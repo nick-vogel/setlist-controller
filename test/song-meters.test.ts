@@ -1,16 +1,12 @@
-import { mkdir, mkdtemp, rm, writeFile } from 'node:fs/promises';
-import { join, resolve } from 'node:path';
+import { writeFile } from 'node:fs/promises';
 import { afterEach, describe, expect, it } from 'vitest';
 import type { CuePoint } from '../src/fake-live/fake-live.ts';
-import { SET_MANIFEST_FILE, type ManifestSong } from '../src/shared/set-manifest.ts';
 import type { Snapshot } from '../src/shared/snapshot.ts';
-import { loaded, startRig, type Rig } from './harness.ts';
+import { loaded, removeManifestFiles, startRig, writeManifestFile, type Rig } from './harness.ts';
 
 // Per-song starting meters in the snapshot: sourced from the set manifest's per-song meter with
 // fallback to Live's reported time signature (or 4/4 before Live reports one), so mixed-meter sets
 // carry accurate bar grids before Live visits later songs.
-
-const REPO_ROOT = resolve(import.meta.dirname, '..');
 
 const MIXED_SET: CuePoint[] = [
   { name: '1 - Count Off (Four Four Song)', time: 0 },
@@ -28,26 +24,16 @@ const MIXED_SET: CuePoint[] = [
 ];
 
 let rig: Rig | undefined;
-let folder: string | undefined;
 
 afterEach(async () => {
   await rig?.close();
   rig = undefined;
-  if (folder) await rm(folder, { recursive: true, force: true });
-  folder = undefined;
+  await removeManifestFiles();
 });
-
-async function writeManifest(songs: ManifestSong[]): Promise<string> {
-  await mkdir(join(REPO_ROOT, 'dist'), { recursive: true });
-  folder = await mkdtemp(join(REPO_ROOT, 'dist/song-meters-'));
-  const path = join(folder, SET_MANIFEST_FILE);
-  await writeFile(path, JSON.stringify({ songs }));
-  return path;
-}
 
 describe('per-song starting meters in the snapshot', () => {
   it('exposes every song meter from the set manifest before Live visits later songs', async () => {
-    const manifestPath = await writeManifest([
+    const manifestPath = await writeManifestFile([
       { title: 'Four Four Song', stemsKey: 'G', meter: '4/4' },
       // Deliberately different case and spacing to prove name-rule matching.
       { title: '  six  EIGHT song ', stemsKey: 'D', meter: '6/8' },
@@ -103,7 +89,7 @@ describe('per-song starting meters in the snapshot', () => {
   });
 
   it('updates songMeters when the set manifest file changes', async () => {
-    const manifestPath = await writeManifest([
+    const manifestPath = await writeManifestFile([
       { title: 'Four Four Song', stemsKey: 'G', meter: '4/4' },
       { title: 'Six Eight Song', stemsKey: 'D', meter: '6/8' },
     ]);

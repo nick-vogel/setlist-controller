@@ -4,6 +4,8 @@ import { parseSet } from '../src/server/set-parser.ts';
 import type { SongDurations } from '../src/shared/set-manifest.ts';
 import {
   addMainTrackEvents,
+  addPad,
+  addPadTrack,
   createWorkspace,
   DATE,
   envelopeEvents,
@@ -135,6 +137,20 @@ describe("a build's song durations", () => {
     // The ramp makes the song's first sections shorter than 98 BPM would.
     const [first] = grace.sections;
     expect(first!.seconds).toBeLessThan((first!.beats * 60) / 98);
+    expectClose(result.durations, await measuredDurations(workspace));
+  });
+
+  // A pad after This Is Amazing Grace, in Goodness of God's key A: its Pad section holds Goodness of God's 63 BPM and 4/4
+  // for 60 s rounded down to whole bars, 15 bars, and the next song's Count Off starts at its end.
+  it("times a pad as the song's last section, at the next song's tempo, with no gap after it", async () => {
+    const workspace = await createWorkspace();
+    await addPadTrack(workspace);
+    await addPad(workspace, 'A', 102.4);
+    const result = await build(workspace, [GRACE, GOODNESS], { 1: { type: 'pad' } });
+
+    const grace = result.durations[0]!;
+    expect(grace.sections.at(-1)).toEqual({ beats: 60, seconds: expect.closeTo((60 * 60) / 63, 9) });
+    expect(grace.gap).toEqual({ beats: 0, seconds: 0 });
     expectClose(result.durations, await measuredDurations(workspace));
   });
 

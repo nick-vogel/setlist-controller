@@ -110,8 +110,9 @@ async function phase0Workspace(): Promise<Workspace & { manifest: string }> {
 const paths = (workspace: Workspace) => ['--library', workspace.library, '--template', workspace.template, '--output-root', workspace.outputRoot, '--show-folder', workspace.showFolder];
 const listPaths = (workspace: Workspace) => ['--library', workspace.library, '--output-root', workspace.outputRoot];
 
-// The manifest a build wrote, each song checked for the durations every build gives it and then shown without them, which
-// test/set-builder-durations.test.ts checks.
+// The manifest a build wrote, each song checked for the durations every build gives it and then shown without them. This
+// is the one check that the command itself, not buildSet alone, writes them to the file; test/set-builder-durations.test.ts
+// checks their values.
 async function readManifest(path: string): Promise<SetManifest> {
   const manifest = JSON.parse(await readFile(path, 'utf8')) as SetManifest;
   for (const song of manifest.songs) expect(song.durations?.sections.length, song.title).toBeGreaterThan(0);

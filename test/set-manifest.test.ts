@@ -66,9 +66,10 @@ describe('reading the set manifest', () => {
     { what: 'a negative length', durations: { sections: [{ beats: 8, seconds: -1 }], gap: null } },
     { what: 'a gap that is left out', durations: { sections: [{ beats: 8, seconds: 4 }] } },
     { what: 'a gap that is not a span', durations: { sections: [], gap: 12 } },
-  ])('drops only the durations with $what', ({ durations }) => {
-    const text = JSON.stringify({ songs: [{ title: 'Made Up Song', stemsKey: 'G', meter: '6/8', durations }] });
-    expect(parseSetManifest(text)).toEqual({ manifest: { songs: [{ title: 'Made Up Song', stemsKey: 'G', meter: '6/8' }] } });
+  ])('drops only the durations with $what, and keeps the next song\'s', ({ durations }) => {
+    const timed = { title: 'Another Song', stemsKey: 'D', durations: { sections: [{ beats: 16, seconds: 8 }], gap: null } };
+    const text = JSON.stringify({ songs: [{ title: 'Made Up Song', stemsKey: 'G', meter: '6/8', durations }, timed] });
+    expect(parseSetManifest(text)).toEqual({ manifest: { songs: [{ title: 'Made Up Song', stemsKey: 'G', meter: '6/8' }, timed] } });
   });
 
   it.each([

@@ -59,6 +59,15 @@ export function sectionAt(set: SetList | null, address: JumpTarget): Section | u
   return set?.songs.find((song) => song.number === address.song)?.sections[address.section];
 }
 
+// The gap after the song at `index`: from its End to the next song's first locator, in beats. Null after the last song
+// and after a song with no End. An overlap or a pad gives a gap of no beats, its End on the next song's first locator.
+export function gapAfter(songs: readonly Song[], index: number): { start: number; end: number } | null {
+  const song = songs[index];
+  const nextStart = songs[index + 1]?.sections[0]?.time;
+  if (!song || song.end === null || nextStart === undefined) return null;
+  return { start: song.end, end: nextStart };
+}
+
 // Whether two addresses name the same section, or the same song's End. False when either is missing.
 // A section is never a song's End.
 export function sameSection(a: JumpTarget | null | undefined, b: JumpTarget | null | undefined): boolean {

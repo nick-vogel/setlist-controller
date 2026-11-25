@@ -4,7 +4,7 @@ import { describe, expect, it } from 'vitest';
 import type { Role } from '../src/shared/routes.ts';
 import type { NowPlaying, SetList, Snapshot } from '../src/shared/snapshot.ts';
 import { Page } from '../web/src/App.tsx';
-import { formatSeconds, setSeconds, songSeconds, timeLeft, type Timings } from '../web/src/durations.ts';
+import { formatSeconds, setSeconds, songSeconds, timeLeft, type Playhead } from '../web/src/durations.ts';
 import { NowPlaying as NowPlayingPanel } from '../web/src/NowPlaying.tsx';
 
 // The totals a page shows from each song's timing: a song's and the set's, gaps included and skipped sections left out,
@@ -31,13 +31,14 @@ const SET: SetList = {
   warnings: [],
 };
 
-const TIMINGS: Timings = {
+const TIMINGS: Snapshot['songTimings'] = {
   1: { sections: [4, 10, 5], gap: 6, source: 'build' },
   2: { sections: [20], gap: 3, source: 'build' },
   3: { sections: [30], gap: null, source: 'build' },
 };
 
 const at = (song: number, section: number, fraction = 0): NowPlaying => ({ song, section, next: 'end', bar: 1, bars: 4, fraction });
+const playhead = (now: NowPlaying | null, position: number | null, loop: Snapshot['loop'] = null, jump: Snapshot['jump'] = null, countIn = false): Playhead => ({ now, position, loop, jump, countIn });
 
 describe('song and set totals', () => {
   it('counts every section a song plays and leaves out a skipped one', () => {
@@ -65,40 +66,77 @@ describe('song and set totals', () => {
 describe('the time left at the playhead', () => {
   it('counts the rest of the section by its beats, the later sections the song plays, and the rest of the set', () => {
     // A quarter through the Verse, 8 to 24: 12 of its 16 beats are left.
-    expect(timeLeft(SET, TIMINGS, at(1, 1), 12, null)).toEqual({ song: 7.5, set: { seconds: 7.5 + 6 + 20 + 3 + 30, atLeast: false }, approximate: false });
+    expect(timeLeft(SET, TIMINGS, playhead(at(1, 1), 12, null))).toEqual({ song: 7.5, set: { seconds: 7.5 + 6 + 20 + 3 + 30, atLeast: false }, approximate: false });
   });
 
   it('counts the rest of a skipped section the playhead is in, but no skipped section after it', () => {
-    expect(timeLeft(SET, TIMINGS, at(1, 0), 4, null).song).toBe(2 + 10);
-    expect(timeLeft(SET, TIMINGS, at(1, 2), 28, null).song).toBe(2.5);
+    expect(timeLeft(SET, TIMINGS, playhead(at(1, 0), 4, null)).song).toBe(2 + 10);
+    expect(timeLeft(SET, TIMINGS, playhead(at(1, 2), 28, null)).song).toBe(2.5);
   });
 
   it('counts what is left of the gap between two songs, and gives no song time', () => {
     // Halfway through the gap from 32 to 40.
-    expect(timeLeft(SET, TIMINGS, null, 36, null)).toEqual({ song: null, set: { seconds: 3 + 20 + 3 + 30, atLeast: false }, approximate: false });
+    expect(timeLeft(SET, TIMINGS, playhead(null, 36, null))).toEqual({ song: null, set: { seconds: 3 + 20 + 3 + 30, atLeast: false }, approximate: false });
   });
 
   it('counts all of the set before the first song, and nothing after the last', () => {
     const before = { songs: SET.songs.map((song) => ({ ...song, sections: song.sections.map((section) => ({ ...section, time: section.time + 8, end: section.end! + 8 })), end: song.end! + 8 })), warnings: [] };
-    expect(timeLeft(before, TIMINGS, null, 2, null).set).toEqual(setSeconds(before, TIMINGS));
-    expect(timeLeft(SET, TIMINGS, null, 90, null)).toEqual({ song: null, set: null, approximate: false });
+    expect(timeLeft(before, TIMINGS, playhead(null, 2, null)).set).toEqual({ seconds: 14 + 6 + 20 + 3 + 30, atLeast: false });
+    expect(timeLeft(SET, TIMINGS, playhead(null, 90, null))).toEqual({ song: null, set: null, approximate: false });
   });
 
   it('says the time left is a minimum when a later song is not timed', () => {
     const timings = { 1: TIMINGS[1]!, 2: TIMINGS[2]! };
-    expect(timeLeft(SET, timings, at(2, 0), 48, null)).toEqual({ song: 10, set: { seconds: 10 + 3, atLeast: true }, approximate: false });
+    expect(timeLeft(SET, timings, playhead(at(2, 0), 48, null))).toEqual({ song: 10, set: { seconds: 10 + 3, atLeast: true }, approximate: false });
   });
 
   it('gives no song time for a song with no timing, and a minimum for the set', () => {
-    expect(timeLeft(SET, { 3: TIMINGS[3]! }, at(2, 0), 48, null)).toEqual({ song: null, set: { seconds: 30, atLeast: true }, approximate: false });
+    expect(timeLeft(SET, { 3: TIMINGS[3]! }, playhead(at(2, 0), 48, null))).toEqual({ song: null, set: { seconds: 30, atLeast: true }, approximate: false });
   });
 
   it('is approximate while a loop is on', () => {
-    expect(timeLeft(SET, TIMINGS, at(1, 1), 12, { start: 8, length: 16, section: { song: 1, section: 1 } }).approximate).toBe(true);
+    expect(timeLeft(SET, TIMINGS, playhead(at(1, 1), 12, { start: 8, length: 16, section: { song: 1, section: 1 } })).approximate).toBe(true);
+  });
+
+  // The jump lands on the next bar line, or at the end of a count-in's Count Off, so the time left counts from there.
+  it.each([
+    { what: 'Previous, back to the Count Off of the same song', jump: { song: 1, section: 0 }, song: 4 + 10, set: 14 + 59 },
+    { what: 'a tap on a section of a later song', jump: { song: 3, section: 0 }, song: 30, set: 30 },
+    { what: "Next to a song's End", jump: { song: 1, section: 'end' as const }, song: 0, set: 59 },
+    { what: 'a tap on a skipped section, which then plays', jump: { song: 1, section: 2 }, song: 5, set: 5 + 59 },
+  ])('counts from where a waiting jump lands: $what', ({ jump, song, set }) => {
+    expect(timeLeft(SET, TIMINGS, playhead(at(1, 1), 12, null, jump))).toEqual({ song, set: { seconds: set, atLeast: false }, approximate: false });
+  });
+
+  it("counts the rest of a count-in's Count Off, then the song from its target, leaving out the sections it counts in past", () => {
+    // A quarter through the Count Off, 0 to 8, counting in to the Verse.
+    const found = timeLeft(SET, TIMINGS, playhead(at(1, 0), 2, null, { song: 1, section: 1 }, true));
+    expect(found).toEqual({ song: 3 + 10, set: { seconds: 13 + 59, atLeast: false }, approximate: false });
   });
 
   it('knows nothing before Live reports the position', () => {
-    expect(timeLeft(SET, TIMINGS, null, null, null)).toEqual({ song: null, set: null, approximate: false });
+    expect(timeLeft(SET, TIMINGS, playhead(null, null, null))).toEqual({ song: null, set: null, approximate: false });
+  });
+});
+
+describe('how a page rounds seconds', () => {
+  it('rounds each song and gap of the set total, so it is the sum of what the setlist shows and its gaps', () => {
+    const timings = {
+      1: { sections: [2.4, 2.4, 0], gap: 0.4, source: 'tempo' as const },
+      2: { sections: [2.4], gap: 0.4, source: 'tempo' as const },
+      3: { sections: [2.4], gap: null, source: 'tempo' as const },
+    };
+    // 5 + 2 + 2, where the seconds unrounded add up to 10.4.
+    expect(setSeconds(SET, timings)).toEqual({ seconds: 9, atLeast: false });
+  });
+
+  it.each([
+    [0, '0:00'],
+    [0.2, '0:01'],
+    [59, '0:59'],
+    [59.5, '1:00'],
+  ])('rounds %s seconds left up, to %s', (seconds, text) => {
+    expect(formatSeconds(seconds, 'up')).toBe(text);
   });
 });
 
@@ -170,6 +208,6 @@ describe('the durations a page shows', () => {
 
   it('shows only the set time between songs, and keeps the line in place with nothing known', () => {
     expect(line(panel({ now: null, position: 36 }), 'now-time-left')).toBe('0:56 left in set');
-    expect(panel({ songTimings: {} })).toContain('<p class="now-time-left">\u00a0</p>');
+    expect(line(panel({ songTimings: {} }), 'now-time-left')).toBe('');
   });
 });

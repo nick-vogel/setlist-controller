@@ -1,34 +1,20 @@
-import { mkdir, mkdtemp, rm, writeFile } from 'node:fs/promises';
-import { join, resolve } from 'node:path';
 import { expect, test, type Locator, type Page } from '@playwright/test';
 import type { CuePoint } from '../src/fake-live/fake-live.ts';
-import { SET_MANIFEST_FILE, type ManifestSong } from '../src/shared/set-manifest.ts';
-import { loaded } from '../test/harness.ts';
+import type { ManifestSong } from '../src/shared/set-manifest.ts';
+import { loaded, removeManifestFiles, writeManifestFile } from '../test/harness.ts';
 import { startE2eRig, type E2eRig } from './rig.ts';
 
 // Song and set durations on the leader's iPad and on a phone: each song's length under its title, the whole set's over
 // the setlist, gaps included, and the time left in the song and the set as Live plays, from the build's set manifest,
 // or from Live's tempo for a set the build did not time.
 
-const REPO_ROOT = resolve(import.meta.dirname, '..');
-
 let e2e: E2eRig | undefined;
-let folder: string | undefined;
 
 test.afterEach(async () => {
   await e2e?.close();
   e2e = undefined;
-  if (folder) await rm(folder, { recursive: true, force: true });
-  folder = undefined;
+  await removeManifestFiles();
 });
-
-async function manifestFile(songs: ManifestSong[]): Promise<string> {
-  await mkdir(join(REPO_ROOT, 'dist'), { recursive: true });
-  folder = await mkdtemp(join(REPO_ROOT, 'dist/e2e-durations-'));
-  const path = join(folder, SET_MANIFEST_FILE);
-  await writeFile(path, JSON.stringify({ songs }));
-  return path;
-}
 
 // Three titled songs, each a Count Off of 8 beats, a Verse and a Chorus of 16 and an End, 8 beats apart. Song n
 // starts at beat 48 * (n - 1).
@@ -64,7 +50,7 @@ async function expectWhole(line: Locator) {
 }
 
 test("the setlist shows each song's duration and the set's, and Now playing the time left, from the build's manifest", async ({ page }) => {
-  e2e = await startE2eRig({ playing: true, position: 8 }, SET, { setManifest: await manifestFile(BUILT) });
+  e2e = await startE2eRig({ playing: true, position: 8 }, SET, { setManifest: await writeManifestFile(BUILT) });
   const watcher = await e2e.rig.connectViewer();
   await watcher.snapshot((snapshot) => loaded(snapshot) && Object.keys(snapshot.songTimings).length === 3);
   await page.goto(e2e.leaderUrl);
@@ -97,10 +83,10 @@ test("a set the build did not time shows a song's duration once Live plays in it
   await expect(page.locator('.set-duration')).toHaveText('Set at least 0:20');
   await expect(timeLeft(page)).toHaveText('0:16 left in song · at least 0:16 left in set');
 
-  // Song 2 at 96 BPM: 40 beats are 25 seconds. Song 1 keeps its timing. Live reports the tempo, then plays on.
-  e2e.rig.live.setPosition(48 + 8);
+  // Song 2 at 96 BPM: 40 beats are 25 seconds. Live reports the next song's tempo as it plays into it, and song 1 keeps
+  // the timing Live first played it at.
   e2e.rig.live.setTempo(96);
-  e2e.rig.live.advance(1000);
+  e2e.rig.live.setPosition(48 + 8);
   await expect(songDurations(page)).toHaveText(['0:20', '0:25']);
   await expect(page.locator('.set-duration')).toHaveText('Set at least 0:45');
 });
