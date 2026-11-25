@@ -7,9 +7,10 @@ import { controls, leaderSocketPath, producerSocketPath, SOCKET_PATHS, type Role
 import type { ConnectionsPart, ProducerSnapshot, Snapshot } from '../shared/snapshot.ts';
 import { realClock, type Clock } from './clock.ts';
 
-// Sends the full snapshot on connect and on every change. The snapshot is small, so no diffs. Viewers
-// and leaders get the playback snapshot; producers get it plus the connections part. Each role's
-// snapshot goes out only when it changed, so a change to the connections alone reaches no viewer.
+// Sends the full snapshot on connect and on every change, pacing position-only changes (below). The
+// snapshot is small, so no diffs. Viewers and leaders get the playback snapshot; producers get it plus
+// the connections part. Each role's snapshot goes out only when it changed, so a change to the
+// connections alone reaches no viewer.
 //
 // Two protections keep stage browsers on slow or congested Wi-Fi current:
 // 1. Per-socket latest-only coalescing: while a socket still has a send in flight, no further

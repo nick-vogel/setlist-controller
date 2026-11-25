@@ -425,11 +425,11 @@ describe('cue timing and lateness independence', () => {
       rig.live.setPosition(1);
       await producer.snapshot(at(1));
 
-      // Now hubClock is at 50 (window is closed for the next 50 ms — do NOT advance hubClock!).
+      // Now hubClock is at 50 (the window stays closed for 50 ms, so hubClock must not move here).
       // Move Live forward inside Intro across slide 2 at beat 4 to beat 4.5 (half a beat = 250 ms late).
       rig.live.advance(3.5 * BEAT_MS);
 
-      // The target receives the intra-section slide cue immediately with zero hub throttle delay!
+      // The target receives the intra-section slide cue immediately with no hub throttle delay.
       await vi.waitFor(() => expect(target.cues).toHaveLength(1));
       expect(target.cues[0]).toMatchObject({ song: 1, section: 0, slide: 2 });
 
@@ -438,7 +438,7 @@ describe('cue timing and lateness independence', () => {
       await vi.waitFor(() => expect(target.cues).toHaveLength(2));
       expect(target.cues[1]).toMatchObject({ song: 1, section: 1, name: 'Verse', slide: 1 });
 
-      // Producer immediately sees the updated lateness (significant change!), with exact 125 ms lateness.
+      // Producer immediately sees the updated lateness (a significant change), with exact 125 ms lateness.
       const latestProducer = await producer.snapshot((snapshot) => snapshot.connections[0]?.lateness.last === 125);
       expect(latestProducer.connections[0]?.lateness.last).toBe(125);
 
