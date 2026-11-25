@@ -6,7 +6,7 @@ import { audioCopies, audioProblems, carryOver, copyAudio, copyPads, copyProject
 import { introProblems, overlapProblems, padProblems, padTrackProblems, stemProblems, templateProblems } from './checks.ts';
 import { matchSongs, padsFolder, type SongMatch } from './library.ts';
 import { timeSignature } from './meter.ts';
-import { applyLiveEdits, type LiveEdits } from './live-edits.ts';
+import { applyLiveEdits, type LiveEdits, type LocatorCarry } from './live-edits.ts';
 import { isKey, readPads, type Pad, type PadsReading } from './pads.ts';
 import { buildRecipe, SET_RECIPE_FILE, writeRecipe, type RecipeExtras } from './recipe.ts';
 import { mainEvents, readSong, type Song, type SongReading } from './song.ts';
@@ -64,9 +64,9 @@ export type BuildOptions = CheckOptions & {
   carryOver?: boolean;
   // Optional metadata recorded into set-recipe.json alongside the built set.
   recipe?: RecipeExtras;
-  // Optional preserved Live edits (locator flags, track mixer volumes, clip volumes) to reapply onto
-  // untouched songs after materializing the set.
-  liveEdits?: { edits: LiveEdits; untouched: Map<number, number> };
+  // Optional preserved Live edits (untouched songs' locators, track mixer volumes, clip volumes) to reapply after
+  // materializing the set.
+  liveEdits?: { edits: LiveEdits } & Omit<LocatorCarry, 'placed'>;
 };
 
 // One song of a built set, as the command's summary shows it.
@@ -119,7 +119,8 @@ export async function buildSet(options: BuildOptions): Promise<BuildResult> {
   const placed = placeSongs(songs, transitions);
   writeSet(set, targets, placed, options.stemMap, { projectFolder: folder }, padFiles);
   if (options.liveEdits !== undefined) {
-    applyLiveEdits(set, options.liveEdits.edits, options.liveEdits.untouched);
+    const { edits, untouched, boundary, oldStarts } = options.liveEdits;
+    applyLiveEdits(set, edits, { untouched, boundary, oldStarts, placed });
   }
   const copies = audioCopies(songs);
   const recipe = buildRecipe({
@@ -129,7 +130,7 @@ export async function buildSet(options: BuildOptions): Promise<BuildResult> {
     outputRoot: options.outputRoot,
     stemMap: options.stemMap,
     pads: options.pads,
-    songs: placed.map(({ song }) => ({ folder: song.folder, title: song.title })),
+    songs: placed.map(({ song, offset }) => ({ folder: song.folder, title: song.title, start: offset })),
     transitions,
     extras: options.recipe,
   });

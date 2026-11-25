@@ -16,6 +16,8 @@ export const DEFAULT_STEM_MAP_PATH = resolve(import.meta.dirname, '../../config/
 export type RecipeSong = {
   folder: string;
   title: string;
+  // The song's start beat in the built set.
+  start: number;
   chartKey?: string;
   chartText?: string;
 };
@@ -88,7 +90,7 @@ export function buildRecipe({
   outputRoot: string;
   stemMap: StemMap;
   pads?: string;
-  songs: { folder: string; title: string }[];
+  songs: { folder: string; title: string; start: number }[];
   transitions?: Partial<Record<number, Transition>>;
   extras?: RecipeExtras;
 }): SetRecipe {
@@ -97,11 +99,12 @@ export function buildRecipe({
     if (transition === undefined || transition.type === 'gap') continue;
     normalizedTransitions[Number(key)] = transition.type === 'pad' && transition.key !== undefined ? { type: 'pad', key: transition.key } : { type: transition.type };
   }
-  const recipeSongs: RecipeSong[] = songs.map(({ folder, title }, index) => {
+  const recipeSongs: RecipeSong[] = songs.map(({ folder, title, start }, index) => {
     const chart = extras?.charts?.[index];
     return {
       folder,
       title,
+      start,
       ...(chart?.chartText === undefined ? {} : { ...(chart.chartKey === undefined ? {} : { chartKey: chart.chartKey }), chartText: chart.chartText }),
     };
   });
@@ -204,7 +207,7 @@ export function parseRecipe(text: string, path: string): { ok: true; recipe: Set
   }
   const songs: RecipeSong[] = [];
   for (const entry of raw.songs) {
-    if (!isObject(entry) || !isNonEmptyString(entry.folder) || !isNonEmptyString(entry.title)) {
+    if (!isObject(entry) || !isNonEmptyString(entry.folder) || !isNonEmptyString(entry.title) || typeof entry.start !== 'number' || !Number.isFinite(entry.start) || entry.start < 0) {
       return { ok: false, problem: `${path} has an invalid song entry in "songs".` };
     }
     if (entry.chartKey !== undefined && typeof entry.chartKey !== 'string') {
@@ -216,6 +219,7 @@ export function parseRecipe(text: string, path: string): { ok: true; recipe: Set
     songs.push({
       folder: entry.folder,
       title: entry.title,
+      start: entry.start,
       ...(entry.chartKey === undefined ? {} : { chartKey: entry.chartKey }),
       ...(entry.chartText === undefined ? {} : { chartText: entry.chartText }),
     });

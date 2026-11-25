@@ -1,16 +1,14 @@
-import { byTime, child, childElements, setValue, valueOf, type AlsDocument, type Element } from './als.ts';
+import { byTime, child, childElements, replaceListItems, setValue, valueOf, type AlsDocument, type Element } from './als.ts';
 import { PAD_TRACK } from './template.ts';
+import type { PlacedSong } from './timeline.ts';
+import { numbered } from './write-set.ts';
 
-// Preserves rehearsal edits saved in an existing Live set (.als) when `build-set edit`
-// re-materializes the set:
-// 1. Per-song locator flags (+SKIP, +LOOP, +LOOP:<n>, >>> <target>[@<n>]) on untouched songs,
-//    re-indexed when song numbers shift after --add or --drop.
+// Keeps the rehearsal work saved in an existing Live set (.als) when `build-set edit` re-materializes the set:
+// 1. Every untouched song's locators, exactly as the old set has them, renamed and added ones included: only the leading
+//    song number and the time change. The song before the edited position takes its End region from the new build.
 // 2. Track mixer volumes (DeviceChain -> Mixer -> Volume -> Manual) across every track and MainTrack.
 // 3. Per-song clip gain (AudioClip -> SampleVolume) on untouched songs.
-
-export type PlannedLoop = { passes: number | null };
-export type JumpTarget = { name: string; occurrence: number | null };
-export type SectionFlags = { loop?: PlannedLoop; skip?: true; jump?: JumpTarget };
+// Nothing here reads meaning out of a locator name beyond its song number and the builder's own End section.
 
 export type LiveEdits = {
   // Track mixer Manual volumes keyed by `${track.name}:${Id}`.
@@ -19,51 +17,26 @@ export type LiveEdits = {
   trackVolumesByName: Map<string, string>;
   // MainTrack mixer Manual volume.
   mainVolume?: string;
-  // Per-old-song-number locator flags, keyed by `${baseSectionName}\0${occurrence}`.
-  locatorFlags: Map<number, Map<string, SectionFlags>>;
+  // Every old locator whose name starts with a song number, by that number, in time order.
+  locators: Map<number, Element[]>;
   // Per-old-song-number clip SampleVolume values, keyed by `${relativePath}\0${occurrence}`.
   clipVolumes: Map<number, Map<string, string>>;
 };
 
+export type LocatorCarry = {
+  // Each untouched song's NEW 1-based song number, mapped to its OLD 1-based song number.
+  untouched: Map<number, number>;
+  // The NEW song numbers whose End region the new build decides: the song just before the edited position.
+  boundary: Set<number>;
+  // Each OLD song number's start beat in the old set.
+  oldStarts: Map<number, number>;
+  placed: PlacedSong[];
+};
+
 // `<song number> <separator> <section name>`, matching set-parser.ts.
 const LOCATOR = /^\s*(\d+)\s*[-\u2013\u2014]\s*(.*?)\s*$/;
-// A trailing ` >>> <target>` with optional `@<n>`, white space around the arrow loose.
-const JUMP_FLAG = /^(.*?)\s*>>>\s*(\S.*?)\s*$/;
-const OCCURRENCE = /^(.*?)@([1-9]\d*)$/;
-// A trailing ` +SKIP`, ` +LOOP`, or ` +LOOP:<n>`, letter case ignored.
-const PLUS_FLAG = /^(.*?)\s+\+(skip|loop(?::(\d+))?)$/i;
-
-export function readLocatorFlags(locatorSection: string): { name: string } & SectionFlags {
-  let name = locatorSection;
-  let jump: JumpTarget | undefined;
-  let loop: PlannedLoop | undefined;
-  let skip = false;
-  const jumpMatch = JUMP_FLAG.exec(name);
-  if (jumpMatch?.[1] && jumpMatch[2]) {
-    name = jumpMatch[1];
-    const occurrence = OCCURRENCE.exec(jumpMatch[2]);
-    jump = occurrence?.[1] ? { name: occurrence[1].trim(), occurrence: Number(occurrence[2]) } : { name: jumpMatch[2], occurrence: null };
-  }
-  for (let plus = PLUS_FLAG.exec(name); plus?.[1] && plus[2]; plus = PLUS_FLAG.exec(name)) {
-    name = plus[1];
-    if (plus[2].toLowerCase() === 'skip') skip = true;
-    else if (plus[3] === undefined) loop = { passes: null };
-    else if (Number(plus[3]) >= 2) loop = { passes: Number(plus[3]) };
-  }
-  return { name, ...(skip && { skip: true as const }), ...(loop && { loop }), ...(jump && { jump }) };
-}
-
-export function withLocatorFlags(section: string, flags: SectionFlags): string {
-  let name = section;
-  if (flags.skip) name += ' +SKIP';
-  if (flags.loop) name += flags.loop.passes === null ? ' +LOOP' : ` +LOOP:${flags.loop.passes}`;
-  if (flags.jump) name += ` >>> ${flags.jump.name}${flags.jump.occurrence === null ? '' : `@${flags.jump.occurrence}`}`;
-  return name;
-}
-
-function hasAnyFlag(flags: SectionFlags): boolean {
-  return flags.skip === true || flags.loop !== undefined || flags.jump !== undefined;
-}
+const END = 'End';
+const EPS = 1e-4;
 
 // Extracts Live edits from an existing built `.als` document before re-materialization.
 export function extractLiveEdits(document: AlsDocument): LiveEdits {
@@ -82,32 +55,20 @@ export function extractLiveEdits(document: AlsDocument): LiveEdits {
   const mainTrack = optionalChild(liveSet, 'MainTrack');
   const mainVolume = mainTrack ? optionalValue(mainTrack, 'DeviceChain', 'Mixer', 'Volume', 'Manual') : undefined;
 
-  const locatorFlags = new Map<number, Map<string, SectionFlags>>();
-  const locators = sortedLocators(liveSet);
-  const seenSections = new Map<string, number>();
-  for (const locator of locators) {
-    const parsed = LOCATOR.exec(valueOf(locator, 'Name'));
-    if (!parsed?.[1] || !parsed[2]) continue;
-    const songNumber = Number(parsed[1]);
-    const { name: baseName, skip, loop, jump } = readLocatorFlags(parsed[2]);
-    const countKey = `${songNumber}\0${baseName}`;
-    const occurrence = seenSections.get(countKey) ?? 0;
-    seenSections.set(countKey, occurrence + 1);
-    const flags: SectionFlags = { ...(skip && { skip }), ...(loop && { loop }), ...(jump && { jump }) };
-    if (!hasAnyFlag(flags)) continue;
-    const songFlags = locatorFlags.get(songNumber) ?? new Map<string, SectionFlags>();
-    songFlags.set(`${baseName}\0${occurrence}`, flags);
-    locatorFlags.set(songNumber, songFlags);
+  const sorted = sortedLocators(liveSet);
+  const locators = new Map<number, Element[]>();
+  for (const locator of sorted) {
+    const number = songNumber(locator);
+    if (number === undefined) continue;
+    locators.set(number, [...(locators.get(number) ?? []), structuredClone(locator)]);
   }
 
-  const clipVolumes = extractClipVolumes(liveSet, locators);
+  const clipVolumes = extractClipVolumes(liveSet, sorted);
 
-  return { trackVolumesById, trackVolumesByName, ...(mainVolume === undefined ? {} : { mainVolume }), locatorFlags, clipVolumes };
+  return { trackVolumesById, trackVolumesByName, ...(mainVolume === undefined ? {} : { mainVolume }), locators, clipVolumes };
 }
 
-// Reapplies extracted Live edits onto a newly materialized `.als`. `untouched` maps each
-// untouched song's NEW 1-based song number to its OLD 1-based song number.
-export function applyLiveEdits(document: AlsDocument, edits: LiveEdits, untouched: Map<number, number>): void {
+export function applyLiveEdits(document: AlsDocument, edits: LiveEdits, carry: LocatorCarry): void {
   const liveSet = child(document.root, 'LiveSet');
 
   // 1. Track mixer volumes.
@@ -126,26 +87,72 @@ export function applyLiveEdits(document: AlsDocument, edits: LiveEdits, untouche
     if (mainManual) mainManual.attributes.Value = edits.mainVolume;
   }
 
-  // 2. Per-song locator flags on untouched songs.
-  const locators = sortedLocators(liveSet);
-  const seenSections = new Map<string, number>();
-  for (const locator of locators) {
-    const parsed = LOCATOR.exec(valueOf(locator, 'Name'));
-    if (!parsed?.[1] || !parsed[2]) continue;
-    const newSongNumber = Number(parsed[1]);
-    const baseName = parsed[2];
-    const countKey = `${newSongNumber}\0${baseName}`;
-    const occurrence = seenSections.get(countKey) ?? 0;
-    seenSections.set(countKey, occurrence + 1);
-    const oldSongNumber = untouched.get(newSongNumber);
-    if (oldSongNumber === undefined) continue;
-    const flags = edits.locatorFlags.get(oldSongNumber)?.get(`${baseName}\0${occurrence}`);
-    if (flags === undefined) continue;
-    setValue(locator, ['Name'], `${newSongNumber} - ${withLocatorFlags(baseName, flags)}`);
-  }
+  // 2. Per-song clip SampleVolume on untouched songs, found by the new build's own locators.
+  const built = sortedLocators(liveSet);
+  applyClipVolumes(liveSet, built, edits.clipVolumes, carry.untouched);
 
-  // 3. Per-song clip SampleVolume on untouched songs.
-  applyClipVolumes(liveSet, locators, edits.clipVolumes, untouched);
+  replaceListItems(child(liveSet, 'Locators'), 'Locators', numbered(byTime(carriedLocators(built, edits.locators, carry), (locator) => valueOf(locator, 'Time'))));
+}
+
+// The new set's locators: the new build's for a touched song and for an untouched song the old set holds none of; the
+// old set's, moved and renumbered, for every other untouched song. On the song before the edited position, each of the
+// new build's locators but its End takes the place of an old one at the same local time, when there is one, and every
+// other old one before the new End comes along too; the old End never does.
+function carriedLocators(built: Element[], old: Map<number, Element[]>, { untouched, boundary, oldStarts, placed }: LocatorCarry): Element[] {
+  const fresh = new Map<number, Element[]>();
+  const unnumbered: Element[] = [];
+  for (const locator of built) {
+    const number = songNumber(locator);
+    if (number === undefined) unnumbered.push(locator);
+    else fresh.set(number, [...(fresh.get(number) ?? []), locator]);
+  }
+  const result = [...unnumbered];
+  for (const { number, offset } of placed) {
+    const own = fresh.get(number) ?? [];
+    const oldNumber = untouched.get(number);
+    const kept = oldNumber === undefined ? undefined : old.get(oldNumber);
+    if (oldNumber === undefined || kept === undefined || kept.length === 0) {
+      result.push(...own);
+      continue;
+    }
+    const oldStart = oldStarts.get(oldNumber);
+    if (oldStart === undefined) throw new Error(`Song ${oldNumber} of the set being edited has no start beat in its recipe.`);
+    const carried = (locator: Element) => carriedLocator(locator, number, offset - oldStart);
+    if (!boundary.has(number)) {
+      result.push(...kept.map(carried));
+      continue;
+    }
+    const unused = kept.filter((locator) => section(locator) !== END);
+    const newEnd = own.find((locator) => section(locator) === END);
+    const endAt = newEnd === undefined ? Infinity : localTime(newEnd, offset);
+    for (const locator of own) {
+      const at = localTime(locator, offset);
+      const match = section(locator) === END ? -1 : unused.findIndex((candidate) => Math.abs(localTime(candidate, oldStart) - at) < EPS);
+      result.push(match === -1 ? locator : carried(unused.splice(match, 1)[0]!));
+    }
+    result.push(...unused.filter((locator) => localTime(locator, oldStart) < endAt - EPS).map(carried));
+  }
+  return result;
+}
+
+function carriedLocator(locator: Element, number: number, delta: number): Element {
+  const copy = structuredClone(locator);
+  setValue(copy, ['Name'], valueOf(copy, 'Name').replace(/^(\s*)\d+/, `$1${number}`));
+  setValue(copy, ['Time'], String(Number(valueOf(copy, 'Time')) + delta));
+  return copy;
+}
+
+function songNumber(locator: Element): number | undefined {
+  const parsed = LOCATOR.exec(valueOf(locator, 'Name'));
+  return parsed?.[1] === undefined ? undefined : Number(parsed[1]);
+}
+
+function section(locator: Element): string | undefined {
+  return LOCATOR.exec(valueOf(locator, 'Name'))?.[2];
+}
+
+function localTime(locator: Element, start: number): number {
+  return Number(valueOf(locator, 'Time')) - start;
 }
 
 type SongSpan = { songNumber: number; start: number; end: number };
@@ -170,7 +177,6 @@ function songSpans(locators: Element[]): SongSpan[] {
 
 function songAtBeat(spans: SongSpan[], beat: number): number | undefined {
   // Small epsilon handles floating-point drift on clip starts sitting right on a song's start beat.
-  const EPS = 1e-4;
   for (const span of spans) {
     if (beat >= span.start - EPS && beat < span.end - EPS) return span.songNumber;
   }

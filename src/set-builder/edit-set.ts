@@ -12,8 +12,8 @@ import { buildManifest, writeSetManifest } from './set-manifest.ts';
 import { songTitle } from './song.ts';
 
 // `build-set edit`: modifies a single song in an already-built set (--swap, --add, --drop) using
-// its saved `set-recipe.json`, carrying forward Live locator flags (+SKIP, +LOOP, >>>) and track
-// mixer volumes from the existing `.als` onto untouched songs, and regenerating every target
+// its saved `set-recipe.json`, carrying every untouched song's locators, track mixer volumes and
+// clip gains from the existing `.als` into the new one, and regenerating every target
 // recorded in the recipe (`.als` + APFS-cloned audio/pads, `set-manifest.json`, and Eos lighting
 // cues when `--lights` was used). Any validation error leaves all existing files untouched.
 
@@ -130,7 +130,12 @@ export async function editSet(options: EditOptions): Promise<EditResult> {
       ...(recipe.lights === undefined ? {} : { lights: recipe.lights }),
       charts,
     },
-    liveEdits: { edits: liveEdits, untouched: planned.untouched },
+    liveEdits: {
+      edits: liveEdits,
+      untouched: planned.untouched,
+      boundary: planned.boundary,
+      oldStarts: new Map(recipe.songs.map((song, index) => [index + 1, song.start])),
+    },
   });
 
   if (!built.ok) return { ok: false, problems: built.problems };
@@ -174,10 +179,11 @@ export async function editSet(options: EditOptions): Promise<EditResult> {
 }
 
 type PlannedEdit = {
-  songs: RecipeSong[];
+  songs: Omit<RecipeSong, 'start'>[];
   transitions: Partial<Record<number, Transition>>;
   // Maps each untouched song's NEW 1-based song number to its OLD 1-based song number.
   untouched: Map<number, number>;
+  boundary: Set<number>;
 };
 
 async function planEdit(recipe: SetRecipe, action: EditAction): Promise<{ ok: true } & PlannedEdit | { ok: false; problems: string[] }> {
@@ -195,7 +201,7 @@ async function planEdit(recipe: SetRecipe, action: EditAction): Promise<{ ok: tr
     for (let position = 1; position <= songs.length; position++) {
       if (position !== target.position) untouched.set(position, position);
     }
-    return { ok: true, songs: nextSongs, transitions: { ...transitions }, untouched };
+    return { ok: true, songs: nextSongs, transitions: { ...transitions }, untouched, boundary: before(target.position) };
   }
 
   if (action.kind === 'add') {
@@ -218,7 +224,7 @@ async function planEdit(recipe: SetRecipe, action: EditAction): Promise<{ ok: tr
     for (let oldPos = 1; oldPos <= songs.length; oldPos++) {
       untouched.set(oldPos >= at ? oldPos + 1 : oldPos, oldPos);
     }
-    return { ok: true, songs: nextSongs, transitions: nextTransitions, untouched };
+    return { ok: true, songs: nextSongs, transitions: nextTransitions, untouched, boundary: before(at) };
   }
 
   // Drop.
@@ -243,7 +249,11 @@ async function planEdit(recipe: SetRecipe, action: EditAction): Promise<{ ok: tr
     if (oldPos === target.position) continue;
     untouched.set(oldPos > target.position ? oldPos - 1 : oldPos, oldPos);
   }
-  return { ok: true, songs: nextSongs, transitions: nextTransitions, untouched };
+  return { ok: true, songs: nextSongs, transitions: nextTransitions, untouched, boundary: before(target.position) };
+}
+
+function before(position: number): Set<number> {
+  return new Set(position > 1 ? [position - 1] : []);
 }
 
 function listedSongs(songs: RecipeSong[]): string {

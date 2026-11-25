@@ -360,7 +360,7 @@ function moved(value: string, offset: number): string {
 }
 
 // The list's elements with their Ids set to 0 to n in list order.
-function numbered(elements: Element[]): Element[] {
+export function numbered(elements: Element[]): Element[] {
   elements.forEach((element, id) => (element.attributes.Id = String(id)));
   return elements;
 }

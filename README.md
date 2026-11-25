@@ -154,7 +154,7 @@ Every build also writes a `set-recipe.json` file beside the built `.als` recordi
 - `--add <song>` with optional `--at <pos>`: inserts `<song>` at position `<pos>` (or appends it at the end when `--at` is omitted).
 - `--drop <song>`: removes `<song>` from the set.
 
-`pnpm build-set edit` reads the existing `.als` first to preserve `+SKIP`, `+LOOP`, and `>>>` locator flags and track mixer volumes on untouched songs, atomically re-materializes the set with APFS clones, updates `set-manifest.json` (preserving Planning Center charts on untouched songs so connected band devices reload automatically), updates any pad files, and regenerates Eos lighting cues when `--lights` was run on the set. Any validation error leaves the existing `.als` and `set-manifest.json` untouched.
+`pnpm build-set edit` reads the existing `.als` first to carry every untouched song's locators as Live has them, renamed and added ones included, and its track mixer volumes and clip gains, atomically re-materializes the set with APFS clones, updates `set-manifest.json` (preserving Planning Center charts on untouched songs so connected band devices reload automatically), updates any pad files, and regenerates Eos lighting cues when `--lights` was run on the set. Any validation error leaves the existing `.als` and `set-manifest.json` untouched.
 
 The build expects four things:
 

@@ -117,6 +117,14 @@ function renameLocator(xml: string, from: string, to: string, occurrence = 0): s
   });
 }
 
+// Adds a copy of the locator named `from`, named `to` at `time`.
+function addLocator(xml: string, from: string, to: string, time: number): string {
+  const escaped = from.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+  return xml.replace(new RegExp(`<Locator Id="\\d+">(?:(?!</Locator>)[\\s\\S])*?<Name Value="${escaped}" />[\\s\\S]*?</Locator>`), (block) =>
+    `${block}${block.replace(/<Locator Id="\d+">/, '<Locator Id="999">').replace(/<Time Value="[^"]*" \/>/, `<Time Value="${time}" />`).replace(`<Name Value="${from}" />`, `<Name Value="${to}" />`)}`,
+  );
+}
+
 // Sets the mixer Volume Manual value on the first track (GroupTrack or AudioTrack) with EffectiveName `name`.
 function setTrackMixerVolume(xml: string, name: string, volume: string): string {
   const pattern = new RegExp(`(<(?:GroupTrack|AudioTrack) [^>]*>[\\s\\S]*?<EffectiveName Value="${name}" />[\\s\\S]*?<Mixer>[\\s\\S]*?<Volume>[\\s\\S]*?<Manual Value=")[^"]*(")`);
@@ -172,8 +180,8 @@ describe('set-recipe.json generation', () => {
       outputRoot: workspace.outputRoot,
       stemMap,
       songs: [
-        { folder: GRACE, title: 'This Is Amazing Grace' },
-        { folder: GOODNESS, title: 'Goodness of God' },
+        { folder: GRACE, title: 'This Is Amazing Grace', start: 0 },
+        { folder: GOODNESS, title: 'Goodness of God', start: 248 },
       ],
       transitions: { 1: { type: 'overlap' } },
     });
@@ -197,10 +205,12 @@ describe('set-recipe.json generation', () => {
     expect(recipe.setManifest).toBe(workspace.setManifest);
     expect(recipe.showFolder).toBe(workspace.showFolder);
     expect(recipe.stemMapPath).toBe(join(REPO_ROOT, 'config/stem-map.json'));
-    expect(recipe.songs).toEqual([
+    expect(recipe.songs.map(({ folder, title }) => ({ folder, title }))).toEqual([
       { folder: GRACE, title: 'This Is Amazing Grace' },
       { folder: GOODNESS, title: 'Goodness of God' },
     ]);
+    expect(recipe.songs[0]?.start).toBe(0);
+    expect(recipe.songs[1]?.start).toBeGreaterThan(0);
     expect(recipe.transitions).toEqual({ 1: { type: 'pad' } });
   });
 
@@ -374,7 +384,7 @@ describe('build-set edit (--swap, --add, --drop)', () => {
 });
 
 describe('preserving Live edits across build-set edit', () => {
-  it('preserves +SKIP, +LOOP, >>> locator flags, track mixer volumes, and clip gains on untouched songs across --swap, --add, and --drop', async () => {
+  it('carries every untouched song\'s locators as Live has them, and its volumes and clip gains, across --swap, --add, and --drop', async () => {
     const workspace = await createWorkspace();
     await addPadTrack(workspace);
     await addPad(workspace, 'A', 120);
@@ -387,7 +397,8 @@ describe('preserving Live edits across build-set edit', () => {
     // Simulate rehearsal edits saved in Ableton Live on the built .als:
     // - Song 1 (Goodness): +SKIP on Verse 1, +LOOP:2 on the 2nd Chorus, >>> Chorus@2 on Bridge, +LOOP on Pad
     // - Song 2 (Trust, about to be swapped): +SKIP on Verse 1 (must NOT transfer to replacement!)
-    // - Song 3 (Grace): +LOOP on Bridge
+    // - Song 3 (Grace): +LOOP on Bridge, a flag before the title on its Count Off, and +LOOP:1 on its Outro
+    // - Song 1: a section renamed with no flag in it, and a locator added in Live
     // - Track mixer volumes on GroupTrack (KEYS), AudioTrack slot (Drums 1), single tracks (GUIDE, PAD), and MainTrack
     // - Clip SampleVolume on Song 1's Piano clip and Song 2's Piano clip
     await mutateAlsXml(setPath(workspace), (xml) => {
@@ -398,6 +409,10 @@ describe('preserving Live edits across build-set edit', () => {
       next = renameLocator(next, '1 - Pad', '1 - Pad +LOOP');
       next = renameLocator(next, '2 - Verse 1', '2 - Verse 1 +SKIP');
       next = renameLocator(next, '3 - Bridge', '3 - Bridge +LOOP');
+      next = renameLocator(next, '3 - Count Off (This Is Amazing Grace)', '3 - Count Off +skip (This Is Amazing Grace)');
+      next = renameLocator(next, '3 - Outro', '3 - Outro +LOOP:1');
+      next = renameLocator(next, '1 - Verse 2', '1 - Verse 2 (soft)');
+      next = addLocator(next, '1 - Intro', '1 - Band Hold', 100);
       next = setTrackMixerVolume(next, 'KEYS', '0.72');
       next = setTrackMixerVolume(next, 'Drums 1', '0.84');
       next = setTrackMixerVolume(next, 'GUIDE', '0.55');
@@ -421,6 +436,13 @@ describe('preserving Live edits across build-set edit', () => {
     expect(names).toContain('3 - Bridge +LOOP');
     // Replacement song 2 must NOT inherit old song 2's +SKIP flag.
     expect(names.filter((name) => name.startsWith('2 - ') && name.includes('+SKIP'))).toEqual([]);
+    expect(names).toEqual(expect.arrayContaining(['1 - Verse 2 (soft)', '1 - Band Hold', '3 - Count Off +skip (This Is Amazing Grace)', '3 - Outro +LOOP:1']));
+    expect(names).not.toContain('1 - Verse 2');
+    expect(names).not.toContain('3 - Outro');
+    expect(locatorList(root).find((locator) => locator.name === '1 - Band Hold')?.time).toBe(100);
+    let parsed = parseSet(locatorList(root));
+    expect(parsed.warnings).toEqual([]);
+    expect(parsed.songs.map((song) => song.title)).toEqual(['Goodness of God', 'Great Are You Lord', 'This Is Amazing Grace']);
 
     expect(mixerVolume(root, 'KEYS')).toBe('0.72');
     expect(mixerVolume(root, 'Drums 1')).toBe('0.84');
@@ -445,6 +467,10 @@ describe('preserving Live edits across build-set edit', () => {
     expect(names).toContain('1 - Bridge >>> Chorus@2');
     expect(names).toContain('1 - Pad +LOOP');
     expect(names).toContain('2 - Bridge +LOOP');
+    expect(names).toEqual(expect.arrayContaining(['1 - Verse 2 (soft)', '1 - Band Hold', '2 - Count Off +skip (This Is Amazing Grace)', '2 - Outro +LOOP:1']));
+    parsed = parseSet(locatorList(root));
+    expect(parsed.warnings).toEqual([]);
+    expect(parsed.songs.map((song) => song.title)).toEqual(['Goodness of God', 'This Is Amazing Grace']);
     expect(mixerVolume(root, 'KEYS')).toBe('0.72');
     expect(mixerVolume(root, 'Drums 1')).toBe('0.84');
     expect(mixerVolume(root, 'GUIDE')).toBe('0.55');
@@ -463,6 +489,12 @@ describe('preserving Live edits across build-set edit', () => {
     expect(names).toContain('2 - Bridge >>> Chorus@2');
     expect(names).toContain('2 - Pad +LOOP');
     expect(names).toContain('3 - Bridge +LOOP');
+    expect(names).toEqual(expect.arrayContaining(['2 - Verse 2 (soft)', '2 - Band Hold', '3 - Count Off +skip (This Is Amazing Grace)', '3 - Outro +LOOP:1']));
+    const songTwoStart = locatorList(root).find((locator) => locator.name === '2 - Count Off (Goodness of God)')?.time;
+    expect(locatorList(root).find((locator) => locator.name === '2 - Band Hold')?.time).toBe(songTwoStart! + 100);
+    parsed = parseSet(locatorList(root));
+    expect(parsed.warnings).toEqual([]);
+    expect(parsed.songs.map((song) => song.title)).toEqual(['Trust In God', 'Goodness of God', 'This Is Amazing Grace']);
     // Newly added song 1 has no flags.
     expect(names.filter((name) => name.startsWith('1 - ') && /\+SKIP|\+LOOP|>>>/.test(name))).toEqual([]);
     expect(mixerVolume(root, 'KEYS')).toBe('0.72');
@@ -470,6 +502,30 @@ describe('preserving Live edits across build-set edit', () => {
     expect(mainTrackVolume(root)).toBe('0.91');
     // Verify PAD clip exists on PAD track.
     expect(arrangementClips(singleTrack(root, 'PAD')).map(stemOf)).toEqual(['A']);
+  }, 20_000);
+});
+
+describe('the song before the edited position', () => {
+  it('the song before a dropped last song keeps its renamed sections and gets back the sections its overlap had cut', async () => {
+    const workspace = await createWorkspace();
+    const built = await run(['grace', 'great are', 'goodness', '--overlap', '2', '--date', DATE, ...buildPaths(workspace)]);
+    expect(built.code).toBe(0);
+    const before = locatorList(await readSet(setPath(workspace))).map((locator) => locator.name);
+    expect(before).not.toContain('2 - Ending');
+    await mutateAlsXml(setPath(workspace), (xml) => renameLocator(xml, '2 - Bridge', '2 - Bridge (soft)'));
+
+    const dropped = await run(['edit', projectFolder(workspace), '--drop', '3']);
+
+    expect(dropped.stderr).toBe('');
+    expect(dropped.code).toBe(0);
+    const root = await readSet(setPath(workspace));
+    const songTwo = locatorList(root).map((locator) => locator.name).filter((name) => name.startsWith('2 - '));
+    expect(songTwo).toContain('2 - Bridge (soft)');
+    expect(songTwo.filter((name) => name === '2 - Bridge')).toHaveLength(1);
+    expect(songTwo).toContain('2 - Ending');
+    expect(songTwo.filter((name) => name === '2 - End')).toHaveLength(1);
+    expect(songTwo.at(-1)).toBe('2 - End');
+    expect(parseSet(locatorList(root)).warnings).toEqual([]);
   }, 20_000);
 });
 
