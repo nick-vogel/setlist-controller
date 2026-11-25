@@ -10,6 +10,7 @@ import { PROPRESENTER_AGAIN_MS, PROPRESENTER_TIMEOUT_MS } from './propresenter.t
 import { readRecipe, readStemMapFile, updateRecipe, type RecipeSong, type RecipeSongChart, type SetRecipe } from './recipe.ts';
 import { buildManifest, writeSetManifest } from './set-manifest.ts';
 import { songTitle } from './song.ts';
+import { padAfterLast } from './timeline.ts';
 
 // `build-set edit`: changes one song of an already-built set (swaps, adds or drops it) using
 // its saved `set-recipe.json`, carrying every untouched song's locators, track mixer volumes and
@@ -218,7 +219,7 @@ async function planEdit(recipe: SetRecipe, action: EditAction): Promise<{ ok: tr
       replacement.folder === songs[target.position - 1]!.folder
         ? [`Song ${target.position} is rebuilt from ${replacement.folder} in the library, so its locators and clip gains start as the library has them.`]
         : padKeyWarnings(nextTransitions, nextSongs, target.position, true);
-    return { ok: true, songs: nextSongs, transitions: nextTransitions, untouched, boundary: boundaryBefore(target.position, transitions, nextTransitions), warnings };
+    return { ok: true, songs: nextSongs, transitions: nextTransitions, untouched, boundary: boundaryBefore(target.position, { transitions, count: songs.length }, { transitions: nextTransitions, count: nextSongs.length }), warnings };
   }
 
   if (action.kind === 'add') {
@@ -241,7 +242,7 @@ async function planEdit(recipe: SetRecipe, action: EditAction): Promise<{ ok: tr
     for (let oldPos = 1; oldPos <= songs.length; oldPos++) {
       untouched.set(oldPos >= at ? oldPos + 1 : oldPos, oldPos);
     }
-    return { ok: true, songs: nextSongs, transitions: nextTransitions, untouched, boundary: boundaryBefore(at, transitions, nextTransitions), warnings: padKeyWarnings(nextTransitions, nextSongs, at) };
+    return { ok: true, songs: nextSongs, transitions: nextTransitions, untouched, boundary: boundaryBefore(at, { transitions, count: songs.length }, { transitions: nextTransitions, count: nextSongs.length }), warnings: padKeyWarnings(nextTransitions, nextSongs, at) };
   }
 
   const target = resolveRecipeSong(songs, action.song);
@@ -270,7 +271,7 @@ async function planEdit(recipe: SetRecipe, action: EditAction): Promise<{ ok: tr
     songs: nextSongs,
     transitions: nextTransitions,
     untouched,
-    boundary: boundaryBefore(target.position, transitions, nextTransitions),
+    boundary: boundaryBefore(target.position, { transitions, count: songs.length }, { transitions: nextTransitions, count: nextSongs.length }),
     warnings: padKeyWarnings(nextTransitions, nextSongs, target.position),
   };
 }
@@ -291,12 +292,18 @@ function padKeyWarnings(transitions: Partial<Record<number, Transition>>, songs:
   return warnings;
 }
 
-function boundaryBefore(position: number, oldTransitions: Partial<Record<number, Transition>>, nextTransitions: Partial<Record<number, Transition>>): Set<number> {
+type PlacedSet = { transitions: Partial<Record<number, Transition>>; count: number };
+
+function boundaryBefore(position: number, old: PlacedSet, next: PlacedSet): Set<number> {
   if (position <= 1) return new Set();
   const prev = position - 1;
-  const beforeType = oldTransitions[prev]?.type ?? 'gap';
-  const afterType = nextTransitions[prev]?.type ?? 'gap';
+  const beforeType = placedType(old, prev);
+  const afterType = placedType(next, prev);
   return new Set(beforeType === 'pad' || afterType === 'pad' || beforeType !== afterType ? [prev] : []);
+}
+
+function placedType({ transitions, count }: PlacedSet, position: number): Transition['type'] {
+  return (position === count ? padAfterLast(transitions[position]) : transitions[position])?.type ?? 'gap';
 }
 
 function listedSongs(songs: RecipeSong[]): string {

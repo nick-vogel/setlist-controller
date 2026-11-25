@@ -169,7 +169,7 @@ export function introOf(song: Song): number {
 
 // The last song's transition: its pad, when one follows it. buildSet has already thrown on any other transition after
 // the last song (checkTransitions).
-function padAfterLast(transition: Transition | undefined): Transition | undefined {
+export function padAfterLast(transition: Transition | undefined): Transition | undefined {
   return transition?.type === 'pad' ? transition : undefined;
 }
 

@@ -95,9 +95,9 @@ export function applyLiveEdits(document: AlsDocument, edits: LiveEdits, carry: L
 }
 
 // The new set's locators: the new build's for a touched song and for an untouched song the old set holds none of; the
-// old set's, moved and renumbered, for every other untouched song. On the song before the edited position, each of the
-// new build's locators but its End and Pad Out takes the place of an old one at the same local time, when there is one,
-// and every other old one before the new End comes along too; the old End and Pad Out never do.
+// old set's, moved and renumbered, for every other untouched song. On a boundary song, each of the new build's locators
+// but its End and Pad Out takes the place of an old one at the same local time, when there is one, and every other old
+// one before the new End comes along too; the old End and Pad Out never do.
 function carriedLocators(built: Element[], old: Map<number, Element[]>, { untouched, boundary, oldStarts, placed }: LocatorCarry): Element[] {
   const fresh = new Map<number, Element[]>();
   const unnumbered: Element[] = [];

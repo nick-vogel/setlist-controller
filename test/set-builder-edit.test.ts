@@ -613,6 +613,25 @@ describe('the song before the edited position', () => {
     expect(parseSet(locatorList(root)).warnings).toEqual([]);
   }, 20_000);
 
+  it('a song a hand-edited recipe gives an overlap after the last song takes its End from the new build once a song is added after it', async () => {
+    const workspace = await createWorkspace();
+    const built = await run(['trust', 'grace', '--date', DATE, ...buildPaths(workspace)]);
+    expect(built.code).toBe(0);
+    const folder = projectFolder(workspace);
+    const ending = locatorList(await readSet(setPath(workspace))).find((locator) => locator.name === '2 - Ending')!;
+    const recipe = await readRecipeJson(folder);
+    await writeFile(recipePath(folder), JSON.stringify({ ...recipe, transitions: { 2: { type: 'overlap' } } }, null, 2));
+
+    const added = await run(['edit', folder, '--add', 'goodness']);
+
+    expect(added.stderr).toBe('');
+    expect(added.code).toBe(0);
+    const songTwo = locatorList(await readSet(setPath(workspace))).filter((locator) => locator.name.startsWith('2 - '));
+    expect(songTwo.map((locator) => locator.name)).not.toContain('2 - Ending');
+    expect(songTwo.at(-1)).toEqual({ time: ending.time, name: '2 - End' });
+    expect(songTwo.every((locator) => locator.time <= ending.time)).toBe(true);
+  }, 20_000);
+
   it('a song with an unchanged gap before an edit keeps deleted and moved locators verbatim', async () => {
     const workspace = await createWorkspace();
     const built = await run(['goodness', 'trust', 'grace', '--date', DATE, ...buildPaths(workspace)]);
