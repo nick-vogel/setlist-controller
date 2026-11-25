@@ -8,7 +8,7 @@ import { numbered } from './write-set.ts';
 //    song number and the time change. The song before the edited position takes its End region from the new build.
 // 2. Track mixer volumes (DeviceChain -> Mixer -> Volume -> Manual) across every track and MainTrack.
 // 3. Per-song clip gain (AudioClip -> SampleVolume) on untouched songs.
-// Nothing here reads meaning out of a locator name beyond its song number and the builder's own End section.
+// Nothing here reads meaning out of a locator name beyond its song number and the builder's own End and Pad Out sections.
 
 export type LiveEdits = {
   // Track mixer Manual volumes keyed by `${track.name}:${Id}`.
@@ -36,6 +36,7 @@ export type LocatorCarry = {
 // `<song number> <separator> <section name>`, matching set-parser.ts.
 const LOCATOR = /^\s*(\d+)\s*[-\u2013\u2014]\s*(.*?)\s*$/;
 const END = 'End';
+const PAD_OUT = 'Pad Out';
 const EPS = 1e-4;
 
 // Extracts Live edits from an existing built `.als` document before re-materialization.
@@ -96,8 +97,8 @@ export function applyLiveEdits(document: AlsDocument, edits: LiveEdits, carry: L
 
 // The new set's locators: the new build's for a touched song and for an untouched song the old set holds none of; the
 // old set's, moved and renumbered, for every other untouched song. On the song before the edited position, each of the
-// new build's locators but its End takes the place of an old one at the same local time, when there is one, and every
-// other old one before the new End comes along too; the old End never does.
+// new build's locators but its End and Pad Out takes the place of an old one at the same local time, when there is one,
+// and every other old one before the new End comes along too; the old End and Pad Out never do.
 function carriedLocators(built: Element[], old: Map<number, Element[]>, { untouched, boundary, oldStarts, placed }: LocatorCarry): Element[] {
   const fresh = new Map<number, Element[]>();
   const unnumbered: Element[] = [];
@@ -122,12 +123,12 @@ function carriedLocators(built: Element[], old: Map<number, Element[]>, { untouc
       result.push(...kept.map(carried));
       continue;
     }
-    const unused = kept.filter((locator) => section(locator) !== END);
+    const unused = kept.filter((locator) => !isEndRegion(locator));
     const newEnd = own.find((locator) => section(locator) === END);
     const endAt = newEnd === undefined ? Infinity : localTime(newEnd, offset);
     for (const locator of own) {
       const at = localTime(locator, offset);
-      const match = section(locator) === END ? -1 : unused.findIndex((candidate) => Math.abs(localTime(candidate, oldStart) - at) < EPS);
+      const match = isEndRegion(locator) ? -1 : unused.findIndex((candidate) => Math.abs(localTime(candidate, oldStart) - at) < EPS);
       result.push(match === -1 ? locator : carried(unused.splice(match, 1)[0]!));
     }
     result.push(...unused.filter((locator) => localTime(locator, oldStart) < endAt - EPS).map(carried));
@@ -145,6 +146,11 @@ function carriedLocator(locator: Element, number: number, delta: number): Elemen
 function songNumber(locator: Element): number | undefined {
   const parsed = LOCATOR.exec(valueOf(locator, 'Name'));
   return parsed?.[1] === undefined ? undefined : Number(parsed[1]);
+}
+
+function isEndRegion(locator: Element): boolean {
+  const name = section(locator);
+  return name === END || name === PAD_OUT;
 }
 
 function section(locator: Element): string | undefined {

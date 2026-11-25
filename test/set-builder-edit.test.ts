@@ -550,6 +550,26 @@ describe('swapping a song for itself', () => {
 });
 
 describe('the song before the edited position', () => {
+  it('a song added after a pad that ended the set leaves no Pad Out from the old set inside the new Pad section', async () => {
+    const workspace = await createWorkspace();
+    await addPadTrack(workspace);
+    await addPad(workspace, 'A', 120);
+    await addPad(workspace, 'D', 120);
+    const built = await run(['goodness', 'trust', '--pad', '2', '--date', DATE, ...buildPaths(workspace)]);
+    expect(built.code).toBe(0);
+    expect(locatorList(await readSet(setPath(workspace))).map((locator) => locator.name)).toContain('2 - Pad Out');
+
+    const added = await run(['edit', projectFolder(workspace), '--add', 'grace']);
+
+    expect(added.stderr).toBe('');
+    expect(added.code).toBe(0);
+    const root = await readSet(setPath(workspace));
+    const songTwo = locatorList(root).map((locator) => locator.name).filter((name) => name.startsWith('2 - '));
+    expect(songTwo).not.toContain('2 - Pad Out');
+    expect(songTwo.slice(-2)).toEqual(['2 - Pad', '2 - End']);
+    expect(parseSet(locatorList(root)).warnings).toEqual([]);
+  }, 20_000);
+
   it('the song before a dropped last song keeps its renamed sections and gets back the sections its overlap had cut', async () => {
     const workspace = await createWorkspace();
     const built = await run(['grace', 'great are', 'goodness', '--overlap', '2', '--date', DATE, ...buildPaths(workspace)]);
