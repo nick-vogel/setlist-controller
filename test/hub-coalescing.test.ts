@@ -412,6 +412,7 @@ describe('a client that received a held position', () => {
     fade: null,
     chartRevision: 1,
     songMeters: { 1: 4 },
+    safeMode: true,
     power: UNKNOWN_POWER,
   });
   const noProblems: ConnectionsPart = { connections: [], connectionProblems: [] };

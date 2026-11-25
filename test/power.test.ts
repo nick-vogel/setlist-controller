@@ -198,6 +198,7 @@ const snapshotOn = (power: PowerState): ProducerSnapshot => ({
   countIn: false,
   endToggles: { 1: 'stop' },
   loop: null,
+  safeMode: true,
   fade: null,
   chartRevision: 1,
   songMeters: { 1: 4 },

@@ -1,5 +1,6 @@
 import type { Command } from '../shared/command.ts';
 import { COUNT_OFF, countInFor, isPad } from '../shared/count-in.ts';
+import { activeSong } from '../shared/safe-mode.ts';
 import {
   sameSection,
   sectionAt,
@@ -23,6 +24,9 @@ import { parseSet } from './set-parser.ts';
 export type PlaybackController = {
   fromLive(event: LiveEvent): void;
   command(command: Command): void;
+  // Whether Safe Mode refuses this command while Live plays, so the server drops it before the cue
+  // engine or connection schedule reacts to it.
+  refuses(command: Command): boolean;
   snapshot(): PlaybackState;
   // The clock time the beat is due, or was: the playhead's last reported position at the clock time
   // the controller took it, carried on to the beat at Live's tempo. Null while the position is not
@@ -160,6 +164,9 @@ export function startPlaybackController(
   // Each song's end toggle, by song number. Every song starts on its default, and starts there again
   // whenever a read finds the set changed.
   let endToggles: Record<number, EndToggle> = {};
+  // Server-wide Safe Mode. Always starts true on every server start and is never persisted across
+  // restarts.
+  let safeMode = true;
   // Live's arrangement loop as its listeners last reported it. These reports are the only source of
   // the loop state the pages show, so a loop set at the laptop, or left on from last time, shows too.
   const liveLoop = { on: false, start: 0, length: 0 };
@@ -291,7 +298,20 @@ export function startPlaybackController(
     countIn: countIn !== null,
     endToggles,
     loop: loop(liveLoop),
+    safeMode,
   });
+
+  // Whether Safe Mode refuses this command while Live plays: any jump or Play from start aimed at
+  // another song is blocked while safeMode is true and Live is playing. Play from start after a
+  // Stop whose report has not arrived yet starts Live from stopped rather than jumping while
+  // playing, so stopWait clears the guard for it.
+  const refuses = (command: Command): boolean => {
+    if (!safeMode || !playing) return false;
+    const song = activeSong(countIn !== null, waitingJump, now(position));
+    if (command.kind === 'jump') return command.song !== song;
+    if (command.kind === 'play-from-start') return stopWait === null && command.song !== song;
+    return false;
+  };
 
   // The loop while it is on, and the section its brace matches.
   const loop = ({ on, start, length }: { on: boolean; start: number; length: number }): Loop | null => {
@@ -779,8 +799,10 @@ export function startPlaybackController(
     },
     command(command) {
       // A command for Live while Live is not connected would go nowhere, and a jump would leave a
-      // waiting jump behind, so it is ignored. The end toggles are the server's own, and need no Live.
-      if (live !== 'connected' && command.kind !== 'set-end-toggle') return;
+      // waiting jump behind, so it is ignored. End toggles and Safe Mode are the server's own, and
+      // need no Live.
+      if (live !== 'connected' && command.kind !== 'set-end-toggle' && command.kind !== 'set-safe-mode') return;
+      if (refuses(command)) return;
       switch (command.kind) {
         case 'jump': {
           // A target that is not in the set, or no set yet, is ignored.
@@ -932,9 +954,14 @@ export function startPlaybackController(
           if (!(command.song in endToggles)) return;
           endToggles = { ...endToggles, [command.song]: command.toggle };
           break;
+        case 'set-safe-mode':
+          if (safeMode === command.enabled) return;
+          safeMode = command.enabled;
+          break;
       }
       onChange(snapshot());
     },
+    refuses,
     snapshot,
     dueAt(beat) {
       // A listener report comes well within half a bar of the playhead crossing a beat, at any tempo a

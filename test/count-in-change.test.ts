@@ -78,6 +78,7 @@ async function play(beats: number, to: number, ...clients: Client[]) {
 // that jump, it holds all Live will get of the presses before it.
 async function barrier(leader: Client) {
   const before = jumps().length;
+  leader.send({ kind: 'set-safe-mode', enabled: false });
   leader.send(tap(2, 1));
   await vi.waitFor(() => expect(jumps().slice(before)).toContain(SONG_2_VERSE_CUE));
   return jumps().slice(0, -1);
@@ -504,6 +505,7 @@ describe('a tap in another song during the count', () => {
 
   it('before the jump to the target was sent cancels the count-in, and Live jumps there on the next bar line', async () => {
     const { viewer, producer, leader } = await counting();
+    leader.send({ kind: 'set-safe-mode', enabled: false });
 
     leader.send(tap(2, 1));
 
@@ -525,6 +527,7 @@ describe('a tap in another song during the count', () => {
 
   it('after the jump to the target was sent cancels the count-in, and replaces the jump Live holds', async () => {
     const { viewer, producer, leader } = await sentAndAt(5);
+    leader.send({ kind: 'set-safe-mode', enabled: false });
 
     leader.send(tap(2, 1));
 

@@ -184,6 +184,7 @@ describe('the fade out', () => {
     await silent(leader, 2);
 
     // Play from start on song 2, which Live makes on the next bar line, at beat 4.
+    leader.send({ kind: 'set-safe-mode', enabled: false });
     leader.send({ kind: 'play-from-start', song: 2 });
     await vi.waitFor(() => expect(rig?.received(JUMP)).toHaveLength(1));
     rig.live.advance(BEAT_MS);
@@ -480,6 +481,7 @@ describe('the fade out', () => {
     await silent(leader, 2);
 
     // Play from start on song 2, which Live makes on the next bar line, at beat 4.
+    leader.send({ kind: 'set-safe-mode', enabled: false });
     leader.send({ kind: 'play-from-start', song: 2 });
     await vi.waitFor(() => expect(rig?.received(JUMP)).toHaveLength(1));
     await rig.advanceConnected(1000);

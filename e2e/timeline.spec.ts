@@ -198,6 +198,10 @@ test('while playing: timeline tracks the pinned playhead, dragging peeks with Fo
   expect(e2e.rig.received(STOP)).toEqual([]);
   await expect(page.getByRole('button', { name: 'Follow' })).toBeVisible();
 
+  // Turn Safe Mode off for rehearsal cross-song jumping on the timeline.
+  await page.getByRole('button', { name: /Safe Mode/ }).click();
+  await expect(page.getByRole('button', { name: 'Safe Mode: Off' })).toBeVisible();
+
   const song2Chorus = page.locator('.timeline-section[data-song="2"][data-section="1"]');
   await song2Chorus.click();
   await expect.poll(() => e2e?.rig.received(JUMP).map((m) => m.args)).toEqual([[SONG_2_CHORUS_CUE]]);
@@ -326,7 +330,9 @@ test('MD transport bar: single-tap Pause stops Live (while Setlist Stop still ho
   await rig.advanceConnected(6000);
   await watcher.snapshot((snapshot) => snapshot.fade === null);
 
-  // Single-tap Pause immediately stops Live with no press-and-hold.
+  // With Safe Mode off, single-tap Pause immediately stops Live with no press-and-hold.
+  await page.getByRole('button', { name: /Safe Mode/ }).click();
+  await expect(page.getByRole('button', { name: 'Safe Mode: Off' })).toBeVisible();
   expect(rig.received(STOP)).toEqual([]);
   await transport.getByRole('button', { name: 'Pause' }).click();
   await expect.poll(() => rig.received(STOP).length).toBe(1);

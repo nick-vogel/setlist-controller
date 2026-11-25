@@ -636,6 +636,7 @@ describe('a late second tap', () => {
     await leader.snapshot((snapshot) => at(27.875)(snapshot) && snapshot.endToggles[1] === 'stop');
 
     // The first tap, to song 2's Verse, reaches Live before the bar line at 28.
+    leader.send({ kind: 'set-safe-mode', enabled: false });
     leader.send({ kind: 'jump', song: 2, section: VERSE });
     await leader.snapshot((snapshot) => snapshot.jump?.song === 2 && snapshot.jump.section === VERSE);
     await liveHasJumps(1);
@@ -683,6 +684,7 @@ describe('a late second tap', () => {
 
     rig.live.holdReplies();
     rig.live.advance(0.25 * BEAT_MS);
+    leader.send({ kind: 'set-safe-mode', enabled: false });
     leader.send({ kind: 'jump', song: 2, section: VERSE });
     await leader.snapshot(waitingIn(2, VERSE));
     await liveHasJumps(2);
@@ -712,6 +714,7 @@ describe('a late second tap', () => {
     const leader = await rig.connectLeader();
     await leader.snapshot((snapshot) => at(27.875)(snapshot) && snapshot.endToggles[1] === 'stop');
 
+    leader.send({ kind: 'set-safe-mode', enabled: false });
     leader.send({ kind: 'jump', song: 2, section: VERSE });
     await leader.snapshot(waitingIn(2, VERSE));
     await liveHasJumps(1);
@@ -779,6 +782,7 @@ describe('a late second tap', () => {
     const leader = await rig.connectLeader();
     await leader.snapshot(at(27.875));
 
+    leader.send({ kind: 'set-safe-mode', enabled: false });
     leader.send({ kind: 'jump', song: 2, section: VERSE });
     await leader.snapshot(waitingIn(2, VERSE));
     await liveHasJumps(1);
@@ -1037,6 +1041,7 @@ describe('a lost jump', () => {
     rig.live.holdReplies();
     rig.live.advance(0.25 * BEAT_MS);
     rig.live.loseNext(JUMP);
+    leader.send({ kind: 'set-safe-mode', enabled: false });
     leader.send({ kind: 'jump', song: 2, section: SONG_2_VERSE });
     await leader.snapshot((snapshot) => snapshot.jump?.song === 2 && snapshot.jump.section === SONG_2_VERSE);
     await liveLostJumps(2);
@@ -1074,6 +1079,8 @@ describe('a lost jump', () => {
       await leader.snapshot(at(15.875));
       leader.send({ kind: 'set-end-toggle', song: 1, toggle: 'stop' });
       await leader.snapshot((snapshot) => snapshot.endToggles[1] === 'stop');
+      leader.send({ kind: 'set-safe-mode', enabled: false });
+      await leader.snapshot((snapshot) => !snapshot.safeMode);
       return leader;
     }
 
@@ -1124,6 +1131,7 @@ describe('a lost jump', () => {
       const leader = await rig.connectLeader();
       expect((await leader.snapshot(at(12))).endToggles[1]).not.toBe('stop');
 
+      leader.send({ kind: 'set-safe-mode', enabled: false });
       leader.send({ kind: 'jump', song: 2, section: SONG_2_COUNT_OFF });
       await leader.snapshot(waitingIn(2, SONG_2_COUNT_OFF));
       await vi.waitFor(() => expect(rig?.received(JUMP)).toHaveLength(1));

@@ -2,6 +2,7 @@ import { useCallback, useEffect, useRef, useState, type CSSProperties } from 're
 import { nameKey } from '../../src/shared/match-name.ts';
 import type { PageCommand } from '../../src/shared/command.ts';
 import { CHARTS_API, controls, isSetupPage, pageRole, type Role } from '../../src/shared/routes.ts';
+import { activeSong } from '../../src/shared/safe-mode.ts';
 import type { SetCharts } from '../../src/shared/set-manifest.ts';
 import type { ProducerSnapshot, Snapshot } from '../../src/shared/snapshot.ts';
 import { AutoLockTip } from './AutoLockTip.tsx';
@@ -46,6 +47,7 @@ import { PartPicker } from './PartPicker.tsx';
 import { PlayFromStartButton } from './PlayFromStartButton.tsx';
 import { PowerWarning } from './PowerWarning.tsx';
 import { RefreshButton } from './RefreshButton.tsx';
+import { SafeModeToggle } from './SafeModeToggle.tsx';
 import { SectionControls } from './SectionControls.tsx';
 import { sectionState } from './section-state.ts';
 import { connectToServer, type ServerConnection } from './server-connection.ts';
@@ -249,6 +251,11 @@ export function Page({
         {autoLockTip}
         {reconnecting}
         {stageStatusLine}
+        {controls(role) && (
+          <div className="leader-mode-bar">
+            <SafeModeToggle safeMode={snapshot.safeMode} available={connected} send={send} />
+          </div>
+        )}
         {snapshot.live === 'not-connected' ? (
           <LiveNotConnected />
         ) : (
@@ -259,7 +266,7 @@ export function Page({
     );
   }
 
-  const { live, playing, now, jump, countIn, endToggles, loop, fade } = snapshot;
+  const { live, playing, now, jump, countIn, endToggles, loop, fade, safeMode } = snapshot;
   const liveReady = connected && live === 'connected';
   const controlsLive = controls(role);
   // The song the playhead is in, for the transport row's Count in and Play from start: none on an End
@@ -324,9 +331,10 @@ export function Page({
       {autoLockTip}
       {reconnecting}
       {stageStatusLine}
-      {role === 'leader' && (
+      {controlsLive && (
         <div className="leader-mode-bar">
-          <LeaderViewSwitcher leaderView={leaderView} onLeaderView={onLeaderView} />
+          <SafeModeToggle safeMode={safeMode} available={connected} send={send} />
+          {role === 'leader' && <LeaderViewSwitcher leaderView={leaderView} onLeaderView={onLeaderView} />}
         </div>
       )}
       <NowPlaying live={live} set={snapshot.set} now={now} jump={jump} countIn={countIn} loop={loop} />
@@ -358,6 +366,8 @@ export function Page({
             available={connected}
             playable={liveReady}
             playing={playing}
+            safeMode={safeMode}
+            activeSong={activeSong(countIn, jump, now)}
             now={now}
             send={send}
           />
