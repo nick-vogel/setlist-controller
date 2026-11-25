@@ -118,6 +118,17 @@ export type PlaybackState = {
 // stepping it back in. Null while no fade has changed any volume.
 export type FadePhase = 'out' | 'silent' | 'in';
 
+// How long a song plays, by the set manifest or by Live's tempo. `sections` holds each section's seconds, by index into
+// the song's sections, null for one that cannot be timed, as the last section of a song with no End. `gap` is the seconds
+// from the song's End to the next song's first locator, null after the last song or when it is not known.
+// `source` says where the seconds come from: 'build', the set manifest the build wrote, exact across tempo changes;
+// 'tempo', the beats at Live's tempo while the song played, for a set the manifest does not time.
+export type SongTiming = {
+  sections: (number | null)[];
+  gap: number | null;
+  source: 'build' | 'tempo';
+};
+
 // What the hub sends to every page: the playback state, the fade's phase, the chart revision and
 // each song's starting meter in beats per bar, by song number. The foot pedal's status is not in it;
 // the setup screen asks the laptop's server for that (see setup.ts). Nor are the charts, which a
@@ -126,11 +137,14 @@ export type FadePhase = 'out' | 'silent' | 'in';
 // set manifest's per-song meter, falling back to Live's meter for that song or Live's current time
 // signature (4 for 4/4 before Live reports one), so the whole-set timeline draws accurate bar grids
 // before Live visits later songs. Empty until the set is known. The power is the playback Mac's, as
-// the server last read it, which the leader, producer and setup pages warn on (power.ts).
+// the server last read it, which the leader, producer and setup pages warn on (power.ts). Each song's timing, by song
+// number, holds the song's durations (SongTiming): every song the set manifest times, and, for a set it does not time,
+// each song once Live has played in it. A song with no timing is left out. Empty until the set is known.
 export type Snapshot = PlaybackState & {
   fade: FadePhase | null;
   chartRevision: number;
   songMeters: Record<number, number>;
+  songTimings: Record<number, SongTiming>;
   power: PowerState;
 };
 

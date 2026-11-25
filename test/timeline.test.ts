@@ -50,6 +50,7 @@ const SNAPSHOT: ProducerSnapshot = {
   fade: null,
   chartRevision: 1,
   songMeters: { 1: 4, 2: 3 },
+  songTimings: {},
   power: { source: 'ac', percent: 100 },
   connections: [],
   connectionProblems: [],

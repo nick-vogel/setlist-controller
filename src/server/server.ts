@@ -6,6 +6,7 @@ import type { Command } from '../shared/command.ts';
 import { CHARTS_API, SETUP_API, SETUP_CONNECTIONS_API, SETUP_PEDAL_API, SETUP_REFRESH_API, SETUP_REFUSED } from '../shared/routes.ts';
 import { UNKNOWN_POWER } from '../shared/power.ts';
 import { meterForSong, type SetCharts } from '../shared/set-manifest.ts';
+import { createSongTimings } from './song-timings.ts';
 import type { ConnectionsStatus, PedalStatus } from '../shared/setup.ts';
 import type { ConnectionsPart, Snapshot } from '../shared/snapshot.ts';
 import { chartsTarget } from './charts.ts';
@@ -309,9 +310,17 @@ export async function startServer(options: ServerOptions): Promise<Server> {
       ]),
     );
   };
+  const songTimings = createSongTimings();
   const snapshot = (): Snapshot => {
     const state = controller.snapshot();
-    return { ...state, fade: fade.phase(), chartRevision: manifest.revision(), songMeters: songMeters(state.set), power: powerSource?.current() ?? UNKNOWN_POWER };
+    return {
+      ...state,
+      fade: fade.phase(),
+      chartRevision: manifest.revision(),
+      songMeters: songMeters(state.set),
+      songTimings: songTimings(state.set, manifest.charts().songs, state.now, controller.tempo()),
+      power: powerSource?.current() ?? UNKNOWN_POWER,
+    };
   };
   const publish = () => hub.publish(snapshot(), connectionsPart());
   const hub = startHub(

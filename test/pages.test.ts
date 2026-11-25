@@ -508,6 +508,7 @@ const SNAPSHOT: Snapshot = {
   loop: null,
   chartRevision: 1,
   songMeters: { 1: 4 },
+  songTimings: {},
   power: { source: 'ac', percent: 100 },
 };
 const setup = (snapshot: Snapshot | null) => text(renderToStaticMarkup(createElement(Setup, { snapshot, connected: true })));
