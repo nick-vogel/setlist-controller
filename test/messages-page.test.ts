@@ -52,7 +52,7 @@ describe("the producer's message on a page", () => {
     const variants = {
       'view-only, no part': page({ message: MESSAGE }),
       'view-only chart page': page({ message: MESSAGE, part: 'Keys' }),
-      'leader setlist': page({ message: MESSAGE, role: 'leader' }),
+      'leader setlist, on battery': page({ message: MESSAGE, role: 'leader', snapshot: { ...SNAPSHOT, power: { source: 'battery', percent: 20 } } }),
       'leader timeline': page({ message: MESSAGE, role: 'leader', leaderView: 'timeline' }),
       producer: page({ message: MESSAGE, role: 'producer' }),
       'no set yet': page({ message: MESSAGE, snapshot: { ...SNAPSHOT, set: null } }),

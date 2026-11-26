@@ -21,9 +21,9 @@ async function device(browser: Browser, url: string, name?: string): Promise<Pag
 const panel = (page: Page) => page.getByRole('region', { name: 'Message the band' });
 const banner = (page: Page) => page.locator('.message-banner');
 
-async function sendMessage(producer: Page, to: 'All devices' | 'View-only devices' | string[], text?: string) {
+async function sendMessage(producer: Page, to: 'All devices' | 'View-only devices' | string[], text: string) {
   const messages = panel(producer);
-  if (text !== undefined) await messages.getByLabel('Message', { exact: true }).fill(text);
+  await messages.getByLabel('Message', { exact: true }).fill(text);
   if (Array.isArray(to)) {
     await messages.getByLabel('Chosen devices').check();
     for (const choice of to) await messages.getByRole('checkbox', { name: choice }).check();
@@ -41,9 +41,8 @@ test('a quick message to the view-only devices shows on each phone and on no lea
   const bass = await device(browser, e2e.viewerUrl, 'Bass phone');
   await expect(producer.getByRole('listitem', { name: 'Bass phone' })).toBeVisible();
 
+  await panel(producer).getByLabel('View-only devices').check();
   await panel(producer).getByRole('button', { name: 'Repeat chorus' }).click();
-  await expect(panel(producer).getByLabel('Message', { exact: true })).toHaveValue('Repeat chorus');
-  await sendMessage(producer, 'View-only devices');
 
   for (const phone of [keys, bass]) await expect(banner(phone).getByRole('paragraph')).toHaveText('Repeat chorus');
   await expect(banner(leader)).toHaveCount(0);

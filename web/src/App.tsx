@@ -296,7 +296,6 @@ export function Page({
   // panel on the producer page, and last on the leader's Setlist page.
   const nameField = <DeviceNameField name={deviceName} placeholder={defaultDeviceName(role, part)} onName={onDeviceName} />;
 
-  // The producer's message opens every page it reaches, ahead of everything else.
   const messageBanner = <MessageBanner message={message} onDismiss={onDismissMessage} />;
   // The playback Mac's battery warning, at the top of the leader's and producer's pages, never the
   // band's.

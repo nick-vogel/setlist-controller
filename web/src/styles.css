@@ -1119,8 +1119,8 @@ body {
   font-weight: 700;
 }
 
-/* The producer's Connections panel, below the leader's controls, and its Devices panel under it, which
-   the setup screen shows too. */
+/* The producer's Connections panel, below the leader's controls, its Devices panel under it, which
+   the setup screen shows too, and its Message the band panel under that. */
 .connections,
 .devices,
 .messages {

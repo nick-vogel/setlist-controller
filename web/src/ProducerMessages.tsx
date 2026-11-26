@@ -4,8 +4,8 @@ import { ROLE_LABELS, type Device } from '../../src/shared/devices.ts';
 import { MAX_MESSAGE_TEXT, MESSAGE_PRESETS, messageText, type MessageTarget } from '../../src/shared/messages.ts';
 
 // The producer's messages to the band, under the Devices panel: the quick messages, each of which
-// fills the text box, the text box, who the message goes to, Send, and Clear, which takes every
-// active message off every device. Chosen devices are picked from the Devices panel's list, by
+// sends at once to the devices picked under Send to, so the producer types nothing mid-song, the text
+// box, who the message goes to, Send, and Clear, which takes every active message off every device. Chosen devices are picked from the Devices panel's list, by
 // client ID, never by name, since two devices may share one. Every control is disabled while the
 // page is not connected, as the panel's are.
 export function ProducerMessages({
@@ -26,7 +26,8 @@ export function ProducerMessages({
   const picked = choices.filter((choice) => chosen.has(choice.client)).map((choice) => choice.client);
   const to: MessageTarget | null = target === 'chosen' ? (picked.length > 0 ? picked : null) : target;
   const kept = messageText(text);
-  const sendable = connected && kept !== null && to !== null;
+  const reachable = connected && to !== null;
+  const sendable = reachable && kept !== null;
 
   const toggle = (client: string) =>
     setChosen((held) => {
@@ -40,7 +41,7 @@ export function ProducerMessages({
       <h2 id="messages">Message the band</h2>
       <div className="message-presets" role="group" aria-label="Quick messages">
         {MESSAGE_PRESETS.map((preset) => (
-          <button key={preset} type="button" className={buttonClass(connected)} disabled={!connected} onClick={() => setText(preset)}>
+          <button key={preset} type="button" className={buttonClass(reachable)} disabled={!reachable} onClick={() => to !== null && send({ kind: 'message', text: preset, to })}>
             {preset}
           </button>
         ))}

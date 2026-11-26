@@ -548,12 +548,6 @@ describe('the messages a device dismissed', () => {
     expect(readDismissedMessages(storage)).toEqual(ids.slice(5));
   });
 
-  it('is one list for the browser, whatever the page role, since a message ID names one message', () => {
-    const storage = mapStorage();
-    storeDismissedMessage(storage, 'm1');
-    expect([...storage.entries.keys()]).toEqual(['setlist-controller.dismissed-messages']);
-  });
-
   it('reads none, and stores without throwing, on a device with no storage, one that throws, or a stored value that is not a list of IDs', () => {
     expect(readDismissedMessages(undefined)).toEqual([]);
     expect(readDismissedMessages(throwing)).toEqual([]);

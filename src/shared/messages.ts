@@ -17,7 +17,7 @@ export type MessageTarget = 'all' | 'viewers' | string[];
 // The longest message text the hub keeps. A longer one is cut, never refused, as a device name is.
 export const MAX_MESSAGE_TEXT = 120;
 
-// The quick messages on the producer page, one tap each to fill the text box.
+// The quick messages on the producer page, each sent with one tap.
 export const MESSAGE_PRESETS = ['Repeat chorus', 'Repeat bridge', 'Hold after this song', 'Watch leader'] as const;
 
 // The message text as the hub keeps it, or null for text that is not a string or holds only spaces,
