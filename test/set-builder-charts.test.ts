@@ -256,7 +256,7 @@ describe('the commands that write nothing and --set-manifest', { timeout: 30_000
     {
       mode: '--plan --list',
       args: ['--plan', '--list'],
-      problem: '--plan --list takes only --library, --pads, --template, --date, --service-type, --plan-id, --overlap, --pad, --gap, --replace and --output-root, not --set-manifest.',
+      problem: '--plan --list takes only --library, --pads, --template, --date, --service-type, --plan-id, --skip, --overlap, --pad, --gap, --replace and --output-root, not --set-manifest.',
     },
     { mode: '--skeleton', args: ['--skeleton', 'grace'], problem: '--skeleton takes only --library and --pads, not --set-manifest.' },
   ])('$mode refuses it as a usage error, exit 2, and writes no manifest', async ({ args, problem }) => {

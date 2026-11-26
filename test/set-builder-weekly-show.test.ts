@@ -386,10 +386,10 @@ describe('pnpm build-set --show-folder', { timeout: 30_000 }, () => {
     {
       mode: '--plan --list',
       args: ['--plan', '--list'],
-      problem: '--plan --list takes only --library, --pads, --template, --date, --service-type, --plan-id, --overlap, --pad, --gap, --replace and --output-root, not --show-folder.',
+      problem: '--plan --list takes only --library, --pads, --template, --date, --service-type, --plan-id, --skip, --overlap, --pad, --gap, --replace and --output-root, not --show-folder.',
     },
     { mode: '--skeleton', args: ['--skeleton', 'grace'], problem: '--skeleton takes only --library and --pads, not --show-folder.' },
-    { mode: '--plan --skeleton', args: ['--plan', '--skeleton'], problem: '--plan --skeleton takes only --library, --pads, --date, --service-type and --plan-id, not --show-folder.' },
+    { mode: '--plan --skeleton', args: ['--plan', '--skeleton'], problem: '--plan --skeleton takes only --library, --pads, --date, --service-type, --plan-id and --skip, not --show-folder.' },
   ])('is no flag of $mode, which stops on it with a usage message, exit 2', async ({ args, problem }) => {
     const workspace = await createWorkspace();
 

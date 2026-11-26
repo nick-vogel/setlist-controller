@@ -189,7 +189,7 @@ That includes a listing that exits 1, and the listing after its fix.
 Add any `--date`, `--service-type`, `--plan-id`, `--library`, `--pads`, `--template` or `--output-root` Nick named, by the mapping below, and `--replace "<folder>"` when The yes to replacing carries it, after a fix included, or when Nick names it and a listing has named its folder, by A `--replace` Nick names; each then goes on the build command too, a `--replace` only while they look in the set folder it was given for, by One set folder.
 Show the lines with a problem, and after each, what fixes it. Show no build command, since the build stops on the same problems.
 `"<title>" is planned in <key>, and <library> has it only in <keys>.`: Nick changes the song's key in the plan, or adds the song in that key to the library.
-on the plan path, a change to the songs themselves: a song swapped, added, dropped or moved. The songs come from the plan, and `--plan` takes no song name, so ask whether Nick changes the plan in Planning Center and you list it again, or the set is built from songs he names, by the Steps.
+on the plan path, a change to the songs themselves: a song swapped, added or moved. The songs come from the plan, and `--plan` takes no song name, so ask whether Nick changes the plan in Planning Center and you list it again, or the set is built from songs he names, by the Steps.
 Show the line as printed, and ask "Run it?" as usual, with no second question.
 | "the set from the plan", "from Planning Center" | `--plan`, by The plan path |
 Exit 0: show the command in a code block: `pnpm build-set --plan`, then the transition flags in the order of the positions they name, then any `--date`, `--service-type`, `--plan-id`, `--replace`, `--library`, `--pads`, `--template` or `--output-root`.
@@ -247,7 +247,7 @@ Show the line as printed, and ask "Run it?" as usual, with no second question.
 Show it in a code block: the short names in service order, then the `--overlap` and `--pad` flags in the order of the positions they name, whatever their kind (`--pad 1 --overlap 2 --pad 3`), then any `--date`, `--replace`, `--library`, `--pads`, `--template` or `--output-root`.
 A song change is the move from one song to the next, and its transition is a gap (the default: 4 bars of silence), an overlap, or a pad.
 A song change he names no transition for is a gap and adds nothing.
-on the plan path, a change to the songs themselves: a song swapped, added, dropped or moved. The songs come from the plan, and `--plan` takes no song name, so ask whether Nick changes the plan in Planning Center and you list it again, or the set is built from songs he names, by the Steps.
+on the plan path, a change to the songs themselves: a song swapped, added or moved. The songs come from the plan, and `--plan` takes no song name, so ask whether Nick changes the plan in Planning Center and you list it again, or the set is built from songs he names, by the Steps.
 Ask, one line per open point, and show no command until Nick has answered each, when the request holds:
 A change to the songs themselves is a question under Ask instead of guess.
 ```
@@ -575,7 +575,7 @@ Pins:
 On every route, what he named on the plan path for this build crosses with him, as if he had named it again.
 `--date`, `--output-root`, `--library` and `--pads` he named go on the listing and the build command. So a date he named there gives the date line `Date: <weekday> <YYYY-MM-DD>, the date named`.
 A date on `--date` reads `Date: <weekday> <YYYY-MM-DD>, the date named`.
-on the plan path, a change to the songs themselves: a song swapped, added, dropped or moved. The songs come from the plan, and `--plan` takes no song name, so ask whether Nick changes the plan in Planning Center and you list it again, or the set is built from songs he names, by the Steps.
+on the plan path, a change to the songs themselves: a song swapped, added or moved. The songs come from the plan, and `--plan` takes no song name, so ask whether Nick changes the plan in Planning Center and you list it again, or the set is built from songs he names, by the Steps.
 With no set folder for the date, the listing prints no such line, and the question is "Run it?" as usual.
 | "the set from the plan", "from Planning Center" | `--plan`, by The plan path |
 | a date, "November 1" said on 2026-10-17 | `--date 2026-11-01`: its next occurrence, today or later, when that is a Sunday at most 28 days away, and otherwise a question under Ask instead of guess |
@@ -639,7 +639,7 @@ Show the line as printed, and ask "Run it?" as usual, with no second question.
 Show it in a code block: the short names in service order, then the `--overlap` and `--pad` flags in the order of the positions they name, whatever their kind (`--pad 1 --overlap 2 --pad 3`), then any `--date`, `--replace`, `--library`, `--pads`, `--template` or `--output-root`.
 A song change is the move from one song to the next, and its transition is a gap (the default: 4 bars of silence), an overlap, or a pad.
 A song change he names no transition for is a gap and adds nothing.
-on the plan path, a change to the songs themselves: a song swapped, added, dropped or moved. The songs come from the plan, and `--plan` takes no song name, so ask whether Nick changes the plan in Planning Center and you list it again, or the set is built from songs he names, by the Steps.
+on the plan path, a change to the songs themselves: a song swapped, added or moved. The songs come from the plan, and `--plan` takes no song name, so ask whether Nick changes the plan in Planning Center and you list it again, or the set is built from songs he names, by the Steps.
 Ask, one line per open point, and show no command until Nick has answered each, when the request holds:
 ```
 
@@ -694,7 +694,7 @@ The listing's flags go in step 4's order, without `--template`, which `--list` d
 Show it in a code block: the short names in service order, then the `--overlap` and `--pad` flags in the order of the positions they name, whatever their kind (`--pad 1 --overlap 2 --pad 3`), then any `--date`, `--replace`, `--library`, `--pads`, `--template` or `--output-root`.
 A song change is the move from one song to the next, and its transition is a gap (the default: 4 bars of silence), an overlap, or a pad.
 A song change he names no transition for is a gap and adds nothing.
-on the plan path, a change to the songs themselves: a song swapped, added, dropped or moved. The songs come from the plan, and `--plan` takes no song name, so ask whether Nick changes the plan in Planning Center and you list it again, or the set is built from songs he names, by the Steps.
+on the plan path, a change to the songs themselves: a song swapped, added or moved. The songs come from the plan, and `--plan` takes no song name, so ask whether Nick changes the plan in Planning Center and you list it again, or the set is built from songs he names, by the Steps.
 Ask, one line per open point, and show no command until Nick has answered each, when the request holds:
 Add `--library <folder>` when Nick names a library folder, and `--pads <folder>` when he names a pads folder, and any `--date` or `--output-root <folder>` he names, by the mapping below, and `--replace "<folder>"` when The yes to replacing carries it, or when Nick names it and a listing has named its folder, by A `--replace` Nick names; each then goes on the build command too, a `--replace` only while they look in the set folder it was given for, by One set folder.
 When Nick comes here from The plan path, the flags he named there cross with him, by From the plan path below.
@@ -774,7 +774,7 @@ Its flag takes the position of the song before the song change in the new order,
 Show it in a code block: the short names in service order, then the `--overlap` and `--pad` flags in the order of the positions they name, whatever their kind (`--pad 1 --overlap 2 --pad 3`), then any `--date`, `--replace`, `--library`, `--pads`, `--template` or `--output-root`.
 A song change is the move from one song to the next, and its transition is a gap (the default: 4 bars of silence), an overlap, or a pad.
 A song change he names no transition for is a gap and adds nothing.
-on the plan path, a change to the songs themselves: a song swapped, added, dropped or moved. The songs come from the plan, and `--plan` takes no song name, so ask whether Nick changes the plan in Planning Center and you list it again, or the set is built from songs he names, by the Steps.
+on the plan path, a change to the songs themselves: a song swapped, added or moved. The songs come from the plan, and `--plan` takes no song name, so ask whether Nick changes the plan in Planning Center and you list it again, or the set is built from songs he names, by the Steps.
 Ask, one line per open point, and show no command until Nick has answered each, when the request holds:
 The flags and transitions he named on the plan path come with him to the Steps, by From the plan path under Steps step 1.
 ```
@@ -840,7 +840,7 @@ Songs are numbered by position, from 1 in service order, and every transition fl
 | "a pad after the last song", "a pad for ministry time" after it | `--pad <last>` |
 A pad after the last song names the last song's position, since no song change follows it.
 A change Nick names to a transition becomes its transition flag, by the mapping below, on the listing and the command alike: `--overlap <n>`, `--pad <n>` or `--pad <n>=<key>`, or `--gap <n>` to take back a pad or an overlap the plan gives.
-on the plan path, a change to the songs themselves: a song swapped, added, dropped or moved. The songs come from the plan, and `--plan` takes no song name, so ask whether Nick changes the plan in Planning Center and you list it again, or the set is built from songs he names, by the Steps.
+on the plan path, a change to the songs themselves: a song swapped, added or moved. The songs come from the plan, and `--plan` takes no song name, so ask whether Nick changes the plan in Planning Center and you list it again, or the set is built from songs he names, by the Steps.
 Ask, one line per open point, and show no command until Nick has answered each, when the request holds:
 ```
 
@@ -872,7 +872,7 @@ Pins:
 
 ```
 The plan's transition rule: an item titled `Prayer` that is the next item after a song, headers left out, puts a pad after that song, and a note on a song whose whole text is `overlap` overlaps it into the next song.
-on the plan path, a change to the songs themselves: a song swapped, added, dropped or moved. The songs come from the plan, and `--plan` takes no song name, so ask whether Nick changes the plan in Planning Center and you list it again, or the set is built from songs he names, by the Steps.
+on the plan path, a change to the songs themselves: a song swapped, added or moved. The songs come from the plan, and `--plan` takes no song name, so ask whether Nick changes the plan in Planning Center and you list it again, or the set is built from songs he names, by the Steps.
 When the plan gave a transition, a pad from a `Prayer` item or an overlap from an `overlap` note, the question names it and says it does not cross to the Steps, so he can name it there;
 A transition the plan gave, a pad from a `Prayer` item or an overlap from an `overlap` note, is none Nick named, so it does not cross.
 | "the set from the plan", "from Planning Center" | `--plan`, by The plan path |
@@ -1208,7 +1208,7 @@ Show the line as printed, and ask "Run it?" as usual, with no second question.
 Show it in a code block: the short names in service order, then the `--overlap` and `--pad` flags in the order of the positions they name, whatever their kind (`--pad 1 --overlap 2 --pad 3`), then any `--date`, `--replace`, `--library`, `--pads`, `--template` or `--output-root`.
 A song change is the move from one song to the next, and its transition is a gap (the default: 4 bars of silence), an overlap, or a pad.
 A song change he names no transition for is a gap and adds nothing.
-on the plan path, a change to the songs themselves: a song swapped, added, dropped or moved. The songs come from the plan, and `--plan` takes no song name, so ask whether Nick changes the plan in Planning Center and you list it again, or the set is built from songs he names, by the Steps.
+on the plan path, a change to the songs themselves: a song swapped, added or moved. The songs come from the plan, and `--plan` takes no song name, so ask whether Nick changes the plan in Planning Center and you list it again, or the set is built from songs he names, by the Steps.
 Ask, one line per open point, and show no command until Nick has answered each, when the request holds:
 So the listing for that date and output root runs without `--replace`.
 When its last line is `<folder> already exists. The build stops on it unless --replace "<folder>" replaces it.`, his words are the yes to replacing that folder: the command takes `--replace "<folder>"`, copied from that line, the listing runs again with it, without asking, and the question is "Run it?".
@@ -1275,7 +1275,7 @@ When a new date or a new `--output-root` points the listing at another set folde
 Show it in a code block: the short names in service order, then the `--overlap` and `--pad` flags in the order of the positions they name, whatever their kind (`--pad 1 --overlap 2 --pad 3`), then any `--date`, `--replace`, `--library`, `--pads`, `--template` or `--output-root`.
 A song change is the move from one song to the next, and its transition is a gap (the default: 4 bars of silence), an overlap, or a pad.
 A song change he names no transition for is a gap and adds nothing.
-on the plan path, a change to the songs themselves: a song swapped, added, dropped or moved. The songs come from the plan, and `--plan` takes no song name, so ask whether Nick changes the plan in Planning Center and you list it again, or the set is built from songs he names, by the Steps.
+on the plan path, a change to the songs themselves: a song swapped, added or moved. The songs come from the plan, and `--plan` takes no song name, so ask whether Nick changes the plan in Planning Center and you list it again, or the set is built from songs he names, by the Steps.
 Ask, one line per open point, and show no command until Nick has answered each, when the request holds:
 So the listing for that date and output root runs without `--replace`.
 When its last line is `<folder> already exists. The build stops on it unless --replace "<folder>" replaces it.`, his words are the yes to replacing that folder: the command takes `--replace "<folder>"`, copied from that line, the listing runs again with it, without asking, and the question is "Run it?".
@@ -1351,7 +1351,7 @@ A listing or command keeps `--replace` only while it looks in that same set fold
 Show it in a code block: the short names in service order, then the `--overlap` and `--pad` flags in the order of the positions they name, whatever their kind (`--pad 1 --overlap 2 --pad 3`), then any `--date`, `--replace`, `--library`, `--pads`, `--template` or `--output-root`.
 A song change is the move from one song to the next, and its transition is a gap (the default: 4 bars of silence), an overlap, or a pad.
 A song change he names no transition for is a gap and adds nothing.
-on the plan path, a change to the songs themselves: a song swapped, added, dropped or moved. The songs come from the plan, and `--plan` takes no song name, so ask whether Nick changes the plan in Planning Center and you list it again, or the set is built from songs he names, by the Steps.
+on the plan path, a change to the songs themselves: a song swapped, added or moved. The songs come from the plan, and `--plan` takes no song name, so ask whether Nick changes the plan in Planning Center and you list it again, or the set is built from songs he names, by the Steps.
 Ask, one line per open point, and show no command until Nick has answered each, when the request holds:
 So the listing for that date and output root runs without `--replace`.
 When its last line is `<folder> already exists. The build stops on it unless --replace "<folder>" replaces it.`, his words are the yes to replacing that folder: the command takes `--replace "<folder>"`, copied from that line, the listing runs again with it, without asking, and the question is "Run it?".
@@ -1487,7 +1487,7 @@ With no set folder for the date, the listing prints no such line, and the questi
 Show it in a code block: the short names in service order, then the `--overlap` and `--pad` flags in the order of the positions they name, whatever their kind (`--pad 1 --overlap 2 --pad 3`), then any `--date`, `--replace`, `--library`, `--pads`, `--template` or `--output-root`.
 A song change is the move from one song to the next, and its transition is a gap (the default: 4 bars of silence), an overlap, or a pad.
 A song change he names no transition for is a gap and adds nothing.
-on the plan path, a change to the songs themselves: a song swapped, added, dropped or moved. The songs come from the plan, and `--plan` takes no song name, so ask whether Nick changes the plan in Planning Center and you list it again, or the set is built from songs he names, by the Steps.
+on the plan path, a change to the songs themselves: a song swapped, added or moved. The songs come from the plan, and `--plan` takes no song name, so ask whether Nick changes the plan in Planning Center and you list it again, or the set is built from songs he names, by the Steps.
 Ask, one line per open point, and show no command until Nick has answered each, when the request holds:
 So the listing for that date and output root runs without `--replace`.
 When its last line is `<folder> already exists. The build stops on it unless --replace "<folder>" replaces it.`, his words are the yes to replacing that folder: the command takes `--replace "<folder>"`, copied from that line, the listing runs again with it, without asking, and the question is "Run it?".
@@ -1559,7 +1559,7 @@ A song folder is in the library, so Nick adds the file to that song's folder in 
 Show it in a code block: the short names in service order, then the `--overlap` and `--pad` flags in the order of the positions they name, whatever their kind (`--pad 1 --overlap 2 --pad 3`), then any `--date`, `--replace`, `--library`, `--pads`, `--template` or `--output-root`.
 A song change is the move from one song to the next, and its transition is a gap (the default: 4 bars of silence), an overlap, or a pad.
 A song change he names no transition for is a gap and adds nothing.
-on the plan path, a change to the songs themselves: a song swapped, added, dropped or moved. The songs come from the plan, and `--plan` takes no song name, so ask whether Nick changes the plan in Planning Center and you list it again, or the set is built from songs he names, by the Steps.
+on the plan path, a change to the songs themselves: a song swapped, added or moved. The songs come from the plan, and `--plan` takes no song name, so ask whether Nick changes the plan in Planning Center and you list it again, or the set is built from songs he names, by the Steps.
 Ask, one line per open point, and show no command until Nick has answered each, when the request holds:
 So the listing for that date and output root runs without `--replace`.
 When its last line is `<folder> already exists. The build stops on it unless --replace "<folder>" replaces it.`, his words are the yes to replacing that folder: the command takes `--replace "<folder>"`, copied from that line, the listing runs again with it, without asking, and the question is "Run it?".
@@ -1639,7 +1639,7 @@ A listing or command keeps `--replace` only while it looks in that same set fold
 Show it in a code block: the short names in service order, then the `--overlap` and `--pad` flags in the order of the positions they name, whatever their kind (`--pad 1 --overlap 2 --pad 3`), then any `--date`, `--replace`, `--library`, `--pads`, `--template` or `--output-root`.
 A song change is the move from one song to the next, and its transition is a gap (the default: 4 bars of silence), an overlap, or a pad.
 A song change he names no transition for is a gap and adds nothing.
-on the plan path, a change to the songs themselves: a song swapped, added, dropped or moved. The songs come from the plan, and `--plan` takes no song name, so ask whether Nick changes the plan in Planning Center and you list it again, or the set is built from songs he names, by the Steps.
+on the plan path, a change to the songs themselves: a song swapped, added or moved. The songs come from the plan, and `--plan` takes no song name, so ask whether Nick changes the plan in Planning Center and you list it again, or the set is built from songs he names, by the Steps.
 Ask, one line per open point, and show no command until Nick has answered each, when the request holds:
 So the listing for that date and output root runs without `--replace`.
 When its last line is `<folder> already exists. The build stops on it unless --replace "<folder>" replaces it.`, his words are the yes to replacing that folder: the command takes `--replace "<folder>"`, copied from that line, the listing runs again with it, without asking, and the question is "Run it?".
@@ -1720,7 +1720,7 @@ Show the command and its lines, as Steps step 4 or plan step 2 shows them, then 
 Show it in a code block: the short names in service order, then the `--overlap` and `--pad` flags in the order of the positions they name, whatever their kind (`--pad 1 --overlap 2 --pad 3`), then any `--date`, `--replace`, `--library`, `--pads`, `--template` or `--output-root`.
 A song change is the move from one song to the next, and its transition is a gap (the default: 4 bars of silence), an overlap, or a pad.
 A song change he names no transition for is a gap and adds nothing.
-on the plan path, a change to the songs themselves: a song swapped, added, dropped or moved. The songs come from the plan, and `--plan` takes no song name, so ask whether Nick changes the plan in Planning Center and you list it again, or the set is built from songs he names, by the Steps.
+on the plan path, a change to the songs themselves: a song swapped, added or moved. The songs come from the plan, and `--plan` takes no song name, so ask whether Nick changes the plan in Planning Center and you list it again, or the set is built from songs he names, by the Steps.
 Ask, one line per open point, and show no command until Nick has answered each, when the request holds:
 So the listing for that date and output root runs without `--replace`.
 When its last line is `<folder> already exists. The build stops on it unless --replace "<folder>" replaces it.`, his words are the yes to replacing that folder: the command takes `--replace "<folder>"`, copied from that line, the listing runs again with it, without asking, and the question is "Run it?".
@@ -2356,7 +2356,7 @@ When a new date or a new `--output-root` points the listing at another set folde
 Show it in a code block: the short names in service order, then the `--overlap` and `--pad` flags in the order of the positions they name, whatever their kind (`--pad 1 --overlap 2 --pad 3`), then any `--date`, `--replace`, `--library`, `--pads`, `--template` or `--output-root`.
 A song change is the move from one song to the next, and its transition is a gap (the default: 4 bars of silence), an overlap, or a pad.
 A song change he names no transition for is a gap and adds nothing.
-on the plan path, a change to the songs themselves: a song swapped, added, dropped or moved. The songs come from the plan, and `--plan` takes no song name, so ask whether Nick changes the plan in Planning Center and you list it again, or the set is built from songs he names, by the Steps.
+on the plan path, a change to the songs themselves: a song swapped, added or moved. The songs come from the plan, and `--plan` takes no song name, so ask whether Nick changes the plan in Planning Center and you list it again, or the set is built from songs he names, by the Steps.
 Ask, one line per open point, and show no command until Nick has answered each, when the request holds:
 ```
 
@@ -2622,7 +2622,7 @@ The line answers for one date and output root, so when the date, `--output-root`
 Show it in a code block: the short names in service order, then the `--overlap` and `--pad` flags in the order of the positions they name, whatever their kind (`--pad 1 --overlap 2 --pad 3`), then any `--date`, `--replace`, `--library`, `--pads`, `--template` or `--output-root`.
 A song change is the move from one song to the next, and its transition is a gap (the default: 4 bars of silence), an overlap, or a pad.
 A song change he names no transition for is a gap and adds nothing.
-on the plan path, a change to the songs themselves: a song swapped, added, dropped or moved. The songs come from the plan, and `--plan` takes no song name, so ask whether Nick changes the plan in Planning Center and you list it again, or the set is built from songs he names, by the Steps.
+on the plan path, a change to the songs themselves: a song swapped, added or moved. The songs come from the plan, and `--plan` takes no song name, so ask whether Nick changes the plan in Planning Center and you list it again, or the set is built from songs he names, by the Steps.
 Ask, one line per open point, and show no command until Nick has answered each, when the request holds:
 ```
 
@@ -2683,7 +2683,7 @@ With no set folder for the date, the listing prints no such line, and the questi
 Show it in a code block: the short names in service order, then the `--overlap` and `--pad` flags in the order of the positions they name, whatever their kind (`--pad 1 --overlap 2 --pad 3`), then any `--date`, `--replace`, `--library`, `--pads`, `--template` or `--output-root`.
 A song change is the move from one song to the next, and its transition is a gap (the default: 4 bars of silence), an overlap, or a pad.
 A song change he names no transition for is a gap and adds nothing.
-on the plan path, a change to the songs themselves: a song swapped, added, dropped or moved. The songs come from the plan, and `--plan` takes no song name, so ask whether Nick changes the plan in Planning Center and you list it again, or the set is built from songs he names, by the Steps.
+on the plan path, a change to the songs themselves: a song swapped, added or moved. The songs come from the plan, and `--plan` takes no song name, so ask whether Nick changes the plan in Planning Center and you list it again, or the set is built from songs he names, by the Steps.
 Ask, one line per open point, and show no command until Nick has answered each, when the request holds:
 ```
 
@@ -2833,7 +2833,7 @@ Show the line as printed, and ask "Run it?" as usual, with no second question.
 Show it in a code block: the short names in service order, then the `--overlap` and `--pad` flags in the order of the positions they name, whatever their kind (`--pad 1 --overlap 2 --pad 3`), then any `--date`, `--replace`, `--library`, `--pads`, `--template` or `--output-root`.
 A song change is the move from one song to the next, and its transition is a gap (the default: 4 bars of silence), an overlap, or a pad.
 A song change he names no transition for is a gap and adds nothing.
-on the plan path, a change to the songs themselves: a song swapped, added, dropped or moved. The songs come from the plan, and `--plan` takes no song name, so ask whether Nick changes the plan in Planning Center and you list it again, or the set is built from songs he names, by the Steps.
+on the plan path, a change to the songs themselves: a song swapped, added or moved. The songs come from the plan, and `--plan` takes no song name, so ask whether Nick changes the plan in Planning Center and you list it again, or the set is built from songs he names, by the Steps.
 Ask, one line per open point, and show no command until Nick has answered each, when the request holds:
 ```
 
@@ -2995,7 +2995,7 @@ The line answers for one date and output root, so when the date, `--output-root`
 Show it in a code block: the short names in service order, then the `--overlap` and `--pad` flags in the order of the positions they name, whatever their kind (`--pad 1 --overlap 2 --pad 3`), then any `--date`, `--replace`, `--library`, `--pads`, `--template` or `--output-root`.
 A song change is the move from one song to the next, and its transition is a gap (the default: 4 bars of silence), an overlap, or a pad.
 A song change he names no transition for is a gap and adds nothing.
-on the plan path, a change to the songs themselves: a song swapped, added, dropped or moved. The songs come from the plan, and `--plan` takes no song name, so ask whether Nick changes the plan in Planning Center and you list it again, or the set is built from songs he names, by the Steps.
+on the plan path, a change to the songs themselves: a song swapped, added or moved. The songs come from the plan, and `--plan` takes no song name, so ask whether Nick changes the plan in Planning Center and you list it again, or the set is built from songs he names, by the Steps.
 Ask, one line per open point, and show no command until Nick has answered each, when the request holds:
 ```
 
@@ -3201,7 +3201,7 @@ It crosses until the build ends, by When the build ends under The yes to replaci
 Songs Nick names in reply to the build's exit 1, whatever fix step 2 gives its problem, answer that failure: the set is built from them by the Steps, and what he named on the plan path crosses with him, with the `--replace` the command had, by When the build ends under The yes to replacing.
 429: too many requests to Planning Center for that account in a short time.
 Nick waits about half a minute and builds again.
-on the plan path, a change to the songs themselves: a song swapped, added, dropped or moved. The songs come from the plan, and `--plan` takes no song name, so ask whether Nick changes the plan in Planning Center and you list it again, or the set is built from songs he names, by the Steps.
+on the plan path, a change to the songs themselves: a song swapped, added or moved. The songs come from the plan, and `--plan` takes no song name, so ask whether Nick changes the plan in Planning Center and you list it again, or the set is built from songs he names, by the Steps.
 Ask, one line per open point, and show no command until Nick has answered each, when the request holds:
 `--date`, `--output-root`, `--library` and `--pads` he named go on the listing and the build command. So a date he named there gives the date line `Date: <weekday> <YYYY-MM-DD>, the date named`.
 | "the set from the plan", "from Planning Center" | `--plan`, by The plan path |
@@ -4321,7 +4321,7 @@ Pins:
 
 ```
 When Nick asks for the chart skeleton, the headings to type each song's chord chart under in Planning Center, run it without asking, since it writes nothing.
-For the plan's songs, such as "the chart skeleton for Sunday's plan", run `pnpm build-set --plan --skeleton`, with any `--date`, `--service-type` or `--plan-id` he names, by the mapping.
+For the plan's songs, such as "the chart skeleton for Sunday's plan", run `pnpm build-set --plan --skeleton`, with any `--date`, `--service-type`, `--plan-id` or `--skip` he names, by the mapping.
 Show the output as printed: each song's number and title, then its headings, one per line.
 Pass on each `Note:` line on stderr, which names the locators a song's skeleton leaves out, such as Outro, since the chart view shows each of those with its name and bar count.
 Then point Nick to section 12 of `docs/install.md`: he pastes each song's headings, not its number and title line, into its arrangement's Lyrics & Chords editor, and types each chord in square brackets right before the syllable it falls on.
@@ -4955,6 +4955,93 @@ A chain line stops nothing either: it names a cue the song cue runs on into by a
 A line that says a copy does not keep a follow or a hang stops nothing: the copy is the cue of a song past the song cues the show has, and such a cue runs on into nothing.
 ```
 
+## plan-skip-a-song
+
+Said on: Saturday 2027-01-02
+Library: the Phase 0 plan's songs
+Source: setlist-controller#31
+Nick says:
+- Build Sunday's set from the plan, and leave out Yes And Amen.
+
+Listing:
+
+```
+pnpm build-set --plan --list --skip 2
+```
+
+Plan: the recorded Phase 0 plan, on 2027-01-03
+Set folders: none
+Exit: 0
+Last line: `Warning: song 1, "WELCOME HOME", is planned at 134 BPM, and its folder WELCOME HOME-Elevation Rhythm-F-98.00bpm is at 98 BPM.`
+
+Command: `pnpm build-set --plan --skip 2`
+Date line: `Date: Sunday 2027-01-03, the coming Sunday, since no date is named`
+Question: Run it?
+
+Song lines:
+
+```
+1. WELCOME HOME (F), then an overlap
+2. Yes And Amen (G), skipped
+3. Fall Like Rain (E), the last song
+```
+
+Note: Yes And Amen is song 2 of the plan, so leaving it out is `--skip 2`, on the listing before it runs. Its listing line reads `2. Yes And Amen  G  skipped, from --skip 2`, the plan's `Prayer` after it reads `Prayer: no effect`, and WELCOME HOME's overlap from the plan goes into Fall Like Rain. Yes And Amen's meter warning is gone, so the BPM warning on song 1 is the last line.
+
+Pins:
+
+```
+A plan song Nick leaves out up front adds its `--skip <n>`, by plan step 3, to the listing and the build command alike.
+A song `--skip` leaves out prints as `<n>. <title>  <plan key>  skipped, from --skip <n>`, with no folder and no transition, and the last song is the last one not skipped.
+Each `--skip` goes right after `pnpm build-set --plan`, before the transition flags, and a song it leaves out reads `<n>. <title> (<key>), skipped`, so every song keeps its plan number.
+A plan song Nick leaves out ("skip song 3", "leave out the tag", "treat it as if it does not exist") becomes `--skip <n>`, n being its number in the listing, and goes on the listing and the command the same way.
+| "leave out song n", "skip the tag", "treat it as if it does not exist", on the plan path | `--skip <n>`, n being the song's number in the plan listing |
+```
+
+## plan-skip-stays-behind
+
+Said on: Saturday 2027-01-02
+Library: the Phase 0 plan's songs
+Source: setlist-controller#31
+Nick says:
+- Build Sunday's set from the plan, and skip song 2.
+- move Fall Like Rain to the start
+- build it from songs I name
+- Fall Like Rain, WELCOME HOME.
+
+Listing:
+
+```
+pnpm build-set --plan --list --skip 2
+```
+
+Plan: the recorded Phase 0 plan, on 2027-01-03
+Set folders: none
+Exit: 0
+Last line: `Warning: song 1, "WELCOME HOME", is planned at 134 BPM, and its folder WELCOME HOME-Elevation Rhythm-F-98.00bpm is at 98 BPM.`
+
+Listing:
+
+```
+pnpm build-set --list
+```
+
+Set folders: none
+Exit: 0
+Last line: `amen  G  Yes And Amen-Jesus Culture-G-72.00bpm`
+
+Command: `pnpm build-set rain home`
+Date line: `Date: Sunday 2027-01-03, the coming Sunday, since no date is named`
+Question: Run it?
+
+Note: The move is a change to the songs themselves, so it is the question under Ask instead of guess, which names the overlap from song 1 that the plan's `overlap` note gives and says it does not cross. The `--skip 2` stays behind on the Steps: Yes And Amen is not among the songs Nick names, so the command has no flag for it.
+
+Pins:
+
+```
+A `--skip` stays behind too, since the song it leaves out is not among the songs he names.
+```
+
 # Sentences no trace pins
 
 Sentence: What crosses:
@@ -5203,11 +5290,14 @@ Reason: a build's exit 2: no trace's build command exits 2, and the exit 2 of a 
 Sentence: Done when Nick has the output, and a fix for each problem.
 Reason: a step's end condition: it says when the step is done, and no listing, command or question depends on it
 
-Sentence: `"<title>" has no song folder in <library>.`: the library has no folder whose title is the plan's title.
+Sentence: `"<title>" has no song folder in <library>. To leave it out of the set, give --skip <n>.`: the library has no folder whose title is the plan's title.
 Reason: a fix line for a plan listing problem no recorded plan gives, so no trace lists it; test/build-set-skill-quotes.test.ts checks the line it quotes
 
 Sentence: Nick adds the song to the library, or makes the plan's title and the folder's title the same.
 Reason: fix advice for a plan listing problem: what Nick changes in Planning Center, the library or his token, or when he builds again, and no listing, command or question depends on it
+
+Sentence: A song the band plays with no track, such as a sung tag, is left out by the `--skip <n>` the line names, a change to the command, by plan step 3.
+Reason: fix advice for a plan listing problem no recorded plan gives, so no trace lists it; test/set-builder-plan-list.test.ts holds the problem line that names --skip, and plan-skip-a-song traces the --skip it leads to
 
 Sentence: `"<title>" has no key in the plan, ...`: Nick gives the song a key in the plan.
 Reason: a fix line for a plan listing problem no recorded plan gives, so no trace lists it; test/build-set-skill-quotes.test.ts checks the line it quotes

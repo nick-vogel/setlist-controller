@@ -67,6 +67,7 @@ describe('the README', () => {
       '--set-manifest',
       '--show-folder',
       '--skeleton',
+      '--skip',
       '--swap',
       '--template',
     ]);

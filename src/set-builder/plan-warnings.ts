@@ -1,6 +1,7 @@
 import { valueOf } from './als.ts';
 import { timeSignature } from './meter.ts';
 import type { PlanSong } from './plan-reader.ts';
+import { NO_SKIPS, type Skipped } from './plan-transitions.ts';
 import { hasStartingValues, mainEvents, readSong } from './song.ts';
 
 // The warnings a plan build and a listing of the plan give where the plan and a song disagree: the plan's arrangement
@@ -39,9 +40,11 @@ export function planWarnings(songs: PlanSong[], folders: (string | undefined)[],
 
 // The warnings --plan --list gives for the songs' charts, in song order, for every plan song, with a folder or none,
 // since the chart comes from Planning Center: a song whose arrangement has no chart text, and one whose chart text has no
-// chord in square brackets, a bracket holding something other than spaces. A warning never stops the build.
-export function chartWarnings(songs: PlanSong[]): string[] {
+// chord in square brackets, a bracket holding something other than spaces. A song --skip leaves out (skipped, by
+// position from 1) gets none, since the set has no chart for it. A warning never stops the build.
+export function chartWarnings(songs: PlanSong[], skipped: Skipped = NO_SKIPS): string[] {
   return songs.flatMap(({ title, chartText }, index) => {
+    if (skipped.has(index + 1)) return [];
     const song = `song ${index + 1}, "${title}"`;
     if (chartText === undefined) return [`Warning: ${song}, has no chart text in Planning Center, so the chart view shows "No chart for this song".`];
     if (!/\[[^\]]*\S[^\]]*\]/.test(chartText)) {

@@ -71,8 +71,14 @@ type PadTransition = Extract<Transition, { type: 'pad' }>;
 // already names it, and a pad that takes its key from it is not read. The problems come in service order: a song whose
 // folder name has no key, or a key that is not a note name, a pads folder that cannot be listed (once), a key with no
 // file, which lists the names looked for and the keys the folder has, and a file that cannot be read as a WAV. A file
-// two pads play, by one spelling of its key or another, is read once.
-export async function readPads(folder: string, service: (Song | undefined)[], transitions: Partial<Record<number, Transition>>): Promise<PadsReading> {
+// two pads play, by one spelling of its key or another, is read once. A problem calls the song at a position by its
+// number (numberOf).
+export async function readPads(
+  folder: string,
+  service: (Song | undefined)[],
+  transitions: Partial<Record<number, Transition>>,
+  numberOf: (position: number) => number,
+): Promise<PadsReading> {
   const asked = Object.entries(transitions)
     .flatMap(([position, transition]) => (transition?.type === 'pad' ? [[Number(position), transition] as const] : []))
     .toSorted(([a], [b]) => a - b);
@@ -82,7 +88,7 @@ export async function readPads(folder: string, service: (Song | undefined)[], tr
   const pads: Record<number, Pad> = {};
   const problems: string[] = [];
   for (const [position, transition] of asked) {
-    const reading = padKey(position, transition, service);
+    const reading = padKey(position, transition, service, numberOf(position));
     if (reading === undefined) continue;
     if (!reading.ok) {
       problems.push(reading.problem);
@@ -100,7 +106,7 @@ export async function readPads(folder: string, service: (Song | undefined)[], tr
       .find((found) => found !== undefined);
     if (name === undefined) {
       const keyOf = from === undefined ? '' : `the key of ${from}, `;
-      problems.push(`The pad after song ${position} is in ${key}, ${keyOf}and the pads folder ${folder} has no ${names.join(' or ')}. ${keysIn(entries)}`);
+      problems.push(`The pad after song ${numberOf(position)} is in ${key}, ${keyOf}and the pads folder ${folder} has no ${names.join(' or ')}. ${keysIn(entries)}`);
       continue;
     }
     if (!files.has(name)) files.set(name, readPad(folder, name));
@@ -117,16 +123,16 @@ export async function readPads(folder: string, service: (Song | undefined)[], tr
 // The key the pad after song `position` is asked to play in: its own, or the key of the song after it, or of the last
 // song itself for a pad after it, with that song's folder; or the problem that stops the build on the folder's key; or
 // undefined when the song it takes its key from could not be read, whose own problem names it. A pad's own key is a
-// note name: buildSet has already thrown on one that is not (checkTransitions).
-function padKey(position: number, transition: PadTransition, service: (Song | undefined)[]): { ok: true; key: string; from?: string } | { ok: false; problem: string } | undefined {
+// note name: buildSet has already thrown on one that is not (checkTransitions). A problem calls the song by `number`.
+function padKey(position: number, transition: PadTransition, service: (Song | undefined)[], number: number): { ok: true; key: string; from?: string } | { ok: false; problem: string } | undefined {
   if (transition.key !== undefined) return { ok: true, key: transition.key };
   // The song after the pad, at index `position` since positions count from 1; after the last song, the song itself.
   const song = position === service.length ? service[position - 1] : service[position];
   if (!song) return undefined;
   const reading = songNoteKey(song.folder);
   if (reading.ok) return { ok: true, key: reading.key, from: song.folder };
-  if (reading.written === undefined) return { ok: false, problem: `${song.folder}: the folder name has no key before its BPM, which the pad after song ${position} is played in.` };
-  return { ok: false, problem: `${song.folder}: the folder name's key, "${reading.written}", is not a note name, which the pad after song ${position} is played in.` };
+  if (reading.written === undefined) return { ok: false, problem: `${song.folder}: the folder name has no key before its BPM, which the pad after song ${number} is played in.` };
+  return { ok: false, problem: `${song.folder}: the folder name's key, "${reading.written}", is not a note name, which the pad after song ${number} is played in.` };
 }
 
 // The five pairs of note names that are one key, each name mapped to its twin: for the pad files that play a key
