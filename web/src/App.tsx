@@ -340,7 +340,7 @@ export function Page({
           {role === 'leader' && <LeaderViewSwitcher leaderView={leaderView} onLeaderView={onLeaderView} />}
         </div>
       )}
-      <NowPlaying live={live} set={snapshot.set} now={now} jump={jump} countIn={countIn} loop={loop} timings={snapshot.songTimings} position={snapshot.position} />
+      <NowPlaying live={live} set={snapshot.set} now={now} jump={jump} countIn={countIn} loop={loop} timings={snapshot.songTimings} position={snapshot.position} playing={playing} />
       {controlsLive && (
         <section className="transport" aria-label="Transport">
           <StopButton available={liveReady} send={send} />

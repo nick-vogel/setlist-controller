@@ -23,7 +23,7 @@ export function Setup({ snapshot, connected }: { snapshot: Snapshot | null; conn
           <p className={`live-status ${snapshot.live}`}>
             {snapshot.live === 'connected' ? 'Live connected' : 'Live not connected'}
           </p>
-          <NowPlaying live={snapshot.live} set={snapshot.set} now={snapshot.now} jump={snapshot.jump} countIn={snapshot.countIn} loop={snapshot.loop} timings={snapshot.songTimings} position={snapshot.position} />
+          <NowPlaying live={snapshot.live} set={snapshot.set} now={snapshot.now} jump={snapshot.jump} countIn={snapshot.countIn} loop={snapshot.loop} timings={snapshot.songTimings} position={snapshot.position} playing={snapshot.playing} />
           <section className="set-actions" aria-label="Set">
             <RefreshButton live={snapshot.live} playing={snapshot.playing} available={connected} send={refreshFromLaptop} />
           </section>

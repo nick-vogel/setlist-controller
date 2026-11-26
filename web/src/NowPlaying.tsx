@@ -20,6 +20,7 @@ export function NowPlaying({
   loop,
   timings,
   position,
+  playing,
 }: {
   live: Snapshot['live'];
   set: SetList | null;
@@ -29,6 +30,7 @@ export function NowPlaying({
   loop: Snapshot['loop'];
   timings: Snapshot['songTimings'];
   position: Snapshot['position'];
+  playing: Snapshot['playing'];
 }) {
   if (live === 'not-connected') return <LiveNotConnected />;
   if (!set) return null;
@@ -43,7 +45,7 @@ export function NowPlaying({
   const looped = loop?.section && sectionAt(set, loop.section);
   const loopLine = <p className="now-loop">{looped ? `Looping ${looped.name}.` : loop ? 'Loop on.' : '\u00a0'}</p>;
   // The same for the time left, which is not known for a set the build did not time until Live plays in it.
-  const timeLine = <p className="now-time-left">{timeLeftText(timeLeft(set, timings, { now, position, jump, countIn, loop })) || '\u00a0'}</p>;
+  const timeLine = <p className="now-time-left">{timeLeftText(timeLeft(set, timings, { now, position, jump, countIn, loop, playing })) || '\u00a0'}</p>;
 
   if (!now || !song || !section) {
     return (

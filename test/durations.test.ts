@@ -38,7 +38,7 @@ const TIMINGS: Snapshot['songTimings'] = {
 };
 
 const at = (song: number, section: number, fraction = 0): NowPlaying => ({ song, section, next: 'end', bar: 1, bars: 4, fraction });
-const playhead = (now: NowPlaying | null, position: number | null, loop: Snapshot['loop'] = null, jump: Snapshot['jump'] = null, countIn = false): Playhead => ({ now, position, loop, jump, countIn });
+const playhead = (now: NowPlaying | null, position: number | null, loop: Snapshot['loop'] = null, jump: Snapshot['jump'] = null, countIn = false, playing = true): Playhead => ({ now, position, loop, jump, countIn, playing });
 
 describe('song and set totals', () => {
   it('counts every section a song plays and leaves out a skipped one', () => {
@@ -134,6 +134,20 @@ describe('the time left at the playhead', () => {
     expect(timeLeft(SET, TIMINGS, playhead(null, 36, null, { song: 1, section: 1 }, true)).song).toBe(4 + 10);
   });
 
+  it("counts all of the target song's Count Off while Live is stopped in it, before the count-in starts", () => {
+    // Live stopped at beat 6 of song 1's Count Off, 0 to 8, and the leader counts in to the Verse.
+    expect(timeLeft(SET, TIMINGS, playhead(at(1, 0), 6, null, { song: 1, section: 1 }, true, false)).song).toBe(4 + 10);
+  });
+
+  it('counts no lead for a count-in to a song with no Count Off', () => {
+    expect(timeLeft(SET, TIMINGS, playhead(at(1, 1), 12, null, { song: 2, section: 0 }, true)).song).toBe(20);
+  });
+
+  it("knows nothing of the song's time left for a count-in whose Count Off is not timed", () => {
+    const untimedCountOff = { ...TIMINGS, 1: { ...TIMINGS[1]!, sections: [null, 10, 5] } };
+    expect(timeLeft(SET, untimedCountOff, playhead(at(2, 0), 48, null, { song: 1, section: 1 }, true)).song).toBeNull();
+  });
+
   it('knows nothing before Live reports the position', () => {
     expect(timeLeft(SET, TIMINGS, playhead(null, null, null))).toEqual({ song: null, set: null, approximate: false });
   });
@@ -197,8 +211,8 @@ const page = (role: Role, changes: Partial<Snapshot> = {}) =>
 const line = (markup: string, name: string) => text(new RegExp(`<p class="${name}">(.*?)</p>`).exec(markup)?.[1] ?? 'missing');
 const all = (markup: string, name: string) => [...markup.matchAll(new RegExp(`<p class="${name}">(.*?)</p>`, 'g'))].map((match) => text(match[1]!));
 const panel = (changes: Partial<Snapshot> = {}) => {
-  const { live, set, now, jump, countIn, loop, songTimings, position } = { ...SNAPSHOT, ...changes };
-  return renderToStaticMarkup(createElement(NowPlayingPanel, { live, set, now, jump, countIn, loop, timings: songTimings, position }));
+  const { live, set, now, jump, countIn, loop, songTimings, position, playing } = { ...SNAPSHOT, ...changes };
+  return renderToStaticMarkup(createElement(NowPlayingPanel, { live, set, now, jump, countIn, loop, timings: songTimings, position, playing }));
 };
 
 describe('the durations a page shows', () => {

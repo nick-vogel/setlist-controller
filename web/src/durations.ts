@@ -10,7 +10,7 @@ import { gapAfter, type SetList, type Snapshot, type Song, type SongTiming } fro
 type Timings = Snapshot['songTimings'];
 
 // Where the playhead is, and what waits to move it.
-export type Playhead = Pick<Snapshot, 'now' | 'position' | 'jump' | 'countIn' | 'loop'>;
+export type Playhead = Pick<Snapshot, 'now' | 'position' | 'jump' | 'countIn' | 'loop' | 'playing'>;
 
 // Seconds, and whether they are a minimum: some part of what they count is not known.
 export type Total = { seconds: number; atLeast: boolean };
@@ -38,7 +38,7 @@ export function setSeconds(set: SetList, timings: Timings): Total | null {
 //
 // The rest of the section the playhead is in is its share of the section's beats. Across a tempo change inside that one
 // section, the share of seconds differs a little, which the per-section timings cannot tell.
-export function timeLeft(set: SetList, timings: Timings, { now, position, jump, countIn, loop }: Playhead): TimeLeft {
+export function timeLeft(set: SetList, timings: Timings, { now, position, jump, countIn, loop, playing }: Playhead): TimeLeft {
   const approximate = loop !== null;
   const nothing = { song: null, set: null, approximate };
   if (position === null) return nothing;
@@ -48,7 +48,7 @@ export function timeLeft(set: SetList, timings: Timings, { now, position, jump, 
     if (!song) return nothing;
     const timing = timings[song.number];
     const landed = jump.section === 'end' ? 0 : playedFrom(song, timing, jump.section, 1);
-    const lead = countIn ? countInLead(set, timings, song, now, position) : 0;
+    const lead = countIn ? countInLead(set, timings, song, playing ? now : null, position) : 0;
     const left = landed === null || lead === null ? null : lead + landed;
     return { song: left, set: setLeft(set, timings, index, left), approximate };
   }
@@ -107,7 +107,8 @@ function playedAfter(song: Song, timing: SongTiming | undefined, index: number):
 }
 
 // The seconds a count-in plays before it lands: the rest of the target song's Count Off once Live plays in it, and all of
-// it before then, while the playhead is still where Live stood. None for a song with no Count Off.
+// it before then, while the playhead is still where Live stood, even inside that Count Off. `now` is null until Live
+// plays. None for a song with no Count Off.
 function countInLead(set: SetList, timings: Timings, song: Song, now: Playhead['now'], position: number): number | null {
   const countOff = countOffIndex(song);
   if (countOff === -1) return 0;
