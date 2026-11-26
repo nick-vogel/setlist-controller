@@ -5,7 +5,7 @@ import { join, resolve } from 'node:path';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import type { CuePoint } from '../src/fake-live/fake-live.ts';
 import { manualClock, type ManualClock } from '../src/server/clock.ts';
-import { POSITION_BROADCAST_MS, startHub } from '../src/server/hub.ts';
+import { type Hub, POSITION_BROADCAST_MS, startHub } from '../src/server/hub.ts';
 import { SILENT_BEFORE_LOST_MS } from '../src/server/live-bridge.ts';
 import { UNKNOWN_POWER } from '../src/shared/power.ts';
 import { producerSocketPath, SOCKET_PATHS } from '../src/shared/routes.ts';
@@ -504,6 +504,48 @@ describe('a client that received a held position', () => {
     clock.advance(POSITION_BROADCAST_MS);
     hub.publish(snap(1), noProblems);
     hub.publish(snap(2), noProblems);
+    await viewer.snapshot((snapshot) => snapshot.position === 1);
+    await viewer.flush();
+    await viewer.flush();
+    expect(viewer.received.map((snapshot) => snapshot.position)).toEqual([0, 1]);
+
+    clock.advance(POSITION_BROADCAST_MS);
+    await viewer.snapshot((snapshot) => snapshot.position === 2);
+    expect(viewer.received.map((snapshot) => snapshot.position)).toEqual([0, 1, 2]);
+  });
+
+  it.each([
+    {
+      change: 'a producer-only change',
+      publishWhileBusy: (hub: Hub) => {
+        hub.publish(snap(1), offline);
+        hub.publish(snap(2), offline);
+      },
+    },
+    {
+      change: 'a revert to the position in flight',
+      publishWhileBusy: (hub: Hub) => {
+        hub.publish(snap(2), noProblems);
+        hub.publish(snap(1), noProblems);
+        hub.publish(snap(2), noProblems);
+      },
+    },
+  ])('still holds a position published after $change while the send before it is in flight', async ({ publishWhileBusy }) => {
+    const clock = manualClock();
+    const http = createServer();
+    const hub = startHub(http, { snapshot: snap(0), connections: noProblems }, { leader: 'l', producer: 'p' }, () => {}, () => {}, clock);
+    await new Promise<void>((done) => http.listen(0, '127.0.0.1', done));
+    const viewer = await connect(`ws://127.0.0.1:${(http.address() as AddressInfo).port}${SOCKET_PATHS.viewer}`);
+    stopHub = async () => {
+      viewer.close();
+      await hub.close();
+      await new Promise<void>((done) => http.close(() => done()));
+    };
+    await viewer.snapshot((snapshot) => snapshot.position === 0);
+
+    clock.advance(POSITION_BROADCAST_MS);
+    hub.publish(snap(1), noProblems);
+    publishWhileBusy(hub);
     await viewer.snapshot((snapshot) => snapshot.position === 1);
     await viewer.flush();
     await viewer.flush();

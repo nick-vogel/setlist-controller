@@ -102,10 +102,14 @@ export function startHub(
 
   // Sends the socket its next frame, else the newest snapshot for its role when it has not had it,
   // once nothing is in flight on it. A send's callback sends again only for a waiting frame or a
-  // broadcast that found the socket busy, so a socket that was busy gets the one newest snapshot
-  // when it is free, and a position held for the trailing flush stays held.
+  // broadcast that changed the socket's own snapshot while it was busy, so a socket that was busy gets
+  // the one newest snapshot when it is free, and a position held for the trailing flush stays held.
   const deliver = (socket: WebSocket, state: ClientState) => {
     if (closed || socket.readyState !== WebSocket.OPEN) return;
+    if (forRole(latest, state.role) === state.lastSent) {
+      state.dirty = false;
+      return;
+    }
     if (state.inFlight) {
       state.dirty = true;
       return;
