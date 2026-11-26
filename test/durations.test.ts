@@ -126,6 +126,14 @@ describe('the time left at the playhead', () => {
     expect(timeLeft(SET, untimedLast, playhead(at(3, 0), 70, null, { song: 3, section: 'end' }))).toEqual({ song: 0, set: { seconds: 0, atLeast: false }, approximate: false });
   });
 
+  // The page has the count-in before Live reports that it plays the Count Off, so the playhead is still where it was.
+  it("counts all of the target song's Count Off for a count-in that Live has not started yet", () => {
+    // From the middle of song 2's Intro, a count-in to song 1's Verse: its 4 s Count Off, then the Verse.
+    expect(timeLeft(SET, TIMINGS, playhead(at(2, 0), 48, null, { song: 1, section: 1 }, true)).song).toBe(4 + 10);
+    // From between songs 1 and 2.
+    expect(timeLeft(SET, TIMINGS, playhead(null, 36, null, { song: 1, section: 1 }, true)).song).toBe(4 + 10);
+  });
+
   it('knows nothing before Live reports the position', () => {
     expect(timeLeft(SET, TIMINGS, playhead(null, null, null))).toEqual({ song: null, set: null, approximate: false });
   });
