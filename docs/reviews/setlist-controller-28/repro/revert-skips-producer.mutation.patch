@@ -1,0 +1,13 @@
+diff --git a/src/server/hub.ts b/src/server/hub.ts
+index 441a176..c3b7563 100644
+--- a/src/server/hub.ts
++++ b/src/server/hub.ts
+@@ -281,7 +281,7 @@ export function startHub(
+       if (next.playback === broadcasted.playback && next.producer === broadcasted.producer) {
+         if (stopFlush) {
+           cancelFlush();
+-          for (const [socket, state] of clients) deliver(socket, state);
++          for (const [socket, state] of clients) if (state.role !== 'producer') deliver(socket, state);
+         }
+         return;
+       }
