@@ -7,7 +7,7 @@ import { MAX_MESSAGE_TEXT, MESSAGE_PRESETS, messageText, type MessageTarget } fr
 // devices picked under Send to, so the producer types nothing mid-song. Then the text box, who the
 // message goes to, Send, and Clear, which takes every active message off every device. Chosen devices
 // are picked from the Devices panel's list, by client ID, never by name, since two devices may share
-// one. Every control is disabled while the page is not connected, as the panel's are.
+// one. Every button is disabled while the page is not connected, as the panel's are.
 export function ProducerMessages({
   devices,
   ownClient,

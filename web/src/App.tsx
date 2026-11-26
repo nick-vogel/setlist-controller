@@ -310,8 +310,8 @@ export function Page({
       <ProducerMessages devices={snapshot.devices} ownClient={clientId} connected={connected} send={send} />
     </>
   );
-  // The name field: after the pickers and the Auto-Lock tip on the view-only page, under the Devices
-  // panel on the producer page, and last on the leader's Setlist page.
+  // The name field: after the pickers and the Auto-Lock tip on the view-only page, under the Message
+  // the band panel on the producer page, and last on the leader's Setlist page.
   const nameField = <DeviceNameField name={deviceName} placeholder={defaultDeviceName(role, part)} onName={onDeviceName} />;
 
   const messageBanner = <MessageBanner message={message} onDismiss={onDismissMessage} />;
