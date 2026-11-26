@@ -264,7 +264,6 @@ export function Page({
 }) {
   // The panel does not wait for a set: the connections are not Live's. A pick does, since it is kept
   // for the set, and the server drops one while it has read none.
-  // Then the Devices panel.
   const connections = role === 'producer' && 'connections' in snapshot && (
     <>
       <ConnectionsPanel connections={snapshot.connections} problems={snapshot.connectionProblems} connected={connected} setKnown={snapshot.set !== null} send={send} />

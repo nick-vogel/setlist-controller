@@ -58,7 +58,8 @@ export function DevicesPanel({
   );
 }
 
-// The hour and minute the device's last socket closed, by the page's own clock and locale.
+// The hour and minute the device's last socket closed, by the server's clock, in the page's time zone
+// and locale.
 function lastSeenLine(lastSeen: number | null): string {
   if (lastSeen === null) return 'Offline';
   return `Offline, last seen ${new Date(lastSeen).toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' })}`;
