@@ -138,7 +138,7 @@ async function topmostAtCentre(page: Page, selector: string): Promise<string | n
   }, selector);
 }
 
-test('a message that comes or goes moves nothing on the leader page, and nothing at the top of the page covers its controls', async ({ browser, page }) => {
+test('a message that comes or goes leaves Count in where it was on the leader page, and the stage status line ends above the page under it', async ({ browser, page }) => {
   e2e = await startE2eRig();
   const producer = await device(browser, e2e.producerUrl);
   await page.goto(e2e.leaderUrl);
