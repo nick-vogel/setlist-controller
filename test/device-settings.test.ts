@@ -482,21 +482,34 @@ describe('the name a device goes by', () => {
     expect(storage.entries.size).toBe(0);
   });
 
-  it('is read again when another tab stores one, so every tab of the device says hello with it', () => {
+  it('is read again when another tab stores one or clears the storage, so every tab of the device says hello with it', () => {
     const storage = mapStorage();
     const page = new EventTarget();
+    const stored = (key: string | null) => page.dispatchEvent(Object.assign(new Event('storage'), { key }));
     const names: (string | null)[] = [];
     const stop = watchDeviceName(page, storage, (name) => names.push(name));
 
     storeDeviceName(storage, 'Stage left');
-    page.dispatchEvent(new Event('storage'));
+    stored('setlist-controller.device-name');
     storeDeviceName(storage, '');
-    page.dispatchEvent(new Event('storage'));
+    stored(null);
     stop();
     storeDeviceName(storage, 'Stage right');
-    page.dispatchEvent(new Event('storage'));
+    stored('setlist-controller.device-name');
 
     expect(names).toEqual(['Stage left', null]);
+  });
+
+  it('is not read again when another tab stores some other setting, so a name typed here and not yet stored stays', () => {
+    const storage = mapStorage();
+    const page = new EventTarget();
+    const names: (string | null)[] = [];
+    watchDeviceName(page, storage, (name) => names.push(name));
+
+    storePart(storage, 'Bass');
+    page.dispatchEvent(Object.assign(new Event('storage'), { key: 'setlist-controller.part' }));
+
+    expect(names).toEqual([]);
   });
 
   it('reads no name on a device that never stored one or cannot store', () => {

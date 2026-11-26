@@ -290,10 +290,13 @@ export function readDeviceName(storage: DeviceStorage | undefined): string | nul
   }
 }
 
-// Calls onName with the stored name each time another tab changes the storage, so every tab of the
-// device goes by the name typed last. Returns the function that stops it.
+// Calls onName with the stored name each time another tab stores one or clears the storage, so every
+// tab of the device goes by the name typed last. Returns the function that stops it.
 export function watchDeviceName(page: EventTarget, storage: DeviceStorage | undefined, onName: (name: string | null) => void): () => void {
-  const reread = () => onName(readDeviceName(storage));
+  const reread = (event: Event) => {
+    const { key } = event as StorageEvent;
+    if (key === DEVICE_NAME_KEY || key === null) onName(readDeviceName(storage));
+  };
   page.addEventListener('storage', reread);
   return () => page.removeEventListener('storage', reread);
 }
