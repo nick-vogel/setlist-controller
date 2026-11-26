@@ -681,9 +681,12 @@ describe('a client that received a held position', () => {
     producer.send({ kind: 'message', text: 'Repeat chorus', to: 'viewers' });
     await producer.snapshot((snapshot) => snapshot.activeMessages.length === 1);
 
+    expect(producer.received.at(-1)?.position).toBe(12);
     hub.publish(snap(10), noProblems);
 
     await midWindow.snapshot((snapshot) => snapshot.position === 10);
+    await producer.flush();
+    expect(producer.received.at(-1)?.position).toBe(10);
     await existing.flush();
     expect(existing.received.length).toBe(existingCount);
   });
