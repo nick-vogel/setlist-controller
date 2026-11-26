@@ -35,6 +35,45 @@ body {
   background: #ff6369;
 }
 
+/* The producer's message: white with dark text, apart from the battery warning's amber and red, so it
+   reads from across the stage. It holds to the top of the page while it scrolls, over the chart
+   strip, the stage status line and the Reconnecting banner, until the device dismisses it. */
+.message-banner {
+  position: sticky;
+  top: 0;
+  z-index: 3;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem 1rem;
+  margin: 0 0 1rem;
+  padding: 0.75rem 1rem;
+  border-radius: 0.5rem;
+  background: #fff;
+  color: #111;
+}
+
+.message-banner-text {
+  flex: 1 1 12rem;
+  margin: 0;
+  font-size: 1.75rem;
+  font-weight: 700;
+}
+
+.message-banner-dismiss {
+  min-height: 3rem;
+  padding: 0.5rem 1.25rem;
+  border: 0;
+  border-radius: 0.75rem;
+  background: #111;
+  color: #fff;
+  font: inherit;
+  font-size: 1.125rem;
+  font-weight: 600;
+  touch-action: manipulation;
+  cursor: pointer;
+}
+
 .song + .song {
   margin-top: 1.5rem;
 }
@@ -1083,12 +1122,14 @@ body {
 /* The producer's Connections panel, below the leader's controls, and its Devices panel under it, which
    the setup screen shows too. */
 .connections,
-.devices {
+.devices,
+.messages {
   margin-bottom: 1.5rem;
 }
 
 .connections h2,
-.devices h2 {
+.devices h2,
+.messages h2 {
   margin: 0 0 0.5rem;
   font-size: 1.25rem;
 }
@@ -1160,11 +1201,13 @@ body {
   margin-bottom: 1rem;
 }
 
-.device-name-field-label {
+.device-name-field-label,
+.message-field-label {
   color: #aaa;
 }
 
-.device-name-input {
+.device-name-input,
+.message-text-input {
   min-height: 3rem;
   min-width: 0;
   padding: 0.5rem 0.75rem;
@@ -1204,6 +1247,54 @@ body {
 .connection-button.unavailable {
   opacity: 0.4;
   cursor: default;
+}
+
+/* The producer's message panel, under the Devices panel: the quick messages in a row that wraps, the
+   text box across the panel, who the message goes to, and Send and Clear. Each choice is a label as
+   tall as a tap target. */
+.message-presets,
+.message-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-bottom: 0.75rem;
+}
+
+.message-text-field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  margin-bottom: 0.75rem;
+}
+
+.message-target {
+  margin: 0 0 0.75rem;
+  padding: 0;
+  border: 0;
+}
+
+.message-target legend {
+  padding: 0;
+  margin-bottom: 0.25rem;
+}
+
+.message-choice {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  min-height: 3rem;
+  font-size: 1.125rem;
+}
+
+.message-choice input {
+  width: 1.5rem;
+  height: 1.5rem;
+}
+
+.message-devices {
+  margin: 0;
+  padding: 0 0 0 2rem;
+  list-style: none;
 }
 
 /* The choice a target asks the producer to pick, such as ProPresenter's playlist: its label and a

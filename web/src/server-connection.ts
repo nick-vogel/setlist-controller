@@ -1,6 +1,7 @@
 import type { PageCommand } from '../../src/shared/command.ts';
 import { isReload, type DeviceHello } from '../../src/shared/devices.ts';
 import { isHeartbeat, SILENCE_MS } from '../../src/shared/heartbeat.ts';
+import { readMessageFrame, type BandMessage } from '../../src/shared/messages.ts';
 import type { Snapshot } from '../../src/shared/snapshot.ts';
 
 // A page's connection to the server's hub. It comes back on its own when the connection drops, with
@@ -9,7 +10,8 @@ import type { Snapshot } from '../../src/shared/snapshot.ts';
 // socket that reads open but carries nothing is dead. The hub sends the full snapshot on every
 // connect, so coming back is the same as a first connect, and the page never reloads on its own: only
 // the producer's Reload, which the hub sends as a frame of its own, reloads it. Each socket opens with
-// the device's hello, so the hub lists the device again after every connect.
+// the device's hello, so the hub lists the device again after every connect and sends its active
+// message from the producer again, on a frame of its own too.
 
 export type ServerConnection = {
   // Sends while the connection is open. A command sent while it is down is dropped, not queued: a
@@ -30,6 +32,8 @@ export type ConnectionOptions = {
   onStatus?(open: boolean): void;
   // What the producer's Reload does. The page reloads itself; a test hands in its own.
   onReload?(): void;
+  // The device's active message from the producer, or null when it has none.
+  onMessage?(message: BandMessage | null): void;
   visibility: Visibility;
 };
 
@@ -47,7 +51,7 @@ export function retryDelay(attempt: number): number {
   return RETRY_DELAYS_MS[Math.min(attempt, RETRY_DELAYS_MS.length - 1)]!;
 }
 
-export function connectToServer({ url, onSnapshot, onStatus, onReload = () => location.reload(), visibility }: ConnectionOptions): ServerConnection {
+export function connectToServer({ url, onSnapshot, onStatus, onReload = () => location.reload(), onMessage, visibility }: ConnectionOptions): ServerConnection {
   let socket: WebSocket | null = null;
   let hello: DeviceHello | null = null;
   // The open socket a wake replaced. It carries commands until the fresh socket opens.
@@ -99,6 +103,12 @@ export function connectToServer({ url, onSnapshot, onStatus, onReload = () => lo
       if (socket !== opened) return;
       // A heartbeat only shows the socket is alive. The page reads up once a snapshot has come.
       if (isHeartbeat(event.data)) return;
+      // Read from the current socket alone: a wake's fresh socket gets the active message on its hello.
+      const message = readMessageFrame(event.data);
+      if (message !== undefined) {
+        onMessage?.(message);
+        return;
+      }
       onSnapshot(JSON.parse(String(event.data)) as Snapshot);
       if (reported) return;
       reported = true;

@@ -3,6 +3,7 @@ import { createElement } from 'react';
 import { renderToStaticMarkup } from 'react-dom/server';
 import { describe, expect, it } from 'vitest';
 import type { Command, PageCommand } from '../src/shared/command.ts';
+import { MESSAGE_PRESETS } from '../src/shared/messages.ts';
 import { controls, leaderPagePath, leaderSocketPath, pageRole, producerPagePath, producerSocketPath, type Role } from '../src/shared/routes.ts';
 import { activeSong } from '../src/shared/safe-mode.ts';
 import type { SetCharts } from '../src/shared/set-manifest.ts';
@@ -1504,8 +1505,10 @@ describe('the producer page', () => {
 
   it("shows every leader control", () => {
     const leaderAll = buttons(page('leader', SNAPSHOT));
-    // Clear offline is the Devices panel's, the producer's own.
-    const producerButtons = buttons(page('producer', PRODUCER)).filter((label) => label !== 'Clear offline');
+    // Clear offline is the Devices panel's, and the quick messages, Send and Clear messages are the
+    // message panel's, the producer's own.
+    const producerOnly = new Set<string>(['Clear offline', ...MESSAGE_PRESETS, 'Send', 'Clear messages']);
+    const producerButtons = buttons(page('producer', PRODUCER)).filter((label) => !producerOnly.has(label));
     expect(leaderAll).toEqual(expect.arrayContaining(['Setlist', 'Timeline']));
     expect(producerButtons).not.toContain('Setlist');
     expect(producerButtons).not.toContain('Timeline');

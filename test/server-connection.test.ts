@@ -1,6 +1,7 @@
 import { afterEach, beforeEach, expect, it, vi } from 'vitest';
 import { RELOAD, type DeviceHello } from '../src/shared/devices.ts';
 import { HEARTBEAT, HEARTBEAT_MS, SILENCE_MS } from '../src/shared/heartbeat.ts';
+import { messageFrame } from '../src/shared/messages.ts';
 import { connectToServer } from '../web/src/server-connection.ts';
 
 // A WebSocket the test drives by hand: it opens, delivers and closes only when told to.
@@ -250,5 +251,38 @@ it('reloads on a reload frame that reaches the socket a wake is replacing, befor
   first.deliver(RELOAD);
 
   expect(reloads).toBe(1);
+  connection.close();
+});
+
+it('hands a message frame, and the frame that clears it, to the page, and never reads either as a snapshot', () => {
+  const snapshots: unknown[] = [];
+  const messages: unknown[] = [];
+  const connection = connectToServer({ url: 'ws://server/', onSnapshot: (snapshot) => snapshots.push(snapshot), onMessage: (message) => messages.push(message), visibility: new Visibility() });
+  FakeSocket.all[0]!.accept();
+
+  FakeSocket.all[0]!.deliver(messageFrame({ id: 'm1', text: 'Repeat chorus' }));
+  FakeSocket.all[0]!.deliver(messageFrame(null));
+
+  expect(messages).toEqual([{ id: 'm1', text: 'Repeat chorus' }, null]);
+  expect(snapshots).toEqual([]);
+  connection.close();
+});
+
+// The hub answers the fresh socket's hello with the active message, so the page loses nothing by
+// leaving the old one's, which may be older than the fresh socket's.
+it('reads no message from the socket a wake is replacing', () => {
+  const visibility = new Visibility();
+  const messages: unknown[] = [];
+  const connection = connectToServer({ url: 'ws://server/', onSnapshot: () => {}, onMessage: (message) => messages.push(message), visibility });
+  const first = FakeSocket.all[0]!;
+  first.accept();
+  first.deliver();
+
+  visibility.wake();
+  FakeSocket.all[1]!.accept();
+  FakeSocket.all[1]!.deliver(messageFrame(null));
+  first.deliver(messageFrame({ id: 'm1', text: 'Repeat chorus' }));
+
+  expect(messages).toEqual([null]);
   connection.close();
 });

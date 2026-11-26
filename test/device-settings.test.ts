@@ -13,6 +13,9 @@ import {
   readCapo,
   readClientId,
   readDeviceName,
+  readDismissedMessages,
+  storeDismissedMessage,
+  MAX_DISMISSED_MESSAGES,
   watchDeviceName,
   readChordNames,
   readDisplay,
@@ -523,5 +526,41 @@ describe('the name a device goes by', () => {
     expect(defaultDeviceName('producer', 'Keys')).toBe('Producer');
     expect(defaultDeviceName('viewer', 'Bass')).toBe('Bass');
     expect(defaultDeviceName('viewer', null)).toBe('View only');
+  });
+});
+
+describe('the messages a device dismissed', () => {
+  it('holds a dismissed message once stored, and never a message it did not dismiss', () => {
+    const storage = mapStorage();
+    expect(readDismissedMessages(storage)).toEqual([]);
+
+    storeDismissedMessage(storage, 'm1');
+
+    expect(readDismissedMessages(storage)).toEqual(['m1']);
+    expect(readDismissedMessages(storage)).not.toContain('m2');
+  });
+
+  it('keeps the newest dismissed IDs alone, so the list never grows without end', () => {
+    const storage = mapStorage();
+    const ids = Array.from({ length: MAX_DISMISSED_MESSAGES + 5 }, (_, index) => `m${index}`);
+    for (const id of ids) storeDismissedMessage(storage, id);
+
+    expect(readDismissedMessages(storage)).toEqual(ids.slice(5));
+  });
+
+  it('is one list for the browser, whatever the page role, since a message ID names one message', () => {
+    const storage = mapStorage();
+    storeDismissedMessage(storage, 'm1');
+    expect([...storage.entries.keys()]).toEqual(['setlist-controller.dismissed-messages']);
+  });
+
+  it('reads none, and stores without throwing, on a device with no storage, one that throws, or a stored value that is not a list of IDs', () => {
+    expect(readDismissedMessages(undefined)).toEqual([]);
+    expect(readDismissedMessages(throwing)).toEqual([]);
+    expect(readDismissedMessages(mapStorage({ 'setlist-controller.dismissed-messages': '{"a":1}' }))).toEqual([]);
+    expect(readDismissedMessages(mapStorage({ 'setlist-controller.dismissed-messages': 'not json' }))).toEqual([]);
+    expect(readDismissedMessages(mapStorage({ 'setlist-controller.dismissed-messages': '["m1",2]' }))).toEqual(['m1']);
+    expect(() => storeDismissedMessage(undefined, 'm1')).not.toThrow();
+    expect(() => storeDismissedMessage(throwing, 'm1')).not.toThrow();
   });
 });

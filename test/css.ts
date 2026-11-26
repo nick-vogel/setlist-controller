@@ -146,3 +146,19 @@ function compare(a: number[], b: number[]): number {
   }
   return 0;
 }
+
+// The WCAG 2.1 contrast ratio of two hex colours, such as #aaa or #2a2a2a.
+export function contrast(a: string, b: string): number {
+  const [light = 0, dark = 0] = [luminance(a), luminance(b)].sort((x, y) => y - x);
+  return (light + 0.05) / (dark + 0.05);
+}
+
+function luminance(hex: string): number {
+  const channels = /^#([0-9a-f]{2})([0-9a-f]{2})([0-9a-f]{2})$/i.exec(hex.length === 4 ? hex.replace(/[0-9a-f]/gi, '$&$&') : hex);
+  if (!channels) throw new Error(`Not a hex colour: ${hex}`);
+  const [r = 0, g = 0, b = 0] = channels.slice(1).map((channel) => {
+    const value = Number.parseInt(channel, 16) / 255;
+    return value <= 0.03928 ? value / 12.92 : ((value + 0.055) / 1.055) ** 2.4;
+  });
+  return 0.2126 * r + 0.7152 * g + 0.0722 * b;
+}
