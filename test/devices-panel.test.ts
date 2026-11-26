@@ -32,6 +32,7 @@ const SNAPSHOT: ProducerSnapshot = {
   connections: [],
   connectionProblems: [],
   devices: [],
+  activeMessages: [],
 };
 
 const SELF: Device = { client: 'self', name: 'Producer', role: 'producer', battery: 90, online: true, lastSeen: null };

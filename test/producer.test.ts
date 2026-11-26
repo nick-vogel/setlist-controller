@@ -163,7 +163,7 @@ describe('the snapshot by role', () => {
     const forLeader = await leader.snapshot(loaded);
     const forViewer = await viewer.snapshot(loaded);
 
-    expect(forProducer).toEqual({ ...forLeader, connections: [], connectionProblems: [], devices: [] });
+    expect(forProducer).toEqual({ ...forLeader, connections: [], connectionProblems: [], devices: [], activeMessages: [] });
     for (const snapshot of [forLeader, forViewer]) {
       expect(snapshot).not.toHaveProperty('connections');
       expect(snapshot).not.toHaveProperty('connectionProblems');

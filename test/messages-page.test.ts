@@ -35,6 +35,7 @@ const SNAPSHOT: ProducerSnapshot = {
   connections: [],
   connectionProblems: [],
   devices: [],
+  activeMessages: [],
 };
 
 const MESSAGE = { id: 'm1', text: 'Hold after this song' };

@@ -285,6 +285,7 @@ const BASE_SNAPSHOT: ProducerSnapshot = {
   connections: [],
   connectionProblems: [],
   devices: [],
+  activeMessages: [],
 };
 
 describe('activeSong', () => {

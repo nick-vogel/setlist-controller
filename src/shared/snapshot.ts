@@ -1,4 +1,5 @@
 import type { Device } from './devices.ts';
+import type { ActiveMessage } from './messages.ts';
 import type { PowerState } from './power.ts';
 
 // The state the hub sends to every client, whole, on connect and on every change. Between them the
@@ -286,6 +287,7 @@ export type ConnectionsPart = {
   connectionProblems: string[];
 };
 
-// What the hub sends the producer page: the playback snapshot plus the connections part and the
-// devices in the hub's registry (devices.ts). Viewers and leaders get the playback snapshot alone.
-export type ProducerSnapshot = Snapshot & ConnectionsPart & { devices: Device[] };
+// What the hub sends the producer page: the playback snapshot plus the connections part, the devices
+// in the hub's registry (devices.ts) and the active messages, newest first (messages.ts). Viewers and
+// leaders get the playback snapshot alone.
+export type ProducerSnapshot = Snapshot & ConnectionsPart & { devices: Device[]; activeMessages: ActiveMessage[] };

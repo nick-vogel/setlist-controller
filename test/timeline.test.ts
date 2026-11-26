@@ -56,6 +56,7 @@ const SNAPSHOT: ProducerSnapshot = {
   connections: [],
   connectionProblems: [],
   devices: [],
+  activeMessages: [],
 };
 
 describe('timeline layout geometry', () => {
