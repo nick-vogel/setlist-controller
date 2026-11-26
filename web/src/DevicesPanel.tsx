@@ -1,6 +1,7 @@
 import type { DeviceCommand } from '../../src/shared/command.ts';
 import { ROLE_LABELS, type Device } from '../../src/shared/devices.ts';
 import type { ActiveMessage } from '../../src/shared/messages.ts';
+import { clockTime } from './clock-time.ts';
 
 // Every device in the hub's registry, in the order each first said hello: its name, its role, Online
 // or Offline with the time it was last seen, and its battery. On the producer page a device that shows
@@ -20,7 +21,10 @@ export function DevicesPanel({
   producer?: { ownClient: string; connected: boolean; send(command: DeviceCommand): void; activeMessages: ActiveMessage[] };
 }) {
   const anyOffline = devices.some((device) => !device.online);
-  const messageOn = (client: string) => producer?.activeMessages.find((message) => message.shownBy.includes(client))?.text;
+  const messageLine = (client: string) => {
+    const shown = producer?.activeMessages.find((message) => message.shownBy.includes(client));
+    return shown && <span className="device-message">{`Message: ${shown.text}`}</span>;
+  };
   return (
     <section className="devices" aria-labelledby="devices">
       <h2 id="devices">Devices</h2>
@@ -34,7 +38,7 @@ export function DevicesPanel({
               <span className="device-role">{ROLE_LABELS[device.role]}</span>
               <span className="device-status">{device.online ? 'Online' : lastSeenLine(device.lastSeen)}</span>
               <span className="device-battery">{device.battery === null ? 'Battery not reported' : `Battery ${device.battery}%`}</span>
-              {messageOn(device.client) !== undefined && <span className="device-message">{`Message: ${messageOn(device.client)}`}</span>}
+              {messageLine(device.client)}
               {producer && device.online && device.client !== producer.ownClient && (
                 <button
                   type="button"
@@ -67,9 +71,4 @@ export function DevicesPanel({
 function lastSeenLine(lastSeen: number | null): string {
   if (lastSeen === null) return 'Offline';
   return `Offline, last seen ${clockTime(lastSeen)}`;
-}
-
-// The hour and minute of a time on the server's wall clock, in the page's time zone and locale.
-export function clockTime(time: number): string {
-  return new Date(time).toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' });
 }

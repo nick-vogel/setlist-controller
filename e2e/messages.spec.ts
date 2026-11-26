@@ -249,8 +249,9 @@ test("the banner covers no phone's Reconnecting banner, at the top of the page o
   producer.close();
 });
 
-test('a message to all devices shows no banner on the producer page, and a Dismiss on a leader page hides it in its other tab in the same browser', async ({ browser }) => {
+test('a message to all devices shows no banner on a producer page, and in one browser a Dismiss on a chosen producer page leaves a leader page alone while a Dismiss on a leader page hides it in its other tab', async ({ browser }) => {
   e2e = await startE2eRig();
+  const sender = await device(browser, e2e.producerUrl);
   const browserStorage = await browser.newContext();
   const open = async (url: string) => {
     const page = await browserStorage.newPage();
@@ -261,15 +262,31 @@ test('a message to all devices shows no banner on the producer page, and a Dismi
   const producer = await open(e2e.producerUrl);
   const leader = await open(e2e.leaderUrl);
   const otherTab = await open(e2e.leaderUrl);
-  await sendMessage(producer, 'All devices', 'Hold after this song');
+  await sendMessage(sender, 'All devices', 'Hold after this song');
   for (const page of [leader, otherTab]) await expect(banner(page)).toContainText('Hold after this song');
   await expect(activeMessages(producer)).toHaveText([/^Hold after this song/]);
+  for (const page of [sender, producer]) await expect(banner(page)).toHaveCount(0);
+
+  // The browser is one device for each page role, its producer page and its leader pages, the sender's
+  // only choices.
+  await panel(sender).getByLabel('Chosen devices').check();
+  await expect(panel(sender).getByRole('checkbox')).toHaveCount(2);
+  for (const choice of await panel(sender).getByRole('checkbox').all()) await choice.check();
+  await panel(sender).getByLabel('Message', { exact: true }).fill('Watch leader');
+  await panel(sender).getByRole('button', { name: 'Send', exact: true }).click();
+  for (const page of [producer, leader, otherTab]) await expect(banner(page)).toContainText('Watch leader');
+
+  await banner(producer).getByRole('button', { name: 'Dismiss' }).click();
   await expect(banner(producer)).toHaveCount(0);
+  await leader.reload();
+  await expect(leader.getByText('Intro').first()).toBeVisible();
+  await expect(banner(leader)).toContainText('Watch leader');
 
   await banner(leader).getByRole('button', { name: 'Dismiss' }).click();
 
   await expect(banner(otherTab)).toHaveCount(0);
 });
+
 
 test("the battery warning joins the top of the leader page under the banner, and Count in stays where it was as either comes or goes", async ({ browser, page }) => {
   const power = manualPowerSource({ source: 'ac', percent: 100 });

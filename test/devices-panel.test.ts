@@ -99,14 +99,14 @@ describe("the producer's Devices panel, with the active messages", () => {
   it('marks each device with the message it shows, and no other device', () => {
     const activeMessages = [
       { id: 'm2', text: 'Repeat chorus', to: 'viewers' as const, sent: 2, shownBy: ['phone', 'gone'] },
-      { id: 'm1', text: 'Hold after this song', to: 'all' as const, sent: 1, shownBy: ['self'] },
+      { id: 'm1', text: 'Hold after this song', to: 'all' as const, sent: 1, shownBy: ['ipad'] },
     ];
     const markup = renderToStaticMarkup(createElement(Page, { role: 'producer', snapshot: { ...SNAPSHOT, devices: [SELF, PHONE, IPAD, GONE], activeMessages }, connected: true, send: () => {}, clientId: 'self' }));
 
     expect(rows(devicesSection(markup)!).map(({ name, text }) => [name, text.slice(4)])).toEqual([
-      ['Producer', ['Message: Hold after this song']],
+      ['Producer', []],
       ['Keys', ['Message: Repeat chorus']],
-      ['Leader', []],
+      ['Leader', ['Message: Hold after this song']],
       ['Drums', ['Message: Repeat chorus']],
     ]);
   });

@@ -148,6 +148,21 @@ describe("the board's active messages, as the producer page lists them", () => {
     expect(messages.active([]).map(({ text }) => text)).toEqual(['Repeat bridge', 'Repeat chorus']);
   });
 
+  it('keeps a chosen message listed with its whole target after a newer message to the view-only devices covers it', () => {
+    const messages = board();
+    messages.send('Watch leader', ['keys', 'ipad']);
+    messages.send('Repeat chorus', 'viewers');
+    const devices = [
+      { client: 'keys', role: 'viewer' },
+      { client: 'ipad', role: 'leader' },
+    ] as const;
+
+    expect(messages.active(devices).map(({ text, to, shownBy }) => [text, to, shownBy])).toEqual([
+      ['Repeat chorus', 'viewers', ['keys']],
+      ['Watch leader', ['keys', 'ipad'], ['ipad']],
+    ]);
+  });
+
   it('lists a message to all devices alone, since it replaces every older one', () => {
     const messages = board();
     messages.send('Repeat chorus', 'viewers');

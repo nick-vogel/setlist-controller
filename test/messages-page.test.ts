@@ -139,7 +139,7 @@ describe("the producer's message panel, with the active messages", () => {
     const markup = active([
       { id: 'm3', text: 'Watch leader', to: ['ipad', 'keys'], sent: at(9, 43), shownBy: ['keys'] },
       { id: 'm2', text: 'Repeat chorus', to: 'viewers', sent: at(9, 42), shownBy: [] },
-      { id: 'm1', text: 'Hold after this song', to: 'all', sent: at(9, 41), shownBy: ['self'] },
+      { id: 'm1', text: 'Hold after this song', to: 'all', sent: at(9, 41), shownBy: [] },
     ]);
 
     expect(listed(markup)).toEqual([

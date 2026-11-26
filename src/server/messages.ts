@@ -3,12 +3,12 @@ import type { ActiveMessage, BandMessage, MessageTarget } from '../shared/messag
 import type { Role } from '../shared/routes.ts';
 
 // The producer's active messages, from which the hub reads the one message each device shows and the
-// list the producer page shows, each with its target and send time. A
-// device shows the newest message that reaches it, so a second send replaces the first wherever both
-// reach. A message to all devices reaches no producer page, since the producer page lists the active
-// messages instead (#28); a chosen producer page is reached. A message also stands for a device that
-// is not connected yet: one to all devices or every view-only page reaches a page that first connects after the send, and one to chosen devices reaches
-// a chosen device when it comes back. The board lives in memory alone, as the device registry does,
+// list the producer page shows, each with its target and send time. A device shows the newest message
+// that reaches it, so a second send replaces the first wherever both reach. A message to all devices
+// reaches no producer page, since the producer page lists the active messages instead
+// (setlist-controller#28); a chosen producer page is reached. A message also stands for a device that
+// is not connected yet: one to all devices or every view-only page reaches a page that first connects
+// after the send, and one to chosen devices reaches a chosen device when it comes back. The board lives in memory alone, as the device registry does,
 // so a server restart clears it.
 
 export type MessageBoard = {

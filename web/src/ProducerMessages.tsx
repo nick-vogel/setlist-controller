@@ -2,7 +2,7 @@ import { useState } from 'react';
 import type { DeviceCommand } from '../../src/shared/command.ts';
 import { ROLE_LABELS, type Device } from '../../src/shared/devices.ts';
 import { MAX_MESSAGE_TEXT, MESSAGE_PRESETS, messageText, type ActiveMessage, type MessageTarget } from '../../src/shared/messages.ts';
-import { clockTime } from './DevicesPanel.tsx';
+import { clockTime } from './clock-time.ts';
 
 // The producer's messages to the band, under the Devices panel. First the active messages, newest
 // first, each with who it was sent to and when, so the producer sees one that does not reach the

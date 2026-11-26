@@ -11,8 +11,8 @@ import { isClientId } from './devices.ts';
 export type BandMessage = { id: string; text: string };
 
 // Who a message reaches: every page but the producer pages, every view-only page, or the devices with
-// these client IDs. A
-// device takes its role from its socket (src/server/hub.ts), never from its last hello.
+// these client IDs. A device takes its role from its socket (src/server/hub.ts), never from its last
+// hello.
 export type MessageTarget = 'all' | 'viewers' | string[];
 
 // An active message as the producer's snapshot carries it: who it reaches (for chosen devices, those

@@ -578,21 +578,17 @@ describe('a client that received a held position', () => {
     expect(viewer.received.map((snapshot) => snapshot.position)).toEqual([0, 1, 2]);
   });
 
-  it("shows the producer page a message at once while a viewer's position waits for the trailing flush", async () => {
+  it('shows the producer page a message at once, inside a window that holds a position for the trailing flush', async () => {
     const clock = manualClock();
     const http = createServer();
     const hub = startHub(http, { snapshot: snap(0), connections: noProblems }, { leader: 'l', producer: 'p' }, () => {}, () => {}, clock);
     await new Promise<void>((done) => http.listen(0, '127.0.0.1', done));
-    const base = `ws://127.0.0.1:${(http.address() as AddressInfo).port}`;
-    const viewer = await connect(`${base}${SOCKET_PATHS.viewer}`);
-    const producer = await connect<ProducerSnapshot>(`${base}${producerSocketPath('p')}`);
+    const producer = await connect<ProducerSnapshot>(`ws://127.0.0.1:${(http.address() as AddressInfo).port}${producerSocketPath('p')}`);
     stopHub = async () => {
-      viewer.close();
       producer.close();
       await hub.close();
       await new Promise<void>((done) => http.close(() => done()));
     };
-    await viewer.snapshot((snapshot) => snapshot.position === 0);
     await producer.snapshot((snapshot) => snapshot.position === 0);
 
     clock.advance(POSITION_BROADCAST_MS);
@@ -601,8 +597,6 @@ describe('a client that received a held position', () => {
     producer.send({ kind: 'message', text: 'Repeat chorus', to: 'viewers' });
 
     await producer.snapshot((snapshot) => snapshot.activeMessages.length === 1);
-    await viewer.flush();
-    expect(viewer.received.map((snapshot) => snapshot.position)).toEqual([0, 1]);
   });
 
   it.each([

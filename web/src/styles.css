@@ -1164,7 +1164,7 @@ main.leader-page {
 
 /* One target: its label, its state, and its buttons on the right: Arm, Disarm, Fire again and the
    target's own, which wrap onto more lines when they outgrow the row. One device the same way, with
-   its Reload on the right. */
+   its Reload on the right, and one of the producer's active messages the same way, with no button. */
 .connection,
 .device,
 .message-active {
