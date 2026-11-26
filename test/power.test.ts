@@ -209,6 +209,7 @@ const snapshotOn = (power: PowerState): ProducerSnapshot => ({
   connections: [],
   connectionProblems: [],
   devices: [],
+  activeMessages: [],
 });
 const banner = (markup: string) => /<div class="power-warning ([a-z]+)" role="alert"><p class="power-warning-text">([^<]*)<\/p><button[^>]*>([^<]*)<\/button><\/div>/.exec(markup)?.slice(1);
 const page = (role: 'viewer' | 'leader' | 'producer', power: PowerState, dismissedPower: PowerWarningLevel | null = null) =>

@@ -36,6 +36,15 @@ export function readStylesheet(path: string) {
       }
       return winner?.value;
     },
+    // The value the last element of `path` takes from the nearest of itself and its ancestors that
+    // sets `property`, as an inherited property such as color does. Throws when none sets it.
+    inherited(path: Element[], property: string): string {
+      for (let end = path.length; end > 0; end -= 1) {
+        const found = this.value(path.slice(0, end), property);
+        if (found !== undefined) return found;
+      }
+      throw new Error(`No rule sets ${property} on ${JSON.stringify(path.at(-1))} or its ancestors`);
+    },
   };
 }
 

@@ -226,7 +226,7 @@ function deviceStorage(): DeviceStorage | undefined {
 }
 
 // The leader page, the producer page or the view-only page, once the server has sent a snapshot. The
-// producer page is the leader page plus the Connections, Devices and Message the band panels, from the
+// producer page is the leader page plus the Connections, Message the band and Devices panels, from the
 // producer's own snapshot. The producer's message, when there is one, opens every page it reaches. The
 // view-only page opens on the band member's part picker, and with a part it shows the chart view in
 // place of the now-playing panel and the setlist, with the display picker after the part picker, and,
@@ -306,12 +306,12 @@ export function Page({
   const connections = role === 'producer' && 'connections' in snapshot && (
     <>
       <ConnectionsPanel connections={snapshot.connections} problems={snapshot.connectionProblems} connected={connected} setKnown={snapshot.set !== null} send={send} />
-      <DevicesPanel devices={snapshot.devices} producer={{ ownClient: clientId, connected, send }} />
-      <ProducerMessages devices={snapshot.devices} ownClient={clientId} connected={connected} send={send} />
+      <ProducerMessages devices={snapshot.devices} activeMessages={snapshot.activeMessages} ownClient={clientId} connected={connected} send={send} />
+      <DevicesPanel devices={snapshot.devices} producer={{ ownClient: clientId, connected, send, activeMessages: snapshot.activeMessages }} />
     </>
   );
-  // The name field: after the pickers and the Auto-Lock tip on the view-only page, under the Message
-  // the band panel on the producer page, and last on the leader's Setlist page.
+  // The name field: after the pickers and the Auto-Lock tip on the view-only page, under the Devices
+  // panel on the producer page, and last on the leader's Setlist page.
   const nameField = <DeviceNameField name={deviceName} placeholder={defaultDeviceName(role, part)} onName={onDeviceName} />;
 
   const messageBanner = <MessageBanner message={message} onDismiss={onDismissMessage} />;

@@ -63,7 +63,7 @@ test('Dismiss hides the message on that device across a reload until a newer one
   const keys = await device(browser, e2e.viewerUrl, 'Keys phone');
   const bass = await device(browser, e2e.viewerUrl, 'Bass phone');
   await sendMessage(producer, 'All devices', 'Hold after this song');
-  for (const page of [producer, keys, bass]) await expect(banner(page)).toContainText('Hold after this song');
+  for (const page of [keys, bass]) await expect(banner(page)).toContainText('Hold after this song');
 
   await banner(keys).getByRole('button', { name: 'Dismiss' }).click();
 
@@ -97,6 +97,83 @@ test('Clear takes the message off every device', async ({ browser }) => {
   for (const page of [keys, leader]) await expect(banner(page)).toHaveCount(0);
 });
 
+// The producer panel's active messages, newest first.
+const activeMessages = (producer: Page) => panel(producer).getByRole('list', { name: 'Active messages' }).getByRole('listitem');
+const deviceRow = (producer: Page, name: string) => producer.getByRole('region', { name: 'Devices' }).getByRole('listitem', { name });
+
+test('the producer page shows each active message with its target and send time, and a newer one or Clear changes it at once', async ({ browser }) => {
+  e2e = await startE2eRig();
+  const producer = await device(browser, e2e.producerUrl);
+  await device(browser, e2e.viewerUrl, 'Keys phone');
+  await device(browser, e2e.viewerUrl, 'Bass phone');
+  await expect(deviceRow(producer, 'Bass phone')).toBeVisible();
+  await expect(panel(producer)).toContainText('No active message.');
+
+  await sendMessage(producer, 'View-only devices', 'Repeat chorus');
+  await sendMessage(producer, ['Keys phone, View only'], 'Watch leader');
+
+  await expect(activeMessages(producer)).toHaveText([/^Watch leader\s*To Keys phone, View only\s*Sent \d/, /^Repeat chorus\s*To view-only devices\s*Sent \d/]);
+  await expect(deviceRow(producer, 'Keys phone')).toContainText('Message: Watch leader');
+  await expect(deviceRow(producer, 'Bass phone')).toContainText('Message: Repeat chorus');
+
+  await sendMessage(producer, ['Keys phone, View only'], 'Repeat bridge');
+  await expect(activeMessages(producer)).toHaveText([/^Repeat bridge\s*To Keys phone, View only/, /^Repeat chorus\s*To view-only devices/]);
+
+  await sendMessage(producer, 'All devices', 'Hold after this song');
+  await expect(activeMessages(producer)).toHaveText([/^Hold after this song\s*To all devices\s*Sent \d/]);
+  await expect(deviceRow(producer, 'Bass phone')).toContainText('Message: Hold after this song');
+
+  await panel(producer).getByRole('button', { name: 'Clear messages' }).click();
+  await expect(activeMessages(producer)).toHaveCount(0);
+  await expect(panel(producer)).toContainText('No active message.');
+  await expect(deviceRow(producer, 'Keys phone')).not.toContainText('Message:');
+});
+
+test('a producer page that reloads shows the active message again', async ({ browser }) => {
+  e2e = await startE2eRig();
+  const producer = await device(browser, e2e.producerUrl);
+  await device(browser, e2e.viewerUrl, 'Keys phone');
+  await expect(deviceRow(producer, 'Keys phone')).toBeVisible();
+  await sendMessage(producer, ['Keys phone, View only'], 'Watch leader');
+  await expect(activeMessages(producer)).toHaveText([/^Watch leader\s*To Keys phone, View only/]);
+
+  await producer.reload();
+
+  await expect(activeMessages(producer)).toHaveText([/^Watch leader\s*To Keys phone, View only\s*Sent \d/]);
+  await expect(deviceRow(producer, 'Keys phone')).toContainText('Message: Watch leader');
+});
+
+test('a quick message or Clear leaves the quick messages and Clear messages where they were on the producer page', async ({ browser }) => {
+  e2e = await startE2eRig();
+  const producer = await device(browser, e2e.producerUrl);
+  await device(browser, e2e.viewerUrl, 'Keys phone');
+  await device(browser, e2e.viewerUrl, 'Bass phone');
+  await expect(deviceRow(producer, 'Bass phone')).toBeVisible();
+  const messages = panel(producer);
+  const controls = [messages.getByRole('button', { name: 'Repeat chorus' }), messages.getByRole('button', { name: 'Clear messages' })];
+  const tops = () => Promise.all(controls.map((control) => control.evaluate((element) => element.getBoundingClientRect().top + window.scrollY)));
+
+  await messages.getByLabel('View-only devices').check();
+  const before = await tops();
+  await messages.getByRole('button', { name: 'Repeat chorus' }).click();
+  await expect(activeMessages(producer)).toHaveCount(1);
+  await expect(deviceRow(producer, 'Bass phone')).toContainText('Message: Repeat chorus');
+  expect(await tops()).toEqual(before);
+
+  await messages.getByLabel('Chosen devices').check();
+  await messages.getByRole('checkbox', { name: 'Keys phone, View only' }).check();
+  const chosen = await tops();
+  await messages.getByRole('button', { name: 'Watch leader' }).click();
+  await expect(activeMessages(producer)).toHaveCount(2);
+  await expect(deviceRow(producer, 'Keys phone')).toContainText('Message: Watch leader');
+  expect(await tops()).toEqual(chosen);
+
+  await messages.getByRole('button', { name: 'Clear messages' }).click();
+  await expect(messages).toContainText('No active message.');
+  await expect(deviceRow(producer, 'Keys phone')).not.toContainText('Message:');
+  expect(await tops()).toEqual(chosen);
+});
+
 test('a phone whose connection drops and returns shows the newest message, the one sent while it was away', async ({ page }) => {
   const proxied = await startProxiedE2eRig({ playing: false, position: 0 });
   e2e = proxied;
@@ -121,13 +198,16 @@ test('a phone whose connection drops and returns shows the newest message, the o
 test('the banner holds to the top of a page scrolled down', async ({ browser }) => {
   e2e = await startE2eRig();
   const producer = await device(browser, e2e.producerUrl);
-  await sendMessage(producer, 'All devices', 'Watch leader');
-  await expect(banner(producer)).toBeVisible();
+  // A second producer page, the longest page, which only a chosen message reaches.
+  const booth = await device(browser, e2e.producerUrl, 'Booth');
+  await expect(producer.getByRole('listitem', { name: 'Booth' })).toBeVisible();
+  await sendMessage(producer, ['Booth, Producer'], 'Watch leader');
+  await expect(banner(booth)).toBeVisible();
 
-  await producer.evaluate(() => window.scrollTo(0, document.body.scrollHeight));
+  await booth.evaluate(() => window.scrollTo(0, document.body.scrollHeight));
 
-  await expect.poll(() => producer.evaluate(() => window.scrollY)).toBeGreaterThan(200);
-  await expect.poll(async () => (await banner(producer).boundingBox())?.y).toBe(0);
+  await expect.poll(() => booth.evaluate(() => window.scrollY)).toBeGreaterThan(200);
+  await expect.poll(async () => (await banner(booth).boundingBox())?.y).toBe(0);
 });
 
 async function topmostAtCentre(page: Page, selector: string): Promise<string | null> {
@@ -200,8 +280,9 @@ test("the banner covers no phone's Reconnecting banner, at the top of the page o
   producer.close();
 });
 
-test('a Dismiss on the producer page leaves the message on a leader page in the same browser, and a Dismiss on the leader page hides it in its other tab', async ({ browser }) => {
+test('a message to all devices shows no banner on a producer page, and in one browser a Dismiss on a chosen producer page leaves a leader page alone while a Dismiss on a leader page hides it in its other tab', async ({ browser }) => {
   e2e = await startE2eRig();
+  const sender = await device(browser, e2e.producerUrl);
   const browserStorage = await browser.newContext();
   const open = async (url: string) => {
     const page = await browserStorage.newPage();
@@ -212,19 +293,31 @@ test('a Dismiss on the producer page leaves the message on a leader page in the 
   const producer = await open(e2e.producerUrl);
   const leader = await open(e2e.leaderUrl);
   const otherTab = await open(e2e.leaderUrl);
-  await sendMessage(producer, 'All devices', 'Hold after this song');
-  for (const page of [producer, leader, otherTab]) await expect(banner(page)).toContainText('Hold after this song');
+  await sendMessage(sender, 'All devices', 'Hold after this song');
+  for (const page of [leader, otherTab]) await expect(banner(page)).toContainText('Hold after this song');
+  await expect(activeMessages(producer)).toHaveText([/^Hold after this song/]);
+  for (const page of [sender, producer]) await expect(banner(page)).toHaveCount(0);
+
+  // The browser is one device for each page role, its producer page and its leader pages, the sender's
+  // only choices.
+  await panel(sender).getByLabel('Chosen devices').check();
+  await expect(panel(sender).getByRole('checkbox')).toHaveCount(2);
+  for (const choice of await panel(sender).getByRole('checkbox').all()) await choice.check();
+  await panel(sender).getByLabel('Message', { exact: true }).fill('Watch leader');
+  await panel(sender).getByRole('button', { name: 'Send', exact: true }).click();
+  for (const page of [producer, leader, otherTab]) await expect(banner(page)).toContainText('Watch leader');
 
   await banner(producer).getByRole('button', { name: 'Dismiss' }).click();
   await expect(banner(producer)).toHaveCount(0);
   await leader.reload();
   await expect(leader.getByText('Intro').first()).toBeVisible();
-  await expect(banner(leader)).toContainText('Hold after this song');
+  await expect(banner(leader)).toContainText('Watch leader');
 
   await banner(leader).getByRole('button', { name: 'Dismiss' }).click();
 
   await expect(banner(otherTab)).toHaveCount(0);
 });
+
 
 test("the battery warning joins the top of the leader page under the banner, and Count in stays where it was as either comes or goes", async ({ browser, page }) => {
   const power = manualPowerSource({ source: 'ac', percent: 100 });

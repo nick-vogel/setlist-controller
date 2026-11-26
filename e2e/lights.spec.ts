@@ -86,8 +86,8 @@ test("a cue list of a few hundred cues scrolls inside the lights' row, which kee
 
   await row.evaluate((element) => element.scrollIntoView({ block: 'start' }));
 
-  // The page's next row: the Devices panel follows the Connections panel.
-  const next = page.getByRole('region', { name: 'Devices' });
+  // The page's next row: the Message the band panel follows the Connections panel.
+  const next = page.getByRole('region', { name: 'Message the band' });
   await expect(next).toBeInViewport();
   expect(await list.evaluate((element) => element.scrollHeight > element.clientHeight)).toBe(true);
 

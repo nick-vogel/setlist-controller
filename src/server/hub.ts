@@ -4,7 +4,7 @@ import { WebSocket, WebSocketServer } from 'ws';
 import { parseCommand, parseConnectionCommand, parseDeviceCommand, type Command, type ConnectionCommand } from '../shared/command.ts';
 import { parseHello, RELOAD, type Device } from '../shared/devices.ts';
 import { HEARTBEAT, HEARTBEAT_MS } from '../shared/heartbeat.ts';
-import { isMessageFrame, messageFrame } from '../shared/messages.ts';
+import { isMessageFrame, messageFrame, type ActiveMessage } from '../shared/messages.ts';
 import { controls, leaderSocketPath, producerSocketPath, SOCKET_PATHS, type Role } from '../shared/routes.ts';
 import type { ConnectionsPart, ProducerSnapshot, Snapshot } from '../shared/snapshot.ts';
 import { realClock, type Clock } from './clock.ts';
@@ -13,8 +13,8 @@ import { createMessageBoard } from './messages.ts';
 
 // Sends the full snapshot on connect and on every change, pacing position-only changes (below). The
 // snapshot is small, so no diffs. Viewers and leaders get the playback snapshot; producers get it plus
-// the connections part and the devices. Each role's snapshot goes out only when it changed, so a change
-// to the connections or the devices alone reaches no viewer.
+// the connections part, the devices and the active messages. Each role's snapshot goes out only when it
+// changed, so a change to the connections, the devices or the messages alone reaches no viewer.
 //
 // Two protections keep stage browsers on slow or congested Wi-Fi current:
 // 1. Per-socket latest-only coalescing: while a socket still has a send in flight, no further
@@ -35,7 +35,10 @@ import { createMessageBoard } from './messages.ts';
 // The producer's messages (messages.ts) go to each socket that said hello and that a message reaches,
 // by the socket's role and the client ID of its hello. Every hello is answered with the device's
 // active message, or a frame that clears it, so a page shows the right one after a reload, a
-// reconnect or a wake, and after a Clear it missed while it was away.
+// reconnect or a wake, and after a Clear it missed while it was away. A send or a Clear goes to the
+// producer sockets alone as a new producer snapshot, at once and outside the position pacing: it
+// changes no playback socket's snapshot, so it must not flush a position held for the trailing flush
+// to one.
 //
 // Every socket may introduce itself with a hello (devices.ts), the view-only one included, and the
 // hub keeps the devices that did in its registry. The socket's role goes in the registry, never one
@@ -93,10 +96,13 @@ export function startHub(
 
   const devices = createDeviceRegistry<WebSocket>();
   const messages = createMessageBoard();
-  // The newest published state, which a change to the devices encodes again.
+  // The newest published state, which a change to the devices or the messages encodes again, and the
+  // published state the last broadcast carried.
   let published = initial;
+  let broadcastedState = initial;
+  const activeMessages = () => messages.active(devices.list());
   // The newest published snapshots, and the last ones broadcast across connected sockets.
-  let latest = encode(initial.snapshot, initial.connections, devices.list());
+  let latest = encode(initial.snapshot, initial.connections, devices.list(), activeMessages());
   let latestKey = nonPositionKey(initial.snapshot, initial.connections, devices.list());
   let broadcasted = latest;
   let broadcastedKey = latestKey;
@@ -172,10 +178,21 @@ export function startHub(
 
   const devicesChanged = () => hub.publish(published.snapshot, published.connections);
 
+  // The broadcast producer snapshot takes the new messages too, at the broadcast position, so a later
+  // publish compares against what was last broadcast with the messages as they are now: a publish
+  // that changes nothing still changes nothing, and a position that reverts is still brought back.
+  const messagesChanged = () => {
+    const active = activeMessages();
+    latest = encode(published.snapshot, published.connections, devices.list(), active);
+    broadcasted = { playback: broadcasted.playback, producer: encode(broadcastedState.snapshot, broadcastedState.connections, devices.list(), active).producer };
+    for (const [socket, state] of clients) if (state.role === 'producer') deliver(socket, state);
+  };
+
   const broadcast = () => {
     const changedPlayback = latest.playback !== broadcasted.playback;
     const changedProducer = latest.producer !== broadcasted.producer;
     broadcasted = latest;
+    broadcastedState = published;
     broadcastedKey = latestKey;
     if (!changedPlayback && !changedProducer) return;
     for (const [socket, state] of clients) deliver(socket, state);
@@ -224,12 +241,19 @@ export function startHub(
       if (deviceCommand?.kind === 'reload') sendToDevice(deviceCommand.client, RELOAD);
       else if (deviceCommand?.kind === 'clear-offline' && devices.clearOffline()) devicesChanged();
       else if (deviceCommand?.kind === 'message') {
-        const sent = messages.send(deviceCommand.text, deviceCommand.to);
+        // A message to all devices replaces every older one on the board, so a chosen producer page,
+        // which it does not reach, loses its message too: each socket whose message changed is told.
+        const before = new Map([...clients].map(([other, otherState]) => [other, otherState.client === null ? null : messages.activeFor(otherState.client, otherState.role)]));
+        messages.send(deviceCommand.text, deviceCommand.to);
         for (const [other, otherState] of clients) {
-          if (otherState.client !== null && messages.activeFor(otherState.client, otherState.role)?.id === sent.id) queue(other, otherState, messageFrame(sent));
+          if (otherState.client === null) continue;
+          const now = messages.activeFor(otherState.client, otherState.role);
+          if (now?.id !== before.get(other)?.id) queue(other, otherState, messageFrame(now));
         }
+        messagesChanged();
       } else if (deviceCommand?.kind === 'clear-messages' && messages.clear()) {
         for (const [other, otherState] of clients) sendActiveMessage(other, otherState);
+        messagesChanged();
       }
     });
     deliver(socket, state);
@@ -248,7 +272,7 @@ export function startHub(
     publish(snapshot, connections) {
       if (closed) return;
       published = { snapshot, connections };
-      const next = encode(snapshot, connections, devices.list());
+      const next = encode(snapshot, connections, devices.list(), activeMessages());
       const nextKey = nonPositionKey(snapshot, connections, devices.list());
       latest = next;
       latestKey = nextKey;
@@ -301,13 +325,15 @@ export function startHub(
   return hub;
 }
 
-function encode(snapshot: Snapshot, connections: ConnectionsPart, devices: Device[]): Encoded {
-  const producer: ProducerSnapshot = { ...snapshot, ...connections, devices };
+function encode(snapshot: Snapshot, connections: ConnectionsPart, devices: Device[], activeMessages: ActiveMessage[]): Encoded {
+  const producer: ProducerSnapshot = { ...snapshot, ...connections, devices, activeMessages };
   return { playback: JSON.stringify(snapshot), producer: JSON.stringify(producer) };
 }
 
 // Everything in a snapshot, connections part and devices except intra-section playback progress
-// (position, and now's bar and fraction). Two states with the same key differ only in where the
+// (position, and now's bar and fraction). The active messages are left out: a send or a Clear reaches
+// the producer sockets on its own (messagesChanged), and a change to a device's message comes with a
+// change to the devices. Two states with the same key differ only in where the
 // playhead sits inside the same song and section (or both outside any section with a known position).
 function nonPositionKey(snapshot: Snapshot, connections: ConnectionsPart, devices: Device[]): string {
   const { position, now, ...rest } = snapshot;

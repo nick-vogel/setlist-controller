@@ -1,20 +1,27 @@
 import { useState } from 'react';
 import type { DeviceCommand } from '../../src/shared/command.ts';
 import { ROLE_LABELS, type Device } from '../../src/shared/devices.ts';
-import { MAX_MESSAGE_TEXT, MESSAGE_PRESETS, messageText, type MessageTarget } from '../../src/shared/messages.ts';
+import { MAX_MESSAGE_TEXT, MESSAGE_PRESETS, messageText, type ActiveMessage, type MessageTarget } from '../../src/shared/messages.ts';
+import { clockTime } from './clock-time.ts';
 
-// The producer's messages to the band, under the Devices panel. A quick message sends at once to the
+// The producer's messages to the band, above the Devices panel. A quick message sends at once to the
 // devices picked under Send to, so the producer types nothing mid-song. Then the text box, who the
-// message goes to, Send, and Clear, which takes every active message off every device. Chosen devices
-// are picked from the Devices panel's list, by client ID, never by name, since two devices may share
-// one. Every button is disabled while the page is not connected, as the panel's are.
+// message goes to, Send, and Clear, which takes every active message off every device. Last the active
+// messages, newest first, each with who it was sent to and when, so the producer sees one that does not
+// reach the producer page's own banner. The list and the Devices panel's message lines grow on a send
+// and shrink on a Clear, so both sit under every control here and nothing a finger is on moves
+// (e2e/messages.spec.ts). Chosen devices are picked from the Devices panel's list, by client ID, never
+// by name, since two devices may share one. Every button is disabled while the page is not connected,
+// as the panel's are.
 export function ProducerMessages({
   devices,
+  activeMessages,
   ownClient,
   connected,
   send,
 }: {
   devices: Device[];
+  activeMessages: ActiveMessage[];
   ownClient: string;
   connected: boolean;
   send(command: DeviceCommand): void;
@@ -98,6 +105,19 @@ export function ProducerMessages({
           Clear messages
         </button>
       </div>
+      {activeMessages.length === 0 ? (
+        <p className="status">No active message.</p>
+      ) : (
+        <ul className="message-active-list" aria-label="Active messages">
+          {activeMessages.map((message) => (
+            <li key={message.id} className="message-active">
+              <span className="message-active-text">{message.text}</span>
+              <span className="message-active-target">{targetLine(message.to, deviceLabels(devices))}</span>
+              <span className="message-active-sent">{`Sent ${clockTime(message.sent)}`}</span>
+            </li>
+          ))}
+        </ul>
+      )}
     </section>
   );
 }
@@ -108,16 +128,33 @@ const TARGETS = [
   { value: 'chosen', label: 'Chosen devices' },
 ] as const;
 
+// Who an active message was sent to. A chosen device is named as Send to names it, this producer page
+// too where another producer page chose it; one that Clear offline took off the list is only counted,
+// since its name went with it.
+function targetLine(to: MessageTarget, labels: { client: string; label: string }[]): string {
+  if (to === 'all') return 'To all devices';
+  if (to === 'viewers') return 'To view-only devices';
+  const named = to.flatMap((client) => labels.find((choice) => choice.client === client)?.label ?? []);
+  const unlisted = to.length - named.length;
+  if (unlisted > 0) named.push(`${unlisted} ${unlisted === 1 ? 'device' : 'devices'} no longer listed`);
+  return `To ${named.join('; ')}`;
+}
+
 const buttonClass = (available: boolean) => (available ? 'connection-button' : 'connection-button unavailable');
 
-// Every device but the producer page's own, in the Devices panel's order, each labelled by its name
-// and role, and offline where it is, since a message reaches it when it comes back. Two devices of
-// one name and role add the start of their client ID, so the producer can tell them apart.
+// Every device but the producer page's own, in the Devices panel's order, labelled as deviceLabels
+// labels it.
 export function deviceChoices(devices: Device[], ownClient: string): { client: string; label: string }[] {
-  const others = devices.filter((device) => device.client !== ownClient);
+  return deviceLabels(devices).filter((choice) => choice.client !== ownClient);
+}
+
+// Every device, in the Devices panel's order, each labelled by its name and role, and offline where
+// it is, since a message reaches it when it comes back. Two devices of one name and role add the start
+// of their client ID, so the producer can tell them apart.
+function deviceLabels(devices: Device[]): { client: string; label: string }[] {
   const named = (device: Device) => `${device.name}, ${ROLE_LABELS[device.role]}`;
-  return others.map((device) => {
-    const shared = others.some((other) => other !== device && named(other) === named(device));
+  return devices.map((device) => {
+    const shared = devices.some((other) => other !== device && named(other) === named(device));
     const label = `${named(device)}${shared ? ` (${device.client.slice(0, 4)})` : ''}${device.online ? '' : ', offline'}`;
     return { client: device.client, label };
   });

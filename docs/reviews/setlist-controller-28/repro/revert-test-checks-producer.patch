@@ -1,0 +1,17 @@
+diff --git a/test/hub-coalescing.test.ts b/test/hub-coalescing.test.ts
+index 02ddbe7..60b5d1e 100644
+--- a/test/hub-coalescing.test.ts
++++ b/test/hub-coalescing.test.ts
+@@ -681,9 +681,12 @@ describe('a client that received a held position', () => {
+     producer.send({ kind: 'message', text: 'Repeat chorus', to: 'viewers' });
+     await producer.snapshot((snapshot) => snapshot.activeMessages.length === 1);
+ 
++    expect(producer.received.at(-1)?.position).toBe(12);
+     hub.publish(snap(10), noProblems);
+ 
+     await midWindow.snapshot((snapshot) => snapshot.position === 10);
++    await producer.flush();
++    expect(producer.received.at(-1)?.position).toBe(10);
+     await existing.flush();
+     expect(existing.received.length).toBe(existingCount);
+   });

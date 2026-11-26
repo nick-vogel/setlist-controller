@@ -7,9 +7,14 @@ import { messageFrame, readMessageFrame } from '../src/shared/messages.ts';
 // of the active message for each device. The hub's use of the board over real sockets is in
 // messages-hub.test.ts.
 
+// A board whose IDs count up, and whose clock reads 1000 more on each send.
 function board() {
   let count = 0;
-  return createMessageBoard(() => `m${(count += 1)}`);
+  let time = 0;
+  return createMessageBoard(
+    () => `m${(count += 1)}`,
+    () => (time += 1000),
+  );
 }
 
 describe("the producer's message command", () => {
@@ -54,16 +59,16 @@ describe('a message frame', () => {
 });
 
 describe('the message board', () => {
-  it('gives a message to all to every role, a message to view-only pages to viewers alone, and a chosen one to its devices alone', () => {
+  it('gives a message to all to every role but the producer, a message to view-only pages to viewers alone, and a chosen one to its devices alone', () => {
     const messages = board();
     const all = messages.send('Hold after this song', 'all');
-    expect(['viewer', 'leader', 'producer'].map((role) => messages.activeFor('x', role as 'viewer')?.id)).toEqual([all.id, all.id, all.id]);
+    expect(['viewer', 'leader', 'producer'].map((role) => messages.activeFor('x', role as 'viewer')?.id)).toEqual([all.id, all.id, undefined]);
 
     const viewers = messages.send('Repeat chorus', 'viewers');
     expect([messages.activeFor('x', 'viewer')?.id, messages.activeFor('x', 'leader')?.id]).toEqual([viewers.id, all.id]);
 
-    const chosen = messages.send('Watch leader', ['keys']);
-    expect([messages.activeFor('keys', 'viewer')?.id, messages.activeFor('bass', 'viewer')?.id]).toEqual([chosen.id, viewers.id]);
+    const chosen = messages.send('Watch leader', ['keys', 'booth']);
+    expect([messages.activeFor('keys', 'viewer')?.id, messages.activeFor('bass', 'viewer')?.id, messages.activeFor('booth', 'producer')?.id]).toEqual([chosen.id, viewers.id, chosen.id]);
   });
 
   it('keeps one message per device, the newest that reaches it', () => {
@@ -111,6 +116,78 @@ describe('the message board', () => {
     expect(messages.clear()).toBe(true);
 
     expect([messages.activeFor('x', 'viewer'), messages.activeFor('ipad', 'leader')]).toEqual([null, null]);
+    expect(messages.active([])).toEqual([]);
     expect(messages.clear()).toBe(false);
+  });
+});
+
+describe("the board's active messages, as the producer page lists them", () => {
+  it('lists each active message newest first, with its text, its target and when it was sent', () => {
+    const messages = board();
+    messages.send('Hold after this song', 'all');
+    messages.send('Repeat chorus', 'viewers');
+    messages.send('Watch leader', ['keys', 'ipad']);
+
+    expect(messages.active([])).toEqual([
+      { id: 'm3', text: 'Watch leader', to: ['keys', 'ipad'], sent: 3000, shownBy: [] },
+      { id: 'm2', text: 'Repeat chorus', to: 'viewers', sent: 2000, shownBy: [] },
+      { id: 'm1', text: 'Hold after this song', to: 'all', sent: 1000, shownBy: [] },
+    ]);
+  });
+
+  it('names a chosen message by the devices a newer one has not replaced it on, and drops it once none is left', () => {
+    const messages = board();
+    messages.send('Watch leader', ['keys', 'bass']);
+    messages.send('Repeat chorus', ['keys']);
+    expect(messages.active([]).map(({ text, to }) => [text, to])).toEqual([
+      ['Repeat chorus', ['keys']],
+      ['Watch leader', ['bass']],
+    ]);
+
+    messages.send('Repeat bridge', ['bass']);
+    expect(messages.active([]).map(({ text }) => text)).toEqual(['Repeat bridge', 'Repeat chorus']);
+  });
+
+  it('keeps a chosen message listed with its whole target after a newer message to the view-only devices covers it', () => {
+    const messages = board();
+    messages.send('Watch leader', ['keys', 'ipad']);
+    messages.send('Repeat chorus', 'viewers');
+    const devices = [
+      { client: 'keys', role: 'viewer' },
+      { client: 'ipad', role: 'leader' },
+    ] as const;
+
+    expect(messages.active(devices).map(({ text, to, shownBy }) => [text, to, shownBy])).toEqual([
+      ['Repeat chorus', 'viewers', ['keys']],
+      ['Watch leader', ['keys', 'ipad'], ['ipad']],
+    ]);
+  });
+
+  it('lists a message to all devices alone, since it replaces every older one', () => {
+    const messages = board();
+    messages.send('Repeat chorus', 'viewers');
+    messages.send('Watch leader', ['ipad']);
+    messages.send('Hold after this song', 'all');
+
+    expect(messages.active([]).map(({ text }) => text)).toEqual(['Hold after this song']);
+  });
+
+  it('marks each listed device by the one message it shows, by its role', () => {
+    const messages = board();
+    messages.send('Hold after this song', 'all');
+    messages.send('Repeat chorus', 'viewers');
+    messages.send('Watch leader', ['bass']);
+    const devices = [
+      { client: 'panel', role: 'producer' },
+      { client: 'ipad', role: 'leader' },
+      { client: 'keys', role: 'viewer' },
+      { client: 'bass', role: 'viewer' },
+    ] as const;
+
+    expect(messages.active(devices).map(({ text, shownBy }) => [text, shownBy])).toEqual([
+      ['Watch leader', ['bass']],
+      ['Repeat chorus', ['keys']],
+      ['Hold after this song', ['ipad']],
+    ]);
   });
 });

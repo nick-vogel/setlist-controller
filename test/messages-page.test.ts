@@ -3,7 +3,7 @@ import { createElement } from 'react';
 import { renderToStaticMarkup } from 'react-dom/server';
 import { describe, expect, it } from 'vitest';
 import type { Device } from '../src/shared/devices.ts';
-import { MESSAGE_PRESETS } from '../src/shared/messages.ts';
+import { MESSAGE_PRESETS, type ActiveMessage } from '../src/shared/messages.ts';
 import { UNKNOWN_POWER } from '../src/shared/power.ts';
 import type { ProducerSnapshot } from '../src/shared/snapshot.ts';
 import { Page } from '../web/src/App.tsx';
@@ -35,6 +35,7 @@ const SNAPSHOT: ProducerSnapshot = {
   connections: [],
   connectionProblems: [],
   devices: [],
+  activeMessages: [],
 };
 
 const MESSAGE = { id: 'm1', text: 'Hold after this song' };
@@ -120,6 +121,65 @@ describe("the producer's message panel", () => {
       { client: 'ipad', label: 'Leader, Leader' },
       { client: 'gone', label: 'Drums, View only, offline' },
     ]);
+  });
+});
+
+describe("the producer's message panel, with the active messages", () => {
+  const SELF: Device = { client: 'self', name: 'Producer', role: 'producer', battery: null, online: true, lastSeen: null };
+  const KEYS: Device = { client: 'keys', name: 'Keys', role: 'viewer', battery: null, online: true, lastSeen: null };
+  const IPAD: Device = { client: 'ipad', name: 'Leader', role: 'leader', battery: null, online: false, lastSeen: 1 };
+  const at = (hour: number, minute: number) => new Date(2026, 10, 22, hour, minute).getTime();
+  const active = (activeMessages: ActiveMessage[]) =>
+    page({ role: 'producer', clientId: 'self', snapshot: { ...SNAPSHOT, devices: [SELF, KEYS, IPAD], activeMessages } });
+  // Each listed message as its lines read, in order.
+  const listed = (markup: string) =>
+    [...markup.matchAll(/<li class="message-active">(.*?)<\/li>/g)].map(([, inner]) => [...inner!.matchAll(/<span class="[^"]*">([^<]*)<\/span>/g)].map(([, text]) => text));
+
+  it('lists each active message with its text, its target and when it was sent, for every target kind', () => {
+    const markup = active([
+      { id: 'm3', text: 'Watch leader', to: ['ipad', 'keys'], sent: at(9, 43), shownBy: ['keys'] },
+      { id: 'm2', text: 'Repeat chorus', to: 'viewers', sent: at(9, 42), shownBy: [] },
+      { id: 'm1', text: 'Hold after this song', to: 'all', sent: at(9, 41), shownBy: [] },
+    ]);
+
+    expect(listed(markup)).toEqual([
+      ['Watch leader', 'To Leader, Leader, offline; Keys, View only', expect.stringMatching(/^Sent 0?9\D43/)],
+      ['Repeat chorus', 'To view-only devices', expect.stringMatching(/^Sent 0?9\D42/)],
+      ['Hold after this song', 'To all devices', expect.stringMatching(/^Sent 0?9\D41/)],
+    ]);
+  });
+
+  it('counts the chosen devices that Clear offline took off the list, since a name is no longer known', () => {
+    const markup = active([{ id: 'm1', text: 'Watch leader', to: ['keys', 'gone', 'lost'], sent: at(9, 41), shownBy: [] }]);
+
+    expect(listed(markup)[0]?.[1]).toBe('To Keys, View only; 2 devices no longer listed');
+  });
+
+  it('names this producer page itself where another producer page chose it', () => {
+    const markup = active([{ id: 'm1', text: 'Watch leader', to: ['self', 'keys'], sent: at(9, 41), shownBy: ['self', 'keys'] }]);
+
+    expect(listed(markup)[0]?.[1]).toBe('To Producer, Producer; Keys, View only');
+  });
+
+  it('shows the no-message line in place of the list, and only while no message is active', () => {
+    expect(active([])).toContain('No active message.');
+    expect(active([])).not.toContain('message-active-list');
+    const one = active([{ id: 'm1', text: 'Watch leader', to: ['keys'], sent: at(9, 41), shownBy: ['keys'] }]);
+    expect(one).not.toContain('No active message.');
+    expect(one).toContain('message-active-list');
+  });
+});
+
+describe("the producer's active messages' stylesheet", () => {
+  const stylesheet = readStylesheet(resolve(import.meta.dirname, '../web/src/styles.css'));
+  const item: Element[] = [{ tag: 'html' }, { tag: 'body' }, { tag: 'div' }, { tag: 'main' }, { tag: 'section', classes: ['messages'] }, { tag: 'ul', classes: ['message-active-list'] }, { tag: 'li', classes: ['message-active'] }];
+
+  // WCAG 2.1 AA asks 4.5:1 of normal text.
+  it('keeps every line of an active message at 4.5:1 or more on its own surface', () => {
+    const surface = stylesheet.value(item, 'background')!;
+    for (const part of ['message-active-text', 'message-active-target', 'message-active-sent']) {
+      expect(contrast(stylesheet.inherited([...item, { tag: 'span', classes: [part] }], 'color'), surface), part).toBeGreaterThanOrEqual(4.5);
+    }
   });
 });
 

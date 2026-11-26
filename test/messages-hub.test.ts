@@ -1,6 +1,6 @@
 import { afterEach, describe, expect, it } from 'vitest';
 import type { CuePoint } from '../src/fake-live/fake-live.ts';
-import type { BandMessage } from '../src/shared/messages.ts';
+import type { ActiveMessage, BandMessage } from '../src/shared/messages.ts';
 import type { ProducerSnapshot } from '../src/shared/snapshot.ts';
 import { loaded, startRig, type Client, type Rig } from './harness.ts';
 
@@ -30,7 +30,7 @@ const last = (client: { messages: (BandMessage | null)[] }) => {
   return message === undefined ? undefined : message === null ? null : message.text;
 };
 
-async function said(client: Client | Client<ProducerSnapshot>, id: string, name: string) {
+async function said<C extends Client | Client<ProducerSnapshot>>(client: C, id: string, name: string): Promise<C> {
   client.send(hello(id, name));
   await client.flush();
   return client;
@@ -53,12 +53,37 @@ async function settled(...clients: (Client | Client<ProducerSnapshot>)[]) {
 }
 
 describe('a message', () => {
-  it('to all devices reaches every page that said hello, the producer page included', async () => {
+  it('to all devices reaches every page that said hello but the producer pages', async () => {
     const { panel, leader, keys, bass } = await stage();
+    const booth = await said(await rig!.connectProducer(), 'booth', 'Booth');
+    await expect.poll(() => last(booth)).toBeNull();
 
     panel.send({ kind: 'message', text: 'Hold after this song', to: 'all' });
 
-    await expect.poll(() => [panel, leader, keys, bass].map(last)).toEqual(Array(4).fill('Hold after this song'));
+    await expect.poll(() => [leader, keys, bass].map(last)).toEqual(Array(3).fill('Hold after this song'));
+    await settled(panel, booth);
+    expect([panel, booth].map(last)).toEqual([null, null]);
+  });
+
+  it("to all devices takes a chosen producer page's older message off its banner, as the list drops it", async () => {
+    const { panel } = await stage();
+    const booth = await said(await rig!.connectProducer(), 'booth', 'Booth');
+    panel.send({ kind: 'message', text: 'Watch leader', to: ['booth'] });
+    await expect.poll(() => last(booth)).toBe('Watch leader');
+
+    panel.send({ kind: 'message', text: 'Hold after this song', to: 'all' });
+
+    await expect.poll(() => last(booth)).toBeNull();
+    await panel.snapshot(lists([['Hold after this song', 'all', ['ipad', 'keys', 'bass']]]));
+  });
+
+  it('to a chosen producer page reaches it', async () => {
+    const { panel } = await stage();
+    const booth = await said(await rig!.connectProducer(), 'booth', 'Booth');
+
+    panel.send({ kind: 'message', text: 'Watch leader', to: ['booth'] });
+
+    await expect.poll(() => last(booth)).toBe('Watch leader');
   });
 
   it('to the view-only devices reaches every view-only socket and no leader or producer page', async () => {
@@ -175,5 +200,63 @@ describe('Clear', () => {
     keys.close();
     const back = await said(await rig!.connectViewer(), 'keys', 'Keys');
     await expect.poll(() => back.messages).toEqual([null]);
+  });
+});
+
+// The producer snapshot's active messages, each as [text, target, the devices that show it].
+const listed = (snapshot: ProducerSnapshot) => snapshot.activeMessages.map(({ text, to, shownBy }) => [text, to, shownBy]);
+
+const lists = (expected: unknown[]) => (snapshot: ProducerSnapshot) => JSON.stringify(listed(snapshot)) === JSON.stringify(expected);
+
+describe("the producer page's active messages", () => {
+  it('lists each one with its text, its target and its send time, for every target kind', async () => {
+    const { panel } = await stage();
+    const before = Date.now();
+
+    panel.send({ kind: 'message', text: 'Hold after this song', to: 'all' });
+    panel.send({ kind: 'message', text: 'Repeat chorus', to: 'viewers' });
+    panel.send({ kind: 'message', text: 'Watch leader', to: ['ipad'] });
+
+    const snapshot = await panel.snapshot((snapshot) => snapshot.activeMessages.length === 3);
+    expect(listed(snapshot)).toEqual([
+      ['Watch leader', ['ipad'], ['ipad']],
+      ['Repeat chorus', 'viewers', ['keys', 'bass']],
+      ['Hold after this song', 'all', []],
+    ]);
+    for (const { sent } of snapshot.activeMessages) expect(sent).toBeGreaterThanOrEqual(before);
+    for (const { sent } of snapshot.activeMessages) expect(sent).toBeLessThanOrEqual(Date.now());
+  });
+
+  it('shows a newer message that replaces one, and a Clear, at once', async () => {
+    const { panel } = await stage();
+    panel.send({ kind: 'message', text: 'Repeat chorus', to: ['keys'] });
+    await panel.snapshot(lists([['Repeat chorus', ['keys'], ['keys']]]));
+
+    panel.send({ kind: 'message', text: 'Repeat bridge', to: ['keys'] });
+    await panel.snapshot(lists([['Repeat bridge', ['keys'], ['keys']]]));
+
+    panel.send({ kind: 'clear-messages' });
+    await panel.snapshot(lists([]));
+  });
+
+  it('is in the first snapshot of a producer page that reconnects or reloads', async () => {
+    const { panel } = await stage();
+    panel.send({ kind: 'message', text: 'Watch leader', to: ['ipad'] });
+    const shown: ActiveMessage[] = (await panel.snapshot((snapshot) => snapshot.activeMessages.length === 1)).activeMessages;
+
+    panel.close();
+    const back = await rig!.connectProducer();
+
+    expect((await back.snapshot()).activeMessages).toEqual(shown);
+  });
+
+  it('follows a device that connects, since the list marks the devices that show each one', async () => {
+    const { panel } = await stage();
+    panel.send({ kind: 'message', text: 'Repeat chorus', to: ['late'] });
+    await panel.snapshot(lists([['Repeat chorus', ['late'], []]]));
+
+    await said(await rig!.connectViewer(), 'late', 'Drums');
+
+    await panel.snapshot(lists([['Repeat chorus', ['late'], ['late']]]));
   });
 });
