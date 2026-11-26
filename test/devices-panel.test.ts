@@ -1,3 +1,4 @@
+import { resolve } from 'node:path';
 import { createElement } from 'react';
 import { renderToStaticMarkup } from 'react-dom/server';
 import { describe, expect, it } from 'vitest';
@@ -6,6 +7,7 @@ import { UNKNOWN_POWER } from '../src/shared/power.ts';
 import type { ProducerSnapshot } from '../src/shared/snapshot.ts';
 import { Page } from '../web/src/App.tsx';
 import { DevicesPanel } from '../web/src/DevicesPanel.tsx';
+import { readStylesheet, type Element } from './css.ts';
 
 // The Devices panel as the producer page and the setup screen draw it, and each page's device name
 // field. A static render presses no button: that Reload reloads the one device and Clear offline
@@ -114,5 +116,58 @@ describe('the device name field', () => {
 
     expect(attribute(field(page({ part: 'Bass' })), 'placeholder')).toBe('Bass');
     expect(attribute(field(page({ part: 'Bass', deviceName: 'Stage left' })), 'value')).toBe('Stage left');
+  });
+});
+
+describe("the Devices panel's stylesheet", () => {
+  const stylesheet = readStylesheet(resolve(import.meta.dirname, '../web/src/styles.css'));
+  const row = (classes: string[]): Element[] => [
+    { tag: 'html' },
+    { tag: 'body' },
+    { tag: 'div' },
+    { tag: 'main' },
+    { tag: 'section', classes: ['devices'] },
+    { tag: 'ul', classes: ['device-list'] },
+    { tag: 'li', classes },
+  ];
+  const inherited = (path: Element[], property: string): string => {
+    for (let end = path.length; end > 0; end -= 1) {
+      const value = stylesheet.value(path.slice(0, end), property);
+      if (value !== undefined) return value;
+    }
+    throw new Error(`No rule sets ${property} on ${JSON.stringify(path.at(-1))} or its ancestors`);
+  };
+  const luminance = (hex: string) => {
+    const channels = /^#([0-9a-f]{2})([0-9a-f]{2})([0-9a-f]{2})$/i.exec(hex.length === 4 ? hex.replace(/[0-9a-f]/gi, '$&$&') : hex);
+    if (!channels) throw new Error(`Not a hex colour: ${hex}`);
+    const [r = 0, g = 0, b = 0] = channels.slice(1).map((channel) => {
+      const value = Number.parseInt(channel, 16) / 255;
+      return value <= 0.03928 ? value / 12.92 : ((value + 0.055) / 1.055) ** 2.4;
+    });
+    return 0.2126 * r + 0.7152 * g + 0.0722 * b;
+  };
+  const contrast = (a: string, b: string) => {
+    const [light = 0, dark = 0] = [luminance(a), luminance(b)].sort((x, y) => y - x);
+    return (light + 0.05) / (dark + 0.05);
+  };
+
+  // WCAG 2.1 AA asks 4.5:1 of normal text, and the row's 18px text at weight 400 is normal text.
+  it("keeps every line of an offline row at 4.5:1 or more on the row's own surface, with no opacity over it", () => {
+    const offline = row(['device', 'offline']);
+    expect(stylesheet.value(offline, 'opacity')).toBeUndefined();
+    const surface = inherited(offline, 'background');
+    for (const part of ['device-name', 'device-role', 'device-status', 'device-battery']) {
+      const color = inherited([...offline, { tag: 'span', classes: [part] }], 'color');
+      expect(contrast(color, surface), part).toBeGreaterThanOrEqual(4.5);
+    }
+  });
+
+  it('draws an offline row apart from an online one, in grey and not in the red of an offline connection target', () => {
+    const online = row(['device']);
+    const offline = row(['device', 'offline']);
+    expect(stylesheet.value(online, 'background')).toBe('#2a2a2a');
+    expect(stylesheet.value(offline, 'border-style')).toBe('dashed');
+    expect(stylesheet.value(offline, 'background')).not.toBe(stylesheet.value(online, 'background'));
+    expect(stylesheet.value(offline, 'background')).not.toBe(stylesheet.value(row(['connection', 'offline']), 'background'));
   });
 });
