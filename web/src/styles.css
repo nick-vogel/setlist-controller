@@ -17,14 +17,23 @@ body {
 
 /* The playback Mac's battery warning, last in the top layer of the leader, producer and setup pages:
    amber at or below 80% on battery, red at or below 30%, in dark text on the colour so it reads from
-   across the stage. */
+   across the stage, with the producer's message's Dismiss button. */
 .power-warning {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem 1rem;
   margin: 0;
   padding: 0.75rem 1rem;
   border-radius: 0.5rem;
+  color: #111;
+}
+
+.power-warning-text {
+  flex: 1 1 12rem;
+  margin: 0;
   font-size: 1.25rem;
   font-weight: 600;
-  color: #111;
 }
 
 .power-warning.low {
@@ -74,7 +83,8 @@ main.leader-page {
   font-weight: 700;
 }
 
-.message-banner-dismiss {
+.message-banner-dismiss,
+.power-warning-dismiss {
   min-height: 3rem;
   padding: 0.5rem 1.25rem;
   border: 0;

@@ -1,13 +1,15 @@
+import { resolve } from 'node:path';
 import { createElement } from 'react';
 import { renderToStaticMarkup } from 'react-dom/server';
 import { afterEach, describe, expect, it } from 'vitest';
 import type { CuePoint } from '../src/fake-live/fake-live.ts';
 import { manualClock } from '../src/server/clock.ts';
 import { manualPowerSource, parsePmset, pmsetPowerSource, POWER_POLL_MS, type ManualPowerSource } from '../src/server/power.ts';
-import { powerWarning, UNKNOWN_POWER, type PowerState } from '../src/shared/power.ts';
+import { powerWarning, UNKNOWN_POWER, type PowerState, type PowerWarningLevel } from '../src/shared/power.ts';
 import type { Connection, PreServiceCheck, ProducerSnapshot, SetList, Snapshot } from '../src/shared/snapshot.ts';
 import { Page } from '../web/src/App.tsx';
 import { Setup } from '../web/src/Setup.tsx';
+import { contrast, readStylesheet, type Element } from './css.ts';
 import { loaded, startRig, type Rig } from './harness.ts';
 
 let rig: Rig | undefined;
@@ -208,16 +210,17 @@ const snapshotOn = (power: PowerState): ProducerSnapshot => ({
   connectionProblems: [],
   devices: [],
 });
-const banner = (markup: string) => /<p class="power-warning ([a-z]+)" role="alert">([^<]*)<\/p>/.exec(markup)?.slice(1);
-const page = (role: 'viewer' | 'leader' | 'producer', power: PowerState) => banner(renderToStaticMarkup(createElement(Page, { role, snapshot: snapshotOn(power), connected: true, send: () => {} })));
-const setup = (power: PowerState) => banner(renderToStaticMarkup(createElement(Setup, { snapshot: snapshotOn(power), connected: true })));
+const banner = (markup: string) => /<div class="power-warning ([a-z]+)" role="alert"><p class="power-warning-text">([^<]*)<\/p><button[^>]*>([^<]*)<\/button><\/div>/.exec(markup)?.slice(1);
+const page = (role: 'viewer' | 'leader' | 'producer', power: PowerState, dismissedPower: PowerWarningLevel | null = null) =>
+  banner(renderToStaticMarkup(createElement(Page, { role, snapshot: snapshotOn(power), connected: true, send: () => {}, dismissedPower })));
+const setup = (power: PowerState, dismissedPower: PowerWarningLevel | null = null) => banner(renderToStaticMarkup(createElement(Setup, { snapshot: snapshotOn(power), connected: true, dismissedPower })));
 
 describe('the battery banner', () => {
   it('shows on the leader, producer and setup pages with the charge, amber at 80% and red at 30%', () => {
     for (const shown of [(power: PowerState) => page('leader', power), (power: PowerState) => page('producer', power), setup]) {
-      expect(shown({ source: 'battery', percent: 80 })).toEqual(['low', 'The playback Mac is on battery at 80%. Plug in its power.']);
-      expect(shown({ source: 'battery', percent: 30 })).toEqual(['urgent', 'The playback Mac is on battery at 30%. Plug in its power now.']);
-      expect(shown({ source: 'battery', percent: null })).toEqual(['urgent', 'The playback Mac is on battery. Plug in its power now.']);
+      expect(shown({ source: 'battery', percent: 80 })).toEqual(['low', 'The playback Mac is on battery at 80%. Plug in its power.', 'Dismiss']);
+      expect(shown({ source: 'battery', percent: 30 })).toEqual(['urgent', 'The playback Mac is on battery at 30%. Plug in its power now.', 'Dismiss']);
+      expect(shown({ source: 'battery', percent: null })).toEqual(['urgent', 'The playback Mac is on battery. Plug in its power now.', 'Dismiss']);
       expect(shown({ source: 'battery', percent: 95 })).toBeUndefined();
       expect(shown({ source: 'ac', percent: 20 })).toBeUndefined();
     }
@@ -225,6 +228,31 @@ describe('the battery banner', () => {
 
   it("never shows on the band's view-only page", () => {
     expect(page('viewer', { source: 'battery', percent: 10 })).toBeUndefined();
+  });
+
+  it('stays hidden at the warning the page dismissed, and shows at the other one', () => {
+    for (const shown of [(power: PowerState, dismissed: PowerWarningLevel) => page('leader', power, dismissed), (power: PowerState, dismissed: PowerWarningLevel) => page('producer', power, dismissed), setup]) {
+      expect(shown({ source: 'battery', percent: 80 }, 'low')).toBeUndefined();
+      expect(shown({ source: 'battery', percent: 30 }, 'low')).toEqual(['urgent', 'The playback Mac is on battery at 30%. Plug in its power now.', 'Dismiss']);
+      expect(shown({ source: 'battery', percent: 30 }, 'urgent')).toBeUndefined();
+      expect(shown({ source: 'battery', percent: 80 }, 'urgent')).toEqual(['low', 'The playback Mac is on battery at 80%. Plug in its power.', 'Dismiss']);
+    }
+  });
+});
+
+describe("the battery banner's stylesheet", () => {
+  const stylesheet = readStylesheet(resolve(import.meta.dirname, '../web/src/styles.css'));
+
+  // WCAG 2.1 AA asks 4.5:1 of normal text.
+  it('keeps its text and its Dismiss button at 4.5:1 or more on their own surfaces, amber and red', () => {
+    for (const warning of ['low', 'urgent']) {
+      const path: Element[] = [{ tag: 'html' }, { tag: 'body' }, { tag: 'div' }, { tag: 'main' }, { tag: 'div', classes: ['page-top'] }, { tag: 'div', classes: ['power-warning', warning] }];
+      const surface = stylesheet.value(path, 'background')!;
+      const text = [...path, { tag: 'p', classes: ['power-warning-text'] }];
+      expect(contrast(stylesheet.value(text, 'color') ?? stylesheet.value(path, 'color')!, surface), warning).toBeGreaterThanOrEqual(4.5);
+      const button = [...path, { tag: 'button', classes: ['power-warning-dismiss'] }];
+      expect(contrast(stylesheet.value(button, 'color')!, stylesheet.value(button, 'background')!), warning).toBeGreaterThanOrEqual(4.5);
+    }
   });
 });
 

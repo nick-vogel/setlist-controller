@@ -251,6 +251,40 @@ test("the battery warning joins the top of the leader page under the banner, and
   expect(await top()).toBe(before);
 });
 
+test('Dismiss on the battery warning frees Safe Mode and the Setlist and Timeline switcher, and the warning shows again at red and on a new drop onto battery', async ({ browser, page }) => {
+  const power = manualPowerSource({ source: 'battery', percent: 80 });
+  e2e = await startE2eRig({}, SET, { power });
+  await page.goto(e2e.leaderUrl);
+  await expect(page.getByText('Intro').first()).toBeVisible();
+  const warning = page.locator('.power-warning');
+  await expect(warning).toHaveClass(/\blow\b/);
+
+  await warning.getByRole('button', { name: 'Dismiss' }).click();
+  await expect(warning).toHaveCount(0);
+  const safeMode = page.getByRole('button', { name: /Safe Mode/ });
+  await safeMode.click();
+  await expect(safeMode).toHaveText('Safe Mode: Off');
+  await page.getByRole('group', { name: 'Leader view' }).getByRole('button', { name: 'Timeline' }).click();
+  await expect(page.locator('.timeline-readout-primary')).toBeVisible();
+  expect(await topmostAtCentre(page, '.timeline-readout-primary')).not.toBe('power-warning');
+
+  power.set({ source: 'battery', percent: 30 });
+  await expect(warning).toHaveClass(/\burgent\b/);
+
+  // The producer page's Playback Mac row shows when the page has drawn the mains power snapshot, which
+  // the warning alone cannot, as it shows nothing on mains power.
+  const producer = await device(browser, e2e.producerUrl);
+  const producerWarning = producer.locator('.power-warning');
+  await producerWarning.getByRole('button', { name: 'Dismiss' }).click();
+  await expect(producerWarning).toHaveCount(0);
+  await producer.getByRole('button', { name: /Safe Mode/ }).click();
+  await expect(producer.getByRole('button', { name: /Safe Mode/ })).toHaveText('Safe Mode: On');
+  power.set({ source: 'ac', percent: 30 });
+  await expect(producer.getByRole('region', { name: 'Connections' }).getByRole('listitem', { name: 'Playback Mac' }).locator('.check-note')).toHaveText(['On mains power.']);
+  power.set({ source: 'battery', percent: 30 });
+  await expect(producerWarning).toHaveClass(/\burgent\b/);
+});
+
 test("the setup screen's battery warning and Reconnecting banner move nothing on the screen, and neither covers the other", async ({ page }) => {
   const power = manualPowerSource({ source: 'ac', percent: 100 });
   const proxied = await startProxiedE2eRig({}, SET, { power });

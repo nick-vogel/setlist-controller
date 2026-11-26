@@ -9,6 +9,8 @@ export type PowerState = {
 // What the server holds before its first read, and for a server started with no power source.
 export const UNKNOWN_POWER: PowerState = { source: 'unknown', percent: null };
 
+export type PowerWarningLevel = 'low' | 'urgent';
+
 // At or below this charge on battery, the leader, producer and setup pages show the amber warning.
 export const LOW_BATTERY_PERCENT = 80;
 // At or below this charge on battery, the warning turns red.
@@ -20,7 +22,7 @@ export const URGENT_BATTERY_PERCENT = 30;
 // battery with no charge read, since nothing says how long the Mac has left. The pre-service check
 // fails on battery at any charge (src/server/power.ts), so an unplugged cord is caught before the set
 // starts even where no banner shows.
-export function powerWarning(power: PowerState): 'low' | 'urgent' | null {
+export function powerWarning(power: PowerState): PowerWarningLevel | null {
   if (power.source !== 'battery') return null;
   if (power.percent === null || power.percent <= URGENT_BATTERY_PERCENT) return 'urgent';
   return power.percent <= LOW_BATTERY_PERCENT ? 'low' : null;

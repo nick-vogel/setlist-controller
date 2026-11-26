@@ -136,7 +136,7 @@ describe("the message banner's stylesheet", () => {
     const layer: Element[] = [{ tag: 'html' }, { tag: 'body' }, { tag: 'div' }, { tag: 'main' }, { tag: 'div', classes: ['page-top'] }];
     expect(stylesheet.value(layer, 'position')).toBe('fixed');
     expect(stylesheet.value(layer, 'flex-direction')).toBe('column');
-    for (const signal of [{ tag: 'div', classes: ['message-banner'] }, { tag: 'p', classes: ['server-lost'] }, { tag: 'section', classes: ['stage-status', 'sticky'] }, { tag: 'p', classes: ['power-warning', 'urgent'] }]) {
+    for (const signal of [{ tag: 'div', classes: ['message-banner'] }, { tag: 'p', classes: ['server-lost'] }, { tag: 'section', classes: ['stage-status', 'sticky'] }, { tag: 'div', classes: ['power-warning', 'urgent'] }]) {
       expect(stylesheet.value([...layer, signal], 'position'), signal.classes[0]).toBeUndefined();
       expect(stylesheet.value([...layer, signal], 'z-index'), signal.classes[0]).toBeUndefined();
     }

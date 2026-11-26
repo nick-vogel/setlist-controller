@@ -6,7 +6,7 @@ import { activeSong } from '../../src/shared/safe-mode.ts';
 import type { SetCharts } from '../../src/shared/set-manifest.ts';
 import type { DeviceHello } from '../../src/shared/devices.ts';
 import type { BandMessage } from '../../src/shared/messages.ts';
-import { powerWarning } from '../../src/shared/power.ts';
+import { powerWarning, type PowerWarningLevel } from '../../src/shared/power.ts';
 import type { ProducerSnapshot, Snapshot } from '../../src/shared/snapshot.ts';
 import { AutoLockTip } from './AutoLockTip.tsx';
 import { watchBattery, type BatteryNavigator } from './battery.ts';
@@ -172,10 +172,15 @@ export function App() {
   );
   useEffect(() => watchDismissedMessages(window, deviceStorage(), role, setDismissed), [role]);
   const shownMessage = message !== null && !dismissed.includes(message.id) ? message : null;
+  // Held in the page's memory alone, not the device's storage as a dismissed message is: a reload
+  // shows the battery warning again.
+  const [dismissedPower, setDismissedPower] = useState<PowerWarningLevel | null>(null);
+  const warningNow = snapshot ? powerWarning(snapshot.power) : null;
+  if (dismissedPower !== null && dismissedPower !== warningNow) setDismissedPower(null);
   // Only the view-only page draws the chart view, so only it fetches the charts.
   const charts = useCharts(role === 'viewer' && !setup, snapshot?.chartRevision, connected);
 
-  if (setup) return <Setup snapshot={snapshot} connected={connected} />;
+  if (setup) return <Setup snapshot={snapshot} connected={connected} dismissedPower={dismissedPower} onDismissPower={setDismissedPower} />;
   if (!snapshot) return <p className="status">Connecting to the server.</p>;
   return (
     <Page
@@ -205,6 +210,8 @@ export function App() {
       onDeviceName={onDeviceName}
       message={shownMessage}
       onDismissMessage={onDismissMessage}
+      dismissedPower={dismissedPower}
+      onDismissPower={setDismissedPower}
     />
   );
 }
@@ -252,6 +259,8 @@ export function Page({
   onDeviceName = () => {},
   message = null,
   onDismissMessage = () => {},
+  dismissedPower = null,
+  onDismissPower = () => {},
 }: {
   role: Role;
   snapshot: Snapshot | ProducerSnapshot;
@@ -289,6 +298,8 @@ export function Page({
   // The producer's message to this device, or null for none or one the device dismissed.
   message?: BandMessage | null;
   onDismissMessage?(id: string): void;
+  dismissedPower?: PowerWarningLevel | null;
+  onDismissPower?(warning: PowerWarningLevel): void;
 }) {
   // The panel does not wait for a set: the connections are not Live's. A pick does, since it is kept
   // for the set, and the server drops one while it has read none.
@@ -305,8 +316,9 @@ export function Page({
 
   const messageBanner = <MessageBanner message={message} onDismiss={onDismissMessage} />;
   // The playback Mac's battery warning, at the top of the leader's and producer's pages, never the
-  // band's.
-  const powerShown = role !== 'viewer' && powerWarning(snapshot.power) !== null;
+  // band's, and not at the warning the page dismissed.
+  const warning = powerWarning(snapshot.power);
+  const powerShown = role !== 'viewer' && warning !== null && warning !== dismissedPower;
   const picker = role === 'viewer' && <PartPicker part={part} onPart={onPart} />;
   // After the pickers, on the view-only page only.
   const autoLockTip = role === 'viewer' && tip && <AutoLockTip onShown={onTipShown} />;
@@ -321,7 +333,7 @@ export function Page({
       {reconnecting}
       {stageStatusLine}
       {messageBanner}
-      {powerShown && <PowerWarning power={snapshot.power} />}
+      {powerShown && <PowerWarning power={snapshot.power} onDismiss={onDismissPower} />}
     </div>
   );
   const leaderPage = role === 'leader' ? 'leader-page' : undefined;

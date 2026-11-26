@@ -21,14 +21,14 @@ async function walksThePowerSteps(page: Page, url: (rig: E2eRig) => string) {
   await expect(banner).toHaveCount(0);
 
   power.set({ source: 'battery', percent: 80 });
-  await expect(banner).toHaveText('The playback Mac is on battery at 80%. Plug in its power.');
+  await expect(banner.getByRole('paragraph')).toHaveText('The playback Mac is on battery at 80%. Plug in its power.');
   await expect(banner).toHaveClass(/\blow\b/);
 
   power.set({ source: 'battery', percent: 95 });
   await expect(banner).toHaveCount(0);
 
   power.set({ source: 'battery', percent: 30 });
-  await expect(banner).toHaveText('The playback Mac is on battery at 30%. Plug in its power now.');
+  await expect(banner.getByRole('paragraph')).toHaveText('The playback Mac is on battery at 30%. Plug in its power now.');
   await expect(banner).toHaveClass(/\burgent\b/);
 
   power.set({ source: 'ac', percent: 30 });
@@ -66,6 +66,20 @@ test("the Playback Mac row's pre-service check fails on battery at 95% and passe
   power.set({ source: 'ac', percent: 96 });
   await expect(setupRow.locator('.check-note')).toHaveText(['On mains power.']);
   await expect(setupRow.locator('.check-problem')).toHaveCount(0);
+});
+
+test("Dismiss takes the setup screen's battery warning off the top of the screen, and the Playback Mac row still reports the battery", async ({ page }) => {
+  const power = manualPowerSource({ source: 'battery', percent: 80 });
+  e2e = await startE2eRig({}, SET, { power });
+  await page.goto(e2e.setupUrl);
+  const warning = page.locator('.power-warning');
+  await expect(warning).toHaveClass(/\blow\b/);
+
+  await warning.getByRole('button', { name: 'Dismiss' }).click();
+
+  await expect(warning).toHaveCount(0);
+  const row = page.getByRole('region', { name: 'Connections' }).getByRole('listitem', { name: 'Playback Mac' });
+  await expect(row.locator('.check-problem')).toHaveText(["On battery at 80%. Plug in the playback Mac's power before the set starts."]);
 });
 
 test("the band's view-only page never shows the battery warning", async ({ page }) => {
