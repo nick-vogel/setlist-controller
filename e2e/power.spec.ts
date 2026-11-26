@@ -75,7 +75,7 @@ test("Dismiss takes the setup screen's battery warning off the top of the screen
   const warning = page.locator('.power-warning');
   await expect(warning).toHaveClass(/\blow\b/);
 
-  await warning.getByRole('button', { name: 'Dismiss' }).click();
+  await warning.getByRole('button', { name: 'Dismiss battery warning', exact: true }).click();
 
   await expect(warning).toHaveCount(0);
   const row = page.getByRole('region', { name: 'Connections' }).getByRole('listitem', { name: 'Playback Mac' });

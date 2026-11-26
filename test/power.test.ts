@@ -226,6 +226,11 @@ describe('the battery banner', () => {
     }
   });
 
+  it('names its Dismiss button for a screen reader apart from the message banner\'s Dismiss', () => {
+    const markup = renderToStaticMarkup(createElement(Page, { role: 'producer', snapshot: snapshotOn({ source: 'battery', percent: 80 }), connected: true, send: () => {}, dismissedPower: null }));
+    expect(/<button[^>]*class="power-warning-dismiss"[^>]*>/.exec(markup)?.[0]).toContain('aria-label="Dismiss battery warning"');
+  });
+
   it("never shows on the band's view-only page", () => {
     expect(page('viewer', { source: 'battery', percent: 10 })).toBeUndefined();
   });

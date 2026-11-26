@@ -259,7 +259,7 @@ test('Dismiss on the battery warning frees Safe Mode and the Setlist and Timelin
   const warning = page.locator('.power-warning');
   await expect(warning).toHaveClass(/\blow\b/);
 
-  await warning.getByRole('button', { name: 'Dismiss' }).click();
+  await warning.getByRole('button', { name: 'Dismiss battery warning', exact: true }).click();
   await expect(warning).toHaveCount(0);
   const safeMode = page.getByRole('button', { name: /Safe Mode/ });
   await safeMode.click();
@@ -275,7 +275,7 @@ test('Dismiss on the battery warning frees Safe Mode and the Setlist and Timelin
   // the warning alone cannot, as it shows nothing on mains power.
   const producer = await device(browser, e2e.producerUrl);
   const producerWarning = producer.locator('.power-warning');
-  await producerWarning.getByRole('button', { name: 'Dismiss' }).click();
+  await producerWarning.getByRole('button', { name: 'Dismiss battery warning', exact: true }).click();
   await expect(producerWarning).toHaveCount(0);
   await producer.getByRole('button', { name: /Safe Mode/ }).click();
   await expect(producer.getByRole('button', { name: /Safe Mode/ })).toHaveText('Safe Mode: On');
