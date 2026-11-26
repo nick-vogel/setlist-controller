@@ -82,6 +82,20 @@ describe('the message board', () => {
     expect(messages.activeFor('late', 'viewer')).toEqual(viewers);
   });
 
+  it('replaces an older message to a chosen view-only device with a message to the view-only devices', () => {
+    const messages = board();
+    messages.send('Watch leader', ['keys']);
+    const viewers = messages.send('Repeat chorus', 'viewers');
+    expect(messages.activeFor('keys', 'viewer')).toEqual(viewers);
+  });
+
+  it("leaves a chosen leader's message in place under a message to the view-only devices", () => {
+    const messages = board();
+    const chosen = messages.send('Watch leader', ['ipad']);
+    messages.send('Repeat chorus', 'viewers');
+    expect(messages.activeFor('ipad', 'leader')).toEqual(chosen);
+  });
+
   it('makes a new ID for every send, the same text included', () => {
     const messages = board();
     expect(messages.send('Repeat chorus', 'all').id).not.toBe(messages.send('Repeat chorus', 'all').id);

@@ -137,6 +137,29 @@ describe('the active message', () => {
 
     await expect.poll(() => last(late)).toBe('Repeat bridge');
   });
+
+  it('to chosen devices reaches a chosen device that first connects after the send', async () => {
+    const { panel } = await stage();
+    panel.send({ kind: 'message', text: 'Watch leader', to: ['late'] });
+    await panel.flush();
+
+    const late = await said(await rig!.connectViewer(), 'late', 'Drums');
+
+    await expect.poll(() => last(late)).toBe('Watch leader');
+  });
+
+  it("to a chosen leader stays its message across a reconnect after a message to the view-only devices", async () => {
+    const { panel, leader, keys } = await stage();
+    panel.send({ kind: 'message', text: 'Watch leader', to: ['ipad'] });
+    await expect.poll(() => last(leader)).toBe('Watch leader');
+    panel.send({ kind: 'message', text: 'Repeat chorus', to: 'viewers' });
+    await expect.poll(() => last(keys)).toBe('Repeat chorus');
+
+    leader.close();
+    const back = await said(await rig!.connectLeader(), 'ipad', 'Leader');
+
+    await expect.poll(() => last(back)).toBe('Watch leader');
+  });
 });
 
 describe('Clear', () => {
