@@ -110,6 +110,17 @@ describe("the producer's Devices panel, with the active messages", () => {
       ['Drums', ['Message: Repeat chorus']],
     ]);
   });
+
+  it('marks a device that dismissed the message it shows as dismissed, and no other device that shows it', () => {
+    const activeMessages = [{ id: 'm1', text: 'Repeat chorus', to: 'all' as const, sent: 1, shownBy: ['phone', 'ipad'], dismissedBy: ['phone'] }];
+    const markup = renderToStaticMarkup(createElement(Page, { role: 'producer', snapshot: { ...SNAPSHOT, devices: [SELF, PHONE, IPAD], activeMessages }, connected: true, send: () => {}, clientId: 'self' }));
+
+    expect(rows(devicesSection(markup)!).map(({ name, text }) => [name, text.slice(4)])).toEqual([
+      ['Producer', []],
+      ['Keys', ['Message: Repeat chorus, dismissed']],
+      ['Leader', ['Message: Repeat chorus']],
+    ]);
+  });
 });
 
 describe("the setup screen's Devices panel", () => {
