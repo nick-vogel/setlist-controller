@@ -5,7 +5,7 @@
   "E GTRS": ["EG 1", "EG 2", "EG 3", "EG 4", "EG 5", "EG 6", "EG 7", "EG 8", "EG Group"],
   "KEYS": ["Piano", "Piano 2", "Organ", "Keys", "Keys 1", "Keys 2", "Keys 3", "Keys 4", "Rhodes", "Synth Pad", "Synth Group", "Bells", "Strings", "Cello"],
   "VOX": ["BGVS", "BGVS 1", "BGVS 2", "Alto", "Tenor", "Choir", "Choir 1", "Choir 2", "Oohs"],
-  "OTHER": ["Loop", "Synth Loop", "FX", "Vox FX"],
+  "OTHER": ["Loop", "Synth Loop", "FX", "Vox FX", "Aux Drums", "Shaker", "Synth FX"],
   "GUIDE": ["Guide"],
   "MT CLICK": ["Click Track"]
 }
