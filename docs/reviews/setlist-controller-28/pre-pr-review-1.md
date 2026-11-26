@@ -53,6 +53,10 @@ Added in this review:
 - **A send or Clear and the position pacing:** `messagesChanged` sends producer sockets `latest`, which carries the newest published position, at once. Playback sockets keep their held position until the trailing flush, and `broadcasted.producer` is rebuilt at the broadcast position so a later publish compares correctly. This is the recorded mechanism (hub header, `src/server/hub.ts:38-41`, "at once and outside the position pacing"), and it stays; see Reviewed and Dismissed.
 - **Where the active list sits (finding 1):** Nick picked Option A on 2026-11-26 ("As you recommend"): `<ProducerMessages />` goes before `<DevicesPanel />`, and the active list goes after the Send and Clear row, so nothing above the panel's controls grows on a send or a Clear.
 
+Added in remediation 1 (2026-11-26):
+- **The zero-shift test on the producer page** measures page position (`getBoundingClientRect().top + window.scrollY`), not `boundingBox()`, since a click can scroll the page. It picks the target before it takes the baseline, because opening Chosen devices grows the Send to fieldset above Send and Clear by the producer's own action, not by a send. Mirrors the leader page's "moving no control" tests in `e2e/messages.spec.ts`.
+- **The row after the Connections panel on the producer page** is now the Message the band panel, so `e2e/lights.spec.ts` scrolls to that region as its next row.
+
 ## Remediation scope
 Nick 2026-11-26: remediate all four Confirmed findings. Finding 1 takes Option A, with its zero-shift e2e test.
 
@@ -226,3 +230,21 @@ Tests added: 20 (devices-panel 1, hub-coalescing 3, messages-hub 6, messages-pag
 
 ## Verdict
 Ready with follow-ups once finding 1 is settled. Gate: Nick picks Option A or Option C for finding 1, and with Option A the remediation lands with its zero-shift e2e test. Findings 2, 3 and 4 are small and go in the same remediation round. Needs Further Investigation A becomes a follow-up issue, since the base fails the same way.
+
+## Remediation: 2026-11-26
+| Finding | Commit | Proof | Comments added | Verify verdict |
+| --- | --- | --- | --- | --- |
+| 1 (MEDIUM) | `39d853a` a send or Clear moved the quick messages and Clear messages on the producer page; `10ab174` follow-up, the README still put the Devices panel under Connections | red to green: `pnpm build && pnpm exec playwright test e2e/messages.spec.ts -g "a quick message or Clear leaves"` (red: Repeat chorus 1770 to 1855 px in Chromium, both projects failed); `node docs/reviews/setlist-controller-28/repro/quick-messages-move.mts` exit 1 before, exit 0 after; preserve: `e2e/messages.spec.ts`, `e2e/devices.spec.ts`, `e2e/producer.spec.ts`, `e2e/lights.spec.ts` 56 passed, `test/messages-page.test.ts`, `test/devices-panel.test.ts`, `test/pages.test.ts` 245 passed | 1 (the ProducerMessages header sentence on why the list and the Devices panel sit under every control); the other gate lines are existing comments rewritten for the new order | proved by execution |
+| 2 (LOW) | `b96dbe7` the revert test never looked at the producer page | red to green: with `repro/revert-skips-producer.mutation.patch` applied, `pnpm vitest run test/hub-coalescing.test.ts -t "after a message reached the producer page"` fails with `expected 12 to be 10`; mutation reverted, all 19 tests in the file pass | 0 | proved by execution |
+| 3 (LOW) | `898120c` the empty-list test could not tell which branch ran | red to green: with `activeMessages.length < 0` in `web/src/ProducerMessages.tsx`, `pnpm vitest run test/messages-page.test.ts -t "no-message line"` fails; restored, it passes, 12 of 12 in the file | 0 | proved by execution |
+| 4 (LOW, comment hygiene) | `03d0149` comments and README drift on who holds a message | each entry read against `src/server/messages.ts:71,76` (`shownBy` over every registry device, `shownOn` ignores `online`) and decision 1; the `styles.css:1276` entry landed in `39d853a` with the active messages last, per Option A | n/a | excluded from verify (prose) |
+
+Sites the brief missed, found on re-verify and fixed under finding 1: `e2e/lights.spec.ts:89-90` (scrolled to the Devices panel as the row after Connections; now the Message the band panel), `web/src/App.tsx:229` and `web/src/styles.css:1139-1140` (panel order comments), and `README.md:47` ("The producer page's Devices panel, under Connections"), which the brief's grep did not match, in `10ab174`.
+
+Checks at `10ab174`: `pnpm lint` exit 0; `pnpm typecheck` exit 0; `pnpm vitest run --maxWorkers=2` 117 files, 3580 passed, 5 skipped; `pnpm check:private --range origin/main..HEAD` exit 0; `pnpm test:e2e` 222 passed, 2 failed, both `webkit-ipad` `page.goto` timeouts (`e2e/messages.spec.ts:60`, the same test as at the base, and `e2e/timeline.spec.ts:175`, the second hang moved from `:286` by the new test); each file alone: `e2e/messages.spec.ts` 30 passed, `e2e/timeline.spec.ts` 12 passed. Needs Further Investigation A stands. `origin/main` is still `232dfca`, so no merge.
+
+### Known regressions, deferred
+None.
+
+### Rework briefs
+None. Every fix was proved by execution, so no verify agent ran and no rework pass was needed.
