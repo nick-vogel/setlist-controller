@@ -17,7 +17,7 @@ const SKILL = join(REPO_ROOT, '.claude/skills/build-set/SKILL.md');
 const TRACES = join(REPO_ROOT, '.claude/skills/build-set/traces.md');
 
 // The traces in traces.md. A trace added or deleted changes this count in the same commit.
-const TRACE_COUNT = 102;
+const TRACE_COUNT = 104;
 
 const TRACE = `# Traces
 

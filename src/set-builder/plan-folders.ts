@@ -2,6 +2,7 @@ import { listed, songFolders, unreadableLibrary, type LibraryFolders } from './l
 import { sameName } from './name-rule.ts';
 import { isKey, KEY_GRAMMAR, sameKey, songKey, songNoteKey } from './pads.ts';
 import type { PlanSong } from './plan-reader.ts';
+import type { Skipped } from './plan-transitions.ts';
 import { songTitle } from './song.ts';
 
 // Each plan song's library folder: the folders whose title, the text before the folder name's first hyphen, is the plan
@@ -9,28 +10,40 @@ import { songTitle } from './song.ts';
 // spelling being the same key (sameKey). Each song that has no one folder is one problem, checked in this order: no
 // folder of its title, no key in the plan (never a folder picked without one, even when the title has one folder), a
 // plan key that is not a note name (isKey) as read (planKey), no folder in the plan's key, and two or more folders in it. Every song's problem is reported, in plan order, before the
-// build stops. An unreadable library is its one problem.
-export async function planFolders(folders: LibraryFolders, songs: PlanSong[]): Promise<{ ok: true; folders: string[] } | { ok: false; problems: string[] }> {
-  const picked = await pickFolders(folders, songs);
+// build stops. A song --skip leaves out (skipped, by position from 1) gets no folder and no problem, so the folders are
+// those of the songs kept, in plan order. An unreadable library is its one problem.
+export async function planFolders(
+  folders: LibraryFolders,
+  songs: PlanSong[],
+  skipped: Skipped,
+): Promise<{ ok: true; folders: string[] } | { ok: false; problems: string[] }> {
+  const picked = await pickFolders(folders, songs, skipped);
   if (!picked.ok) return { ok: false, problems: [picked.problem] };
-  const problems = picked.picks.flatMap((pick) => (pick.ok ? [] : [pick.problem]));
-  return problems.length === 0 ? { ok: true, folders: picked.picks.flatMap((pick) => (pick.ok ? [pick.folder] : [])) } : { ok: false, problems };
+  const picks = picked.picks.filter((pick) => pick !== undefined);
+  const problems = picks.flatMap((pick) => (pick.ok ? [] : [pick.problem]));
+  return problems.length === 0 ? { ok: true, folders: picks.flatMap((pick) => (pick.ok ? [pick.folder] : [])) } : { ok: false, problems };
 }
 
 // One plan song's folder, or its problem.
 export type FolderPick = { ok: true; folder: string } | { ok: false; problem: string };
 
 // Each plan song's folder or its problem, by planFolders's rule and wording, in plan order, so a listing of the plan can
-// show every song's; or the unreadable library's one problem.
-export async function pickFolders(folders: LibraryFolders, songs: PlanSong[]): Promise<{ ok: true; picks: FolderPick[] } | { ok: false; problem: string }> {
+// show every song's, and undefined for a song --skip leaves out (skipped); or the unreadable library's one problem.
+export async function pickFolders(
+  folders: LibraryFolders,
+  songs: PlanSong[],
+  skipped: Skipped,
+): Promise<{ ok: true; picks: (FolderPick | undefined)[] } | { ok: false; problem: string }> {
   const library = await songFolders(folders);
   if (library === undefined) return { ok: false, problem: unreadableLibrary(folders.library) };
-  return { ok: true, picks: songs.map((song) => pickFolder(folders.library, library, song)) };
+  return { ok: true, picks: songs.map((song, index) => (skipped.has(index + 1) ? undefined : pickFolder(folders.library, library, song, index + 1))) };
 }
 
-function pickFolder(libraryPath: string, library: string[], song: PlanSong): FolderPick {
+// A song with no folder of its title may be one the band plays with no track, such as a sung tag, so its problem names
+// --skip, which leaves it out, as a fix (setlist-controller#31).
+function pickFolder(libraryPath: string, library: string[], song: PlanSong, position: number): FolderPick {
   const titled = library.filter((folder) => sameName(songTitle(folder), song.title));
-  if (titled.length === 0) return { ok: false, problem: `"${song.title}" has no song folder in ${libraryPath}.` };
+  if (titled.length === 0) return { ok: false, problem: `"${song.title}" has no song folder in ${libraryPath}. To leave it out of the set, give --skip ${position}.` };
   if (song.key === undefined) {
     return { ok: false, problem: `"${song.title}" has no key in the plan, and ${libraryPath} has it in ${keysOf(titled)}. Give it a key in the plan.` };
   }

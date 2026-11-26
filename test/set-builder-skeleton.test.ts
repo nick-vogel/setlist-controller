@@ -244,8 +244,9 @@ describe('pnpm build-set --skeleton', { timeout: 30_000 }, () => {
     { args: ['--skeleton', '--list'], problem: '--skeleton prints the chart skeleton and takes no --list.' },
     { args: ['--skeleton', 'grace', '--output-root', 'Sets'], problem: '--skeleton takes only --library and --pads, not --output-root.' },
     { args: ['--skeleton', 'grace', '--date', PHASE_0], problem: '--skeleton takes only --library and --pads, not --date.' },
+    { args: ['--skeleton', 'grace', '--skip', '1'], problem: '--skeleton takes only --library and --pads, not --skip.' },
     { args: ['--plan', '--skeleton', 'grace'], problem: '--plan takes the songs from the plan, not "grace".' },
-    { args: ['--plan', '--skeleton', '--replace', 'Sets'], problem: '--plan --skeleton takes only --library, --pads, --date, --service-type and --plan-id, not --replace.' },
+    { args: ['--plan', '--skeleton', '--replace', 'Sets'], problem: '--plan --skeleton takes only --library, --pads, --date, --service-type, --plan-id and --skip, not --replace.' },
   ])('refuses $args as a usage error, exit 2, writing nothing', async ({ args, problem }) => {
     const workspace = await createWorkspace();
     const before = await snapshotFolder(workspace.dir);
@@ -293,7 +294,22 @@ describe('pnpm build-set --plan --skeleton', { timeout: 30_000 }, () => {
     const result = await run(['--plan', '--skeleton', '--date', PHASE_0, '--library', workspace.library], workspace, await planEnv(workspace, fake));
 
     expect(result.stdout).toBe(lines('1. WELCOME HOME', ...GRACE_HEADINGS, '', '3. Fall Like Rain', ...GOODNESS_HEADINGS));
-    expect(result.stderr).toBe(lines(noteOne('WELCOME HOME', 'Outro'), `"Yes And Amen" has no song folder in ${workspace.library}.`));
+    expect(result.stderr).toBe(lines(noteOne('WELCOME HOME', 'Outro'), `"Yes And Amen" has no song folder in ${workspace.library}. To leave it out of the set, give --skip 2.`));
     expect(result.code).toBe(1);
+  });
+});
+
+describe('pnpm build-set --plan --skeleton --skip', { timeout: 30_000 }, () => {
+  it('leaves a skipped song out with no problem, and keeps the plan numbers of the others, exit 0 (setlist-controller#31)', async () => {
+    const workspace = await createWorkspace();
+    await copySongAs(workspace, GRACE, WELCOME_HOME);
+    await copySongAs(workspace, GOODNESS, FALL_LIKE_RAIN);
+    const fake = await planningCenter();
+
+    const result = await run(['--plan', '--skeleton', '--skip', '2', '--date', PHASE_0, '--library', workspace.library], workspace, await planEnv(workspace, fake));
+
+    expect(result.stdout).toBe(lines('1. WELCOME HOME', ...GRACE_HEADINGS, '', '3. Fall Like Rain', ...GOODNESS_HEADINGS));
+    expect(result.stderr).toBe(lines(noteOne('WELCOME HOME', 'Outro')));
+    expect(result.code).toBe(0);
   });
 });

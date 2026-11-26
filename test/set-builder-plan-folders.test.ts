@@ -140,7 +140,7 @@ describe('pnpm build-set --plan, a song title', { timeout: 30_000 }, () => {
     const workspace = await createWorkspace();
     const fake = await planningCenterEditing();
 
-    await expectStopped(workspace, await buildNovember1(workspace, fake), [`"Fall Like Rain" has no song folder in ${workspace.library}.`]);
+    await expectStopped(workspace, await buildNovember1(workspace, fake), [`"Fall Like Rain" has no song folder in ${workspace.library}. To leave it out of the set, give --skip 3.`]);
   });
 
   it('does not match "Grace" to This Is Amazing Grace', async () => {
@@ -148,7 +148,7 @@ describe('pnpm build-set --plan, a song title', { timeout: 30_000 }, () => {
     await copySongAs(workspace, GOODNESS, FALL_LIKE_RAIN);
     const fake = await planningCenterEditing({ 'This Is Amazing Grace': { title: 'Grace' } });
 
-    await expectStopped(workspace, await buildNovember1(workspace, fake), [`"Grace" has no song folder in ${workspace.library}.`]);
+    await expectStopped(workspace, await buildNovember1(workspace, fake), [`"Grace" has no song folder in ${workspace.library}. To leave it out of the set, give --skip 1.`]);
   });
 
   it('matches a title that differs only in letter case and spacing', async () => {
@@ -263,7 +263,7 @@ describe('pnpm build-set --plan, every problem at once', { timeout: 30_000 }, ()
 
     await expectStopped(workspace, await buildNovember1(workspace, fake), [
       `"Great Are You Lord" is planned in E, and ${workspace.library} has it only in D.`,
-      `"Fall Like Rain" has no song folder in ${workspace.library}.`,
+      `"Fall Like Rain" has no song folder in ${workspace.library}. To leave it out of the set, give --skip 3.`,
     ]);
   });
 

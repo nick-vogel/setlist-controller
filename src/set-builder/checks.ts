@@ -114,8 +114,14 @@ export const FILE_FADE_OUT_SECONDS = 20;
 // for the song; else a pad file too short for its clip (padAudio) and FILE_FADE_OUT_SECONDS after it. The file is left
 // unchecked when the clip cannot be measured: for a pad whose file could not be found or read, whose own problem names
 // it; when the song or the holder has no starting tempo or meter; when the song after the pad stands in the service with
-// its own problem; or when it has no Intro (introProblems).
-export function padProblems(service: (Song | undefined)[], transitions: Partial<Record<number, Transition>>, pads: Record<number, Pad>): string[] {
+// its own problem; or when it has no Intro (introProblems). A problem calls the song at a position by its number
+// (numberOf).
+export function padProblems(
+  service: (Song | undefined)[],
+  transitions: Partial<Record<number, Transition>>,
+  pads: Record<number, Pad>,
+  numberOf: (position: number) => number,
+): string[] {
   const problems = service.flatMap((song, index) => {
     const position = index + 1;
     if (!song || transitions[position]?.type !== 'pad') return [];
@@ -130,7 +136,7 @@ export function padProblems(service: (Song | undefined)[], transitions: Partial<
     if (lasts >= needs) return [];
     const shown = (value: number) => Number(value.toFixed(3));
     return [
-      `The pad after song ${position} plays ${file.name}, which lasts ${shown(lasts)} s. Its clip plays the file from ${shown(from)} s to ${shown(from + seconds)} s, and the file's last ${FILE_FADE_OUT_SECONDS} s are its own fade-out, so the pad needs a file of at least ${shown(needs)} s.`,
+      `The pad after song ${numberOf(position)} plays ${file.name}, which lasts ${shown(lasts)} s. Its clip plays the file from ${shown(from)} s to ${shown(from + seconds)} s, and the file's last ${FILE_FADE_OUT_SECONDS} s are its own fade-out, so the pad needs a file of at least ${shown(needs)} s.`,
     ];
   });
   return [...new Set(problems)];
