@@ -76,7 +76,7 @@ describe('the message board', () => {
     expect(messages.activeFor('keys', 'viewer')).toEqual(second);
   });
 
-  it('gives a message to all or to view-only pages to a device that first connects after the send', () => {
+  it('gives a message to view-only pages to a device that first connects after the send', () => {
     const messages = board();
     const viewers = messages.send('Repeat chorus', 'viewers');
     expect(messages.activeFor('late', 'viewer')).toEqual(viewers);

@@ -4,9 +4,10 @@ import type { Role } from '../shared/routes.ts';
 
 // The producer's active messages, from which the hub reads the one message each device shows. A
 // device shows the newest message that reaches it, so a second send replaces the first wherever both
-// reach. A message to every page or to every view-only page stands for the page that first connects
-// after the send too. The board lives in memory alone, as the device registry does, so a server
-// restart clears it.
+// reach. A message also stands for a device that is not connected yet: one to every page or every
+// view-only page reaches a page that first connects after the send, and one to chosen devices reaches
+// a chosen device when it comes back. The board lives in memory alone, as the device registry does,
+// so a server restart clears it.
 
 export type MessageBoard = {
   // Records a message to the target, with a new ID, and gives it.

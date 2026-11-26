@@ -11,9 +11,10 @@ import { deviceChoices } from '../web/src/ProducerMessages.tsx';
 import { contrast, readStylesheet, type Element } from './css.ts';
 
 // The producer's message as each page draws it, and the producer's panel that sends one. A static
-// render presses nothing and evaluates no stylesheet: that a preset fills the text box, that Send
-// reaches the devices it targets, that Dismiss hides the banner across a reload, and that the banner
-// holds to the top of a scrolled page are in e2e/messages.spec.ts.
+// render presses nothing and lays nothing out: that a quick message sends at once, that Send reaches
+// the devices it targets, that Dismiss hides the banner across a reload, and that the banner holds to
+// the top of a scrolled page, moves nothing and covers no connection signal are in
+// e2e/messages.spec.ts.
 
 const SNAPSHOT: ProducerSnapshot = {
   live: 'connected',
