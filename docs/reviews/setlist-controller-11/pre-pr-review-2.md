@@ -188,3 +188,25 @@ Nick 2026-11-26: remediate all three Confirmed findings. Finding 1 takes Option 
 
 ## Verdict
 **Not ready to merge as-is.** Zero CRITICALs and zero HIGHs. Gate: fix Finding 1 (MEDIUM, battery warning in `.page-top` permanently blocking Safe Mode, the Setlist/Timeline switcher, and the Timeline primary readout while on battery at 80% or less, after Nick picks Option A or Option B), and fold Findings 2 and 3 (both LOW) into the same remediation round. Everything in the server board, hub queue/pacing, producer-only gate, dismissal/sync, and message banner itself is verified and ready.
+
+## Remediation, 2026-11-26
+| Finding | Commit | Proof | Comments added | Verify verdict |
+| --- | --- | --- | --- | --- |
+| 1 (MEDIUM), Option A | `53e050f` finding 1: the battery warning covered Safe Mode and the view switcher with no way to put it away | red then green: the new e2e tests "Dismiss on the battery warning frees Safe Mode and the Setlist and Timeline switcher, and the warning shows again at red and on a new drop onto battery" (`e2e/messages.spec.ts`) and "Dismiss takes the setup screen's battery warning off the top of the screen, and the Playback Mac row still reports the battery" (`e2e/power.spec.ts`) timed out on the missing Dismiss button in both projects before, and pass after; 3 unit tests in `test/power.test.ts` (markup with Dismiss, the dismissed warning hidden and the other shown, the text and button contrast on amber and red) failed before and pass after; `pnpm vitest run --maxWorkers=2 test/power.test.ts test/messages-page.test.ts test/stage-status.test.ts` 38 passed; `pnpm exec playwright test e2e/messages.spec.ts e2e/power.spec.ts e2e/stage-status.spec.ts e2e/safe-mode.spec.ts e2e/setup.spec.ts` 60 passed | 3 new (the page-memory decision in `App`, the WCAG source in the stylesheet test, why the e2e test reads the producer page's Playback Mac row), plus 2 existing comments updated in place | fixed (one `pr-review-finder` agent, symmetric surface: pages and setup screen) |
+| 2 (LOW) | `9394732` finding 2: the top layer test passed with the banners outside the top layer | red then green by mutation: with `{messageBanner}` and the battery warning moved out of `.page-top` in `web/src/App.tsx`, the old helper passed all 7 tests and the new one fails 2; with `App.tsx` restored, all 7 pass | 0 | proved by execution |
+| 3 (LOW, comment hygiene) | `6dcfc6e` finding 3: comment hygiene | each of the two entries read against the code it describes (only the buttons take `disabled` in `ProducerMessages`; the name field follows `<ProducerMessages />` inside `connections`) | prose only | not verified by agent, by design |
+
+Round checks at `6dcfc6e`: `pnpm lint` exit 0; `pnpm typecheck` exit 0; `pnpm vitest run --maxWorkers=2` 117 files, 3559 passed, 5 skipped; `pnpm test:e2e` 218 passed in both projects; `pnpm check:private --range origin/main..HEAD` exit 0. The repro `repro/battery-warning-blocks-controls.mts` measures the page without a Dismiss, by design, so it still exits 1; the e2e tests above are its real-suite form.
+
+### Known regressions, deferred
+None.
+
+### Notes from the verify pass, not defects
+- The battery warning is taller until it is dismissed: the Dismiss button's `min-height: 3rem` makes it about 4.5rem, and it wraps onto a second row on a narrow phone. This mirrors the message banner and is the cost Option A declared.
+- With the message banner and the battery warning both up, the top layer holds two buttons named "Dismiss". Every e2e locator is scoped to its banner. A distinct accessible name (for example "Dismiss battery warning") would depart from "mirror the message banner", so it is Nick's call.
+- The reset of the dismissed warning in `App` has no unit test, since the unit suite has no DOM renderer. The e2e tests cover low to urgent on the leader page and urgent to mains power to urgent on the producer page.
+- Two power snapshots batched into one render (low, then none, then low) would keep a dismissal. The server reads power every 10 seconds, so this is not reachable in practice.
+
+### Approach decisions added
+- **Battery warning dismissal (Finding 1):** `App` holds the dismissed warning level in `useState`, for the pages and the setup screen alike, since it renders both, and clears it during render as soon as `powerWarning(snapshot.power)` differs from it. `Page` and `Setup` take it as `dismissedPower` and `onDismissPower`, beside the dismissed message. Page memory only, unlike the dismissed message's per-role storage: a reload shows the warning again. The Dismiss button shares `.message-banner-dismiss`'s rule.
+- **Top layer test helper (Finding 2):** `pageTopMarkup` slices the `.page-top` div by counting nested `div` tags, and `inPageTop` reads only that slice.
