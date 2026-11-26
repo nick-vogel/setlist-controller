@@ -28,7 +28,7 @@ export type CountInRule =
 export function countInFor(song: Song, section: number): CountInRule {
   const target = song.sections[section];
   if (!target) return { kind: 'refused', reason: 'no-section' };
-  const countOff = song.sections.findIndex((candidate) => candidate.name === COUNT_OFF);
+  const countOff = countOffIndex(song);
   if (countOff === -1) return { kind: 'refused', reason: 'no-count-off' };
   if (isPad(target.name)) return { kind: 'refused', reason: 'pad' };
   if (section <= countOff + 1) return { kind: 'play-from-start' };
@@ -43,6 +43,11 @@ export function countInFor(song: Song, section: number): CountInRule {
 export function countInLandsOn(song: Song, section: number): boolean {
   const rule = countInFor(song, section);
   return rule.kind === 'count-in' || (rule.kind === 'play-from-start' && song.sections[section - 1]?.name === COUNT_OFF);
+}
+
+// The index of the song's first section named Count Off, or -1 when it has none.
+export function countOffIndex(song: Song): number {
+  return song.sections.findIndex((section) => section.name === COUNT_OFF);
 }
 
 // Whether the song has a section named Count Off, without which it has no count-in at all.

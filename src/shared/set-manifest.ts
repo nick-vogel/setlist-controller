@@ -1,10 +1,11 @@
 import { namesMatch } from './match-name.ts';
 
 // The set manifest: one JSON file holding, for each song of the set in set order, its title, the key
-// of its stems, its starting meter, and its chart's key and text. A song with no chart has no chart key
-// and no chart text.
-// The set builder writes it, the server reads it and serves it to the band pages, and the chart view
-// reads a song's chart from it, so it holds no node import.
+// of its stems, its starting meter, its chart's key and text, and how long its sections and the gap
+// after it play. A song with no chart has no chart key and no chart text, and a manifest the build did
+// not write has no durations.
+// The set builder writes it, the server reads it, serves it to the band pages and times the songs from
+// it, and the chart view reads a song's chart from it, so it holds no node import.
 
 // The manifest's file name, in the app's support folder beside the leader secret by default.
 export const SET_MANIFEST_FILE = 'set-manifest.json';

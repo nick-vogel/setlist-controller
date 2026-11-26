@@ -154,6 +154,23 @@ describe('the song timer', () => {
     expect(timeSongs(other, [], { now: null, playing: false, tempo: 120 })).toEqual({});
   });
 
+  // A Pad and a Pad Out hold the next song's tempo, as the build writes them.
+  it("does not time a song by the tempo of its Pad or Pad Out, and times it once Live plays another of its sections", () => {
+    const padded = parseSet([
+      { name: '1 - Count Off (Padded Song)', time: 0 },
+      { name: '1 - Verse', time: 8 },
+      { name: '1 - Pad', time: 24 },
+      { name: '1 - Pad Out', time: 40 },
+      { name: '1 - End', time: 48 },
+    ]);
+    const timeSongs = createSongTimer();
+    const at = (section: number) => ({ now: { song: 1, section, next: 'end' as const, bar: 1, bars: 2, fraction: 0 }, playing: true });
+    expect(timeSongs(padded, [], { ...at(2), tempo: 63 })).toEqual({});
+    expect(timeSongs(padded, [], { ...at(3), tempo: 63 })).toEqual({});
+    // The Pad and Pad Out at the song's own 120 BPM too, so the song keeps a total.
+    expect(timeSongs(padded, [], { ...at(1), tempo: 120 })[1]).toEqual({ sections: [4, 8, 8, 4], gap: null, source: 'tempo' });
+  });
+
   it('keeps the first tempo it timed a song at while Live plays on in it, and times it again once its locators move', () => {
     const timeSongs = createSongTimer();
     timeSongs(set, [], { ...playingIn(1), tempo: 96 });

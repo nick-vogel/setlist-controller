@@ -135,7 +135,7 @@ const nowPlaying = (
   live: Snapshot['live'] = 'connected',
   loop: Snapshot['loop'] = null,
   countIn = false,
-) => renderToStaticMarkup(createElement(NowPlaying, { live, set: SET, now, jump, countIn, loop, timings: {}, position: null }));
+) => renderToStaticMarkup(createElement(NowPlaying, { live, set: SET, now, jump, countIn, loop, timings: {}, position: null, playing: false }));
 // The text a page shows, without its markup.
 const text = (markup: string) => markup.replace(/<[^>]*>/g, ' ').replace(/\s+/g, ' ').trim();
 // A pre-service check's problem lines, and the names under its Cannot match:, as the markup holds them.
@@ -181,7 +181,7 @@ describe('the now-playing block', () => {
   });
 
   it('shows no Next on the last section of a song with no End, and keeps the line in its place', () => {
-    const markup = renderToStaticMarkup(createElement(NowPlaying, { live: 'connected', set: NO_END_SET, now: NO_END_LAST, jump: null, countIn: false, loop: null, timings: {}, position: null }));
+    const markup = renderToStaticMarkup(createElement(NowPlaying, { live: 'connected', set: NO_END_SET, now: NO_END_LAST, jump: null, countIn: false, loop: null, timings: {}, position: null, playing: false }));
     expect(text(markup)).not.toContain('Next');
     expect(text(nowPlaying(PLAYING, null))).toContain('Next');
     expect(markup).toContain('class="now-next"');
@@ -191,7 +191,7 @@ describe('the now-playing block', () => {
   // the section after the target, in the target's song.
   it("names the section after a count-in's target on the Next line, and the one after the playhead for a tap", () => {
     const markup = (set: SetList, section: number, countIn: boolean) =>
-      renderToStaticMarkup(createElement(NowPlaying, { live: 'connected', set, now: onSection(1, 0), jump: { song: 1, section }, countIn, loop: null, timings: {}, position: null }));
+      renderToStaticMarkup(createElement(NowPlaying, { live: 'connected', set, now: onSection(1, 0), jump: { song: 1, section }, countIn, loop: null, timings: {}, position: null, playing: false }));
     const nextLine = (set: SetList, section: number, countIn: boolean) => text(/<p class="now-next">(.*?)<\/p>/.exec(markup(set, section, countIn))?.[1] ?? 'missing');
     expect(nextLine(COUNT_IN_SET, 1, true)).toBe('Next Verse');
     expect(nextLine(COUNT_IN_SET, 2, true)).toBe('Next Bridge');
