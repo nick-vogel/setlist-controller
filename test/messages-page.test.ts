@@ -161,9 +161,12 @@ describe("the producer's message panel, with the active messages", () => {
     expect(listed(markup)[0]?.[1]).toBe('To Producer, Producer; Keys, View only');
   });
 
-  it('says there is no active message when there is none', () => {
-    expect(listed(active([]))).toEqual([]);
+  it('shows the no-message line in place of the list, and only while no message is active', () => {
     expect(active([])).toContain('No active message.');
+    expect(active([])).not.toContain('message-active-list');
+    const one = active([{ id: 'm1', text: 'Watch leader', to: ['keys'], sent: at(9, 41), shownBy: ['keys'] }]);
+    expect(one).not.toContain('No active message.');
+    expect(one).toContain('message-active-list');
   });
 });
 
