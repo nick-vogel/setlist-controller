@@ -7,7 +7,9 @@ import { gapAfter, type NowPlaying, type SetList, type Snapshot, type Song, type
 // its tempo changes, as long as the manifest's beats still match Live's locators: a set moved by hand after the build is
 // timed by Live instead. Any other song is timed by its beats at Live's tempo the first time Live plays in it, once Live
 // has reported a tempo, outside its Pad and Pad Out, which play at the next song's tempo, and keeps that timing until the
-// set changes. A song Live has not played in has no timing: Live reports only the tempo it plays now.
+// set changes. The Pad and Pad Out are then timed at the song's own tempo too, so a padded song's total is off by the
+// difference: left untimed, they would leave the song with no total at all. A song Live has not played in has no timing:
+// Live reports only the tempo it plays now.
 
 // Live's song time is float32, so beats a hair apart are the same beats.
 const BEATS_EPSILON = 1e-3;

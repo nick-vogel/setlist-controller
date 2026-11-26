@@ -167,6 +167,7 @@ describe('the song timer', () => {
     const at = (section: number) => ({ now: { song: 1, section, next: 'end' as const, bar: 1, bars: 2, fraction: 0 }, playing: true });
     expect(timeSongs(padded, [], { ...at(2), tempo: 63 })).toEqual({});
     expect(timeSongs(padded, [], { ...at(3), tempo: 63 })).toEqual({});
+    // The Pad and Pad Out at the song's own 120 BPM too, so the song keeps a total.
     expect(timeSongs(padded, [], { ...at(1), tempo: 120 })[1]).toEqual({ sections: [4, 8, 8, 4], gap: null, source: 'tempo' });
   });
 
