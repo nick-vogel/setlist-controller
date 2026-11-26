@@ -578,6 +578,31 @@ describe('a client that received a held position', () => {
     expect(viewer.received.map((snapshot) => snapshot.position)).toEqual([0, 1, 2]);
   });
 
+  it('sends the next position at once after a message and a publish that changes nothing, as with no message', async () => {
+    const clock = manualClock();
+    const http = createServer();
+    const hub = startHub(http, { snapshot: snap(0), connections: noProblems }, { leader: 'l', producer: 'p' }, () => {}, () => {}, clock);
+    await new Promise<void>((done) => http.listen(0, '127.0.0.1', done));
+    const base = `ws://127.0.0.1:${(http.address() as AddressInfo).port}`;
+    const viewer = await connect(`${base}${SOCKET_PATHS.viewer}`);
+    const producer = await connect<ProducerSnapshot>(`${base}${producerSocketPath('p')}`);
+    stopHub = async () => {
+      viewer.close();
+      producer.close();
+      await hub.close();
+      await new Promise<void>((done) => http.close(() => done()));
+    };
+    await viewer.snapshot((snapshot) => snapshot.position === 0);
+    clock.advance(POSITION_BROADCAST_MS);
+    producer.send({ kind: 'message', text: 'Repeat chorus', to: 'viewers' });
+    await producer.snapshot((snapshot) => snapshot.activeMessages.length === 1);
+
+    hub.publish(snap(0), noProblems);
+    hub.publish(snap(1), noProblems);
+
+    await viewer.snapshot((snapshot) => snapshot.position === 1);
+  });
+
   it('shows the producer page a message at once, inside a window that holds a position for the trailing flush', async () => {
     const clock = manualClock();
     const http = createServer();
@@ -649,6 +674,18 @@ describe('a client that received a held position', () => {
     await midWindow.flush();
     expect(existing.received.length).toBe(existingCount);
     expect(midWindow.received.at(-1)?.position).toBe(10);
+  });
+
+  it('is brought back to the broadcast position when the position reverts after a message reached the producer page', async () => {
+    const { hub, existing, existingCount, producer, midWindow } = await heldWindow();
+    producer.send({ kind: 'message', text: 'Repeat chorus', to: 'viewers' });
+    await producer.snapshot((snapshot) => snapshot.activeMessages.length === 1);
+
+    hub.publish(snap(10), noProblems);
+
+    await midWindow.snapshot((snapshot) => snapshot.position === 10);
+    await existing.flush();
+    expect(existing.received.length).toBe(existingCount);
   });
 
   it('is brought back to the broadcast position when the position reverts alongside a producer-only change', async () => {

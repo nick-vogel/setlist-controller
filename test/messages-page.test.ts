@@ -155,6 +155,12 @@ describe("the producer's message panel, with the active messages", () => {
     expect(listed(markup)[0]?.[1]).toBe('To Keys, View only; 2 devices no longer listed');
   });
 
+  it('names this producer page itself where another producer page chose it', () => {
+    const markup = active([{ id: 'm1', text: 'Watch leader', to: ['self', 'keys'], sent: at(9, 41), shownBy: ['self', 'keys'] }]);
+
+    expect(listed(markup)[0]?.[1]).toBe('To Producer, Producer; Keys, View only');
+  });
+
   it('says there is no active message when there is none', () => {
     expect(listed(active([]))).toEqual([]);
     expect(active([])).toContain('No active message.');

@@ -6,10 +6,11 @@ import type { Role } from '../shared/routes.ts';
 // list the producer page shows, each with its target and send time. A device shows the newest message
 // that reaches it, so a second send replaces the first wherever both reach. A message to all devices
 // reaches no producer page, since the producer page lists the active messages instead
-// (setlist-controller#28); a chosen producer page is reached. A message also stands for a device that
-// is not connected yet: one to all devices or every view-only page reaches a page that first connects
-// after the send, and one to chosen devices reaches a chosen device when it comes back. The board lives in memory alone, as the device registry does,
-// so a server restart clears it.
+// (setlist-controller#28); a chosen producer page is reached, and a later message to all devices takes
+// its message off. A message also stands for a device that is not connected yet: one to all devices or
+// every view-only page reaches a page that first connects after the send, and one to chosen devices
+// reaches a chosen device when it comes back. The board lives in memory alone, as the device registry
+// does, so a server restart clears it.
 
 export type MessageBoard = {
   // Records a message to the target, with a new ID, and gives it.
@@ -35,7 +36,8 @@ export function createMessageBoard(newId: () => string = randomUUID, now: () => 
     send(text, to) {
       const posted = { message: { id: newId(), text }, order: (order += 1), to, sent: now() };
       if (to === 'all') {
-        // It is newer than every message held, so it replaces them all.
+        // It is newer than every message held, so it replaces them all, a chosen producer page's too,
+        // though it does not reach one: the producer page lists it instead.
         all = posted;
         viewers = null;
         chosen.clear();

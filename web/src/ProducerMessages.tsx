@@ -51,7 +51,7 @@ export function ProducerMessages({
           {activeMessages.map((message) => (
             <li key={message.id} className="message-active">
               <span className="message-active-text">{message.text}</span>
-              <span className="message-active-target">{targetLine(message.to, choices)}</span>
+              <span className="message-active-target">{targetLine(message.to, deviceLabels(devices))}</span>
               <span className="message-active-sent">{`Sent ${clockTime(message.sent)}`}</span>
             </li>
           ))}
@@ -126,12 +126,13 @@ const TARGETS = [
   { value: 'chosen', label: 'Chosen devices' },
 ] as const;
 
-// Who an active message was sent to. A chosen device is named as Send to names it; one that Clear
-// offline took off the list is only counted, since its name went with it.
-function targetLine(to: MessageTarget, choices: { client: string; label: string }[]): string {
+// Who an active message was sent to. A chosen device is named as Send to names it, this producer page
+// too where another producer page chose it; one that Clear offline took off the list is only counted,
+// since its name went with it.
+function targetLine(to: MessageTarget, labels: { client: string; label: string }[]): string {
   if (to === 'all') return 'To all devices';
   if (to === 'viewers') return 'To view-only devices';
-  const named = to.flatMap((client) => choices.find((choice) => choice.client === client)?.label ?? []);
+  const named = to.flatMap((client) => labels.find((choice) => choice.client === client)?.label ?? []);
   const unlisted = to.length - named.length;
   if (unlisted > 0) named.push(`${unlisted} ${unlisted === 1 ? 'device' : 'devices'} no longer listed`);
   return `To ${named.join('; ')}`;
@@ -139,14 +140,19 @@ function targetLine(to: MessageTarget, choices: { client: string; label: string 
 
 const buttonClass = (available: boolean) => (available ? 'connection-button' : 'connection-button unavailable');
 
-// Every device but the producer page's own, in the Devices panel's order, each labelled by its name
-// and role, and offline where it is, since a message reaches it when it comes back. Two devices of
-// one name and role add the start of their client ID, so the producer can tell them apart.
+// Every device but the producer page's own, in the Devices panel's order, labelled as deviceLabels
+// labels it.
 export function deviceChoices(devices: Device[], ownClient: string): { client: string; label: string }[] {
-  const others = devices.filter((device) => device.client !== ownClient);
+  return deviceLabels(devices).filter((choice) => choice.client !== ownClient);
+}
+
+// Every device, in the Devices panel's order, each labelled by its name and role, and offline where
+// it is, since a message reaches it when it comes back. Two devices of one name and role add the start
+// of their client ID, so the producer can tell them apart.
+function deviceLabels(devices: Device[]): { client: string; label: string }[] {
   const named = (device: Device) => `${device.name}, ${ROLE_LABELS[device.role]}`;
-  return others.map((device) => {
-    const shared = others.some((other) => other !== device && named(other) === named(device));
+  return devices.map((device) => {
+    const shared = devices.some((other) => other !== device && named(other) === named(device));
     const label = `${named(device)}${shared ? ` (${device.client.slice(0, 4)})` : ''}${device.online ? '' : ', offline'}`;
     return { client: device.client, label };
   });

@@ -53,7 +53,7 @@ async function settled(...clients: (Client | Client<ProducerSnapshot>)[]) {
 }
 
 describe('a message', () => {
-  it('to all devices reaches every page that said hello but the producer pages, which list it instead', async () => {
+  it('to all devices reaches every page that said hello but the producer pages', async () => {
     const { panel, leader, keys, bass } = await stage();
     const booth = await said(await rig!.connectProducer(), 'booth', 'Booth');
     await expect.poll(() => last(booth)).toBeNull();
@@ -63,6 +63,18 @@ describe('a message', () => {
     await expect.poll(() => [leader, keys, bass].map(last)).toEqual(Array(3).fill('Hold after this song'));
     await settled(panel, booth);
     expect([panel, booth].map(last)).toEqual([null, null]);
+  });
+
+  it("to all devices takes a chosen producer page's older message off its banner, as the list drops it", async () => {
+    const { panel } = await stage();
+    const booth = await said(await rig!.connectProducer(), 'booth', 'Booth');
+    panel.send({ kind: 'message', text: 'Watch leader', to: ['booth'] });
+    await expect.poll(() => last(booth)).toBe('Watch leader');
+
+    panel.send({ kind: 'message', text: 'Hold after this song', to: 'all' });
+
+    await expect.poll(() => last(booth)).toBeNull();
+    await panel.snapshot(lists([['Hold after this song', 'all', ['ipad', 'keys', 'bass']]]));
   });
 
   it('to a chosen producer page reaches it', async () => {

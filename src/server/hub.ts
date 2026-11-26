@@ -96,8 +96,10 @@ export function startHub(
 
   const devices = createDeviceRegistry<WebSocket>();
   const messages = createMessageBoard();
-  // The newest published state, which a change to the devices encodes again.
+  // The newest published state, which a change to the devices or the messages encodes again, and the
+  // published state the last broadcast carried.
   let published = initial;
+  let broadcastedState = initial;
   const activeMessages = () => messages.active(devices.list());
   // The newest published snapshots, and the last ones broadcast across connected sockets.
   let latest = encode(initial.snapshot, initial.connections, devices.list(), activeMessages());
@@ -176,8 +178,13 @@ export function startHub(
 
   const devicesChanged = () => hub.publish(published.snapshot, published.connections);
 
+  // The broadcast producer snapshot takes the new messages too, at the broadcast position, so a later
+  // publish compares against what was last broadcast with the messages as they are now: a publish
+  // that changes nothing still changes nothing, and a position that reverts is still brought back.
   const messagesChanged = () => {
-    latest = encode(published.snapshot, published.connections, devices.list(), activeMessages());
+    const active = activeMessages();
+    latest = encode(published.snapshot, published.connections, devices.list(), active);
+    broadcasted = { playback: broadcasted.playback, producer: encode(broadcastedState.snapshot, broadcastedState.connections, devices.list(), active).producer };
     for (const [socket, state] of clients) if (state.role === 'producer') deliver(socket, state);
   };
 
@@ -185,6 +192,7 @@ export function startHub(
     const changedPlayback = latest.playback !== broadcasted.playback;
     const changedProducer = latest.producer !== broadcasted.producer;
     broadcasted = latest;
+    broadcastedState = published;
     broadcastedKey = latestKey;
     if (!changedPlayback && !changedProducer) return;
     for (const [socket, state] of clients) deliver(socket, state);
@@ -233,9 +241,14 @@ export function startHub(
       if (deviceCommand?.kind === 'reload') sendToDevice(deviceCommand.client, RELOAD);
       else if (deviceCommand?.kind === 'clear-offline' && devices.clearOffline()) devicesChanged();
       else if (deviceCommand?.kind === 'message') {
-        const sent = messages.send(deviceCommand.text, deviceCommand.to);
+        // A message to all devices replaces every older one on the board, so a chosen producer page,
+        // which it does not reach, loses its message too: each socket whose message changed is told.
+        const before = new Map([...clients].map(([other, otherState]) => [other, otherState.client === null ? null : messages.activeFor(otherState.client, otherState.role)]));
+        messages.send(deviceCommand.text, deviceCommand.to);
         for (const [other, otherState] of clients) {
-          if (otherState.client !== null && messages.activeFor(otherState.client, otherState.role)?.id === sent.id) queue(other, otherState, messageFrame(sent));
+          if (otherState.client === null) continue;
+          const now = messages.activeFor(otherState.client, otherState.role);
+          if (now?.id !== before.get(other)?.id) queue(other, otherState, messageFrame(now));
         }
         messagesChanged();
       } else if (deviceCommand?.kind === 'clear-messages' && messages.clear()) {

@@ -153,7 +153,7 @@ describe('the producer socket', () => {
 });
 
 describe('the snapshot by role', () => {
-  it('gives the producer the playback snapshot plus an empty connections list, no config problem and no devices, and the leader and viewer no connections part or devices', async () => {
+  it('gives the producer the playback snapshot plus an empty connections list, no config problem, no devices and no active message, and the leader and viewer none of them', async () => {
     rig = await startRig(SET, { playing: false, position: 0 });
     const producer = await rig.connectProducer();
     const leader = await rig.connectLeader();
@@ -168,6 +168,7 @@ describe('the snapshot by role', () => {
       expect(snapshot).not.toHaveProperty('connections');
       expect(snapshot).not.toHaveProperty('connectionProblems');
       expect(snapshot).not.toHaveProperty('devices');
+      expect(snapshot).not.toHaveProperty('activeMessages');
     }
   });
 
