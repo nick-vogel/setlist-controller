@@ -59,16 +59,16 @@ describe('a message frame', () => {
 });
 
 describe('the message board', () => {
-  it('gives a message to all to every role, a message to view-only pages to viewers alone, and a chosen one to its devices alone', () => {
+  it('gives a message to all to every role but the producer, a message to view-only pages to viewers alone, and a chosen one to its devices alone', () => {
     const messages = board();
     const all = messages.send('Hold after this song', 'all');
-    expect(['viewer', 'leader', 'producer'].map((role) => messages.activeFor('x', role as 'viewer')?.id)).toEqual([all.id, all.id, all.id]);
+    expect(['viewer', 'leader', 'producer'].map((role) => messages.activeFor('x', role as 'viewer')?.id)).toEqual([all.id, all.id, undefined]);
 
     const viewers = messages.send('Repeat chorus', 'viewers');
     expect([messages.activeFor('x', 'viewer')?.id, messages.activeFor('x', 'leader')?.id]).toEqual([viewers.id, all.id]);
 
-    const chosen = messages.send('Watch leader', ['keys']);
-    expect([messages.activeFor('keys', 'viewer')?.id, messages.activeFor('bass', 'viewer')?.id]).toEqual([chosen.id, viewers.id]);
+    const chosen = messages.send('Watch leader', ['keys', 'booth']);
+    expect([messages.activeFor('keys', 'viewer')?.id, messages.activeFor('bass', 'viewer')?.id, messages.activeFor('booth', 'producer')?.id]).toEqual([chosen.id, viewers.id, chosen.id]);
   });
 
   it('keeps one message per device, the newest that reaches it', () => {
@@ -172,7 +172,7 @@ describe("the board's active messages, as the producer page lists them", () => {
     expect(messages.active(devices).map(({ text, shownBy }) => [text, shownBy])).toEqual([
       ['Watch leader', ['bass']],
       ['Repeat chorus', ['keys']],
-      ['Hold after this song', ['panel', 'ipad']],
+      ['Hold after this song', ['ipad']],
     ]);
   });
 });

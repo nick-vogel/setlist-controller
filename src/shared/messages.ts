@@ -10,7 +10,8 @@ import { isClientId } from './devices.ts';
 // even after a server restart.
 export type BandMessage = { id: string; text: string };
 
-// Who a message reaches: every page, every view-only page, or the devices with these client IDs. A
+// Who a message reaches: every page but the producer pages, every view-only page, or the devices with
+// these client IDs. A
 // device takes its role from its socket (src/server/hub.ts), never from its last hello.
 export type MessageTarget = 'all' | 'viewers' | string[];
 

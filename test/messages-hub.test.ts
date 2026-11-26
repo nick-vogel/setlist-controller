@@ -53,12 +53,25 @@ async function settled(...clients: (Client | Client<ProducerSnapshot>)[]) {
 }
 
 describe('a message', () => {
-  it('to all devices reaches every page that said hello, the producer page included', async () => {
+  it('to all devices reaches every page that said hello but the producer pages, which list it instead', async () => {
     const { panel, leader, keys, bass } = await stage();
+    const booth = await said(await rig!.connectProducer(), 'booth', 'Booth');
+    await expect.poll(() => last(booth)).toBeNull();
 
     panel.send({ kind: 'message', text: 'Hold after this song', to: 'all' });
 
-    await expect.poll(() => [panel, leader, keys, bass].map(last)).toEqual(Array(4).fill('Hold after this song'));
+    await expect.poll(() => [leader, keys, bass].map(last)).toEqual(Array(3).fill('Hold after this song'));
+    await settled(panel, booth);
+    expect([panel, booth].map(last)).toEqual([null, null]);
+  });
+
+  it('to a chosen producer page reaches it', async () => {
+    const { panel } = await stage();
+    const booth = await said(await rig!.connectProducer(), 'booth', 'Booth');
+
+    panel.send({ kind: 'message', text: 'Watch leader', to: ['booth'] });
+
+    await expect.poll(() => last(booth)).toBe('Watch leader');
   });
 
   it('to the view-only devices reaches every view-only socket and no leader or producer page', async () => {
@@ -196,7 +209,7 @@ describe("the producer page's active messages", () => {
     expect(listed(snapshot)).toEqual([
       ['Watch leader', ['ipad'], ['ipad']],
       ['Repeat chorus', 'viewers', ['keys', 'bass']],
-      ['Hold after this song', 'all', ['panel']],
+      ['Hold after this song', 'all', []],
     ]);
     for (const { sent } of snapshot.activeMessages) expect(sent).toBeGreaterThanOrEqual(before);
     for (const { sent } of snapshot.activeMessages) expect(sent).toBeLessThanOrEqual(Date.now());
