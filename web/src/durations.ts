@@ -1,4 +1,4 @@
-import { COUNT_OFF } from '../../src/shared/count-in.ts';
+import { countOffIndex } from '../../src/shared/count-in.ts';
 import { gapAfter, type SetList, type Snapshot, type Song, type SongTiming } from '../../src/shared/snapshot.ts';
 
 // How long the songs and the set play, and how long is left while Live plays, from each song's timing in the snapshot.
@@ -109,7 +109,7 @@ function playedAfter(song: Song, timing: SongTiming | undefined, index: number):
 // The seconds a count-in plays before it lands: the rest of the target song's Count Off once Live plays in it, and all of
 // it before then, while the playhead is still where Live stood. None for a song with no Count Off.
 function countInLead(set: SetList, timings: Timings, song: Song, now: Playhead['now'], position: number): number | null {
-  const countOff = song.sections.findIndex((section) => section.name === COUNT_OFF);
+  const countOff = countOffIndex(song);
   if (countOff === -1) return 0;
   if (now?.song === song.number && now.section === countOff) return restOfSection(set, timings, song.number, countOff, position);
   return timings[song.number]?.sections[countOff] ?? null;

@@ -1,5 +1,5 @@
 import { createConnection, type Socket } from 'node:net';
-import { COUNT_OFF } from '../shared/count-in.ts';
+import { countOffIndex } from '../shared/count-in.ts';
 import { namesMatch } from '../shared/match-name.ts';
 import { decode, encode, type OscMessage, type OscOutArgument } from '../shared/osc.ts';
 import { songTitle, type SetList, type Song } from '../shared/snapshot.ts';
@@ -856,7 +856,7 @@ function eosTarget(clock: Pick<Clock, 'every' | 'now'>, { host, port, cueList }:
 // null for a song with no section.
 function songStart(song: Song): number | null {
   if (song.sections.length === 0) return null;
-  const countOff = song.sections.findIndex((section) => section.name === COUNT_OFF);
+  const countOff = countOffIndex(song);
   return countOff === -1 ? 0 : countOff;
 }
 
