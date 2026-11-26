@@ -3,7 +3,7 @@ import { setName } from './build-set.ts';
 import { songNoteKey } from './pads.ts';
 import type { FolderPick } from './plan-folders.ts';
 import type { Plan } from './plan-reader.ts';
-import { itemMeanings, lastKept, type TransitionSource } from './plan-transitions.ts';
+import { itemMeanings, lastKept, type Skipped, type TransitionSource } from './plan-transitions.ts';
 
 // `--plan --list`: what the plan resolves to, as lines to print, before a build. Pure: the command reads the plan, the
 // folders and the songs' meters, and prints these lines.
@@ -14,8 +14,8 @@ export type PlanListingInput = {
   plan: Plan;
   // Each plan song's folder, or its problem, by position, and undefined for a song --skip leaves out.
   picks: (FolderPick | undefined)[];
-  // The songs --skip leaves out of the set, by position, each with its flag as typed, `--skip 3`.
-  skipped?: ReadonlyMap<number, string>;
+  // The songs --skip leaves out of the set.
+  skipped: Skipped;
   // The transitions after the flags (transitionsWithFlags), the problems left, and each position's source.
   transitions: Partial<Record<number, Transition>>;
   problems: Map<number, string>;
@@ -39,9 +39,8 @@ export type PlanListingInput = {
 // --skip leaves out is `<n>. <title>  <plan key, or "no key">  skipped, from --skip <n>`, with no folder and no
 // transition, and the last song is the last one not skipped. A non-song item is `<title>: a pad after song <n>`, with
 // `, which <flag> replaces` when a flag names that song, or `<title>: no effect`.
-export function planListing({ date, plan, picks, skipped = new Map(), transitions, problems, sources, warnings, existingSet }: PlanListingInput): string[] {
-  const skips = new Set(skipped.keys());
-  const last = lastKept(plan.songs.length, skips);
+export function planListing({ date, plan, picks, skipped, transitions, problems, sources, warnings, existingSet }: PlanListingInput): string[] {
+  const last = lastKept(plan.songs.length, skipped);
   const songLine = (position: number): string => {
     const song = plan.songs[position - 1];
     const skip = skipped.get(position);
@@ -58,7 +57,7 @@ export function planListing({ date, plan, picks, skipped = new Map(), transition
     }
     return [fields.join('  '), ...after].join('\n');
   };
-  const entries = itemMeanings(plan, skips).map((entry) => {
+  const entries = itemMeanings(plan, skipped).map((entry) => {
     if (entry.kind === 'song') return songLine(entry.position);
     const title = entry.title === '' ? 'untitled' : entry.title;
     if (entry.padAfter === undefined) return `${title}: no effect`;

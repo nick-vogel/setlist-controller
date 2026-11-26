@@ -783,6 +783,16 @@ describe('pnpm build-set --plan --list --skip', { timeout: 30_000 }, () => {
     ]);
   });
 
+  it("numbers the build's own problems as the plan does, so a pad problem names the song --pad names", async () => {
+    const workspace = await phase0Workspace();
+    const fake = await planningCenter();
+
+    const result = await run(['--plan', '--list', '--skip', '1', '--pad', '3=C', '--date', PHASE_0, ...listPaths(workspace)], fake, await tokenFile(workspace));
+
+    expect(result.code).toBe(1);
+    expect(result.stderr).toMatch(/^The pad after song 3 is in C, /);
+  });
+
   it('names --skip as the fix for a plan song with no song folder, and lists the plan with it, exit 0', async () => {
     const workspace = await phase0Workspace();
     await rm(join(workspace.library, YES_AND_AMEN), { recursive: true });

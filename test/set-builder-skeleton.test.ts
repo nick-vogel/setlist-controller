@@ -244,6 +244,7 @@ describe('pnpm build-set --skeleton', { timeout: 30_000 }, () => {
     { args: ['--skeleton', '--list'], problem: '--skeleton prints the chart skeleton and takes no --list.' },
     { args: ['--skeleton', 'grace', '--output-root', 'Sets'], problem: '--skeleton takes only --library and --pads, not --output-root.' },
     { args: ['--skeleton', 'grace', '--date', PHASE_0], problem: '--skeleton takes only --library and --pads, not --date.' },
+    { args: ['--skeleton', 'grace', '--skip', '1'], problem: '--skeleton takes only --library and --pads, not --skip.' },
     { args: ['--plan', '--skeleton', 'grace'], problem: '--plan takes the songs from the plan, not "grace".' },
     { args: ['--plan', '--skeleton', '--replace', 'Sets'], problem: '--plan --skeleton takes only --library, --pads, --date, --service-type, --plan-id and --skip, not --replace.' },
   ])('refuses $args as a usage error, exit 2, writing nothing', async ({ args, problem }) => {

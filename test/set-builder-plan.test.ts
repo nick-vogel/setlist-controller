@@ -5,7 +5,7 @@ import { createServer, type ServerResponse } from 'node:http';
 import type { AddressInfo } from 'node:net';
 import { join } from 'node:path';
 import { afterEach, describe, expect, it } from 'vitest';
-import { readFixtures, requestKey, startPlanningCenter, type PlanningCenter } from './planning-center-fake.ts';
+import { madeUpChart, readFixtures, requestKey, startPlanningCenter, type PlanningCenter } from './planning-center-fake.ts';
 import {
   addPad,
   addPadTrack,
@@ -1192,27 +1192,75 @@ describe('pnpm build-set --plan --skip', { timeout: 30_000 }, () => {
     expect(result.code).toBe(0);
     expect(songLines(result.stdout).map(ends)).toEqual([
       ['1. WELCOME HOME', 'overlap'],
-      ['2. Fall Like Rain', '4/4'],
+      ['3. Fall Like Rain', '4/4'],
     ]);
   });
 
   it('writes the set manifest with the songs it built, each with its own chart, and none for the skipped song', async () => {
-    const full = await phase0Workspace();
-    const skipped = await phase0Workspace();
+    const workspace = await phase0Workspace();
     const fake = await planningCenter();
 
-    expect((await run(['--plan', '--date', PHASE_0, ...paths(full)], fake, await tokenFile(full))).code).toBe(0);
-    expect((await run(['--plan', '--skip', '2', '--date', PHASE_0, ...paths(skipped)], fake, await tokenFile(skipped))).code).toBe(0);
+    expect((await run(['--plan', '--skip', '2', '--date', PHASE_0, ...paths(workspace)], fake, await tokenFile(workspace))).code).toBe(0);
 
     type ManifestSong = { title: string; chartText?: string };
-    const songsOf = async (workspace: Workspace) => (JSON.parse(await readFile(workspace.setManifest, 'utf8')) as { songs: ManifestSong[] }).songs;
-    const [welcome, , rain] = await songsOf(full);
-    expect((await songsOf(skipped)).map(({ title, chartText }) => ({ title, chartText }))).toEqual([
-      { title: welcome?.title, chartText: welcome?.chartText },
-      { title: rain?.title, chartText: rain?.chartText },
+    const { songs } = JSON.parse(await readFile(workspace.setManifest, 'utf8')) as { songs: ManifestSong[] };
+    // WELCOME HOME's and Fall Like Rain's arrangements in the Phase 0 plan, each with its made-up chart.
+    expect(songs.map(({ title, chartText }) => ({ title, chartText }))).toEqual([
+      { title: 'WELCOME HOME', chartText: madeUpChart('36313264').chord_chart },
+      { title: 'Fall Like Rain', chartText: madeUpChart('36302201').chord_chart },
     ]);
-    expect(welcome?.title).toBe('WELCOME HOME');
-    expect(rain?.title).toBe('Fall Like Rain');
+  });
+
+  it('gives nothing for the "overlap" note on a skipped song', async () => {
+    const workspace = await phase0Workspace();
+    const fake = await planningCenter();
+
+    const result = await run(['--plan', '--skip', '1', '--date', PHASE_0, ...paths(workspace)], fake, await tokenFile(workspace));
+
+    expect(result.stderr).toBe('');
+    expect(result.code).toBe(0);
+    expect(songLines(result.stdout).map((line) => ends(line)[1])).toEqual(['pad in E', '4/4']);
+  });
+
+  it('numbers the songs of the summary and its warnings as the plan does, so the numbers match the flags', async () => {
+    const workspace = await phase0Workspace();
+    const fake = await planningCenter();
+
+    const result = await run(['--plan', '--skip', '1', '--date', PHASE_0, ...paths(workspace)], fake, await tokenFile(workspace));
+
+    expect(result.code).toBe(0);
+    expect(songLines(result.stdout).map((line) => ends(line)[0])).toEqual(['2. Yes And Amen', '3. Fall Like Rain']);
+    expect(result.stdout.split('\n').filter((line) => line.startsWith('Warning: '))).toEqual(['Warning: song 2, "Yes And Amen", is planned in 4/4, and its song starts in 6/8.']);
+  });
+
+  it('keeps the "Prayer" after the song before a skipped song as a pad, in the key of the next song not skipped', async () => {
+    const workspace = await createWorkspace();
+    await copySongAs(workspace, GOODNESS, FALL_LIKE_RAIN);
+    await addPadTrack(workspace);
+    await addPad(workspace, 'E', 120);
+    const body = await recorded(NOVEMBER_1_ITEMS);
+    addItem(body, '900000002', 6.6, 'Prayer');
+    const fake = await planningCenterWith({ path: NOVEMBER_1_ITEMS, body });
+
+    const result = await run(['--plan', '--skip', '2', '--date', NOVEMBER_1, ...paths(workspace)], fake, await tokenFile(workspace));
+
+    expect(result.stderr).toBe('');
+    expect(result.code).toBe(0);
+    expect(songLines(result.stdout).map((line) => ends(line)[1])).toEqual(['pad in E', '4/4']);
+  });
+
+  it('stops on an "overlap" note on the last song not skipped as the last-song problem, exit 1, and writes nothing', async () => {
+    const workspace = await phase0Workspace();
+    const body = await recorded(PHASE_0_NOTES);
+    addNote(body, YES_AND_AMEN_ITEM, '900000101', 'overlap');
+    const fake = await planningCenterWith({ path: PHASE_0_NOTES, body });
+
+    const result = await run(['--plan', '--skip', '3', '--date', PHASE_0, ...paths(workspace)], fake, await tokenFile(workspace));
+
+    expect(result.code).toBe(1);
+    expect(result.stdout).toBe('');
+    expect(result.stderr).toBe('The plan\'s "overlap" note on song 2, "Yes And Amen", names the last song, which has no song after it to overlap into.\n');
+    expect(await snapshotFolder(workspace.outputRoot)).toBeUndefined();
   });
 
   it('puts a pad after the last song not skipped when a "Prayer" follows it, in its own key', async () => {
@@ -1234,6 +1282,7 @@ describe('pnpm build-set --plan --skip', { timeout: 30_000 }, () => {
     { flags: ['--skip', '4'], problem: '--skip must name a song by its position, a whole number from 1 to 3, not "4".' },
     { flags: ['--skip', 'two'], problem: '--skip must name a song by its position, a whole number from 1 to 3, not "two".' },
     { flags: ['--skip', '1', '--skip', '2', '--skip', '3'], problem: '--skip leaves out every song of the plan, so there is no set to build.' },
+    { flags: ['--skip', '2', '--skip', '02'], problem: 'Song 2 has --skip twice, "2" and "02". Give --skip once for each song to leave out.' },
     { flags: ['--skip', '2', '--pad', '2'], problem: '--pad 2 names song 2, which --skip 2 leaves out of the set.' },
     { flags: ['--skip', '3', '--overlap', '3'], problem: '--overlap 3 names song 3, which --skip 3 leaves out of the set.' },
     { flags: ['--skip', '2', '--gap', '2'], problem: '--gap 2 names song 2, which --skip 2 leaves out of the set.' },

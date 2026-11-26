@@ -986,6 +986,7 @@ describe('pnpm build-set --list', { timeout: 30_000 }, () => {
     { flag: 'gap', args: ['--gap', '1'] },
     { flag: 'pad', args: ['--pad', '1'] },
     { flag: 'template', args: ['--template', 'template.als'] },
+    { flag: 'skip', args: ['--skip', '1'] },
   ])('stops with a usage message and writes nothing when --$flag is given beside --list', async ({ flag, args }) => {
     const workspace = await createWorkspace();
     const before = await snapshotFolder(workspace.dir);
@@ -1117,86 +1118,5 @@ describe('pnpm build-set --list', { timeout: 30_000 }, () => {
       '--list reads folder names only and writes nothing. When the set folder for the date already exists under the output root, a last line after the songs says so, as --plan --list says it: "<folder> already exists. The build stops on it unless --replace "<folder>" replaces it.", or with --replace, "<folder> already exists, and --replace replaces it." That line never sets exit 1.',
     );
     expect(unwrapped(result.stderr)).toContain('It takes no song name, and no flag but --library, --pads, --date, --replace and --output-root.');
-  });
-});
-
-describe('the usage text on --plan', { timeout: 30_000 }, () => {
-  // The usage text, as a build with no song named prints it.
-  async function usageText(): Promise<string> {
-    const workspace = await createWorkspace();
-    const result = await run(['--date', DATE, ...paths(workspace)]);
-    expect(result.code).toBe(2);
-    return result.stderr;
-  }
-
-  it('has a synopsis line for --plan and one for --plan --list, and --gap on the songs synopsis', async () => {
-    const usage = await usageText();
-
-    expect(usage).toMatch(/^ {2}pnpm build-set <song> \[<song> \.\.\.\] .*\[--gap <n> \.\.\.\]/m);
-    expect(usage).toMatch(/^ {2}pnpm build-set --plan \[--service-type <name or id>\] \[--plan-id <id>\] .*\[--gap <n> \.\.\.\].*\[--replace <set folder>\]/m);
-    expect(usage).toMatch(/^ {2}pnpm build-set --plan --list \[--service-type <name or id>\] \[--plan-id <id>\] .*\[--gap <n> \.\.\.\].*\[--replace <set folder>\].*\[--output-root <folder>\]/m);
-  });
-
-  it('documents --plan: the songs from the plan for the date, in plan order, each folder by its title and the plan key, and no song name beside it', async () => {
-    const usage = unwrapped(await usageText());
-
-    expect(usage).toContain(
-      "--plan takes the songs from the Planning Center plan for the set's date instead, in plan order, and a song name beside it is a usage error.",
-    );
-    expect(usage).toContain(
-      "Each plan song's folder is the one whose title, the part of its name before the first hyphen, is the song's title, and whose key is the plan's key for it.",
-    );
-  });
-
-  it("documents the plan's transition rule, and that a transition flag replaces what the plan gives", async () => {
-    const usage = unwrapped(await usageText());
-
-    expect(usage).toContain(
-      "An item titled Prayer that is the next item after a song, headers left out, puts a pad after that song in the next song's key, and after the last song in its own key.",
-    );
-    expect(usage).toContain('A note on a song whose whole text is overlap overlaps it into the next song. Every other song change is a gap.');
-    expect(usage).toContain('A transition flag for a song replaces what the plan gives the song change after it.');
-  });
-
-  it('documents --gap, which changes nothing without --plan, and names it in the one-transition sentence', async () => {
-    const usage = unwrapped(await usageText());
-
-    expect(usage).toMatch(/(^| )--gap n makes the song change after song n a gap, to take back a pad or an overlap the plan gives it\./);
-    expect(usage).toContain('Without --plan it changes nothing, since a song with no other transition is followed by a gap.');
-    expect(usage).toContain('One song takes one of --overlap, --pad and --gap.');
-    expect(usage).not.toContain('One song takes --overlap or --pad, not both.');
-  });
-
-  it('documents the token file, its mode, and that the token is never typed on the command line', async () => {
-    const usage = unwrapped(await usageText());
-
-    expect(usage).toContain(
-      '--plan reads the plan with the Planning Center personal access token in ~/.config/setlist-controller/pco.env, or in the file PCO_ENV names, as two lines: PCO_CLIENT_ID=<client id> and PCO_SECRET=<secret>.',
-    );
-    expect(usage).toContain('The command refuses the file when its group or other users can read it, and chmod 600 <file> fixes that.');
-    expect(usage).toContain('The token never goes on the command line.');
-    expect(usage).toContain('A value may sit in single or double quotes, and a line may start with export.');
-    expect(usage).toContain('Outside quotes, a # after a space or a tab starts a comment, and so does a # at the start of a line.');
-    expect(usage).toContain('PCO_ENV may start with ~/ for your home folder.');
-    expect(usage).not.toContain('PCO_API_BASE');
-    expect(usage).not.toContain('PCO_TIMEOUT_MS');
-  });
-
-  it("documents the set manifest every build writes, at the server's own default, with no chart for a build by song names", async () => {
-    const usage = unwrapped(await usageText());
-
-    expect(usage).toContain(
-      "Every build writes the set manifest to --set-manifest <path>, by default ~/Library/Application Support/setlist-controller/set-manifest.json, the server's own default, replacing the last one",
-    );
-    expect(usage).toContain('A build by song names writes no chart key and no chart text. A build with a problem writes no manifest.');
-  });
-
-  it('documents the chart, tempo and meter warnings, which never stop the build', async () => {
-    const usage = unwrapped(await usageText());
-
-    expect(usage).toContain('--plan --list warns, after the songs, for a song whose arrangement has no chart text in Planning Center, and for chart text with no chords in square brackets.');
-    expect(usage).toContain(
-      "A plan build's summary and --plan --list warn, after the songs, when the plan's BPM for a song differs from the BPM its folder name writes, or the plan's meter from the meter the song starts in. A warning never stops the build.",
-    );
   });
 });

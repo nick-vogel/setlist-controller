@@ -53,6 +53,10 @@ export type CheckOptions = {
   // The folder of pad files, one WAV per key named by its key (`A.wav`); `<library>/_pads` by default. A build with no
   // pad never reads it.
   pads?: string;
+  // The number a problem calls each song by, in service order: a plan build's plan numbers, which keep the number of a
+  // song --skip leaves out, so a problem names a song as the flags do (setlist-controller#31). Each song's position by
+  // default.
+  numbers?: number[];
 };
 
 export type BuildOptions = CheckOptions & {
@@ -211,7 +215,8 @@ async function readInputs(options: CheckOptions): Promise<{ problems: string[]; 
   const service = matches.map((match) => readings.get(readingKey(match))?.song);
   const songs = service.filter((song) => song !== undefined);
   const transitions = options.transitions ?? {};
-  const padReading = await readPads(pads, service, transitions);
+  const numberOf = (position: number) => options.numbers?.[position - 1] ?? position;
+  const padReading = await readPads(pads, service, transitions, numberOf);
   const problems = [
     ...templateProblems(targets, options.stemMap, sharedTargetNames(liveSet)),
     ...padTrackProblems(liveSet, transitions),
@@ -219,7 +224,7 @@ async function readInputs(options: CheckOptions): Promise<{ problems: string[]; 
     ...overlapProblems(service, transitions, targets, options.stemMap),
     ...introProblems(service, transitions),
     ...padReading.problems,
-    ...padProblems(service, transitions, padReading.pads),
+    ...padProblems(service, transitions, padReading.pads, numberOf),
     ...audioProblems(songs),
   ];
   return { problems, inputs: { set, targets, songs, padReading } };

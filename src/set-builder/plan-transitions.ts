@@ -2,18 +2,21 @@ import type { Transition } from './build-set.ts';
 import { sameName } from './name-rule.ts';
 import type { Plan } from './plan-reader.ts';
 
-// The plan songs --skip leaves out of the set, by position counted from 1: none by default.
-export const NO_SKIPS: ReadonlySet<number> = new Set();
+// The plan songs --skip leaves out of the set, by position counted from 1, each with its flag as typed, `--skip 3`.
+export type Skipped = ReadonlyMap<number, string>;
+
+// No plan song left out.
+export const NO_SKIPS: Skipped = new Map();
 
 // The position of the last plan song of `count` that --skip does not leave out, or 0 when it leaves out every one.
-export function lastKept(count: number, skipped: ReadonlySet<number>): number {
+export function lastKept(count: number, skipped: Skipped): number {
   for (let position = count; position >= 1; position -= 1) if (!skipped.has(position)) return position;
   return 0;
 }
 
 // The positions of the plan songs of `count` that --skip does not leave out, in plan order: song n of the set built is
 // the plan song at index n - 1.
-export function keptPositions(count: number, skipped: ReadonlySet<number>): number[] {
+export function keptPositions(count: number, skipped: Skipped): number[] {
   return Array.from({ length: count }, (_, index) => index + 1).filter((position) => !skipped.has(position));
 }
 
@@ -25,7 +28,7 @@ export function keptPositions(count: number, skipped: ReadonlySet<number>): numb
 // is the other problem. A problem gives no transition. A song --skip leaves out of the set (skipped) gives nothing, its
 // notes and the "Prayer" after it included, and the last song is the last one not skipped. Pure, so that a listing of the
 // plan can say what each item means by the same rule.
-export function planTransitions(plan: Plan, skipped: ReadonlySet<number> = NO_SKIPS): { transitions: Partial<Record<number, Transition>>; problems: Map<number, string> } {
+export function planTransitions(plan: Plan, skipped: Skipped): { transitions: Partial<Record<number, Transition>>; problems: Map<number, string> } {
   const transitions: Partial<Record<number, Transition>> = {};
   const problems = new Map<number, string>();
   const last = lastKept(plan.songs.length, skipped);
@@ -65,7 +68,7 @@ export type TransitionSource = { from: 'plan' } | { from: 'flag'; flag: string }
 export function transitionsWithFlags(
   plan: Plan,
   flags: Map<number, FlagTransition>,
-  skipped: ReadonlySet<number> = NO_SKIPS,
+  skipped: Skipped,
 ): { transitions: Partial<Record<number, Transition>>; problems: Map<number, string>; sources: Map<number, TransitionSource> } {
   const { transitions, problems } = planTransitions(plan, skipped);
   const sources = new Map<number, TransitionSource>(Object.keys(transitions).map((position) => [Number(position), { from: 'plan' }]));
@@ -85,7 +88,7 @@ export type PlanEntry = { kind: 'song'; position: number } | { kind: 'item'; tit
 
 // The plan's order of service from its first song on, each non-song item with what it means for the build. The items
 // before the first song mean nothing and are left out, and an item after a song --skip leaves out (skipped) means nothing.
-export function itemMeanings(plan: Plan, skipped: ReadonlySet<number> = NO_SKIPS): PlanEntry[] {
+export function itemMeanings(plan: Plan, skipped: Skipped): PlanEntry[] {
   const first = plan.items.findIndex((entry) => entry.kind === 'song');
   if (first === -1) return [];
   return plan.items.slice(first).map((entry, at): PlanEntry => {

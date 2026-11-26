@@ -2,7 +2,7 @@ import { listed, songFolders, unreadableLibrary, type LibraryFolders } from './l
 import { sameName } from './name-rule.ts';
 import { isKey, KEY_GRAMMAR, sameKey, songKey, songNoteKey } from './pads.ts';
 import type { PlanSong } from './plan-reader.ts';
-import { NO_SKIPS } from './plan-transitions.ts';
+import type { Skipped } from './plan-transitions.ts';
 import { songTitle } from './song.ts';
 
 // Each plan song's library folder: the folders whose title, the text before the folder name's first hyphen, is the plan
@@ -15,7 +15,7 @@ import { songTitle } from './song.ts';
 export async function planFolders(
   folders: LibraryFolders,
   songs: PlanSong[],
-  skipped: ReadonlySet<number> = NO_SKIPS,
+  skipped: Skipped,
 ): Promise<{ ok: true; folders: string[] } | { ok: false; problems: string[] }> {
   const picked = await pickFolders(folders, songs, skipped);
   if (!picked.ok) return { ok: false, problems: [picked.problem] };
@@ -32,7 +32,7 @@ export type FolderPick = { ok: true; folder: string } | { ok: false; problem: st
 export async function pickFolders(
   folders: LibraryFolders,
   songs: PlanSong[],
-  skipped: ReadonlySet<number> = NO_SKIPS,
+  skipped: Skipped,
 ): Promise<{ ok: true; picks: (FolderPick | undefined)[] } | { ok: false; problem: string }> {
   const library = await songFolders(folders);
   if (library === undefined) return { ok: false, problem: unreadableLibrary(folders.library) };

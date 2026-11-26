@@ -18,7 +18,7 @@ import { pickFolders, planFolders, type FolderPick } from './plan-folders.ts';
 import { existingSetLine, listingHasProblems, planListing } from './plan-list.ts';
 import { API_BASE, readPlan, readToken, tokenFilePath, type Plan, type PlanSong } from './plan-reader.ts';
 import { chartWarnings, planWarnings, startingMeter } from './plan-warnings.ts';
-import { keptPositions, lastKept, transitionsWithFlags, type FlagTransition } from './plan-transitions.ts';
+import { keptPositions, lastKept, NO_SKIPS, transitionsWithFlags, type FlagTransition, type Skipped, type TransitionSource } from './plan-transitions.ts';
 import { DEFAULT_STEM_MAP_PATH, readRecipe, readStemMapFile, updateRecipe } from './recipe.ts';
 import { defaultSetDate } from './set-date.ts';
 import { buildManifest, writeSetManifest } from './set-manifest.ts';
@@ -61,10 +61,10 @@ song replaces what the plan gives the song change after it.
 by its id when the service type has more than one plan on the date. --skip n leaves plan song n out of the set, as a
 song the band plays with no track: it gets no folder, no warning, no chart and no transition, and the song before it
 keeps its own, into the next song not skipped. n counts the plan's songs from 1, as --plan --list numbers them, and
-every other flag counts them the same way, skipped songs included. Give it once for each song to leave out. The last
-song is the last one not skipped. A transition flag that names a skipped song, and a --skip of every song, are usage
-errors. The summary and the build's own problems number the songs of the set. --service-type, --plan-id and --skip need
---plan.
+every other flag counts them the same way, skipped songs included, as do the summary, its warnings and the build's
+problems. Give it once for each song to leave out. The last song is the last one not skipped. A transition flag that
+names a skipped song, a song --skip names twice, and a --skip of every song, are usage errors. The edit mode and the
+lights step count the songs of the set as built. --service-type, --plan-id and --skip need --plan.
 --plan reads the plan with the Planning Center personal access token in ~/.config/setlist-controller/pco.env, or in
 the file PCO_ENV names, as two lines: PCO_CLIENT_ID=<client id> and PCO_SECRET=<secret>. A value may sit in single
 or double quotes, and a line may start with export. Outside quotes, a # after a space or a tab starts a comment, and
@@ -483,15 +483,13 @@ async function planList(): Promise<void> {
   const replace = replaces(date);
   const plan = await readWeekPlan(date);
   if (plan === undefined) return;
-  const skipped = skips(plan.songs.length);
-  const skipSet = new Set(skipped.keys());
-  const { transitions, problems, sources } = transitionsWithFlags(plan, flagTransitions(plan.songs.length, skipped), skipSet);
-  const picked = await pickFolders({ library, pads: padsPath }, plan.songs, skipSet);
+  const { skipped, transitions, problems, sources } = planChanges(plan);
+  const picked = await pickFolders({ library, pads: padsPath }, plan.songs, skipped);
   if (!picked.ok) return fail([picked.problem]);
   const { picks } = picked;
   const folders = picks.map((pick) => (pick?.ok === true ? pick.folder : undefined));
   const meters = await Promise.all(folders.map((folder) => (folder === undefined ? undefined : startingMeter(library, folder))));
-  const warnings = [...planWarnings(plan.songs, folders, meters), ...chartWarnings(plan.songs, skipSet)];
+  const warnings = [...planWarnings(plan.songs, folders, meters), ...chartWarnings(plan.songs, skipped)];
   for (const line of planListing({ date, plan, picks, skipped, transitions, problems, sources, warnings, existingSet: existingSet(date, replace) })) console.log(line);
   if (listingHasProblems({ picks, problems })) {
     process.exitCode = 1;
@@ -500,7 +498,8 @@ async function planList(): Promise<void> {
   try {
     const stemMap = await stemMapFile();
     const songs = folders.filter((folder) => folder !== undefined);
-    const found = await setProblems({ library, template: templatePath(), stemMap, songs, transitions: setTransitions(transitions, keptPositions(plan.songs.length, skipSet)), pads: padsPath });
+    const numbers = keptPositions(plan.songs.length, skipped);
+    const found = await setProblems({ library, template: templatePath(), stemMap, songs, transitions: setTransitions(transitions, numbers), pads: padsPath, numbers });
     if (found.length > 0) fail(found);
   } catch (error) {
     fail([error instanceof Error ? error.message : String(error)]);
@@ -579,7 +578,7 @@ async function namedSkeletonFolders(): Promise<FolderPick[] | undefined> {
 async function planSkeletonFolders(date: string): Promise<(FolderPick | undefined)[] | undefined> {
   const plan = await readWeekPlan(date);
   if (plan === undefined) return undefined;
-  const picked = await pickFolders({ library, pads: padsPath }, plan.songs, new Set(skips(plan.songs.length).keys()));
+  const picked = await pickFolders({ library, pads: padsPath }, plan.songs, skips(plan.songs.length));
   return picked.ok ? picked.picks : fail([picked.problem]);
 }
 
@@ -602,9 +601,10 @@ async function build(): Promise<void> {
   const replace = replaces(date);
   // The songs, named on the command line or read from the plan, come before the transition flags' positions are checked
   // against their count; the plan's own transitions come with its songs.
-  const set = values.plan === true ? await planSet(date) : { songs: positionals, transitions: typedTransitions(flagTransitions(positionals.length)), planSongs: undefined };
+  const set = values.plan === true ? await planSet(date) : { songs: positionals, transitions: typedTransitions(flagTransitions(positionals.length, NO_SKIPS)), plan: undefined };
   if (set === undefined) return;
-  const { songs, transitions, planSongs } = set;
+  const { songs, transitions, plan } = set;
+  const planSongs = plan?.numbers.map((number) => plan.songs[number - 1]).filter((song) => song !== undefined);
   try {
     const stemMap = await stemMapFile();
     // Read before anything is written, so a lights config that is missing or broken is the build's one problem line.
@@ -620,6 +620,7 @@ async function build(): Promise<void> {
       replace,
       transitions,
       pads: padsPath,
+      ...(plan === undefined ? {} : { numbers: plan.numbers }),
       recipe: {
         stemMapPath: DEFAULT_STEM_MAP_PATH,
         setManifest: manifest,
@@ -637,11 +638,13 @@ async function build(): Promise<void> {
       },
     });
     if (result.ok) {
-      const warnings = planSongs === undefined ? [] : planWarnings(planSongs, result.songs.map(({ folder }) => folder), result.songs.map(({ meter }) => meter));
+      // The warnings number the songs as the plan does, so each built song's folder and meter go at its plan number.
+      const atPlanNumbers = <T>(values: T[]): (T | undefined)[] => plan?.songs.map((_, index) => values[plan.numbers.indexOf(index + 1)]) ?? [];
+      const warnings = plan === undefined ? [] : planWarnings(plan.songs, atPlanNumbers(result.songs.map(({ folder }) => folder)), atPlanNumbers(result.songs.map(({ meter }) => meter)));
       // The set is built either way, so its summary prints; a manifest left unwritten would keep last week's charts on
       // this week's set, so it is one line on stderr and exit 1.
       const written = await writeSetManifest(manifest, buildManifest(result.songs, planSongs, result.durations)).then(() => undefined, oneLine);
-      console.log(summary(date, result.songs, warnings, result.setPath));
+      console.log(summary(date, result.songs, warnings, result.setPath, plan?.numbers));
       await weeklyShow(date, lights);
       if (written !== undefined) {
         console.error(`The set is built, but the set manifest ${manifest} cannot be written: ${written}. The chart view still shows the last manifest's charts.`);
@@ -688,15 +691,15 @@ function checkPlanId(): void {
 // none, since a song with no transition is followed by a gap, each with the flag as typed. A value that names no song of
 // `songs`, then one that names a song --skip leaves out (skipped), then a song two flags name, is a usage problem. An
 // --overlap of the last song not skipped is one too.
-function flagTransitions(songs: number, skipped: ReadonlyMap<number, string> = new Map()): Map<number, FlagTransition> {
+function flagTransitions(songs: number, skipped: Skipped): Map<number, FlagTransition> {
   const kept = (flag: string, value: string, position: number): number => {
     const skip = skipped.get(position);
     if (skip !== undefined) usage(`--${flag} ${value} names song ${position}, which ${skip} leaves out of the set.`);
     return position;
   };
-  const last = lastKept(songs, new Set(skipped.keys()));
+  const last = lastKept(songs, skipped);
   const overlaps = (values.overlap ?? []).map((value) => {
-    const position = kept('overlap', value, overlapPosition(value, songs));
+    const position = kept('overlap', value, songPosition('overlap', value, value, songs));
     if (position === last) usage(`--overlap ${position} names the last song, which has no song after it to overlap into.`);
     return { value, position };
   });
@@ -704,7 +707,7 @@ function flagTransitions(songs: number, skipped: ReadonlyMap<number, string> = n
     const pad = padValue(value, songs);
     return { value, ...pad, position: kept('pad', value, pad.position) };
   });
-  const gaps = (values.gap ?? []).map((value) => ({ value, position: kept('gap', value, gapPosition(value, songs)) }));
+  const gaps = (values.gap ?? []).map((value) => ({ value, position: kept('gap', value, songPosition('gap', value, value, songs)) }));
   // The transitions keep one pad for each song, so a second --pad for a song would drop one without a word. Every value's
   // own check comes first; then the first value, in command order, whose song an earlier value named is the problem.
   const padFor = new Map<number, string>();
@@ -732,21 +735,35 @@ function flagTransitions(songs: number, skipped: ReadonlyMap<number, string> = n
 }
 
 // The set the plan for `date` gives: its songs, as the library's folder names, so the build matches each by its whole
-// name as a typed command would, the plan's songs, for the summary's warnings, and the transitions its items and notes give, each transition flag replacing the
-// plan's for its position, problem and all; or undefined, with the problems printed and exit 1. The token is read
-// before any request. The plan's own problems stop the build first, then a transition flag that names no song of the
-// plan, as a usage problem; then every song's folder problem and every transition problem left, all at once.
-async function planSet(date: string): Promise<{ songs: string[]; transitions: Partial<Record<number, Transition>>; planSongs: PlanSong[] } | undefined> {
+// name as a typed command would, and the transitions its items and notes give, each transition flag replacing the plan's
+// for its position, problem and all, by the set's song positions; with the plan's songs and the plan number of each song
+// of the set, for the summary, its warnings, the build's problems and the set manifest's charts. Or undefined, with the
+// problems printed and exit 1. The token is read before any request. The plan's own problems stop the build first, then
+// a transition flag that names no song of the plan, as a usage problem; then every song's folder problem and every
+// transition problem left, all at once.
+async function planSet(
+  date: string,
+): Promise<{ songs: string[]; transitions: Partial<Record<number, Transition>>; plan: { songs: PlanSong[]; numbers: number[] } } | undefined> {
   const plan = await readWeekPlan(date);
   if (plan === undefined) return undefined;
-  const skipped = skips(plan.songs.length);
-  const skipSet = new Set(skipped.keys());
-  const { transitions, problems } = transitionsWithFlags(plan, flagTransitions(plan.songs.length, skipped), skipSet);
-  const picked = await planFolders({ library, pads: padsPath }, plan.songs, skipSet);
+  const { skipped, transitions, problems } = planChanges(plan);
+  const picked = await planFolders({ library, pads: padsPath }, plan.songs, skipped);
   const left = [...(picked.ok ? [] : picked.problems), ...[...problems].toSorted(([a], [b]) => a - b).map(([, problem]) => problem)];
   if (!picked.ok || left.length > 0) return fail(left);
-  const kept = keptPositions(plan.songs.length, skipSet);
-  return { songs: picked.folders, transitions: setTransitions(transitions, kept), planSongs: kept.map((position) => plan.songs[position - 1]).filter((song) => song !== undefined) };
+  const numbers = keptPositions(plan.songs.length, skipped);
+  return { songs: picked.folders, transitions: setTransitions(transitions, numbers), plan: { songs: plan.songs, numbers } };
+}
+
+// The songs --skip leaves out of the plan (skips), and the transitions the plan gives with each transition flag's in
+// place of the plan's (transitionsWithFlags), by plan position, for --plan and --plan --list alike.
+function planChanges(plan: Plan): {
+  skipped: Skipped;
+  transitions: Partial<Record<number, Transition>>;
+  problems: Map<number, string>;
+  sources: Map<number, TransitionSource>;
+} {
+  const skipped = skips(plan.songs.length);
+  return { skipped, ...transitionsWithFlags(plan, flagTransitions(plan.songs.length, skipped), skipped) };
 }
 
 // The transitions by plan position, renumbered by the set's songs: song n of the set is the plan song at kept[n - 1], so
@@ -761,15 +778,16 @@ function setTransitions(transitions: Partial<Record<number, Transition>>, kept: 
 }
 
 // The plan songs --skip leaves out, by position, each with its flag as typed, `--skip 3`. A value that names no song of
-// the plan's `songs`, then a --skip of every song, is a usage problem. A song --skip names twice is left out once.
-function skips(songs: number): Map<number, string> {
+// the plan's `songs`, then a song two values name, then a --skip of every song, is a usage problem.
+function skips(songs: number): Skipped {
   const skipped = new Map<number, string>();
   for (const value of values.skip ?? []) {
-    const position = /^\d+$/.test(value) ? Number(value) : 0;
-    if (position < 1 || position > songs) usage(`--skip must name a song by its position, a whole number from 1 to ${songs}, not "${value}".`);
-    if (!skipped.has(position)) skipped.set(position, `--skip ${value}`);
+    const position = songPosition('skip', value, value, songs);
+    const earlier = skipped.get(position);
+    if (earlier !== undefined) usage(`Song ${position} has --skip twice, "${earlier.replace(/^--skip /, '')}" and "${value}". Give --skip once for each song to leave out.`);
+    skipped.set(position, `--skip ${value}`);
   }
-  if (lastKept(songs, new Set(skipped.keys())) === 0) usage('--skip leaves out every song of the plan, so there is no set to build.');
+  if (lastKept(songs, skipped) === 0) usage('--skip leaves out every song of the plan, so there is no set to build.');
   return skipped;
 }
 
@@ -899,10 +917,11 @@ function stemMapFile(): Promise<StemMap> {
 }
 
 // The set's name, each song with the bar it starts on, the tempo and meter it starts in and the transition after it,
-// then a plan build's warnings, and last the set's path, to check before opening the set in Live.
-function summary(date: string, songs: SongSummary[], warnings: string[], setPath: string): string {
+// then a plan build's warnings, and last the set's path, to check before opening the set in Live. A song's number is its
+// plan number on a plan build (numbers), and its position in the set otherwise.
+function summary(date: string, songs: SongSummary[], warnings: string[], setPath: string, numbers?: number[]): string {
   const lines = songs.map(({ title, startBar, tempo, meter, transition }, index) =>
-    [`${index + 1}. ${title}`, `bar ${startBar}`, `${tempo} BPM`, meter, ...(transition ? [transitionName(transition)] : [])].join('  '),
+    [`${numbers?.[index] ?? index + 1}. ${title}`, `bar ${startBar}`, `${tempo} BPM`, meter, ...(transition ? [transitionName(transition)] : [])].join('  '),
   );
   return [setName(date), ...lines, ...warnings, setPath].join('\n');
 }
@@ -916,7 +935,7 @@ function transitionName(transition: SummaryTransition): string {
 // when it is given one. A position that names no song, then a key that is not a note name, is a usage problem.
 function padValue(value: string, songs: number): { position: number; key?: string } {
   const split = value.indexOf('=');
-  const position = padPosition(split === -1 ? value : value.slice(0, split), value, songs);
+  const position = songPosition('pad', split === -1 ? value : value.slice(0, split), value, songs);
   if (split === -1) return { position };
   const key = value.slice(split + 1);
   if (key === '') usage(`--pad ${value} names no key after "=". ${KEY_GRAMMAR}`);
@@ -930,25 +949,12 @@ function isDate(value: string): boolean {
   return !Number.isNaN(day.getTime()) && day.toISOString().startsWith(value);
 }
 
-// The song position an --overlap value names: a whole number, written in digits, from 1 to the second-to-last song,
-// since the last song has no song after it.
-// The last song's check is the caller's, since with --skip the last song is the last one not skipped.
-function overlapPosition(value: string, songs: number): number {
-  const position = /^\d+$/.test(value) ? Number(value) : 0;
-  if (position < 1 || position > songs) usage(`--overlap must name a song by its position, a whole number from 1 to ${songs}, not "${value}".`);
-  return position;
-}
-
-// A pad may follow the last song, so a --pad position runs to the song count, where an --overlap position stops short of it.
-function padPosition(text: string, value: string, songs: number): number {
+// The song position a transition flag's or --skip's value names in `text`: a whole number, written in digits, from 1 to
+// `songs`, or a usage problem that quotes the value as typed. Every flag runs to the song count: a pad or a gap may
+// follow the last song, and the last song an --overlap may not name is the last one not skipped, which flagTransitions
+// checks.
+function songPosition(flag: string, text: string, value: string, songs: number): number {
   const position = /^\d+$/.test(text) ? Number(text) : 0;
-  if (position < 1 || position > songs) usage(`--pad must name a song by its position, a whole number from 1 to ${songs}, not "${value}".`);
-  return position;
-}
-
-// A gap may follow the last song, to take back a pad the plan puts after it, so a --gap position runs to the song count.
-function gapPosition(value: string, songs: number): number {
-  const position = /^\d+$/.test(value) ? Number(value) : 0;
-  if (position < 1 || position > songs) usage(`--gap must name a song by its position, a whole number from 1 to ${songs}, not "${value}".`);
+  if (position < 1 || position > songs) usage(`--${flag} must name a song by its position, a whole number from 1 to ${songs}, not "${value}".`);
   return position;
 }
