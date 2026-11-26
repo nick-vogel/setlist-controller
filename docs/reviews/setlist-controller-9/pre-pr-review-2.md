@@ -157,3 +157,21 @@ Tests added: 54 (50 unit across `test/battery.test.ts`, `test/devices.test.ts`, 
 
 ## Verdict
 **Ready with follow-ups.** Zero CRITICAL, zero HIGH, zero MEDIUM, and two LOW findings (`src/server/hub.ts:107-114` unchanged-role `dirty` leak and `web/src/styles.css:1144-1147` offline row contrast). Neither blocks opening the PR; both are small enough to fix in a short remediation pass before merge or track as follow-ups.
+
+## Remediation, 2026-11-25
+Both findings are LOW. The orchestrating thread asked for both this round, so the LOW tail was worked rather than deferred.
+
+| Finding | Commit | Proof | Comments added | Verify verdict |
+| --- | --- | --- | --- | --- |
+| 1 (LOW) | `862c686` a broadcast that leaves a busy socket's snapshot unchanged no longer marks it dirty | red to green: `node docs/reviews/setlist-controller-9/repro/dirty-leak-on-unchanged-role.mts` (`[0,1,2]` and `[0,1,3]` exit 1, then `[0,1]` for both, exit 0); new `it.each` "still holds a position published after a producer-only change / a revert to the position in flight while the send before it is in flight" in `test/hub-coalescing.test.ts` red (`[0,1,2]`) before the fix; `pacing-leak.mts` exit 0; the brief's preserve suites plus `test/server-connection.test.ts` 58 of 58; the review 1 repro suite 1 of 1 | 0 new; two lines of the comment above `deliver` reworded to say the callback resends for a broadcast that changed the socket's own snapshot | fixed (disprove agent: 6 cases each for viewer, leader and producer against the real hub, frames, new sockets and heartbeat read against the diff) |
+| 2 (LOW) | `c536129` offline device rows keep their text at 4.5:1 contrast | red to green: `pnpm build && node docs/reviews/setlist-controller-9/repro/offline-row-contrast.mts` (`3.79:1` exit 1 at review time, then `7.41:1` and `8.97:1`, exit 0); two new stylesheet tests in `test/devices-panel.test.ts` red (`expected '0.7' to be undefined`, `expected '#2a2a2a' not to be '#2a2a2a'`) before the fix; `test/devices-panel.test.ts`, `test/pages.test.ts`, `test/setup-screen.test.ts` 245 passed, 5 skipped | 1 (the WCAG 2.1 AA threshold the test applies) | fixed, proved by execution |
+
+### Known regressions, deferred
+- None. The disprove agent noted, as an observation and not a regression: when a busy socket's own payload really changes and a position is then held, its send callback sends `latest`, which already carries the held position. That matches the review 1 decision that a busy socket gets the one newest snapshot, and base `4f54d37` behaves the same way.
+
+### Rework briefs
+- None. No rework pass ran.
+
+### Approach decisions, this round
+- **Unchanged-role broadcast on a busy socket (finding 1):** applied the brief's diff as written, restoring base `4f54d37`'s order in `deliver()`: compare the socket's role payload with `lastSent` first and clear `dirty` on a match, then mark a busy socket `dirty`.
+- **Offline row contrast test (finding 2):** asserted through `test/css.ts` (`readStylesheet`), the cascade helper `test/stage-status.test.ts` and `test/pages.test.ts` already use, with a WCAG 2.1 luminance calculation over the hex colours the cascade resolves. The browser measurement stays in `repro/offline-row-contrast.mts`.
