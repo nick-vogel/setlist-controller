@@ -41,7 +41,7 @@ Carried forward from `pre-pr-review-1.md`:
 - **Client ID and dismissed IDs per role:** keyed by role (`setlist-controller.client-id.<role>` and `setlist-controller.dismissed-messages.<role>`), with `storage` listeners mirroring `watchDeviceName`.
 - **One fixed top layer (`.page-top`):** `position: fixed; inset: 0 0 auto; z-index: 3; display: flex; flex-direction: column;` holding connection signal first, message banner second, battery warning third. `main.leader-page` reserves `padding-top: 2.25rem` for the stage status line alone.
 
-Added in this review (pending Nick's pick on Finding 1):
+Added in this review (Nick 2026-11-26 picked Option A for Finding 1):
 - **Reaching top-of-page controls while the battery warning shows (Finding 1):** Option A keeps `.power-warning` in `.page-top` with zero layout shift and adds a Dismiss button scoped to the current warning tier (`low` vs `urgent`), so escalating from amber (`<= 80%`) to red (`<= 30%`) or returning to mains power and unplugging again re-shows it. Option B keeps `.power-warning` non-dismissible and reserves its height in `<main>` (or returns it to flow), overturning `c100019`'s zero-shift rule for `.power-warning`.
 
 ## Confirmed Issues
@@ -177,6 +177,9 @@ None. Every candidate surfaced in this run was verified by code trace or executi
 
 ## Test quality
 Tests added across the branch: 45 unit/rig tests (`test/messages.test.ts` 12, `test/messages-hub.test.ts` 10, `test/messages-page.test.ts` 7, `test/device-settings.test.ts` 7, `test/hub-coalescing.test.ts` 2, `test/server-connection.test.ts` 2, plus 5 modified assertions across `test/pages.test.ts`, `test/stage-status.test.ts`, `test/devices-panel.test.ts`) and 11 Playwright e2e tests (`e2e/messages.spec.ts`). Base-checkout execution: not run (non-Claude run forbids `git worktree add`); by static inspection every new test file and added test block imports symbols or harness fields absent at `c9da372`. Weak-assertion / tautology shapes found: 1 confirmed (Finding 2: `inPageTop` in `test/messages-page.test.ts:47-48` scans the whole document instead of `.page-top`, and line 55's title claims ordering it does not assert), plus 1 mild accepted shape carried from review 1 (`test/messages-page.test.ts:85` compares presets against `MESSAGE_PRESETS`, where the real rule tested is that presets precede the text box).
+
+## Remediation scope
+Nick 2026-11-26: remediate all three Confirmed findings. Finding 1 takes Option A (a Dismiss button on the battery warning, scoped to the current tier, that shows again on escalation to red or after a return to mains power).
 
 ## Before opening the PR
 - **CI readiness:** `pnpm lint`, `pnpm typecheck`, `pnpm vitest run --maxWorkers=2` (3557 passed, 5 skipped), `pnpm check:private --range origin/main..HEAD`, and 96 Playwright tests across the 9 affected specs all pass at `86e327a`. Rerun `pnpm test:e2e` after fixing Finding 1.
