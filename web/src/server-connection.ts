@@ -92,13 +92,13 @@ export function connectToServer({ url, onSnapshot, onStatus, onReload = () => lo
     });
     opened.addEventListener('message', (event) => {
       listen();
-      if (socket !== opened) return;
-      // A heartbeat only shows the socket is alive. The page reads up once a snapshot has come.
-      if (isHeartbeat(event.data)) return;
       if (isReload(event.data)) {
         onReload();
         return;
       }
+      if (socket !== opened) return;
+      // A heartbeat only shows the socket is alive. The page reads up once a snapshot has come.
+      if (isHeartbeat(event.data)) return;
       onSnapshot(JSON.parse(String(event.data)) as Snapshot);
       if (reported) return;
       reported = true;

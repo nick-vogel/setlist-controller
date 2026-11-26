@@ -235,3 +235,20 @@ it('reloads the page on a reload frame, and never reads it as a snapshot', () =>
   expect(snapshots).toEqual([]);
   connection.close();
 });
+
+it('reloads on a reload frame that reaches the socket a wake is replacing, before the fresh socket opens', () => {
+  const visibility = new Visibility();
+  let reloads = 0;
+  const connection = connectToServer({ url: 'ws://server/', onSnapshot: () => {}, onReload: () => (reloads += 1), visibility });
+  const first = FakeSocket.all[0]!;
+  first.accept();
+  first.deliver();
+
+  visibility.wake();
+  expect(FakeSocket.all).toHaveLength(2);
+  expect(first.readyState).toBe(FakeSocket.OPEN);
+  first.deliver(RELOAD);
+
+  expect(reloads).toBe(1);
+  connection.close();
+});
