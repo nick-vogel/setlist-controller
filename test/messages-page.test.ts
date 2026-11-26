@@ -44,15 +44,25 @@ const page = (props: object) => renderToStaticMarkup(createElement(Page, { role:
 // The opening tag of the first element inside the page's main, the signals in its top layer in order,
 // and the banner's text and button.
 const firstInMain = (markup: string) => /<main[^>]*>(<[^>]*>)/.exec(markup)?.[1] ?? null;
+const pageTopMarkup = (markup: string) => {
+  const start = markup.indexOf('<div class="page-top">');
+  if (start === -1) return '';
+  let depth = 0;
+  for (const tag of markup.slice(start).matchAll(/<\/?div\b[^>]*>/g)) {
+    depth += tag[0].startsWith('</') ? -1 : 1;
+    if (depth === 0) return markup.slice(start, start + tag.index + tag[0].length);
+  }
+  return '';
+};
 const inPageTop = (markup: string) =>
-  markup.includes('<div class="page-top">') ? [...markup.matchAll(/<(?:p|section|div) class="(server-lost|stage-status|message-banner|power-warning)[ "]/g)].map(([, name]) => name) : [];
+  [...pageTopMarkup(markup).matchAll(/<(?:p|section|div) class="(server-lost|stage-status|message-banner|power-warning)[ "]/g)].map(([, name]) => name);
 const banner = (markup: string) => {
   const found = /<div class="message-banner" role="alert"><p class="message-banner-text">([^<]*)<\/p><button[^>]*>([^<]*)<\/button><\/div>/.exec(markup);
   return found ? { text: found[1], button: found[2] } : null;
 };
 
 describe("the producer's message on a page", () => {
-  it('opens every page it reaches in the top layer, ahead of the battery warning and the pickers and after the stage status line, and is gone with no message', () => {
+  it('opens every page it reaches in the top layer, and is gone with no message', () => {
     const variants = {
       'view-only, no part': page({ message: MESSAGE }),
       'view-only chart page': page({ message: MESSAGE, part: 'Keys' }),
