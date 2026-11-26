@@ -18,8 +18,8 @@ export type MessageTarget = 'all' | 'viewers' | string[];
 // An active message as the producer's snapshot carries it: who it reaches (for chosen devices, those
 // a newer chosen message has not replaced it on; a newer message to the view-only devices covers a
 // chosen view-only device without taking it off), when it was sent in milliseconds on the server's wall
-// clock, and the client IDs of the devices in the hub's registry that show it now. A device shows one
-// message at a time, so no device is in two lists.
+// clock, and the client IDs of the devices in the hub's registry that show it, an offline one when it
+// comes back. A device shows one message at a time, so no device is in two lists.
 export type ActiveMessage = BandMessage & { to: MessageTarget; sent: number; shownBy: string[] };
 
 // The longest message text the hub keeps. A longer one is cut, never refused, as a device name is.

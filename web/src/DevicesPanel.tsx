@@ -5,8 +5,9 @@ import { clockTime } from './clock-time.ts';
 
 // Every device in the hub's registry, in the order each first said hello: its name, its role, Online
 // or Offline with the time it was last seen, and its battery. On the producer page a device that shows
-// an active message, offline ones included, names it, so the producer sees who it reached; whether the
-// device dismissed it is not known, since a page keeps its dismissals to itself. Each other online
+// an active message, offline ones included, names it, so the producer sees who holds it; an offline
+// device shows it when it comes back, whether or not it was online at the send. Whether the device
+// dismissed it is not known, since a page keeps its dismissals to itself. Each other online
 // device has Reload, which reloads that device's pages alone, and the panel has Clear offline, which
 // forgets the offline rows; the producer's own row has no Reload, since a reload of the page pressing
 // it drops the panel. The setup screen lists the devices with neither, since only the producer's
