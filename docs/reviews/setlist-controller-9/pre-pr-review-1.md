@@ -37,6 +37,10 @@ Added in this review:
 - **A reload frame on the socket a wake replaces (finding 2):** the page reads a reload on either of its sockets, before the `socket !== opened` guard.
 - **Client ID per role, and the name follows other tabs (finding 3, Nick 2026-11-26):** Nick approved both halves of finding 3's fix: (a) the client ID is keyed per page role (`` `${CLIENT_ID_KEY}.${role}` ``), so a browser holding the producer page and a leader page shows two rows; (b) `App` re-reads the stored device name on the window's `storage` event, so a name typed in one tab reaches the other tab's hello. This replaces implementer decision 4 (one client ID per browser). His earlier "Keep" in the implementer's thread came before this finding reached him.
 
+Added in remediation 1:
+- **The name follows other tabs (finding 3 (b)):** `watchDeviceName(page, storage, onName)` in `web/src/device-settings.ts` listens for the `storage` event and returns the function that stops it, in the shape of `watchBattery` (`web/src/battery.ts`); `App` wires it to `window` in an effect. It reads the name again only for the device name's key, or a null key (a `clear()`), so another tab storing some other setting never puts the stored name over this tab's.
+- **The name stays one per browser:** only the client ID is keyed per role, so the producer page and a view-only page in one browser are two rows with one name, told apart by their roles (`e2e/devices.spec.ts`, "one browser is one device for each page role").
+
 ## Remediation scope
 Nick 2026-11-26: remediate all four Confirmed findings, finding 3 with both (a) and (b). Implementer decisions 1 to 3 stand as written below.
 
@@ -239,3 +243,19 @@ Tests added: 37 · green against `$BASE`: 0 of the 36 that ran on macOS (1, `tes
 
 ## Verdict
 Not ready as-is. The gate is finding 1, which undoes part of #16's 20 Hz cap that #9 was blocked on. Findings 2 and 4 are small and can ride the same remediation. Finding 3 waits on Nick's call on decision 4 and can ship as a follow-up if he keeps one ID per browser.
+
+## Remediation, 2026-11-25
+| Finding | Commit | Proof | Comments added | Verify verdict |
+| --- | --- | --- | --- | --- |
+| 1 (MEDIUM) | `32e91d5` a completed send no longer delivers a held position | red to green: `node docs/reviews/setlist-controller-9/repro/pacing-leak.mts` (`[0,1,2]` exit 1, then `[0,1]` exit 0); new test "holds a position published while the send before it is in flight until the trailing flush" in `test/hub-coalescing.test.ts` red (`[0,1,2]`) before the fix; the brief's five preserve suites 55 of 55 | 0 new; the comment above `deliver` corrected as the brief asked | fixed (disprove agent: repro, the new test against the pre-fix tree, and a reload-plus-held-position script both ways) |
+| 2 (LOW) | `959f483` a reload on the socket a wake replaces reloads the page | red to green: `pnpm vitest run --root docs/reviews/setlist-controller-9/repro`, and the moved test in `test/server-connection.test.ts` (`expected +0 to be 1`, then 11 of 11) | 0 (one existing line moved) | fixed, proved by execution |
+| 3 (LOW) | `bf7faf9` a client ID for each page role, and the name follows other tabs | red to green: `test/device-settings.test.ts` per-role and storage-event cases; new e2e "one browser is one device for each page role, and a name typed in one tab reaches its other tabs" red without the `App` and `device-settings` changes (`Received: ""`), green on both projects | 2 (`watchDeviceName`'s contract, as `watchBattery`'s); existing comments in `device-settings.ts`, `App.tsx`, `src/shared/devices.ts`, `e2e/devices.spec.ts` corrected | introduced: the name was read again on every storage event, whatever its key; closed by the rework below |
+| 3 rework (LOW) | `c5e66b8` read the name again only for its own key | red to green: `test/device-settings.test.ts` "is not read again when another tab stores some other setting" | 0 new; the contract comment reworded | fixed (scoped re-verify) |
+| 4 (LOW, comment hygiene) | `ea8093a` two comments say what the code does | read against the code: `lastSeen` is set by the registry's `now()` on the server (`src/server/devices.ts:44`) and only formatted by the page | 0 | fixed, read against the code |
+
+### Known regressions, deferred
+- None. The scoped re-verify's notes are LOW and none is a defect in the rework: a `clear()` in another tab resets a name a device kept for the visit only, by design of the rework; the listener reads the key but not `storageArea`, and no page uses `sessionStorage`; the negative test covers the part key only.
+
+### Rework briefs
+- Finding 3 rework: achieve a name read again only when the storage event's key is the device name's or null; preserve a name stored by another tab reaching this tab, a blank name read back as null so the page goes by its default, and the stop function; proof: a storage event for the part key calls no `onName`, red before and green after, plus the existing case with the name key and a null key.
+
