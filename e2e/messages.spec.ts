@@ -198,3 +198,29 @@ test("the banner covers no phone's Reconnecting banner, at the top of the page o
   expect(await topmostAtCentre(page, '.message-banner')).toBe('message-banner');
   producer.close();
 });
+
+test('a Dismiss on the producer page leaves the message on a leader page in the same browser, and a Dismiss on the leader page hides it in its other tab', async ({ browser }) => {
+  e2e = await startE2eRig();
+  const browserStorage = await browser.newContext();
+  const open = async (url: string) => {
+    const page = await browserStorage.newPage();
+    await page.goto(url);
+    await expect(page.getByText('Intro').first()).toBeVisible();
+    return page;
+  };
+  const producer = await open(e2e.producerUrl);
+  const leader = await open(e2e.leaderUrl);
+  const otherTab = await open(e2e.leaderUrl);
+  await sendMessage(producer, 'All devices', 'Hold after this song');
+  for (const page of [producer, leader, otherTab]) await expect(banner(page)).toContainText('Hold after this song');
+
+  await banner(producer).getByRole('button', { name: 'Dismiss' }).click();
+  await expect(banner(producer)).toHaveCount(0);
+  await leader.reload();
+  await expect(leader.getByText('Intro').first()).toBeVisible();
+  await expect(banner(leader)).toContainText('Hold after this song');
+
+  await banner(leader).getByRole('button', { name: 'Dismiss' }).click();
+
+  await expect(banner(otherTab)).toHaveCount(0);
+});

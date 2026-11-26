@@ -32,6 +32,7 @@ import {
   storeChordNames,
   storeDeviceName,
   storeDismissedMessage,
+  watchDismissedMessages,
   storeDisplay,
   storeFontSize,
   storeLeaderView,
@@ -157,13 +158,18 @@ export function App() {
   // it. The setup screen is the laptop's own, not a device on the stage.
   const hello: DeviceHello | null = setup ? null : { kind: 'hello', client: clientId, name: deviceName.trim() || defaultDeviceName(role, part), battery };
   const { snapshot, connected, send, message } = useServer(socketPath, hello);
-  // The IDs of the producer's messages this device dismissed, read once and stored on every dismiss.
-  // A dismissed message stays hidden when the hub sends it again, and a newer one, with a new ID, shows.
-  const [dismissed, setDismissed] = useState<readonly string[]>(() => readDismissedMessages(deviceStorage()));
-  const onDismissMessage = useCallback((id: string) => {
-    setDismissed((held) => [...held, id]);
-    storeDismissedMessage(deviceStorage(), id);
-  }, []);
+  // The IDs of the producer's messages this device dismissed, stored on every dismiss and read again
+  // when another tab of the page stores one. A dismissed message stays hidden when the hub sends it
+  // again, and a newer one, with a new ID, shows.
+  const [dismissed, setDismissed] = useState<readonly string[]>(() => readDismissedMessages(deviceStorage(), role));
+  const onDismissMessage = useCallback(
+    (id: string) => {
+      setDismissed((held) => [...held, id]);
+      storeDismissedMessage(deviceStorage(), role, id);
+    },
+    [role],
+  );
+  useEffect(() => watchDismissedMessages(window, deviceStorage(), role, setDismissed), [role]);
   const shownMessage = message !== null && !dismissed.includes(message.id) ? message : null;
   // Only the view-only page draws the chart view, so only it fetches the charts.
   const charts = useCharts(role === 'viewer' && !setup, snapshot?.chartRevision, connected);
