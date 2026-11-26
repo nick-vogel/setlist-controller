@@ -306,8 +306,8 @@ export function Page({
   const connections = role === 'producer' && 'connections' in snapshot && (
     <>
       <ConnectionsPanel connections={snapshot.connections} problems={snapshot.connectionProblems} connected={connected} setKnown={snapshot.set !== null} send={send} />
-      <DevicesPanel devices={snapshot.devices} producer={{ ownClient: clientId, connected, send }} />
-      <ProducerMessages devices={snapshot.devices} ownClient={clientId} connected={connected} send={send} />
+      <DevicesPanel devices={snapshot.devices} producer={{ ownClient: clientId, connected, send, activeMessages: snapshot.activeMessages }} />
+      <ProducerMessages devices={snapshot.devices} activeMessages={snapshot.activeMessages} ownClient={clientId} connected={connected} send={send} />
     </>
   );
   // The name field: after the pickers and the Auto-Lock tip on the view-only page, under the Message

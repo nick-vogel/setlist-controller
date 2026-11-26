@@ -95,6 +95,23 @@ describe("the producer's Devices panel", () => {
   });
 });
 
+describe("the producer's Devices panel, with the active messages", () => {
+  it('marks each device with the message it shows, and no other device', () => {
+    const activeMessages = [
+      { id: 'm2', text: 'Repeat chorus', to: 'viewers' as const, sent: 2, shownBy: ['phone', 'gone'] },
+      { id: 'm1', text: 'Hold after this song', to: 'all' as const, sent: 1, shownBy: ['self'] },
+    ];
+    const markup = renderToStaticMarkup(createElement(Page, { role: 'producer', snapshot: { ...SNAPSHOT, devices: [SELF, PHONE, IPAD, GONE], activeMessages }, connected: true, send: () => {}, clientId: 'self' }));
+
+    expect(rows(devicesSection(markup)!).map(({ name, text }) => [name, text.slice(4)])).toEqual([
+      ['Producer', ['Message: Hold after this song']],
+      ['Keys', ['Message: Repeat chorus']],
+      ['Leader', []],
+      ['Drums', ['Message: Repeat chorus']],
+    ]);
+  });
+});
+
 describe("the setup screen's Devices panel", () => {
   it('lists the devices as the producer sees them, with no Reload and no Clear offline', () => {
     const markup = renderToStaticMarkup(createElement(DevicesPanel, { devices: [SELF, PHONE, GONE] }));
@@ -131,20 +148,13 @@ describe("the Devices panel's stylesheet", () => {
     { tag: 'ul', classes: ['device-list'] },
     { tag: 'li', classes },
   ];
-  const inherited = (path: Element[], property: string): string => {
-    for (let end = path.length; end > 0; end -= 1) {
-      const value = stylesheet.value(path.slice(0, end), property);
-      if (value !== undefined) return value;
-    }
-    throw new Error(`No rule sets ${property} on ${JSON.stringify(path.at(-1))} or its ancestors`);
-  };
   // WCAG 2.1 AA asks 4.5:1 of normal text, and the row's 18px text at weight 400 is normal text.
   it("keeps every line of an offline row at 4.5:1 or more on the row's own surface, with no opacity over it", () => {
     const offline = row(['device', 'offline']);
     expect(stylesheet.value(offline, 'opacity')).toBeUndefined();
-    const surface = inherited(offline, 'background');
-    for (const part of ['device-name', 'device-role', 'device-status', 'device-battery']) {
-      const color = inherited([...offline, { tag: 'span', classes: [part] }], 'color');
+    const surface = stylesheet.inherited(offline, 'background');
+    for (const part of ['device-name', 'device-role', 'device-status', 'device-battery', 'device-message']) {
+      const color = stylesheet.inherited([...offline, { tag: 'span', classes: [part] }], 'color');
       expect(contrast(color, surface), part).toBeGreaterThanOrEqual(4.5);
     }
   });

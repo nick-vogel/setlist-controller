@@ -97,6 +97,52 @@ test('Clear takes the message off every device', async ({ browser }) => {
   for (const page of [keys, leader]) await expect(banner(page)).toHaveCount(0);
 });
 
+// The producer panel's active messages, newest first.
+const activeMessages = (producer: Page) => panel(producer).getByRole('list', { name: 'Active messages' }).getByRole('listitem');
+const deviceRow = (producer: Page, name: string) => producer.getByRole('region', { name: 'Devices' }).getByRole('listitem', { name });
+
+test('the producer page shows each active message with its target and send time, and a newer one or Clear changes it at once', async ({ browser }) => {
+  e2e = await startE2eRig();
+  const producer = await device(browser, e2e.producerUrl);
+  await device(browser, e2e.viewerUrl, 'Keys phone');
+  await device(browser, e2e.viewerUrl, 'Bass phone');
+  await expect(deviceRow(producer, 'Bass phone')).toBeVisible();
+  await expect(panel(producer)).toContainText('No active message.');
+
+  await sendMessage(producer, 'View-only devices', 'Repeat chorus');
+  await sendMessage(producer, ['Keys phone, View only'], 'Watch leader');
+
+  await expect(activeMessages(producer)).toHaveText([/^Watch leader\s*To Keys phone, View only\s*Sent \d/, /^Repeat chorus\s*To view-only devices\s*Sent \d/]);
+  await expect(deviceRow(producer, 'Keys phone')).toContainText('Message: Watch leader');
+  await expect(deviceRow(producer, 'Bass phone')).toContainText('Message: Repeat chorus');
+
+  await sendMessage(producer, ['Keys phone, View only'], 'Repeat bridge');
+  await expect(activeMessages(producer)).toHaveText([/^Repeat bridge\s*To Keys phone, View only/, /^Repeat chorus\s*To view-only devices/]);
+
+  await sendMessage(producer, 'All devices', 'Hold after this song');
+  await expect(activeMessages(producer)).toHaveText([/^Hold after this song\s*To all devices\s*Sent \d/]);
+  await expect(deviceRow(producer, 'Bass phone')).toContainText('Message: Hold after this song');
+
+  await panel(producer).getByRole('button', { name: 'Clear messages' }).click();
+  await expect(activeMessages(producer)).toHaveCount(0);
+  await expect(panel(producer)).toContainText('No active message.');
+  await expect(deviceRow(producer, 'Keys phone')).not.toContainText('Message:');
+});
+
+test('a producer page that reloads shows the active message again', async ({ browser }) => {
+  e2e = await startE2eRig();
+  const producer = await device(browser, e2e.producerUrl);
+  await device(browser, e2e.viewerUrl, 'Keys phone');
+  await expect(deviceRow(producer, 'Keys phone')).toBeVisible();
+  await sendMessage(producer, ['Keys phone, View only'], 'Watch leader');
+  await expect(activeMessages(producer)).toHaveText([/^Watch leader\s*To Keys phone, View only/]);
+
+  await producer.reload();
+
+  await expect(activeMessages(producer)).toHaveText([/^Watch leader\s*To Keys phone, View only\s*Sent \d/]);
+  await expect(deviceRow(producer, 'Keys phone')).toContainText('Message: Watch leader');
+});
+
 test('a phone whose connection drops and returns shows the newest message, the one sent while it was away', async ({ page }) => {
   const proxied = await startProxiedE2eRig({ playing: false, position: 0 });
   e2e = proxied;

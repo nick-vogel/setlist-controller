@@ -1,20 +1,25 @@
 import { useState } from 'react';
 import type { DeviceCommand } from '../../src/shared/command.ts';
 import { ROLE_LABELS, type Device } from '../../src/shared/devices.ts';
-import { MAX_MESSAGE_TEXT, MESSAGE_PRESETS, messageText, type MessageTarget } from '../../src/shared/messages.ts';
+import { MAX_MESSAGE_TEXT, MESSAGE_PRESETS, messageText, type ActiveMessage, type MessageTarget } from '../../src/shared/messages.ts';
+import { clockTime } from './DevicesPanel.tsx';
 
-// The producer's messages to the band, under the Devices panel. A quick message sends at once to the
+// The producer's messages to the band, under the Devices panel. First the active messages, newest
+// first, each with who it was sent to and when, so the producer sees one that does not reach the
+// producer page's own banner. A quick message sends at once to the
 // devices picked under Send to, so the producer types nothing mid-song. Then the text box, who the
 // message goes to, Send, and Clear, which takes every active message off every device. Chosen devices
 // are picked from the Devices panel's list, by client ID, never by name, since two devices may share
 // one. Every button is disabled while the page is not connected, as the panel's are.
 export function ProducerMessages({
   devices,
+  activeMessages,
   ownClient,
   connected,
   send,
 }: {
   devices: Device[];
+  activeMessages: ActiveMessage[];
   ownClient: string;
   connected: boolean;
   send(command: DeviceCommand): void;
@@ -39,6 +44,19 @@ export function ProducerMessages({
   return (
     <section className="messages" aria-labelledby="messages">
       <h2 id="messages">Message the band</h2>
+      {activeMessages.length === 0 ? (
+        <p className="status">No active message.</p>
+      ) : (
+        <ul className="message-active-list" aria-label="Active messages">
+          {activeMessages.map((message) => (
+            <li key={message.id} className="message-active">
+              <span className="message-active-text">{message.text}</span>
+              <span className="message-active-target">{targetLine(message.to, choices)}</span>
+              <span className="message-active-sent">{`Sent ${clockTime(message.sent)}`}</span>
+            </li>
+          ))}
+        </ul>
+      )}
       <div className="message-presets" role="group" aria-label="Quick messages">
         {MESSAGE_PRESETS.map((preset) => (
           <button key={preset} type="button" className={buttonClass(reachable)} disabled={!reachable} onClick={() => to !== null && send({ kind: 'message', text: preset, to })}>
@@ -107,6 +125,17 @@ const TARGETS = [
   { value: 'viewers', label: 'View-only devices' },
   { value: 'chosen', label: 'Chosen devices' },
 ] as const;
+
+// Who an active message was sent to. A chosen device is named as Send to names it; one that Clear
+// offline took off the list is only counted, since its name went with it.
+function targetLine(to: MessageTarget, choices: { client: string; label: string }[]): string {
+  if (to === 'all') return 'To all devices';
+  if (to === 'viewers') return 'To view-only devices';
+  const named = to.flatMap((client) => choices.find((choice) => choice.client === client)?.label ?? []);
+  const unlisted = to.length - named.length;
+  if (unlisted > 0) named.push(`${unlisted} ${unlisted === 1 ? 'device' : 'devices'} no longer listed`);
+  return `To ${named.join('; ')}`;
+}
 
 const buttonClass = (available: boolean) => (available ? 'connection-button' : 'connection-button unavailable');
 
