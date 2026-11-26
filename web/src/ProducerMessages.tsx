@@ -4,13 +4,15 @@ import { ROLE_LABELS, type Device } from '../../src/shared/devices.ts';
 import { MAX_MESSAGE_TEXT, MESSAGE_PRESETS, messageText, type ActiveMessage, type MessageTarget } from '../../src/shared/messages.ts';
 import { clockTime } from './clock-time.ts';
 
-// The producer's messages to the band, under the Devices panel. First the active messages, newest
-// first, each with who it was sent to and when, so the producer sees one that does not reach the
-// producer page's own banner. A quick message sends at once to the
+// The producer's messages to the band, above the Devices panel. A quick message sends at once to the
 // devices picked under Send to, so the producer types nothing mid-song. Then the text box, who the
-// message goes to, Send, and Clear, which takes every active message off every device. Chosen devices
-// are picked from the Devices panel's list, by client ID, never by name, since two devices may share
-// one. Every button is disabled while the page is not connected, as the panel's are.
+// message goes to, Send, and Clear, which takes every active message off every device. Last the active
+// messages, newest first, each with who it was sent to and when, so the producer sees one that does not
+// reach the producer page's own banner. The list and the Devices panel's message lines grow on a send
+// and shrink on a Clear, so both sit under every control here and nothing a finger is on moves
+// (e2e/messages.spec.ts). Chosen devices are picked from the Devices panel's list, by client ID, never
+// by name, since two devices may share one. Every button is disabled while the page is not connected,
+// as the panel's are.
 export function ProducerMessages({
   devices,
   activeMessages,
@@ -44,19 +46,6 @@ export function ProducerMessages({
   return (
     <section className="messages" aria-labelledby="messages">
       <h2 id="messages">Message the band</h2>
-      {activeMessages.length === 0 ? (
-        <p className="status">No active message.</p>
-      ) : (
-        <ul className="message-active-list" aria-label="Active messages">
-          {activeMessages.map((message) => (
-            <li key={message.id} className="message-active">
-              <span className="message-active-text">{message.text}</span>
-              <span className="message-active-target">{targetLine(message.to, deviceLabels(devices))}</span>
-              <span className="message-active-sent">{`Sent ${clockTime(message.sent)}`}</span>
-            </li>
-          ))}
-        </ul>
-      )}
       <div className="message-presets" role="group" aria-label="Quick messages">
         {MESSAGE_PRESETS.map((preset) => (
           <button key={preset} type="button" className={buttonClass(reachable)} disabled={!reachable} onClick={() => to !== null && send({ kind: 'message', text: preset, to })}>
@@ -116,6 +105,19 @@ export function ProducerMessages({
           Clear messages
         </button>
       </div>
+      {activeMessages.length === 0 ? (
+        <p className="status">No active message.</p>
+      ) : (
+        <ul className="message-active-list" aria-label="Active messages">
+          {activeMessages.map((message) => (
+            <li key={message.id} className="message-active">
+              <span className="message-active-text">{message.text}</span>
+              <span className="message-active-target">{targetLine(message.to, deviceLabels(devices))}</span>
+              <span className="message-active-sent">{`Sent ${clockTime(message.sent)}`}</span>
+            </li>
+          ))}
+        </ul>
+      )}
     </section>
   );
 }

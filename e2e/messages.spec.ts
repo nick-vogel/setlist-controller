@@ -143,6 +143,37 @@ test('a producer page that reloads shows the active message again', async ({ bro
   await expect(deviceRow(producer, 'Keys phone')).toContainText('Message: Watch leader');
 });
 
+test('a quick message or Clear leaves the quick messages and Clear messages where they were on the producer page', async ({ browser }) => {
+  e2e = await startE2eRig();
+  const producer = await device(browser, e2e.producerUrl);
+  await device(browser, e2e.viewerUrl, 'Keys phone');
+  await device(browser, e2e.viewerUrl, 'Bass phone');
+  await expect(deviceRow(producer, 'Bass phone')).toBeVisible();
+  const messages = panel(producer);
+  const controls = [messages.getByRole('button', { name: 'Repeat chorus' }), messages.getByRole('button', { name: 'Clear messages' })];
+  const tops = () => Promise.all(controls.map((control) => control.evaluate((element) => element.getBoundingClientRect().top + window.scrollY)));
+
+  await messages.getByLabel('View-only devices').check();
+  const before = await tops();
+  await messages.getByRole('button', { name: 'Repeat chorus' }).click();
+  await expect(activeMessages(producer)).toHaveCount(1);
+  await expect(deviceRow(producer, 'Bass phone')).toContainText('Message: Repeat chorus');
+  expect(await tops()).toEqual(before);
+
+  await messages.getByLabel('Chosen devices').check();
+  await messages.getByRole('checkbox', { name: 'Keys phone, View only' }).check();
+  const chosen = await tops();
+  await messages.getByRole('button', { name: 'Watch leader' }).click();
+  await expect(activeMessages(producer)).toHaveCount(2);
+  await expect(deviceRow(producer, 'Keys phone')).toContainText('Message: Watch leader');
+  expect(await tops()).toEqual(chosen);
+
+  await messages.getByRole('button', { name: 'Clear messages' }).click();
+  await expect(messages).toContainText('No active message.');
+  await expect(deviceRow(producer, 'Keys phone')).not.toContainText('Message:');
+  expect(await tops()).toEqual(chosen);
+});
+
 test('a phone whose connection drops and returns shows the newest message, the one sent while it was away', async ({ page }) => {
   const proxied = await startProxiedE2eRig({ playing: false, position: 0 });
   e2e = proxied;

@@ -1136,8 +1136,8 @@ main.leader-page {
   font-weight: 700;
 }
 
-/* The producer's Connections panel, below the leader's controls, its Devices panel under it, which
-   the setup screen shows too, and its Message the band panel under that. */
+/* The producer's Connections panel, below the leader's controls, its Message the band panel under it,
+   and its Devices panel, which the setup screen shows too, under that. */
 .connections,
 .devices,
 .messages {
@@ -1273,9 +1273,9 @@ main.leader-page {
   cursor: default;
 }
 
-/* The producer's message panel, under the Devices panel: the quick messages in a row that wraps, the
-   text box across the panel, who the message goes to, and Send and Clear. Each choice is a label as
-   tall as a tap target. */
+/* The producer's message panel, above the Devices panel: the quick messages in a row that wraps, the
+   text box across the panel, who the message goes to, Send and Clear, and last the active messages.
+   Each choice is a label as tall as a tap target. */
 .message-presets,
 .message-actions {
   display: flex;
