@@ -313,6 +313,7 @@ describe('the section controls', () => {
       countIn: true,
       connections: [],
       connectionProblems: [],
+      devices: [],
     });
     const onPage = (role: Role, section: number) => {
       const markup = renderToStaticMarkup(createElement(Page, { role, snapshot: snapshot(section), connected: true, send: () => {} }));
@@ -344,6 +345,7 @@ describe('the section controls', () => {
       countIn,
       connections: [],
       connectionProblems: [],
+      devices: [],
     };
     const markup = renderToStaticMarkup(createElement(Page, { role, snapshot, connected: true, send: () => {} }));
     return buttons(/<section class="jump-targets"[^>]*>(.*?)<\/section>/.exec(markup)?.[1] ?? '').map((button) => [button.label, button.disabled]);
@@ -1486,7 +1488,7 @@ describe('the server connection', () => {
 describe('the producer page', () => {
   const page = (role: Role, snapshot: Snapshot | ProducerSnapshot) =>
     renderToStaticMarkup(createElement(Page, { role, snapshot, connected: true, send: () => {} }));
-  const PRODUCER: ProducerSnapshot = { ...SNAPSHOT, connections: [], connectionProblems: [] };
+  const PRODUCER: ProducerSnapshot = { ...SNAPSHOT, connections: [], connectionProblems: [], devices: [] };
   const buttons = (markup: string) => [...markup.matchAll(/<button[^>]*>(.*?)<\/button>/g)].map(([, label = '']) => text(label));
 
   it('shows the Connections panel, which says no connections are configured', () => {
@@ -1502,7 +1504,8 @@ describe('the producer page', () => {
 
   it("shows every leader control", () => {
     const leaderAll = buttons(page('leader', SNAPSHOT));
-    const producerButtons = buttons(page('producer', PRODUCER));
+    // Clear offline is the Devices panel's, the producer's own.
+    const producerButtons = buttons(page('producer', PRODUCER)).filter((label) => label !== 'Clear offline');
     expect(leaderAll).toEqual(expect.arrayContaining(['Setlist', 'Timeline']));
     expect(producerButtons).not.toContain('Setlist');
     expect(producerButtons).not.toContain('Timeline');
@@ -1777,7 +1780,7 @@ describe('the producer page', () => {
 
   it("disables the select on the producer page while the server has read no set from Live, and enables it once one is", () => {
     const producerPage = (set: ProducerSnapshot['set']) =>
-      renderToStaticMarkup(createElement(Page, { role: 'producer', snapshot: { ...SNAPSHOT, set, connections: [WITH_PICK], connectionProblems: [] }, connected: true, send: () => {} }));
+      renderToStaticMarkup(createElement(Page, { role: 'producer', snapshot: { ...SNAPSHOT, set, connections: [WITH_PICK], connectionProblems: [], devices: [] }, connected: true, send: () => {} }));
 
     expect(selectOf(producerPage(null))?.disabled).toBe(true);
     expect(selectOf(producerPage(SNAPSHOT.set))?.disabled).toBe(false);
@@ -2064,7 +2067,7 @@ describe('the part picker', () => {
   });
 
   it('is not on the leader page or the producer page, which stay as they are with or without a part', () => {
-    const producer: ProducerSnapshot = { ...CHART_SNAPSHOT, connections: [], connectionProblems: [] };
+    const producer: ProducerSnapshot = { ...CHART_SNAPSHOT, connections: [], connectionProblems: [], devices: [] };
     for (const [role, snapshot] of [
       ['leader', CHART_SNAPSHOT],
       ['producer', producer],
@@ -2227,7 +2230,7 @@ describe('the chart view', () => {
     });
 
     it('is not on the leader page, the producer page, or the view-only page with no part', () => {
-      const producer: ProducerSnapshot = { ...CHART_SNAPSHOT, connections: [], connectionProblems: [] };
+      const producer: ProducerSnapshot = { ...CHART_SNAPSHOT, connections: [], connectionProblems: [], devices: [] };
       for (const [role, snapshot] of [
         ['leader', CHART_SNAPSHOT],
         ['producer', producer],
@@ -2505,7 +2508,7 @@ describe("the chart view's lyrics and chords", () => {
       const viewer = (part: Part | null) => renderToStaticMarkup(createElement(Page, { role: 'viewer', snapshot: CHART_SNAPSHOT, connected: true, send: () => {}, part, onPart: () => {}, display: 'lyrics-only', onDisplay: () => {} }));
       expect(picker(viewer(null))).toBeUndefined();
       expect(viewer(null)).not.toContain('display-');
-      const producer: ProducerSnapshot = { ...CHART_SNAPSHOT, connections: [], connectionProblems: [] };
+      const producer: ProducerSnapshot = { ...CHART_SNAPSHOT, connections: [], connectionProblems: [], devices: [] };
       for (const [role, snapshot] of [
         ['leader', CHART_SNAPSHOT],
         ['producer', producer],
@@ -2684,7 +2687,7 @@ describe("the chart page's View and Font size selects", () => {
     expect(noPart).not.toContain('view-');
     expect(noPart).not.toContain('font-size');
     expect(noPart).toBe(page({ part: null }));
-    const producer: ProducerSnapshot = { ...CHART_SNAPSHOT, connections: [], connectionProblems: [] };
+    const producer: ProducerSnapshot = { ...CHART_SNAPSHOT, connections: [], connectionProblems: [], devices: [] };
     for (const [role, snapshot] of [
       ['leader', CHART_SNAPSHOT],
       ['producer', producer],
@@ -2835,7 +2838,7 @@ describe("the chart page's Nashville numbers and capo", () => {
     const noPart = page({ part: null, chordNames: 'numbers', capos: { 'Build My Life': 3 } });
     expect(noPart).not.toContain('chord-names');
     expect(noPart).not.toContain('capo');
-    const producer: ProducerSnapshot = { ...CHART_SNAPSHOT, set: SET, connections: [], connectionProblems: [] };
+    const producer: ProducerSnapshot = { ...CHART_SNAPSHOT, set: SET, connections: [], connectionProblems: [], devices: [] };
     for (const [role, snapshot] of [
       ['leader', { ...CHART_SNAPSHOT, set: SET }],
       ['producer', producer],
@@ -2902,7 +2905,7 @@ describe('the Auto-Lock tip', () => {
   });
 
   it('is never on the leader page or the producer page', () => {
-    const producer: ProducerSnapshot = { ...CHART_SNAPSHOT, connections: [], connectionProblems: [] };
+    const producer: ProducerSnapshot = { ...CHART_SNAPSHOT, connections: [], connectionProblems: [], devices: [] };
     for (const [role, snapshot] of [
       ['leader', CHART_SNAPSHOT],
       ['producer', producer],

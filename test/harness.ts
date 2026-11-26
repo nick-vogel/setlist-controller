@@ -12,10 +12,12 @@ import { startServer, type Server } from '../src/server/server.ts';
 import type { TargetKinds } from '../src/server/connections-config.ts';
 import type { Target } from '../src/server/target.ts';
 import { PROBE } from '../src/shared/abletonosc.ts';
+import { isReload } from '../src/shared/devices.ts';
 import { SET_MANIFEST_FILE, type ManifestSong } from '../src/shared/set-manifest.ts';
 import { isHeartbeat } from '../src/shared/heartbeat.ts';
 import type { OscMessage } from '../src/shared/osc.ts';
-import { leaderSocketPath, producerSocketPath, SETUP_CONNECTIONS_API, SETUP_PEDAL_API, SOCKET_PATHS } from '../src/shared/routes.ts';
+import { leaderSocketPath, producerSocketPath, SETUP_CONNECTIONS_API, SETUP_DEVICES_API, SETUP_PEDAL_API, SOCKET_PATHS } from '../src/shared/routes.ts';
+import type { Device } from '../src/shared/devices.ts';
 import type { ConnectionsStatus, PedalStatus } from '../src/shared/setup.ts';
 import type { ProducerSnapshot, Snapshot } from '../src/shared/snapshot.ts';
 
@@ -48,6 +50,9 @@ export type Rig = {
   // itself. Resolves with the first read that matches, asking again until one does. Rejects after
   // WAIT_TIMEOUT_MS.
   connectionsStatus(matches?: (status: ConnectionsStatus) => boolean): Promise<ConnectionsStatus>;
+  // Every device in the hub's registry as the setup screen reads it, from the laptop itself. Resolves
+  // with the first read that matches, asking again until one does. Rejects after WAIT_TIMEOUT_MS.
+  devices(matches?: (devices: Device[]) => boolean): Promise<Device[]>;
   // Stops the fake Live, as Live quitting does. It answers nothing until startLive().
   stopLive(): Promise<void>;
   // Starts a new fake Live on the same port with the same set and transport, and no listeners
@@ -73,6 +78,8 @@ export type Client<S extends Snapshot = Snapshot> = {
   received: S[];
   // How many heartbeats this client has received.
   readonly heartbeats: number;
+  // How many reload frames this client has received.
+  readonly reloads: number;
   // Sends a command as JSON, whatever its shape.
   send(command: unknown): void;
   // Resolves once the server has handled every message this client sent before it.
@@ -176,6 +183,7 @@ export async function startRig(
     midi,
     pedal: (matches = any) => readUntil<PedalStatus>(server.httpPort, SETUP_PEDAL_API, 'a pedal status', matches),
     connectionsStatus: (matches = any) => readUntil<ConnectionsStatus>(server.httpPort, SETUP_CONNECTIONS_API, 'a connections status', matches),
+    devices: (matches = any) => readUntil<Device[]>(server.httpPort, SETUP_DEVICES_API, 'the devices', matches),
     stopLive,
     async startLive(changes = {}) {
       if (running) throw new Error('The fake Live is already running');
@@ -285,11 +293,16 @@ export function connect<S extends Snapshot = Snapshot>(url: string): Promise<Cli
   const received: S[] = [];
   const waiting: { matches: (snapshot: S) => boolean; resolve: (snapshot: S) => void }[] = [];
   let heartbeats = 0;
+  let reloads = 0;
 
   socket.on('message', (data) => {
     // A heartbeat would read as a snapshot whose set is not null, so it is counted and never offered.
     if (isHeartbeat(data)) {
       heartbeats += 1;
+      return;
+    }
+    if (isReload(data)) {
+      reloads += 1;
       return;
     }
     const snapshot = JSON.parse(String(data)) as S;
@@ -328,6 +341,9 @@ export function connect<S extends Snapshot = Snapshot>(url: string): Promise<Cli
         received,
         get heartbeats() {
           return heartbeats;
+        },
+        get reloads() {
+          return reloads;
         },
         send: (command) => socket.send(JSON.stringify(command)),
         // The server reads a connection's frames in order and answers a ping as it reads it, so the

@@ -70,8 +70,16 @@ export type ConnectionCommand =
   // Pick one of the choices the target offers, by its id, such as ProPresenter's playlist.
   | { kind: 'pick'; target: string; choice: string };
 
-// What a page sends: a leader page sends a Command, a producer page either.
-export type PageCommand = Command | ConnectionCommand;
+// The producer's commands for the devices on the Devices panel. Only a producer socket's messages are
+// read as one.
+export type DeviceCommand =
+  // Reload the pages of the device with this client ID.
+  | { kind: 'reload'; client: string }
+  // Forget every device that is offline.
+  | { kind: 'clear-offline' };
+
+// What a page sends: a leader page sends a Command, a producer page any of the three.
+export type PageCommand = Command | ConnectionCommand | DeviceCommand;
 
 // Null for anything that is not a well-formed connection command, so a bad message never throws.
 export function parseConnectionCommand(data: unknown): ConnectionCommand | null {
@@ -87,5 +95,20 @@ export function parseConnectionCommand(data: unknown): ConnectionCommand | null 
   if (kind === 'arm' || kind === 'disarm' || kind === 'fire-again') return { kind, target };
   if (kind === 'run-button' && typeof button === 'string') return { kind, target, button };
   if (kind === 'pick' && typeof choice === 'string') return { kind, target, choice };
+  return null;
+}
+
+// Null for anything that is not a well-formed device command, so a bad message never throws.
+export function parseDeviceCommand(data: unknown): DeviceCommand | null {
+  let value: unknown;
+  try {
+    value = JSON.parse(String(data));
+  } catch {
+    return null;
+  }
+  if (typeof value !== 'object' || value === null) return null;
+  const { kind, client } = value as Record<string, unknown>;
+  if (kind === 'reload' && typeof client === 'string') return { kind, client };
+  if (kind === 'clear-offline') return { kind };
   return null;
 }

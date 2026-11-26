@@ -1,16 +1,18 @@
 import { useEffect, useState } from 'react';
-import { SETUP_API, SETUP_CONNECTIONS_API, SETUP_PEDAL_API, SETUP_REFRESH_API, SETUP_REFUSED } from '../../src/shared/routes.ts';
+import type { Device } from '../../src/shared/devices.ts';
+import { SETUP_API, SETUP_CONNECTIONS_API, SETUP_DEVICES_API, SETUP_PEDAL_API, SETUP_REFRESH_API, SETUP_REFUSED } from '../../src/shared/routes.ts';
 import type { ConnectionsStatus, JoinLink, PedalStatus, SetupInfo } from '../../src/shared/setup.ts';
 import type { Snapshot } from '../../src/shared/snapshot.ts';
 import { NowPlaying, Reconnecting } from './NowPlaying.tsx';
 import { ConnectionsSetup } from './ConnectionsSetup.tsx';
+import { DevicesPanel } from './DevicesPanel.tsx';
 import { PedalSetup } from './PedalSetup.tsx';
 import { PowerWarning } from './PowerWarning.tsx';
 import { RefreshButton } from './RefreshButton.tsx';
 
 // The operator's check before rehearsal, on the playback laptop: whether Live is connected, where
 // the set is, the playback Mac's battery warning, what is wrong with the locators, the foot pedal, the connections config and what each
-// connection target cannot match in the set, and the QR codes that bring the iPad and the band's phones onto the right pages.
+// connection target cannot match in the set, the devices connected, and the QR codes that bring the iPad and the band's phones onto the right pages.
 
 export function Setup({ snapshot, connected }: { snapshot: Snapshot | null; connected: boolean }) {
   return (
@@ -34,6 +36,7 @@ export function Setup({ snapshot, connected }: { snapshot: Snapshot | null; conn
       )}
       <PedalStatusPanel />
       <ConnectionsStatusPanel />
+      <DevicesStatusPanel />
       <JoinCodes />
     </main>
   );
@@ -133,6 +136,26 @@ function ConnectionsStatusPanel() {
       {state.kind === 'loading' && <p className="status">Loading the connections.</p>}
       {state.kind === 'refused' && <p className="status">{SETUP_REFUSED}</p>}
       {state.kind === 'failed' && <p className="status">Could not load the connections. Trying again.</p>}
+    </section>
+  );
+}
+
+// A device comes and goes as a phone sleeps and wakes, so a read a second keeps the list current.
+const DEVICES_POLL_MS = 1000;
+
+// The devices come from the laptop's own server, as the connections do, since the setup screen's
+// viewer snapshot never carries them. It lists them with no Reload and no Clear offline, which only
+// the producer's socket may send.
+function DevicesStatusPanel() {
+  const state = useSetupPoll<Device[]>(SETUP_DEVICES_API, DEVICES_POLL_MS);
+
+  if (state.kind === 'ready') return <DevicesPanel devices={state.value} />;
+  return (
+    <section className="devices" aria-labelledby="devices">
+      <h2 id="devices">Devices</h2>
+      {state.kind === 'loading' && <p className="status">Loading the devices.</p>}
+      {state.kind === 'refused' && <p className="status">{SETUP_REFUSED}</p>}
+      {state.kind === 'failed' && <p className="status">Could not load the devices. Trying again.</p>}
     </section>
   );
 }

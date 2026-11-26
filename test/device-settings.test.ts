@@ -7,8 +7,13 @@ import {
   LEADER_VIEWS,
   PARTS,
   VIEWS,
+  defaultDeviceName,
   defaultDisplay,
+  newClientId,
   readCapo,
+  readClientId,
+  readDeviceName,
+  watchDeviceName,
   readChordNames,
   readDisplay,
   readFontSize,
@@ -18,6 +23,7 @@ import {
   readView,
   storeCapo,
   storeChordNames,
+  storeDeviceName,
   storeDisplay,
   storeFontSize,
   storeLeaderView,
@@ -28,6 +34,7 @@ import {
   type Display,
   type Part,
 } from '../web/src/device-settings.ts';
+import { parseHello } from '../src/shared/devices.ts';
 
 // What a band member's device remembers between visits: their part, so the chart view opens again
 // after a reload.
@@ -416,5 +423,105 @@ describe('the leader view a device stores', () => {
     expect(readView(storage)).toBe('set');
     expect(readLeaderView(storage)).toBe('timeline');
     expect(storage.entries.size).toBe(2);
+  });
+});
+
+describe('the client ID a device keeps', () => {
+  it('is the one it made on its first visit, so the device is the same one after a reload', () => {
+    const storage = mapStorage();
+
+    expect(readClientId(storage, 'viewer', () => 'made-1')).toBe('made-1');
+    expect(readClientId(storage, 'viewer', () => 'made-2')).toBe('made-1');
+  });
+
+  it('is one for each page role, so a browser holding the producer page and a leader page is two devices', () => {
+    const storage = mapStorage();
+
+    expect(readClientId(storage, 'producer', () => 'made-1')).toBe('made-1');
+    expect(readClientId(storage, 'leader', () => 'made-2')).toBe('made-2');
+    expect(readClientId(storage, 'viewer', () => 'made-3')).toBe('made-3');
+    expect(readClientId(storage, 'producer', () => 'made-4')).toBe('made-1');
+  });
+
+  it('is made again in place of a stored value the hub would refuse', () => {
+    const storage = mapStorage({ 'setlist-controller.client-id.viewer': 'not an id' });
+
+    expect(readClientId(storage, 'viewer', () => 'made-1')).toBe('made-1');
+    expect(readClientId(storage, 'viewer', () => 'made-2')).toBe('made-1');
+  });
+
+  it('is made for the visit alone on a device that cannot store', () => {
+    expect(readClientId(throwing, 'viewer', () => 'made-1')).toBe('made-1');
+    expect(readClientId(undefined, 'viewer', () => 'made-2')).toBe('made-2');
+  });
+
+  it('is made as one the hub reads, and a fresh one each time', () => {
+    const [first, second] = [newClientId(), newClientId()];
+
+    expect(parseHello(JSON.stringify({ kind: 'hello', client: first, name: 'Keys' }))?.client).toBe(first);
+    expect(first).not.toBe(second);
+  });
+});
+
+describe('the name a device goes by', () => {
+  it('reads back the name stored, trimmed', () => {
+    const storage = mapStorage();
+
+    storeDeviceName(storage, '  Stage left  ');
+
+    expect(readDeviceName(storage)).toBe('Stage left');
+  });
+
+  it('forgets the name when a blank one is stored, so the device goes by its default again', () => {
+    const storage = mapStorage();
+    storeDeviceName(storage, 'Stage left');
+
+    storeDeviceName(storage, '   ');
+
+    expect(readDeviceName(storage)).toBeNull();
+    expect(storage.entries.size).toBe(0);
+  });
+
+  it('is read again when another tab stores one or clears the storage, so every tab of the device says hello with it', () => {
+    const storage = mapStorage();
+    const page = new EventTarget();
+    const stored = (key: string | null) => page.dispatchEvent(Object.assign(new Event('storage'), { key }));
+    const names: (string | null)[] = [];
+    const stop = watchDeviceName(page, storage, (name) => names.push(name));
+
+    storeDeviceName(storage, 'Stage left');
+    stored('setlist-controller.device-name');
+    storeDeviceName(storage, '');
+    stored(null);
+    stop();
+    storeDeviceName(storage, 'Stage right');
+    stored('setlist-controller.device-name');
+
+    expect(names).toEqual(['Stage left', null]);
+  });
+
+  it('is not read again when another tab stores some other setting, so a name typed here and not yet stored stays', () => {
+    const storage = mapStorage();
+    const page = new EventTarget();
+    const names: (string | null)[] = [];
+    watchDeviceName(page, storage, (name) => names.push(name));
+
+    storePart(storage, 'Bass');
+    page.dispatchEvent(Object.assign(new Event('storage'), { key: 'setlist-controller.part' }));
+
+    expect(names).toEqual([]);
+  });
+
+  it('reads no name on a device that never stored one or cannot store', () => {
+    expect(readDeviceName(mapStorage())).toBeNull();
+    expect(readDeviceName(throwing)).toBeNull();
+    expect(() => storeDeviceName(throwing, 'Stage left')).not.toThrow();
+  });
+
+  it("defaults to the leader's or the producer's role, else the band part picked, else View only", () => {
+    expect(defaultDeviceName('leader', null)).toBe('Leader');
+    expect(defaultDeviceName('producer', 'Keys')).toBe('Producer');
+    expect(defaultDeviceName('viewer', 'Bass')).toBe('Bass');
+    expect(defaultDeviceName('viewer', null)).toBe('View only');
   });
 });

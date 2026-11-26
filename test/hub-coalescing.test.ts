@@ -5,7 +5,7 @@ import { join, resolve } from 'node:path';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import type { CuePoint } from '../src/fake-live/fake-live.ts';
 import { manualClock, type ManualClock } from '../src/server/clock.ts';
-import { POSITION_BROADCAST_MS, startHub } from '../src/server/hub.ts';
+import { type Hub, POSITION_BROADCAST_MS, startHub } from '../src/server/hub.ts';
 import { SILENT_BEFORE_LOST_MS } from '../src/server/live-bridge.ts';
 import { UNKNOWN_POWER } from '../src/shared/power.ts';
 import { producerSocketPath, SOCKET_PATHS } from '../src/shared/routes.ts';
@@ -138,6 +138,34 @@ describe('per-socket slow-link coalescing', () => {
       // kernel buffers before backpressure engaged, then skips to the newest snapshot.
       expect(deliveredWhilePaused).toBeLessThan(totalUpdates);
       expect(slow.received.at(-2)?.position).toBeLessThan(totalUpdates / 4 - 0.25);
+    } finally {
+      slow.close();
+    }
+  }, 30_000);
+
+  it('delivers a reload to a paused slow socket once its link drains, never dropping it for the send in flight', async () => {
+    const hubClock = manualClock();
+    rig = await startRig(largeSet(), { playing: true, position: 0 }, { hubClock });
+    proxy = await startProxy(rig.server.httpPort);
+
+    const slow = await connect(`ws://127.0.0.1:${proxy.port}${SOCKET_PATHS.viewer}`);
+    const healthy = await rig.connectViewer();
+    const panel = await rig.connectProducer();
+    try {
+      await slow.snapshot(at(0));
+      await healthy.snapshot(at(0));
+      slow.send({ kind: 'hello', client: 'slow', name: 'Keys', battery: null });
+      await rig.devices((devices) => devices.length === 1);
+      proxy.pause();
+
+      const totalUpdates = await streamPastKernelBuffers(rig.live, hubClock, healthy);
+      panel.send({ kind: 'reload', client: 'slow' });
+      await panel.flush();
+      expect(slow.reloads).toBe(0);
+
+      proxy.resume();
+      await expect.poll(() => slow.reloads).toBe(1);
+      await slow.snapshot(at(totalUpdates / 4));
     } finally {
       slow.close();
     }
@@ -459,6 +487,74 @@ describe('a client that received a held position', () => {
     clock.advance(10);
     return { clock, hub, existing, existingCount, producer, midWindow };
   }
+
+  it('holds a position published while the send before it is in flight until the trailing flush', async () => {
+    const clock = manualClock();
+    const http = createServer();
+    const hub = startHub(http, { snapshot: snap(0), connections: noProblems }, { leader: 'l', producer: 'p' }, () => {}, () => {}, clock);
+    await new Promise<void>((done) => http.listen(0, '127.0.0.1', done));
+    const viewer = await connect(`ws://127.0.0.1:${(http.address() as AddressInfo).port}${SOCKET_PATHS.viewer}`);
+    stopHub = async () => {
+      viewer.close();
+      await hub.close();
+      await new Promise<void>((done) => http.close(() => done()));
+    };
+    await viewer.snapshot((snapshot) => snapshot.position === 0);
+
+    clock.advance(POSITION_BROADCAST_MS);
+    hub.publish(snap(1), noProblems);
+    hub.publish(snap(2), noProblems);
+    await viewer.snapshot((snapshot) => snapshot.position === 1);
+    await viewer.flush();
+    await viewer.flush();
+    expect(viewer.received.map((snapshot) => snapshot.position)).toEqual([0, 1]);
+
+    clock.advance(POSITION_BROADCAST_MS);
+    await viewer.snapshot((snapshot) => snapshot.position === 2);
+    expect(viewer.received.map((snapshot) => snapshot.position)).toEqual([0, 1, 2]);
+  });
+
+  it.each([
+    {
+      change: 'a producer-only change',
+      publishWhileBusy: (hub: Hub) => {
+        hub.publish(snap(1), offline);
+        hub.publish(snap(2), offline);
+      },
+    },
+    {
+      change: 'a revert to the position in flight',
+      publishWhileBusy: (hub: Hub) => {
+        hub.publish(snap(2), noProblems);
+        hub.publish(snap(1), noProblems);
+        hub.publish(snap(2), noProblems);
+      },
+    },
+  ])('still holds a position published after $change while the send before it is in flight', async ({ publishWhileBusy }) => {
+    const clock = manualClock();
+    const http = createServer();
+    const hub = startHub(http, { snapshot: snap(0), connections: noProblems }, { leader: 'l', producer: 'p' }, () => {}, () => {}, clock);
+    await new Promise<void>((done) => http.listen(0, '127.0.0.1', done));
+    const viewer = await connect(`ws://127.0.0.1:${(http.address() as AddressInfo).port}${SOCKET_PATHS.viewer}`);
+    stopHub = async () => {
+      viewer.close();
+      await hub.close();
+      await new Promise<void>((done) => http.close(() => done()));
+    };
+    await viewer.snapshot((snapshot) => snapshot.position === 0);
+
+    clock.advance(POSITION_BROADCAST_MS);
+    hub.publish(snap(1), noProblems);
+    publishWhileBusy(hub);
+    await viewer.snapshot((snapshot) => snapshot.position === 1);
+    await viewer.flush();
+    await viewer.flush();
+    expect(viewer.received.map((snapshot) => snapshot.position)).toEqual([0, 1]);
+
+    clock.advance(POSITION_BROADCAST_MS);
+    await viewer.snapshot((snapshot) => snapshot.position === 2);
+    expect(viewer.received.map((snapshot) => snapshot.position)).toEqual([0, 1, 2]);
+  });
 
   it('is brought back to the broadcast position when the position reverts to it before the trailing flush', async () => {
     const { clock, hub, existing, existingCount, midWindow } = await heldWindow();

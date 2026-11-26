@@ -1080,17 +1080,21 @@ body {
   font-weight: 700;
 }
 
-/* The producer's Connections panel, below the leader's controls. */
-.connections {
+/* The producer's Connections panel, below the leader's controls, and its Devices panel under it, which
+   the setup screen shows too. */
+.connections,
+.devices {
   margin-bottom: 1.5rem;
 }
 
-.connections h2 {
+.connections h2,
+.devices h2 {
   margin: 0 0 0.5rem;
   font-size: 1.25rem;
 }
 
-.connection-list {
+.connection-list,
+.device-list {
   display: flex;
   flex-direction: column;
   gap: 0.5rem;
@@ -1100,8 +1104,10 @@ body {
 }
 
 /* One target: its label, its state, and its buttons on the right: Arm, Disarm, Fire again and the
-   target's own, which wrap onto more lines when they outgrow the row. */
-.connection {
+   target's own, which wrap onto more lines when they outgrow the row. One device the same way, with
+   its Reload on the right. */
+.connection,
+.device {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
@@ -1113,13 +1119,60 @@ body {
   font-size: 1.125rem;
 }
 
-.connection-label {
+.connection-label,
+.device-name {
   font-weight: 700;
 }
 
 .connection-status,
-.connection-arm {
+.connection-arm,
+.device-role,
+.device-status,
+.device-battery {
   color: #aaa;
+}
+
+.device-list {
+  margin-bottom: 0.75rem;
+}
+
+.device-reload {
+  margin-left: auto;
+}
+
+/* A device offline is grey, not red: a phone that sleeps or leaves after the service is no fault. */
+.device.offline {
+  border-style: dashed;
+  border-color: #333;
+  background: #1b1b1b;
+}
+
+.device.offline .device-name {
+  color: #bbb;
+}
+
+/* The device's own name, on every page but the setup screen: a label and a text field as tall as a
+   tap target, as the pickers' selects are. */
+.device-name-field {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+}
+
+.device-name-field-label {
+  color: #aaa;
+}
+
+.device-name-input {
+  min-height: 3rem;
+  min-width: 0;
+  padding: 0.5rem 0.75rem;
+  border: 2px solid #444;
+  border-radius: 0.75rem;
+  background: #1b1b1b;
+  color: inherit;
+  font: inherit;
 }
 
 .connection-buttons {

@@ -30,6 +30,9 @@ export const SETUP_PEDAL_API = '/api/setup/pedal';
 // Each connection target's row, its pre-service check included. The setup screen polls it, and the
 // server answers only the laptop itself, as it does the foot pedal's status.
 export const SETUP_CONNECTIONS_API = '/api/setup/connections';
+// Every device in the hub's registry, as the producer's snapshot carries it. The setup screen polls it,
+// and the server answers only the laptop itself, since a device's name is no band page's business.
+export const SETUP_DEVICES_API = '/api/setup/devices';
 // The set's charts, from the set manifest (set-manifest.ts), read-only for every device. The page
 // fetches them again when the snapshot's chart revision changes.
 export const CHARTS_API = '/api/charts';

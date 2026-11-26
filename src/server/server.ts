@@ -3,7 +3,8 @@ import { stat } from 'node:fs/promises';
 import { createServer, type IncomingMessage, type ServerResponse } from 'node:http';
 import { extname, join, normalize, resolve, sep } from 'node:path';
 import type { Command } from '../shared/command.ts';
-import { CHARTS_API, SETUP_API, SETUP_CONNECTIONS_API, SETUP_PEDAL_API, SETUP_REFRESH_API, SETUP_REFUSED } from '../shared/routes.ts';
+import type { Device } from '../shared/devices.ts';
+import { CHARTS_API, SETUP_API, SETUP_CONNECTIONS_API, SETUP_DEVICES_API, SETUP_PEDAL_API, SETUP_REFRESH_API, SETUP_REFUSED } from '../shared/routes.ts';
 import { UNKNOWN_POWER } from '../shared/power.ts';
 import { meterForSong, type SetCharts } from '../shared/set-manifest.ts';
 import { createSongTimer } from './song-timings.ts';
@@ -140,7 +141,7 @@ export async function startServer(options: ServerOptions): Promise<Server> {
 
   const http = createServer(
     (request, response) =>
-      void serveWeb(webRoot, secrets, { refresh: () => refresh(), pedalStatus: () => pedal.status(), connectionsStatus: () => connectionsStatus(), charts: () => manifest.charts() }, request, response),
+      void serveWeb(webRoot, secrets, { refresh: () => refresh(), pedalStatus: () => pedal.status(), connectionsStatus: () => connectionsStatus(), devices: () => hub.devices(), charts: () => manifest.charts() }, request, response),
   );
   // The controller and the bridge each call the other, so the controller reaches the bridge, the
   // fade and the hub by late reference. Commands reach the controller through the hub, the setup
@@ -423,6 +424,7 @@ type SetupActions = {
   refresh(): void;
   pedalStatus(): PedalStatus;
   connectionsStatus(): ConnectionsStatus;
+  devices(): Device[];
   charts(): SetCharts;
 };
 
@@ -433,6 +435,7 @@ async function serveWeb(webRoot: string, secrets: HubSecrets, setup: SetupAction
     else if (path === SETUP_REFRESH_API) serveSetupRefresh(request, response, setup.refresh);
     else if (path === SETUP_PEDAL_API) serveLaptopJson(request, response, setup.pedalStatus);
     else if (path === SETUP_CONNECTIONS_API) serveLaptopJson(request, response, setup.connectionsStatus);
+    else if (path === SETUP_DEVICES_API) serveLaptopJson(request, response, setup.devices);
     else if (path === CHARTS_API) serveJson(request, response, setup.charts);
     else await serveFile(webRoot, request, response);
   } catch (error) {
@@ -475,10 +478,10 @@ function serveSetupRefresh(request: IncomingMessage, response: ServerResponse, r
   response.writeHead(204).end();
 }
 
-// The foot pedal's status and the connections' status, each for the laptop alone, as the join codes
-// are: the pedal's config path and mappings are no band page's business, and the monitor changes on
-// every MIDI message; the connections config, a target's row and its pre-service check are the
-// producer's and the operator's, never a band page's.
+// The foot pedal's status, the connections' status and the devices, each for the laptop alone, as the
+// join codes are: the pedal's config path and mappings are no band page's business, and the monitor
+// changes on every MIDI message; the connections config, a target's row and its pre-service check,
+// and each device's name and battery, are the producer's and the operator's, never a band page's.
 function serveLaptopJson(request: IncomingMessage, response: ServerResponse, read: () => unknown) {
   if (request.method !== 'GET' && request.method !== 'HEAD') {
     response.writeHead(405).end();

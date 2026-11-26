@@ -1,4 +1,5 @@
 import { afterEach, beforeEach, expect, it, vi } from 'vitest';
+import { RELOAD, type DeviceHello } from '../src/shared/devices.ts';
 import { HEARTBEAT, HEARTBEAT_MS, SILENCE_MS } from '../src/shared/heartbeat.ts';
 import { connectToServer } from '../web/src/server-connection.ts';
 
@@ -10,11 +11,14 @@ class FakeSocket extends EventTarget {
   static readonly CLOSED = 3;
   static all: FakeSocket[] = [];
   readyState = FakeSocket.CONNECTING;
+  sent: string[] = [];
   constructor() {
     super();
     FakeSocket.all.push(this);
   }
-  send() {}
+  send(data: string) {
+    this.sent.push(data);
+  }
   close() {
     if (this.readyState >= FakeSocket.CLOSING) return;
     this.readyState = FakeSocket.CLOSING;
@@ -189,5 +193,62 @@ it('keeps trying under 2 seconds apart for a whole minute while every try fails'
   // A client that gave up after any number of tries leaves a gap of over 2 seconds at the end.
   expect(starts.length).toBeGreaterThan(30);
   for (let i = 1; i < starts.length; i++) expect(starts[i]! - starts[i - 1]!).toBeLessThan(2000);
+  connection.close();
+});
+
+const HELLO: DeviceHello = { kind: 'hello', client: 'phone', name: 'Keys', battery: 50 };
+
+it('introduces the device on every socket it opens, the one after a drop included', () => {
+  const connection = connectToServer({ url: 'ws://server/', onSnapshot: () => {}, visibility: new Visibility() });
+  connection.introduce(HELLO);
+  expect(FakeSocket.all[0]!.sent).toEqual([]);
+
+  FakeSocket.all[0]!.accept();
+  FakeSocket.all[0]!.closed();
+  vi.advanceTimersByTime(250);
+  FakeSocket.all[1]!.accept();
+
+  expect(FakeSocket.all.map((socket) => socket.sent.map((data) => JSON.parse(data) as unknown))).toEqual([[HELLO], [HELLO]]);
+  connection.close();
+});
+
+it('sends a changed hello at once on the open socket', () => {
+  const connection = connectToServer({ url: 'ws://server/', onSnapshot: () => {}, visibility: new Visibility() });
+  connection.introduce(HELLO);
+  FakeSocket.all[0]!.accept();
+
+  connection.introduce({ ...HELLO, name: 'Keys 2' });
+
+  expect(FakeSocket.all[0]!.sent.map((data) => (JSON.parse(data) as DeviceHello).name)).toEqual(['Keys', 'Keys 2']);
+  connection.close();
+});
+
+it('reloads the page on a reload frame, and never reads it as a snapshot', () => {
+  const snapshots: unknown[] = [];
+  let reloads = 0;
+  const connection = connectToServer({ url: 'ws://server/', onSnapshot: (snapshot) => snapshots.push(snapshot), onReload: () => (reloads += 1), visibility: new Visibility() });
+  FakeSocket.all[0]!.accept();
+
+  FakeSocket.all[0]!.deliver(RELOAD);
+
+  expect(reloads).toBe(1);
+  expect(snapshots).toEqual([]);
+  connection.close();
+});
+
+it('reloads on a reload frame that reaches the socket a wake is replacing, before the fresh socket opens', () => {
+  const visibility = new Visibility();
+  let reloads = 0;
+  const connection = connectToServer({ url: 'ws://server/', onSnapshot: () => {}, onReload: () => (reloads += 1), visibility });
+  const first = FakeSocket.all[0]!;
+  first.accept();
+  first.deliver();
+
+  visibility.wake();
+  expect(FakeSocket.all).toHaveLength(2);
+  expect(first.readyState).toBe(FakeSocket.OPEN);
+  first.deliver(RELOAD);
+
+  expect(reloads).toBe(1);
   connection.close();
 });
