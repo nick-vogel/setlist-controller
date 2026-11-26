@@ -8,9 +8,10 @@ test.afterEach(async () => {
   e2e = undefined;
 });
 
-// Each device opens in a context of its own, since pages in one context share the browser's storage
-// and so its client ID: one context is one device. The battery is stubbed, since no browser here
-// reports one: WebKit has no getBattery, and what Chromium reports on this machine is its own.
+// Each device opens in a context of its own, since pages of one role in one context share the
+// browser's storage and so its client ID: one context is one device. The battery is stubbed, since no
+// browser here reports one: WebKit has no getBattery, and what Chromium reports on this machine is its
+// own.
 async function device(browser: Browser, url: string, battery: number | null = null): Promise<Page> {
   const context = await browser.newContext();
   if (battery !== null) {
@@ -50,6 +51,31 @@ test("a phone named on its page is listed on the producer's Devices panel with i
   await phone.getByLabel('Device name').fill('Stage right');
   await expect(deviceRow(producer, 'Stage right').locator('.device-status')).toHaveText('Online');
   await expect(devicesPanel(producer).getByRole('listitem')).toHaveCount(2);
+});
+
+test('one browser is one device for each page role, and a name typed in one tab reaches its other tabs', async ({ browser }) => {
+  e2e = await startE2eRig();
+  const context = await browser.newContext();
+  const tab = async (url: string) => {
+    const page = await context.newPage();
+    await page.goto(url);
+    await expect(page.getByText('Intro').first()).toBeVisible();
+    return page;
+  };
+  const producer = await tab(e2e.producerUrl);
+  const first = await tab(e2e.viewerUrl);
+  const second = await tab(e2e.viewerUrl);
+
+  await first.getByLabel('Device name').fill('Stage left');
+
+  await expect(second.getByLabel('Device name')).toHaveValue('Stage left');
+  const rows = devicesPanel(producer).getByRole('listitem');
+  await expect(rows.locator('.device-role')).toHaveText(['Producer', 'View only']);
+  await expect(deviceRow(producer, 'Stage left')).toHaveCount(2);
+  await second.reload();
+  await expect(second.getByLabel('Device name')).toHaveValue('Stage left');
+  await expect(rows.filter({ hasText: 'View only' }).locator('.device-status')).toHaveText('Online');
+  await expect(rows).toHaveCount(2);
 });
 
 test('Reload on a device reloads that browser alone, and the producer has no Reload on its own row', async ({ browser }) => {

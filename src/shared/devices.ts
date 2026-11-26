@@ -1,10 +1,10 @@
 import type { Role } from './routes.ts';
 
 // Every page but the setup screen introduces itself to the hub on each socket it opens, and again when
-// its name or battery changes: the client ID it keeps in the browser's storage, the name the device
-// goes by, and its battery. The hub keeps a registry of them by client ID (src/server/devices.ts), and
-// the producer page and the setup screen list it. The socket decides the role, never the hello, so a
-// band phone cannot list itself as the producer.
+// its name or battery changes: the client ID it keeps in the browser's storage for its role, the name
+// the device goes by, and its battery. The hub keeps a registry of them by client ID
+// (src/server/devices.ts), and the producer page and the setup screen list it. The socket decides the
+// role, never the hello, so a band phone cannot list itself as the producer.
 
 // A client ID, as the page makes it (web/src/device-settings.ts): letters, digits and dashes.
 export function isClientId(value: unknown): value is string {

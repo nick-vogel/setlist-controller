@@ -13,6 +13,7 @@ import {
   readCapo,
   readClientId,
   readDeviceName,
+  watchDeviceName,
   readChordNames,
   readDisplay,
   readFontSize,
@@ -429,20 +430,29 @@ describe('the client ID a device keeps', () => {
   it('is the one it made on its first visit, so the device is the same one after a reload', () => {
     const storage = mapStorage();
 
-    expect(readClientId(storage, () => 'made-1')).toBe('made-1');
-    expect(readClientId(storage, () => 'made-2')).toBe('made-1');
+    expect(readClientId(storage, 'viewer', () => 'made-1')).toBe('made-1');
+    expect(readClientId(storage, 'viewer', () => 'made-2')).toBe('made-1');
+  });
+
+  it('is one for each page role, so a browser holding the producer page and a leader page is two devices', () => {
+    const storage = mapStorage();
+
+    expect(readClientId(storage, 'producer', () => 'made-1')).toBe('made-1');
+    expect(readClientId(storage, 'leader', () => 'made-2')).toBe('made-2');
+    expect(readClientId(storage, 'viewer', () => 'made-3')).toBe('made-3');
+    expect(readClientId(storage, 'producer', () => 'made-4')).toBe('made-1');
   });
 
   it('is made again in place of a stored value the hub would refuse', () => {
-    const storage = mapStorage({ 'setlist-controller.client-id': 'not an id' });
+    const storage = mapStorage({ 'setlist-controller.client-id.viewer': 'not an id' });
 
-    expect(readClientId(storage, () => 'made-1')).toBe('made-1');
-    expect(readClientId(storage, () => 'made-2')).toBe('made-1');
+    expect(readClientId(storage, 'viewer', () => 'made-1')).toBe('made-1');
+    expect(readClientId(storage, 'viewer', () => 'made-2')).toBe('made-1');
   });
 
   it('is made for the visit alone on a device that cannot store', () => {
-    expect(readClientId(throwing, () => 'made-1')).toBe('made-1');
-    expect(readClientId(undefined, () => 'made-2')).toBe('made-2');
+    expect(readClientId(throwing, 'viewer', () => 'made-1')).toBe('made-1');
+    expect(readClientId(undefined, 'viewer', () => 'made-2')).toBe('made-2');
   });
 
   it('is made as one the hub reads, and a fresh one each time', () => {
@@ -470,6 +480,23 @@ describe('the name a device goes by', () => {
 
     expect(readDeviceName(storage)).toBeNull();
     expect(storage.entries.size).toBe(0);
+  });
+
+  it('is read again when another tab stores one, so every tab of the device says hello with it', () => {
+    const storage = mapStorage();
+    const page = new EventTarget();
+    const names: (string | null)[] = [];
+    const stop = watchDeviceName(page, storage, (name) => names.push(name));
+
+    storeDeviceName(storage, 'Stage left');
+    page.dispatchEvent(new Event('storage'));
+    storeDeviceName(storage, '');
+    page.dispatchEvent(new Event('storage'));
+    stop();
+    storeDeviceName(storage, 'Stage right');
+    page.dispatchEvent(new Event('storage'));
+
+    expect(names).toEqual(['Stage left', null]);
   });
 
   it('reads no name on a device that never stored one or cannot store', () => {

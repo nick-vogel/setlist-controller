@@ -246,8 +246,9 @@ export function storeLeaderView(storage: DeviceStorage | undefined, view: Leader
 }
 
 // The ID the hub knows the device by (src/shared/devices.ts), made on its first visit and kept, so the
-// producer's Devices panel shows one row for it across reloads and reconnects. Every page on the
-// device shares it, since the browser's storage is the device's.
+// producer's Devices panel shows one row for it across reloads and reconnects. One for each page role:
+// a browser holding the producer page and a leader page is two devices, and its tabs of one role share
+// one.
 const CLIENT_ID_KEY = 'setlist-controller.client-id';
 
 // 128 random bits as hex. getRandomValues, not randomUUID: a band phone joins over plain HTTP on the
@@ -258,16 +259,17 @@ export function newClientId(): string {
 
 // The stored client ID, else a new one, stored: nothing stored, or a value the hub would refuse. A
 // device that cannot store gets a new one for this visit.
-export function readClientId(storage: DeviceStorage | undefined, make: () => string = newClientId): string {
+export function readClientId(storage: DeviceStorage | undefined, role: Role, make: () => string = newClientId): string {
+  const key = `${CLIENT_ID_KEY}.${role}`;
   try {
-    const value = storage?.getItem(CLIENT_ID_KEY);
+    const value = storage?.getItem(key);
     if (isClientId(value)) return value;
   } catch {
     // Made for this visit below.
   }
   const made = make();
   try {
-    storage?.setItem(CLIENT_ID_KEY, made);
+    storage?.setItem(key, made);
   } catch {
     // A device that cannot store is a new device at its next visit.
   }
@@ -286,6 +288,14 @@ export function readDeviceName(storage: DeviceStorage | undefined): string | nul
   } catch {
     return null;
   }
+}
+
+// Calls onName with the stored name each time another tab changes the storage, so every tab of the
+// device goes by the name typed last. Returns the function that stops it.
+export function watchDeviceName(page: EventTarget, storage: DeviceStorage | undefined, onName: (name: string | null) => void): () => void {
+  const reread = () => onName(readDeviceName(storage));
+  page.addEventListener('storage', reread);
+  return () => page.removeEventListener('storage', reread);
 }
 
 // Stores the name, or forgets it for a blank one, so the device goes by its default again.

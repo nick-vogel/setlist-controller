@@ -35,6 +35,7 @@ import {
   storePart,
   storeTipShown,
   storeView,
+  watchDeviceName,
   type ChordNames,
   type DeviceStorage,
   type Display,
@@ -71,14 +72,16 @@ import { ViewPicker } from './ViewPicker.tsx';
 export function App() {
   const { role, socketPath } = pageRole(location.pathname);
   const setup = isSetupPage(location.pathname);
-  // The device's client ID and the name it goes by, read once from the device, the name stored on
-  // every change. A device with no name typed goes by its role or its part.
-  const [clientId] = useState(() => readClientId(deviceStorage()));
+  // The page's client ID, read once from the device for its role, and the name the device goes by,
+  // stored on every change and read again when another tab stores one. A device with no name typed
+  // goes by its role or its part.
+  const [clientId] = useState(() => readClientId(deviceStorage(), role));
   const [deviceName, setDeviceName] = useState(() => readDeviceName(deviceStorage()) ?? '');
   const onDeviceName = useCallback((typed: string) => {
     setDeviceName(typed);
     storeDeviceName(deviceStorage(), typed);
   }, []);
+  useEffect(() => watchDeviceName(window, deviceStorage(), (name) => setDeviceName(name ?? '')), []);
   const battery = useBattery(!setup);
   // The band member's part, read once from the device and stored on every change, and the display
   // the device keeps for that part, read again for each part picked.
