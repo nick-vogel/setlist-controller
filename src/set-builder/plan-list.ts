@@ -3,7 +3,7 @@ import { setName } from './build-set.ts';
 import { songNoteKey } from './pads.ts';
 import type { FolderPick } from './plan-folders.ts';
 import type { Plan } from './plan-reader.ts';
-import { itemMeanings, type TransitionSource } from './plan-transitions.ts';
+import { itemMeanings, lastKept, type TransitionSource } from './plan-transitions.ts';
 
 // `--plan --list`: what the plan resolves to, as lines to print, before a build. Pure: the command reads the plan, the
 // folders and the songs' meters, and prints these lines.
@@ -12,8 +12,10 @@ export type PlanListingInput = {
   // The set's date, YYYY-MM-DD.
   date: string;
   plan: Plan;
-  // Each plan song's folder, or its problem, by position.
-  picks: FolderPick[];
+  // Each plan song's folder, or its problem, by position, and undefined for a song --skip leaves out.
+  picks: (FolderPick | undefined)[];
+  // The songs --skip leaves out of the set, by position, each with its flag as typed, `--skip 3`.
+  skipped?: ReadonlyMap<number, string>;
   // The transitions after the flags (transitionsWithFlags), the problems left, and each position's source.
   transitions: Partial<Record<number, Transition>>;
   problems: Map<number, string>;
@@ -33,12 +35,17 @@ export type PlanListingInput = {
 // (`gap, the default`, `overlap, from the plan`, `pad in G, from --pad 1=G`), or the position's transition problem; the
 // last song has that field only when it has a transition, a flag or a problem. A folder problem of several lines, such as
 // two folders in the key, takes the folder field with its first line, and its other lines, the folder names, follow the
-// song's line as they are, so the transition stays on the song's own line and the problem's text is the build's. A
-// non-song item is `<title>: a pad after song <n>`, with `, which <flag> replaces` when a flag names that song, or
-// `<title>: no effect`.
-export function planListing({ date, plan, picks, transitions, problems, sources, warnings, existingSet }: PlanListingInput): string[] {
+// song's line as they are, so the transition stays on the song's own line and the problem's text is the build's. A song
+// --skip leaves out is `<n>. <title>  <plan key, or "no key">  skipped, from --skip <n>`, with no folder and no
+// transition, and the last song is the last one not skipped. A non-song item is `<title>: a pad after song <n>`, with
+// `, which <flag> replaces` when a flag names that song, or `<title>: no effect`.
+export function planListing({ date, plan, picks, skipped = new Map(), transitions, problems, sources, warnings, existingSet }: PlanListingInput): string[] {
+  const skips = new Set(skipped.keys());
+  const last = lastKept(plan.songs.length, skips);
   const songLine = (position: number): string => {
     const song = plan.songs[position - 1];
+    const skip = skipped.get(position);
+    if (skip !== undefined) return [`${position}. ${song?.title ?? ''}`, song?.key ?? 'no key', `skipped, from ${skip}`].join('  ');
     const pick = picks[position - 1];
     const [folder = '', ...after] = (pick === undefined ? '' : pick.ok ? pick.folder : pick.problem).split('\n');
     const fields = [`${position}. ${song?.title ?? ''}`, song?.key ?? 'no key', folder];
@@ -46,12 +53,12 @@ export function planListing({ date, plan, picks, transitions, problems, sources,
     const transition = transitions[position];
     const source = sources.get(position);
     if (problem !== undefined) fields.push(problem);
-    else if (transition !== undefined || source !== undefined || position < plan.songs.length) {
+    else if (transition !== undefined || source !== undefined || position < last) {
       fields.push(`${transitionName(transition, padKey(position, transition, picks))}, ${sourceName(source)}`);
     }
     return [fields.join('  '), ...after].join('\n');
   };
-  const entries = itemMeanings(plan).map((entry) => {
+  const entries = itemMeanings(plan, skips).map((entry) => {
     if (entry.kind === 'song') return songLine(entry.position);
     const title = entry.title === '' ? 'untitled' : entry.title;
     if (entry.padAfter === undefined) return `${title}: no effect`;
@@ -69,7 +76,7 @@ export function existingSetLine({ folder, replace }: { folder: string; replace: 
 
 // Whether the listing exits 1: a song with a folder problem, or a transition problem left after the flags.
 export function listingHasProblems({ picks, problems }: Pick<PlanListingInput, 'picks' | 'problems'>): boolean {
-  return problems.size > 0 || picks.some((pick) => !pick.ok);
+  return problems.size > 0 || picks.some((pick) => pick !== undefined && !pick.ok);
 }
 
 // The transition as the listing names it: `gap` for none, `overlap`, `pad in <key>`, or `pad` with no key known.
@@ -84,12 +91,12 @@ function sourceName(source: TransitionSource | undefined): string {
   return source.from === 'plan' ? 'from the plan' : `from ${source.flag}`;
 }
 
-// A pad's key, as the build would play it: its own, else the next song's folder key, else, after the last song, its
-// own song's; undefined when that folder is a problem or writes no note name.
-function padKey(position: number, transition: Transition | undefined, picks: FolderPick[]): string | undefined {
+// A pad's key, as the build would play it: its own, else the folder key of the next song --skip does not leave out,
+// else, after the last song, its own song's; undefined when that folder is a problem or writes no note name.
+function padKey(position: number, transition: Transition | undefined, picks: (FolderPick | undefined)[]): string | undefined {
   if (transition?.type !== 'pad') return undefined;
   if (transition.key !== undefined) return transition.key;
-  const pick = picks[position] ?? picks[position - 1];
+  const pick = picks.slice(position).find((each) => each !== undefined) ?? picks[position - 1];
   if (pick === undefined || !pick.ok) return undefined;
   const key = songNoteKey(pick.folder);
   return key.ok ? key.key : undefined;

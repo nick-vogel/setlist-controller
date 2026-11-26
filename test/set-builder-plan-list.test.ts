@@ -362,7 +362,7 @@ describe('pnpm build-set --plan --list', { timeout: 30_000 }, () => {
     expect(result.stdout.split('\n').filter((line) => /^\d+\. /.test(line))).toEqual([
       `1. This Is Amazing Grace  D  ${GRACE}  gap, the default`,
       `2. Great Are You Lord  D  ${GREAT_ARE}  gap, the default`,
-      `3. Fall Like Rain  E  "Fall Like Rain" has no song folder in ${workspace.library}.`,
+      `3. Fall Like Rain  E  "Fall Like Rain" has no song folder in ${workspace.library}. To leave it out of the set, give --skip 3.`,
     ]);
     await expectReadOnly(workspace, fake);
   });
@@ -740,5 +740,65 @@ describe('pnpm build-set --plan --list, the forms recorded from the real Plannin
     expect(warnings(result.stdout).filter((line) => line.includes('"Oh How I Need You (Find You)"'))).toEqual([
       'Warning: song 6, "Oh How I Need You (Find You)", is planned in 2/4, and its song starts in 4/4.',
     ]);
+  });
+});
+
+// --skip <n> leaves plan song n out of the set (setlist-controller#31). The listing keeps its line, with its plan number,
+// so the numbers the other flags take stay in view.
+describe('pnpm build-set --plan --list --skip', { timeout: 30_000 }, () => {
+  it('lists a skipped song with its number and key and no folder, gives it no warning, and reads the "Prayer" after it as no pad, exit 0', async () => {
+    const workspace = await phase0Workspace();
+    const fake = await planningCenter();
+
+    const result = await run(['--plan', '--list', '--skip', '2', '--date', PHASE_0, ...listPaths(workspace)], fake, await tokenFile(workspace));
+
+    expect(result.stderr).toBe('');
+    expect(result.code).toBe(0);
+    expect(result.stdout).toBe(
+      [
+        '2027-01-03 Sunday',
+        `1. WELCOME HOME  F  ${WELCOME_HOME}  overlap, from the plan`,
+        '2. Yes And Amen  G  skipped, from --skip 2',
+        'Prayer: no effect',
+        `3. Fall Like Rain  E  ${FALL_LIKE_RAIN}`,
+        ...PHASE_0_ITEMS_AFTER,
+        PHASE_0_WARNINGS[0],
+        '',
+      ].join('\n'),
+    );
+    await expectReadOnly(workspace, fake);
+  });
+
+  it('makes the last song not skipped the last song: the "Prayer" after it is a pad in its own key, and the song after it is skipped', async () => {
+    const workspace = await phase0Workspace();
+    const fake = await planningCenter();
+
+    const result = await run(['--plan', '--list', '--skip', '3', '--date', PHASE_0, ...listPaths(workspace)], fake, await tokenFile(workspace));
+
+    expect(result.stdout.split('\n').slice(1, 5)).toEqual([
+      `1. WELCOME HOME  F  ${WELCOME_HOME}  overlap, from the plan`,
+      `2. Yes And Amen  G  ${YES_AND_AMEN}  pad in G, from the plan`,
+      'Prayer: a pad after song 2',
+      '3. Fall Like Rain  E  skipped, from --skip 3',
+    ]);
+  });
+
+  it('names --skip as the fix for a plan song with no song folder, and lists the plan with it, exit 0', async () => {
+    const workspace = await phase0Workspace();
+    await rm(join(workspace.library, YES_AND_AMEN), { recursive: true });
+    const fake = await planningCenter();
+
+    const stopped = await run(['--plan', '--list', '--date', PHASE_0, ...listPaths(workspace)], fake, await tokenFile(workspace));
+
+    expect(stopped.code).toBe(1);
+    expect(stopped.stdout.split('\n')[2]).toBe(
+      `2. Yes And Amen  G  "Yes And Amen" has no song folder in ${workspace.library}. To leave it out of the set, give --skip 2.  pad in E, from the plan`,
+    );
+
+    const skipped = await run(['--plan', '--list', '--skip', '2', '--date', PHASE_0, ...listPaths(workspace)], fake, await tokenFile(workspace));
+
+    expect(skipped.stderr).toBe('');
+    expect(skipped.code).toBe(0);
+    expect(skipped.stdout.split('\n')[2]).toBe('2. Yes And Amen  G  skipped, from --skip 2');
   });
 });

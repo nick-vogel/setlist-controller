@@ -18,7 +18,7 @@ import { pickFolders, planFolders, type FolderPick } from './plan-folders.ts';
 import { existingSetLine, listingHasProblems, planListing } from './plan-list.ts';
 import { API_BASE, readPlan, readToken, tokenFilePath, type Plan, type PlanSong } from './plan-reader.ts';
 import { chartWarnings, planWarnings, startingMeter } from './plan-warnings.ts';
-import { transitionsWithFlags, type FlagTransition } from './plan-transitions.ts';
+import { keptPositions, lastKept, transitionsWithFlags, type FlagTransition } from './plan-transitions.ts';
 import { DEFAULT_STEM_MAP_PATH, readRecipe, readStemMapFile, updateRecipe } from './recipe.ts';
 import { defaultSetDate } from './set-date.ts';
 import { buildManifest, writeSetManifest } from './set-manifest.ts';
@@ -35,11 +35,11 @@ import { makeWeeklyShow, noTemplateLine, weeklyShowLines } from './weekly-show.t
 
 const USAGE = `Usage:
   pnpm build-set <song> [<song> ...] [--overlap <n> ...] [--gap <n> ...] [--pad <n>[=<key>] ...] [--pads <folder>] [--date YYYY-MM-DD] [--replace <set folder>] [--library <folder>] [--template <set.als>] [--output-root <folder>] [--set-manifest <path>] [--show-folder <folder>]
-  pnpm build-set --plan [--service-type <name or id>] [--plan-id <id>] [--overlap <n> ...] [--gap <n> ...] [--pad <n>[=<key>] ...] [--pads <folder>] [--date YYYY-MM-DD] [--replace <set folder>] [--library <folder>] [--template <set.als>] [--output-root <folder>] [--set-manifest <path>] [--show-folder <folder>]
+  pnpm build-set --plan [--service-type <name or id>] [--plan-id <id>] [--skip <n> ...] [--overlap <n> ...] [--gap <n> ...] [--pad <n>[=<key>] ...] [--pads <folder>] [--date YYYY-MM-DD] [--replace <set folder>] [--library <folder>] [--template <set.als>] [--output-root <folder>] [--set-manifest <path>] [--show-folder <folder>]
   pnpm build-set --list [--library <folder>] [--pads <folder>] [--date YYYY-MM-DD] [--replace <set folder>] [--output-root <folder>]
-  pnpm build-set --plan --list [--service-type <name or id>] [--plan-id <id>] [--overlap <n> ...] [--gap <n> ...] [--pad <n>[=<key>] ...] [--pads <folder>] [--date YYYY-MM-DD] [--replace <set folder>] [--library <folder>] [--template <set.als>] [--output-root <folder>]
+  pnpm build-set --plan --list [--service-type <name or id>] [--plan-id <id>] [--skip <n> ...] [--overlap <n> ...] [--gap <n> ...] [--pad <n>[=<key>] ...] [--pads <folder>] [--date YYYY-MM-DD] [--replace <set folder>] [--library <folder>] [--template <set.als>] [--output-root <folder>]
   pnpm build-set --skeleton <song> [<song> ...] [--library <folder>] [--pads <folder>]
-  pnpm build-set --plan --skeleton [--service-type <name or id>] [--plan-id <id>] [--date YYYY-MM-DD] [--library <folder>] [--pads <folder>]
+  pnpm build-set --plan --skeleton [--service-type <name or id>] [--plan-id <id>] [--skip <n> ...] [--date YYYY-MM-DD] [--library <folder>] [--pads <folder>]
   pnpm build-set --lights [--date YYYY-MM-DD] [--output-root <folder>] [--show-folder <folder>] [--connections-config <path>] [--playlist <name>]
   pnpm build-set edit [<set folder>] [--date YYYY-MM-DD] [--output-root <folder>] (--swap <song> <replacement> | --add <song> [--at <pos>] | --drop <song>)
 
@@ -51,13 +51,20 @@ beside it is a usage error. Each plan song's folder is the one whose title, the 
 hyphen, is the song's title, and whose key is the plan's key for it. A plan key in lower case reads as its note name,
 e as E, and a key change as the key before its first hyphen, G-A as G; a plan key that is still no note name stops
 the build. Titles match trimmed, with each run of spaces as one, in any letter case. A song with no such folder, no
-key in the plan, or two such folders stops the build, and every song's problem is printed.
+key in the plan, or two such folders stops the build, and every song's problem is printed. A song with no folder of
+its title names --skip as a fix.
 The plan gives each song change its transition. An item titled Prayer that is the next item after a song, headers
 left out, puts a pad after that song in the next song's key, and after the last song in its own key. A note on a song
 whose whole text is overlap overlaps it into the next song. Every other song change is a gap. A transition flag for a
 song replaces what the plan gives the song change after it.
 --service-type names the plan's service type by its name or its id, and defaults to Service. --plan-id names the plan
-by its id when the service type has more than one plan on the date. --service-type and --plan-id need --plan.
+by its id when the service type has more than one plan on the date. --skip n leaves plan song n out of the set, as a
+song the band plays with no track: it gets no folder, no warning, no chart and no transition, and the song before it
+keeps its own, into the next song not skipped. n counts the plan's songs from 1, as --plan --list numbers them, and
+every other flag counts them the same way, skipped songs included. Give it once for each song to leave out. The last
+song is the last one not skipped. A transition flag that names a skipped song, and a --skip of every song, are usage
+errors. The summary and the build's own problems number the songs of the set. --service-type, --plan-id and --skip need
+--plan.
 --plan reads the plan with the Planning Center personal access token in ~/.config/setlist-controller/pco.env, or in
 the file PCO_ENV names, as two lines: PCO_CLIENT_ID=<client id> and PCO_SECRET=<secret>. A value may sit in single
 or double quotes, and a line may start with export. Outside quotes, a # after a space or a tab starts a comment, and
@@ -181,23 +188,24 @@ replaces it." That line never sets exit 1. It takes no song name, and no flag bu
 and --output-root.
 --plan --list prints what the plan resolves to and writes nothing: the set's name, then each plan song on its own
 line with its key in the plan, or "no key", its folder or the problem that leaves it none, and the transition after
-it with where it comes from (the default, the plan, or the flag that gives it) or its problem, then each item that is
+it with where it comes from (the default, the plan, or the flag that gives it) or its problem, or, for a song --skip
+leaves out, "skipped, from --skip <n>" in place of its folder and transition, then each item that is
 no song, from the first song on, with what it does to the set, then the warnings. When the set folder for the date
 already exists under the output root, a last line says so: "<folder> already exists. The build stops on it unless
 --replace "<folder>" replaces it.", or with --replace, "<folder> already exists, and --replace replaces it." That line
 never sets exit 1. It exits 1 when a song or a song change has a problem. When none has, it runs the build's own
 checks on the songs' folders, with the template, stem map, transitions and pads folder the build would use, prints
 each problem the build would stop on, on stderr after the listing, and exits 1. --plan --list takes no song name, and
-no flag but --library, --pads, --template, --date, --service-type, --plan-id, --overlap, --pad, --gap, --replace and
---output-root.
+no flag but --library, --pads, --template, --date, --service-type, --plan-id, --skip, --overlap, --pad, --gap,
+--replace and --output-root.
 --skeleton prints each song's chart skeleton, for the songs named, or for the plan's songs with --plan, and writes
 nothing: a line with the song's number and title, then each locator name of its Live set as a chord chart heading, in
 upper case, once, in the order first played, with a blank line between songs. Paste each song's headings into its
 arrangement's chord chart in Planning Center. Count Off and a blank locator are left out. A locator name that is no
 section word with an optional number, such as Outro, is left out too, and a note on stderr names it; a note never sets
 exit 1. A song that has no folder, cannot be read or has no locators prints its problem on stderr after the skeletons,
-exit 1. --skeleton takes no flag but --library and --pads, and --plan --skeleton adds --date, --service-type and
---plan-id.`;
+exit 1. A plan song --skip leaves out has no skeleton and no problem. --skeleton takes no flag but --library and
+--pads, and --plan --skeleton adds --date, --service-type, --plan-id and --skip.`;
 
 function usage(problem: string): never {
   console.error(`${problem}\n\n${USAGE}`);
@@ -225,6 +233,7 @@ const OPTIONS = {
   plan: { type: 'boolean' },
   'service-type': { type: 'string' },
   'plan-id': { type: 'string' },
+  skip: { type: 'string', multiple: true },
   skeleton: { type: 'boolean' },
   'show-folder': { type: 'string' },
   lights: { type: 'boolean' },
@@ -235,11 +244,11 @@ const LIST_OPTIONS: string[] = ['list', 'library', 'pads', 'date', 'replace', 'o
 // The flags --plan --list takes: --list's, the plan's own, the transition flags, whose plan it lists, --template,
 // which it checks the songs against as the build does, and --output-root and --replace, so it looks for the set folder
 // the build would write and says whether --replace replaces it.
-const PLAN_LIST_OPTIONS: string[] = ['list', 'plan', 'library', 'pads', 'template', 'date', 'service-type', 'plan-id', 'overlap', 'pad', 'gap', 'replace', 'output-root'];
+const PLAN_LIST_OPTIONS: string[] = ['list', 'plan', 'library', 'pads', 'template', 'date', 'service-type', 'plan-id', 'skip', 'overlap', 'pad', 'gap', 'replace', 'output-root'];
 // The flags --skeleton takes, and --plan --skeleton: it reads the songs' locators only and writes nothing, so it takes
 // the flags that find the songs, and none of a build's.
 const SKELETON_OPTIONS: string[] = ['skeleton', 'library', 'pads'];
-const PLAN_SKELETON_OPTIONS: string[] = ['skeleton', 'plan', 'library', 'pads', 'date', 'service-type', 'plan-id'];
+const PLAN_SKELETON_OPTIONS: string[] = ['skeleton', 'plan', 'library', 'pads', 'date', 'service-type', 'plan-id', 'skip'];
 // The flags --lights takes: it reads the set built for the date under the output root and builds none, so it takes the
 // two that find that set, the show folder, the connections config that names Eos and ProPresenter, and the playlist to
 // take the songs' colours from when the date does not name one.
@@ -467,21 +476,23 @@ async function planList(): Promise<void> {
   const [named] = positionals;
   if (named !== undefined) usage(`--plan takes the songs from the plan, not "${named}".`);
   const flag = (Object.keys(OPTIONS) as (keyof typeof OPTIONS)[]).find((option) => !PLAN_LIST_OPTIONS.includes(option) && values[option] !== undefined);
-  if (flag !== undefined) usage(`--plan --list takes only --library, --pads, --template, --date, --service-type, --plan-id, --overlap, --pad, --gap, --replace and --output-root, not --${flag}.`);
+  if (flag !== undefined) usage(`--plan --list takes only --library, --pads, --template, --date, --service-type, --plan-id, --skip, --overlap, --pad, --gap, --replace and --output-root, not --${flag}.`);
   checkPlanId();
   if (values.date !== undefined && !isDate(values.date)) usage(`--date must be a real date written YYYY-MM-DD, not ${values.date}.`);
   const date = values.date ?? defaultSetDate(new Date());
   const replace = replaces(date);
   const plan = await readWeekPlan(date);
   if (plan === undefined) return;
-  const { transitions, problems, sources } = transitionsWithFlags(plan, flagTransitions(plan.songs.length));
-  const picked = await pickFolders({ library, pads: padsPath }, plan.songs);
+  const skipped = skips(plan.songs.length);
+  const skipSet = new Set(skipped.keys());
+  const { transitions, problems, sources } = transitionsWithFlags(plan, flagTransitions(plan.songs.length, skipped), skipSet);
+  const picked = await pickFolders({ library, pads: padsPath }, plan.songs, skipSet);
   if (!picked.ok) return fail([picked.problem]);
   const { picks } = picked;
-  const folders = picks.map((pick) => (pick.ok ? pick.folder : undefined));
+  const folders = picks.map((pick) => (pick?.ok === true ? pick.folder : undefined));
   const meters = await Promise.all(folders.map((folder) => (folder === undefined ? undefined : startingMeter(library, folder))));
-  const warnings = [...planWarnings(plan.songs, folders, meters), ...chartWarnings(plan.songs)];
-  for (const line of planListing({ date, plan, picks, transitions, problems, sources, warnings, existingSet: existingSet(date, replace) })) console.log(line);
+  const warnings = [...planWarnings(plan.songs, folders, meters), ...chartWarnings(plan.songs, skipSet)];
+  for (const line of planListing({ date, plan, picks, skipped, transitions, problems, sources, warnings, existingSet: existingSet(date, replace) })) console.log(line);
   if (listingHasProblems({ picks, problems })) {
     process.exitCode = 1;
     return;
@@ -489,7 +500,7 @@ async function planList(): Promise<void> {
   try {
     const stemMap = await stemMapFile();
     const songs = folders.filter((folder) => folder !== undefined);
-    const found = await setProblems({ library, template: templatePath(), stemMap, songs, transitions, pads: padsPath });
+    const found = await setProblems({ library, template: templatePath(), stemMap, songs, transitions: setTransitions(transitions, keptPositions(plan.songs.length, skipSet)), pads: padsPath });
     if (found.length > 0) fail(found);
   } catch (error) {
     fail([error instanceof Error ? error.message : String(error)]);
@@ -513,7 +524,7 @@ async function skeleton(): Promise<void> {
   if (flag !== undefined) {
     usage(
       values.plan === true
-        ? `--plan --skeleton takes only --library, --pads, --date, --service-type and --plan-id, not --${flag}.`
+        ? `--plan --skeleton takes only --library, --pads, --date, --service-type, --plan-id and --skip, not --${flag}.`
         : `--skeleton takes only --library and --pads, not --${flag}.`,
     );
   }
@@ -525,6 +536,8 @@ async function skeleton(): Promise<void> {
   const notes: string[] = [];
   const problems: string[] = [];
   for (const [index, pick] of picks.entries()) {
+    // A song --skip leaves out has no skeleton and no problem, and the songs after it keep their plan numbers.
+    if (pick === undefined) continue;
     if (!pick.ok) {
       problems.push(pick.problem);
       continue;
@@ -561,12 +574,12 @@ async function namedSkeletonFolders(): Promise<FolderPick[] | undefined> {
   return matched.ok ? matched.matches : fail(matched.problems);
 }
 
-// Each plan song's folder, or its problem, in plan order; or undefined, with the token's, the plan's or the library's
-// problem printed and exit 1.
-async function planSkeletonFolders(date: string): Promise<FolderPick[] | undefined> {
+// Each plan song's folder, or its problem, in plan order, undefined for a song --skip leaves out; or undefined, with the
+// token's, the plan's or the library's problem printed and exit 1.
+async function planSkeletonFolders(date: string): Promise<(FolderPick | undefined)[] | undefined> {
   const plan = await readWeekPlan(date);
   if (plan === undefined) return undefined;
-  const picked = await pickFolders({ library, pads: padsPath }, plan.songs);
+  const picked = await pickFolders({ library, pads: padsPath }, plan.songs, new Set(skips(plan.songs.length).keys()));
   return picked.ok ? picked.picks : fail([picked.problem]);
 }
 
@@ -576,7 +589,7 @@ async function planSkeletonFolders(date: string): Promise<FolderPick[] | undefin
 // token is read or anything is written.
 async function build(): Promise<void> {
   const [named] = positionals;
-  for (const flag of ['service-type', 'plan-id'] as const) {
+  for (const flag of ['service-type', 'plan-id', 'skip'] as const) {
     if (values.plan !== true && values[flag] !== undefined) usage(`--${flag} needs --plan.`);
   }
   if (values['connections-config'] !== undefined) usage('--connections-config needs --lights.');
@@ -673,11 +686,25 @@ function checkPlanId(): void {
 
 // The transition each transition flag gives its song, by the song's position: --overlap's and --pad's, and --gap's as
 // none, since a song with no transition is followed by a gap, each with the flag as typed. A value that names no song of
-// `songs`, then a song two flags name, is a usage problem.
-function flagTransitions(songs: number): Map<number, FlagTransition> {
-  const overlaps = (values.overlap ?? []).map((value) => ({ value, position: overlapPosition(value, songs) }));
-  const pads = (values.pad ?? []).map((value) => ({ value, ...padValue(value, songs) }));
-  const gaps = (values.gap ?? []).map((value) => ({ value, position: gapPosition(value, songs) }));
+// `songs`, then one that names a song --skip leaves out (skipped), then a song two flags name, is a usage problem. An
+// --overlap of the last song not skipped is one too.
+function flagTransitions(songs: number, skipped: ReadonlyMap<number, string> = new Map()): Map<number, FlagTransition> {
+  const kept = (flag: string, value: string, position: number): number => {
+    const skip = skipped.get(position);
+    if (skip !== undefined) usage(`--${flag} ${value} names song ${position}, which ${skip} leaves out of the set.`);
+    return position;
+  };
+  const last = lastKept(songs, new Set(skipped.keys()));
+  const overlaps = (values.overlap ?? []).map((value) => {
+    const position = kept('overlap', value, overlapPosition(value, songs));
+    if (position === last) usage(`--overlap ${position} names the last song, which has no song after it to overlap into.`);
+    return { value, position };
+  });
+  const pads = (values.pad ?? []).map((value) => {
+    const pad = padValue(value, songs);
+    return { value, ...pad, position: kept('pad', value, pad.position) };
+  });
+  const gaps = (values.gap ?? []).map((value) => ({ value, position: kept('gap', value, gapPosition(value, songs)) }));
   // The transitions keep one pad for each song, so a second --pad for a song would drop one without a word. Every value's
   // own check comes first; then the first value, in command order, whose song an earlier value named is the problem.
   const padFor = new Map<number, string>();
@@ -712,10 +739,38 @@ function flagTransitions(songs: number): Map<number, FlagTransition> {
 async function planSet(date: string): Promise<{ songs: string[]; transitions: Partial<Record<number, Transition>>; planSongs: PlanSong[] } | undefined> {
   const plan = await readWeekPlan(date);
   if (plan === undefined) return undefined;
-  const { transitions, problems } = transitionsWithFlags(plan, flagTransitions(plan.songs.length));
-  const picked = await planFolders({ library, pads: padsPath }, plan.songs);
+  const skipped = skips(plan.songs.length);
+  const skipSet = new Set(skipped.keys());
+  const { transitions, problems } = transitionsWithFlags(plan, flagTransitions(plan.songs.length, skipped), skipSet);
+  const picked = await planFolders({ library, pads: padsPath }, plan.songs, skipSet);
   const left = [...(picked.ok ? [] : picked.problems), ...[...problems].toSorted(([a], [b]) => a - b).map(([, problem]) => problem)];
-  return picked.ok && left.length === 0 ? { songs: picked.folders, transitions, planSongs: plan.songs } : fail(left);
+  if (!picked.ok || left.length > 0) return fail(left);
+  const kept = keptPositions(plan.songs.length, skipSet);
+  return { songs: picked.folders, transitions: setTransitions(transitions, kept), planSongs: kept.map((position) => plan.songs[position - 1]).filter((song) => song !== undefined) };
+}
+
+// The transitions by plan position, renumbered by the set's songs: song n of the set is the plan song at kept[n - 1], so
+// a skipped song's position drops out and the songs after it move up (setlist-controller#31).
+function setTransitions(transitions: Partial<Record<number, Transition>>, kept: number[]): Partial<Record<number, Transition>> {
+  const renumbered: Partial<Record<number, Transition>> = {};
+  kept.forEach((position, index) => {
+    const transition = transitions[position];
+    if (transition !== undefined) renumbered[index + 1] = transition;
+  });
+  return renumbered;
+}
+
+// The plan songs --skip leaves out, by position, each with its flag as typed, `--skip 3`. A value that names no song of
+// the plan's `songs`, then a --skip of every song, is a usage problem. A song --skip names twice is left out once.
+function skips(songs: number): Map<number, string> {
+  const skipped = new Map<number, string>();
+  for (const value of values.skip ?? []) {
+    const position = /^\d+$/.test(value) ? Number(value) : 0;
+    if (position < 1 || position > songs) usage(`--skip must name a song by its position, a whole number from 1 to ${songs}, not "${value}".`);
+    if (!skipped.has(position)) skipped.set(position, `--skip ${value}`);
+  }
+  if (lastKept(songs, new Set(skipped.keys())) === 0) usage('--skip leaves out every song of the plan, so there is no set to build.');
+  return skipped;
 }
 
 // The plan for `date`, of --service-type and --plan-id, read with the token from its file before any request; or
@@ -877,10 +932,10 @@ function isDate(value: string): boolean {
 
 // The song position an --overlap value names: a whole number, written in digits, from 1 to the second-to-last song,
 // since the last song has no song after it.
+// The last song's check is the caller's, since with --skip the last song is the last one not skipped.
 function overlapPosition(value: string, songs: number): number {
   const position = /^\d+$/.test(value) ? Number(value) : 0;
   if (position < 1 || position > songs) usage(`--overlap must name a song by its position, a whole number from 1 to ${songs}, not "${value}".`);
-  if (position === songs) usage(`--overlap ${position} names the last song, which has no song after it to overlap into.`);
   return position;
 }
 

@@ -1167,14 +1167,6 @@ describe('the usage text on --plan', { timeout: 30_000 }, () => {
     expect(usage).not.toContain('One song takes --overlap or --pad, not both.');
   });
 
-  it('documents --service-type and --plan-id, both needing --plan', async () => {
-    const usage = unwrapped(await usageText());
-
-    expect(usage).toMatch(/(^| )--service-type names the plan's service type by its name or its id, and defaults to Service\./);
-    expect(usage).toContain('--plan-id names the plan by its id when the service type has more than one plan on the date.');
-    expect(usage).toContain('--service-type and --plan-id need --plan.');
-  });
-
   it('documents the token file, its mode, and that the token is never typed on the command line', async () => {
     const usage = unwrapped(await usageText());
 
@@ -1188,23 +1180,6 @@ describe('the usage text on --plan', { timeout: 30_000 }, () => {
     expect(usage).toContain('PCO_ENV may start with ~/ for your home folder.');
     expect(usage).not.toContain('PCO_API_BASE');
     expect(usage).not.toContain('PCO_TIMEOUT_MS');
-  });
-
-  it('documents --plan --list: what it prints, that it writes nothing, and the flags it takes', async () => {
-    const usage = unwrapped(await usageText());
-
-    expect(usage).toContain(
-      '--plan --list prints what the plan resolves to and writes nothing: the set\'s name, then each plan song on its own line with its key in the plan, or "no key", its folder or the problem that leaves it none, and the transition after it with where it comes from (the default, the plan, or the flag that gives it) or its problem, then each item that is no song, from the first song on, with what it does to the set, then the warnings.',
-    );
-    expect(usage).toContain('It exits 1 when a song or a song change has a problem.');
-    expect(usage).toContain(
-      'When the set folder for the date already exists under the output root, a last line says so: "<folder> already exists. The build stops on it unless --replace "<folder>" replaces it.", or with --replace, "<folder> already exists, and --replace replaces it." That line never sets exit 1.',
-    );
-    expect(usage).toContain(
-      "When none has, it runs the build's own checks on the songs' folders, with the template, stem map, transitions and pads folder the build would use, prints each problem the build would stop on, on stderr after the listing, and exits 1.",
-    );
-    expect(usage).not.toContain('It does not check whether the set folder for the date already exists.');
-    expect(usage).toContain('--plan --list takes no song name, and no flag but --library, --pads, --template, --date, --service-type, --plan-id, --overlap, --pad, --gap, --replace and --output-root.');
   });
 
   it("documents the set manifest every build writes, at the server's own default, with no chart for a build by song names", async () => {

@@ -391,10 +391,10 @@ describe('pnpm build-set --lights, its usage errors', { timeout: 30_000 }, () =>
     {
       mode: '--plan --list',
       args: ['--plan', '--list'],
-      problem: '--plan --list takes only --library, --pads, --template, --date, --service-type, --plan-id, --overlap, --pad, --gap, --replace and --output-root, not --lights.',
+      problem: '--plan --list takes only --library, --pads, --template, --date, --service-type, --plan-id, --skip, --overlap, --pad, --gap, --replace and --output-root, not --lights.',
     },
     { mode: '--skeleton', args: ['--skeleton', 'grace'], problem: '--skeleton takes only --library and --pads, not --lights.' },
-    { mode: '--plan --skeleton', args: ['--plan', '--skeleton'], problem: '--plan --skeleton takes only --library, --pads, --date, --service-type and --plan-id, not --lights.' },
+    { mode: '--plan --skeleton', args: ['--plan', '--skeleton'], problem: '--plan --skeleton takes only --library, --pads, --date, --service-type, --plan-id and --skip, not --lights.' },
   ])('is no flag of $mode, which stops on it with its own usage message, exit 2', async ({ args, problem }) => {
     const workspace = stage();
 
