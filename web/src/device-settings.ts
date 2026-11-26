@@ -317,3 +317,45 @@ export function storeDeviceName(storage: DeviceStorage | undefined, name: string
 export function defaultDeviceName(role: Role, part: Part | null): string {
   return role === 'viewer' && part !== null ? part : ROLE_LABELS[role];
 }
+
+// The IDs of the producer's messages the device dismissed, newest last, so a dismissed message stays
+// hidden when the hub sends it again on the next hello. One list for each device, which is one for
+// each page role, as the client ID is: a message to All devices carries one ID to every device, so a
+// list for the browser would hide it on a page that never dismissed it.
+const DISMISSED_MESSAGES_KEY = 'setlist-controller.dismissed-messages';
+
+// The most dismissed IDs the device keeps. The hub holds one active message per device, so the newest
+// few are all that can come back.
+export const MAX_DISMISSED_MESSAGES = 20;
+
+// The stored IDs, or none: nothing stored, a value that is not a list, or no storage. An entry that is
+// not a string is left out.
+export function readDismissedMessages(storage: DeviceStorage | undefined, role: Role): string[] {
+  try {
+    const value: unknown = JSON.parse(storage?.getItem(`${DISMISSED_MESSAGES_KEY}.${role}`) ?? '[]');
+    return Array.isArray(value) ? value.filter((id): id is string => typeof id === 'string') : [];
+  } catch {
+    return [];
+  }
+}
+
+// Calls onDismissed with the stored IDs each time another tab of the same page role stores one or
+// clears the storage, so every tab of the device hides the message. Returns the function that stops
+// it.
+export function watchDismissedMessages(page: EventTarget, storage: DeviceStorage | undefined, role: Role, onDismissed: (ids: string[]) => void): () => void {
+  const reread = (event: Event) => {
+    const { key } = event as StorageEvent;
+    if (key === `${DISMISSED_MESSAGES_KEY}.${role}` || key === null) onDismissed(readDismissedMessages(storage, role));
+  };
+  page.addEventListener('storage', reread);
+  return () => page.removeEventListener('storage', reread);
+}
+
+export function storeDismissedMessage(storage: DeviceStorage | undefined, role: Role, id: string): void {
+  try {
+    const kept = [...readDismissedMessages(storage, role).filter((held) => held !== id), id].slice(-MAX_DISMISSED_MESSAGES);
+    storage?.setItem(`${DISMISSED_MESSAGES_KEY}.${role}`, JSON.stringify(kept));
+  } catch {
+    // A device that cannot store shows the message again at its next open.
+  }
+}

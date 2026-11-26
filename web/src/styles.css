@@ -15,16 +15,25 @@ body {
   color: #aaa;
 }
 
-/* The playback Mac's battery warning, at the top of the leader, producer and setup pages: amber at
-   or below 80% on battery, red at or below 30%, in dark text on the colour so it reads from across
-   the stage. */
+/* The playback Mac's battery warning, last in the top layer of the leader, producer and setup pages:
+   amber at or below 80% on battery, red at or below 30%, in dark text on the colour so it reads from
+   across the stage, with the producer's message's Dismiss button. */
 .power-warning {
-  margin: 0 0 1rem;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem 1rem;
+  margin: 0;
   padding: 0.75rem 1rem;
   border-radius: 0.5rem;
+  color: #111;
+}
+
+.power-warning-text {
+  flex: 1 1 12rem;
+  margin: 0;
   font-size: 1.25rem;
   font-weight: 600;
-  color: #111;
 }
 
 .power-warning.low {
@@ -33,6 +42,60 @@ body {
 
 .power-warning.urgent {
   background: #ff6369;
+}
+
+/* The top of every page: the page's connection signal, the Reconnecting banner or the leader's stage
+   status line, then the producer's message, then the playback Mac's battery warning. Fixed over the
+   top of the page and the chart view's pinned strip, so nothing under it moves when any of them
+   comes or goes, and none covers another. */
+.page-top {
+  position: fixed;
+  inset: 0 0 auto;
+  z-index: 3;
+  display: flex;
+  flex-direction: column;
+}
+
+/* The leader page keeps the top free for the stage status line at its tallest, with the transport's
+   pill (e2e/messages.spec.ts). */
+main.leader-page {
+  padding-top: 2.25rem;
+}
+
+/* The producer's message: white with dark text, apart from the battery warning's amber and red, so it
+   reads from across the stage, until the device dismisses it. */
+.message-banner {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem 1rem;
+  margin: 0;
+  padding: 0.75rem 1rem;
+  border-radius: 0.5rem;
+  background: #fff;
+  color: #111;
+}
+
+.message-banner-text {
+  flex: 1 1 12rem;
+  margin: 0;
+  font-size: 1.75rem;
+  font-weight: 700;
+}
+
+.message-banner-dismiss,
+.power-warning-dismiss {
+  min-height: 3rem;
+  padding: 0.5rem 1.25rem;
+  border: 0;
+  border-radius: 0.75rem;
+  background: #111;
+  color: #fff;
+  font: inherit;
+  font-size: 1.125rem;
+  font-weight: 600;
+  touch-action: manipulation;
+  cursor: pointer;
 }
 
 .song + .song {
@@ -65,10 +128,10 @@ body {
   background: #2f6fd6;
 }
 
-/* The stage status line: one line pinned to the top of the leader page while it scrolls. Nothing in
-   it wraps and a long name is cut short, so it stays one line tall on a phone. Without .sticky it is
-   the inline module the configurable layout (setlist-controller#7) puts on the other pages. Under
-   the Reconnecting banner (z-index 2), which the leader page does not show. */
+/* The stage status line: one line pinned to the top of the leader page in the page's top layer.
+   Nothing in it wraps and a long name is cut short, so it stays one line tall on a phone. Without
+   .sticky it is the inline module the configurable layout (setlist-controller#7) puts on the other
+   pages. */
 .stage-status {
   display: flex;
   flex-wrap: nowrap;
@@ -86,10 +149,7 @@ body {
 }
 
 .stage-status.sticky {
-  position: sticky;
-  top: 0;
-  z-index: 1;
-  margin: 0 -1rem 0.75rem;
+  margin: 0;
   padding: 0.4375rem 1rem;
   border: 0;
   border-bottom: 1px solid #333;
@@ -684,12 +744,8 @@ body {
   color: #eee;
 }
 
-/* The server is out of reach. Fixed over the top of the page, so nothing under it moves while it
-   shows or when it goes, and over the chart view's pinned strip, which holds to the same place. */
+/* The server is out of reach, first in the page's top layer. */
 .server-lost {
-  position: fixed;
-  inset: 0 0 auto;
-  z-index: 2;
   margin: 0;
   padding: max(0.5rem, env(safe-area-inset-top)) 1rem 0.5rem;
   border-bottom: 2px solid #f0b429;
@@ -1080,15 +1136,17 @@ body {
   font-weight: 700;
 }
 
-/* The producer's Connections panel, below the leader's controls, and its Devices panel under it, which
-   the setup screen shows too. */
+/* The producer's Connections panel, below the leader's controls, its Devices panel under it, which
+   the setup screen shows too, and its Message the band panel under that. */
 .connections,
-.devices {
+.devices,
+.messages {
   margin-bottom: 1.5rem;
 }
 
 .connections h2,
-.devices h2 {
+.devices h2,
+.messages h2 {
   margin: 0 0 0.5rem;
   font-size: 1.25rem;
 }
@@ -1160,11 +1218,13 @@ body {
   margin-bottom: 1rem;
 }
 
-.device-name-field-label {
+.device-name-field-label,
+.message-field-label {
   color: #aaa;
 }
 
-.device-name-input {
+.device-name-input,
+.message-text-input {
   min-height: 3rem;
   min-width: 0;
   padding: 0.5rem 0.75rem;
@@ -1204,6 +1264,54 @@ body {
 .connection-button.unavailable {
   opacity: 0.4;
   cursor: default;
+}
+
+/* The producer's message panel, under the Devices panel: the quick messages in a row that wraps, the
+   text box across the panel, who the message goes to, and Send and Clear. Each choice is a label as
+   tall as a tap target. */
+.message-presets,
+.message-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-bottom: 0.75rem;
+}
+
+.message-text-field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  margin-bottom: 0.75rem;
+}
+
+.message-target {
+  margin: 0 0 0.75rem;
+  padding: 0;
+  border: 0;
+}
+
+.message-target legend {
+  padding: 0;
+  margin-bottom: 0.25rem;
+}
+
+.message-choice {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  min-height: 3rem;
+  font-size: 1.125rem;
+}
+
+.message-choice input {
+  width: 1.5rem;
+  height: 1.5rem;
+}
+
+.message-devices {
+  margin: 0;
+  padding: 0 0 0 2rem;
+  list-style: none;
 }
 
 /* The choice a target asks the producer to pick, such as ProPresenter's playlist: its label and a

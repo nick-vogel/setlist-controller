@@ -59,8 +59,8 @@ export async function startE2eRig(setup: LiveSetup = {}, cuePoints: CuePoint[] =
   return rigAt(rig, rig.server.httpPort, () => rig.close());
 }
 
-export async function startProxiedE2eRig(setup: LiveSetup = {}, cuePoints: CuePoint[] = SET): Promise<ProxiedE2eRig> {
-  const rig = await startRig(cuePoints, setup);
+export async function startProxiedE2eRig(setup: LiveSetup = {}, cuePoints: CuePoint[] = SET, options: RigOptions = {}): Promise<ProxiedE2eRig> {
+  const rig = await startRig(cuePoints, setup, options);
   const proxy = await startProxy(rig.server.httpPort);
   return {
     // Twice the rig's own budget, so a rig that cannot close rejects with the part of it still open

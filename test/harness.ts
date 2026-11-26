@@ -13,6 +13,7 @@ import type { TargetKinds } from '../src/server/connections-config.ts';
 import type { Target } from '../src/server/target.ts';
 import { PROBE } from '../src/shared/abletonosc.ts';
 import { isReload } from '../src/shared/devices.ts';
+import { readMessageFrame, type BandMessage } from '../src/shared/messages.ts';
 import { SET_MANIFEST_FILE, type ManifestSong } from '../src/shared/set-manifest.ts';
 import { isHeartbeat } from '../src/shared/heartbeat.ts';
 import type { OscMessage } from '../src/shared/osc.ts';
@@ -80,6 +81,8 @@ export type Client<S extends Snapshot = Snapshot> = {
   readonly heartbeats: number;
   // How many reload frames this client has received.
   readonly reloads: number;
+  // Every message frame this client has received, in order: the message, or null where it cleared one.
+  messages: (BandMessage | null)[];
   // Sends a command as JSON, whatever its shape.
   send(command: unknown): void;
   // Resolves once the server has handled every message this client sent before it.
@@ -294,6 +297,7 @@ export function connect<S extends Snapshot = Snapshot>(url: string): Promise<Cli
   const waiting: { matches: (snapshot: S) => boolean; resolve: (snapshot: S) => void }[] = [];
   let heartbeats = 0;
   let reloads = 0;
+  const messages: (BandMessage | null)[] = [];
 
   socket.on('message', (data) => {
     // A heartbeat would read as a snapshot whose set is not null, so it is counted and never offered.
@@ -303,6 +307,11 @@ export function connect<S extends Snapshot = Snapshot>(url: string): Promise<Cli
     }
     if (isReload(data)) {
       reloads += 1;
+      return;
+    }
+    const message = readMessageFrame(data);
+    if (message !== undefined) {
+      messages.push(message);
       return;
     }
     const snapshot = JSON.parse(String(data)) as S;
@@ -345,6 +354,7 @@ export function connect<S extends Snapshot = Snapshot>(url: string): Promise<Cli
         get reloads() {
           return reloads;
         },
+        messages,
         send: (command) => socket.send(JSON.stringify(command)),
         // The server reads a connection's frames in order and answers a ping as it reads it, so the
         // pong comes back only after every earlier message has been handled.

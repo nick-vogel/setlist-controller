@@ -171,6 +171,35 @@ describe('per-socket slow-link coalescing', () => {
     }
   }, 30_000);
 
+  it('replaces a message waiting on a paused slow socket with the newer one, so the stale one never shows', async () => {
+    const hubClock = manualClock();
+    rig = await startRig(largeSet(), { playing: true, position: 0 }, { hubClock });
+    proxy = await startProxy(rig.server.httpPort);
+
+    const slow = await connect(`ws://127.0.0.1:${proxy.port}${SOCKET_PATHS.viewer}`);
+    const healthy = await rig.connectViewer();
+    const panel = await rig.connectProducer();
+    try {
+      await slow.snapshot(at(0));
+      await healthy.snapshot(at(0));
+      slow.send({ kind: 'hello', client: 'slow', name: 'Keys', battery: null });
+      await expect.poll(() => slow.messages).toEqual([null]);
+      proxy.pause();
+
+      const totalUpdates = await streamPastKernelBuffers(rig.live, hubClock, healthy);
+      panel.send({ kind: 'message', text: 'Repeat chorus', to: ['slow'] });
+      panel.send({ kind: 'message', text: 'Watch leader', to: ['slow'] });
+      await panel.flush();
+
+      proxy.resume();
+      await slow.snapshot(at(totalUpdates / 4));
+      await slow.flush();
+      expect(slow.messages.map((message) => message?.text ?? null)).toEqual([null, 'Watch leader']);
+    } finally {
+      slow.close();
+    }
+  }, 30_000);
+
   it('converges a paused slow producer socket to the newest producer snapshot including connections', async () => {
     const hubClock = manualClock();
     const target = fakeTarget({ name: 'propresenter', label: 'ProPresenter' });
@@ -505,6 +534,41 @@ describe('a client that received a held position', () => {
     hub.publish(snap(1), noProblems);
     hub.publish(snap(2), noProblems);
     await viewer.snapshot((snapshot) => snapshot.position === 1);
+    await viewer.flush();
+    await viewer.flush();
+    expect(viewer.received.map((snapshot) => snapshot.position)).toEqual([0, 1]);
+
+    clock.advance(POSITION_BROADCAST_MS);
+    await viewer.snapshot((snapshot) => snapshot.position === 2);
+    expect(viewer.received.map((snapshot) => snapshot.position)).toEqual([0, 1, 2]);
+  });
+
+  it("holds a position published while the send before it is in flight, past a message frame that reaches the socket", async () => {
+    const clock = manualClock();
+    const http = createServer();
+    const hub = startHub(http, { snapshot: snap(0), connections: noProblems }, { leader: 'l', producer: 'p' }, () => {}, () => {}, clock);
+    await new Promise<void>((done) => http.listen(0, '127.0.0.1', done));
+    const base = `ws://127.0.0.1:${(http.address() as AddressInfo).port}`;
+    const viewer = await connect(`${base}${SOCKET_PATHS.viewer}`);
+    const producer = await connect<ProducerSnapshot>(`${base}${producerSocketPath('p')}`);
+    stopHub = async () => {
+      viewer.close();
+      producer.close();
+      await hub.close();
+      await new Promise<void>((done) => http.close(() => done()));
+    };
+    await viewer.snapshot((snapshot) => snapshot.position === 0);
+    viewer.send({ kind: 'hello', client: 'keys', name: 'Keys', battery: null });
+    await viewer.flush();
+    await producer.snapshot((snapshot) => snapshot.devices.length === 1);
+    await expect.poll(() => viewer.messages).toEqual([null]);
+
+    clock.advance(POSITION_BROADCAST_MS);
+    hub.publish(snap(1), noProblems);
+    hub.publish(snap(2), noProblems);
+    producer.send({ kind: 'message', text: 'Repeat chorus', to: 'all' });
+    await producer.flush();
+    await expect.poll(() => viewer.messages.length).toBe(2);
     await viewer.flush();
     await viewer.flush();
     expect(viewer.received.map((snapshot) => snapshot.position)).toEqual([0, 1]);

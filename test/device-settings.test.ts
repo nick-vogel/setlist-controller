@@ -13,7 +13,11 @@ import {
   readCapo,
   readClientId,
   readDeviceName,
+  readDismissedMessages,
+  storeDismissedMessage,
+  MAX_DISMISSED_MESSAGES,
   watchDeviceName,
+  watchDismissedMessages,
   readChordNames,
   readDisplay,
   readFontSize,
@@ -523,5 +527,83 @@ describe('the name a device goes by', () => {
     expect(defaultDeviceName('producer', 'Keys')).toBe('Producer');
     expect(defaultDeviceName('viewer', 'Bass')).toBe('Bass');
     expect(defaultDeviceName('viewer', null)).toBe('View only');
+  });
+});
+
+describe('the messages a device dismissed', () => {
+  it('holds a dismissed message once stored', () => {
+    const storage = mapStorage();
+    expect(readDismissedMessages(storage, 'viewer')).toEqual([]);
+
+    storeDismissedMessage(storage, 'viewer', 'm1');
+
+    expect(readDismissedMessages(storage, 'viewer')).toEqual(['m1']);
+  });
+
+  it('keeps the newest dismissed IDs alone, so the list never grows without end', () => {
+    const storage = mapStorage();
+    const ids = Array.from({ length: MAX_DISMISSED_MESSAGES + 5 }, (_, index) => `m${index}`);
+    for (const id of ids) storeDismissedMessage(storage, 'viewer', id);
+
+    expect(readDismissedMessages(storage, 'viewer')).toEqual(ids.slice(5));
+  });
+
+  it('moves an ID dismissed again to the newest end, held once', () => {
+    const storage = mapStorage();
+    for (const id of ['m1', 'm2', 'm1']) storeDismissedMessage(storage, 'viewer', id);
+
+    expect(readDismissedMessages(storage, 'viewer')).toEqual(['m2', 'm1']);
+  });
+
+  it("keeps one list for each page role, so a message dismissed on the producer page still shows on a leader page in the same browser", () => {
+    const storage = mapStorage();
+
+    storeDismissedMessage(storage, 'producer', 'm1');
+
+    expect(readDismissedMessages(storage, 'producer')).toEqual(['m1']);
+    expect(readDismissedMessages(storage, 'leader')).toEqual([]);
+    expect(readDismissedMessages(storage, 'viewer')).toEqual([]);
+  });
+
+  it('reads none, and stores without throwing, on a device with no storage, one that throws, or a stored value that is not a list of IDs', () => {
+    expect(readDismissedMessages(undefined, 'viewer')).toEqual([]);
+    expect(readDismissedMessages(throwing, 'viewer')).toEqual([]);
+    expect(readDismissedMessages(mapStorage({ 'setlist-controller.dismissed-messages.viewer': '{"a":1}' }), 'viewer')).toEqual([]);
+    expect(readDismissedMessages(mapStorage({ 'setlist-controller.dismissed-messages.viewer': 'not json' }), 'viewer')).toEqual([]);
+    expect(readDismissedMessages(mapStorage({ 'setlist-controller.dismissed-messages.viewer': '["m1",2]' }), 'viewer')).toEqual(['m1']);
+    expect(() => storeDismissedMessage(undefined, 'viewer', 'm1')).not.toThrow();
+    expect(() => storeDismissedMessage(throwing, 'viewer', 'm1')).not.toThrow();
+  });
+
+  it("is read again when another tab of the same page dismisses one or clears the storage, so every tab of the device hides it", () => {
+    const storage = mapStorage();
+    const page = new EventTarget();
+    const stored = (key: string | null) => page.dispatchEvent(Object.assign(new Event('storage'), { key }));
+    const lists: string[][] = [];
+    const stop = watchDismissedMessages(page, storage, 'leader', (ids) => lists.push(ids));
+
+    storeDismissedMessage(storage, 'leader', 'm1');
+    stored('setlist-controller.dismissed-messages.leader');
+    storage.entries.clear();
+    stored(null);
+    stop();
+    storeDismissedMessage(storage, 'leader', 'm2');
+    stored('setlist-controller.dismissed-messages.leader');
+
+    expect(lists).toEqual([['m1'], []]);
+  });
+
+  it("is not read again when a tab of another page role dismisses one, or another tab stores some other setting", () => {
+    const storage = mapStorage();
+    const page = new EventTarget();
+    const lists: string[][] = [];
+    watchDismissedMessages(page, storage, 'leader', (ids) => lists.push(ids));
+
+    storeDismissedMessage(storage, 'producer', 'm1');
+    page.dispatchEvent(Object.assign(new Event('storage'), { key: 'setlist-controller.dismissed-messages.producer' }));
+    storePart(storage, 'Bass');
+    page.dispatchEvent(Object.assign(new Event('storage'), { key: 'setlist-controller.part' }));
+
+    expect(lists).toEqual([]);
   });
 });

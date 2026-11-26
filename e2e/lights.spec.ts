@@ -86,14 +86,14 @@ test("a cue list of a few hundred cues scrolls inside the lights' row, which kee
 
   await row.evaluate((element) => element.scrollIntoView({ block: 'start' }));
 
-  // The page's next rows: the songs follow the Connections panel.
-  const songs = page.locator('section.song').first();
-  await expect(songs).toBeInViewport();
+  // The page's next row: the Devices panel follows the Connections panel.
+  const next = page.getByRole('region', { name: 'Devices' });
+  await expect(next).toBeInViewport();
   expect(await list.evaluate((element) => element.scrollHeight > element.clientHeight)).toBe(true);
 
-  // With the songs just coming onto the bottom of the screen, the row's pre-service check, above the
+  // With the next row just coming onto the bottom of the screen, the row's pre-service check, above the
   // list, is still on it.
-  await songs.evaluate((element) => window.scrollBy(0, element.getBoundingClientRect().top - (window.innerHeight - 40)));
+  await next.evaluate((element) => window.scrollBy(0, element.getBoundingClientRect().top - (window.innerHeight - 40)));
   await expect(row.locator('.check')).toBeInViewport();
 });
 

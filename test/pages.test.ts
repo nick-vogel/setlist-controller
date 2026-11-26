@@ -3,6 +3,7 @@ import { createElement } from 'react';
 import { renderToStaticMarkup } from 'react-dom/server';
 import { describe, expect, it } from 'vitest';
 import type { Command, PageCommand } from '../src/shared/command.ts';
+import { MESSAGE_PRESETS } from '../src/shared/messages.ts';
 import { controls, leaderPagePath, leaderSocketPath, pageRole, producerPagePath, producerSocketPath, type Role } from '../src/shared/routes.ts';
 import { activeSong } from '../src/shared/safe-mode.ts';
 import type { SetCharts } from '../src/shared/set-manifest.ts';
@@ -1477,7 +1478,7 @@ describe('the server connection', () => {
   });
 
   it('shows the line over the top of the page, so nothing under it moves', () => {
-    const line: Element[] = [{ tag: 'html' }, { tag: 'body' }, { tag: 'div' }, { tag: 'main' }, { tag: 'p', classes: ['server-lost'] }];
+    const line: Element[] = [{ tag: 'html' }, { tag: 'body' }, { tag: 'div' }, { tag: 'main' }, { tag: 'div', classes: ['page-top'] }];
     expect(stylesheet.value(line, 'position')).toBe('fixed');
     // Over the chart view's pinned strip, held to the same place at the top of the screen.
     const strip: Element[] = [{ tag: 'html' }, { tag: 'body' }, { tag: 'div' }, { tag: 'main', classes: ['chart-page'] }, { tag: 'section', classes: ['chart-strip'] }];
@@ -1504,8 +1505,10 @@ describe('the producer page', () => {
 
   it("shows every leader control", () => {
     const leaderAll = buttons(page('leader', SNAPSHOT));
-    // Clear offline is the Devices panel's, the producer's own.
-    const producerButtons = buttons(page('producer', PRODUCER)).filter((label) => label !== 'Clear offline');
+    // Clear offline is the Devices panel's, and the quick messages, Send and Clear messages are the
+    // message panel's, the producer's own.
+    const producerOnly = new Set<string>(['Clear offline', ...MESSAGE_PRESETS, 'Send', 'Clear messages']);
+    const producerButtons = buttons(page('producer', PRODUCER)).filter((label) => !producerOnly.has(label));
     expect(leaderAll).toEqual(expect.arrayContaining(['Setlist', 'Timeline']));
     expect(producerButtons).not.toContain('Setlist');
     expect(producerButtons).not.toContain('Timeline');

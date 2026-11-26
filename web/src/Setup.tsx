@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import type { Device } from '../../src/shared/devices.ts';
 import { SETUP_API, SETUP_CONNECTIONS_API, SETUP_DEVICES_API, SETUP_PEDAL_API, SETUP_REFRESH_API, SETUP_REFUSED } from '../../src/shared/routes.ts';
 import type { ConnectionsStatus, JoinLink, PedalStatus, SetupInfo } from '../../src/shared/setup.ts';
+import { powerWarning, type PowerWarningLevel } from '../../src/shared/power.ts';
 import type { Snapshot } from '../../src/shared/snapshot.ts';
 import { NowPlaying, Reconnecting } from './NowPlaying.tsx';
 import { ConnectionsSetup } from './ConnectionsSetup.tsx';
@@ -14,14 +15,30 @@ import { RefreshButton } from './RefreshButton.tsx';
 // the set is, the playback Mac's battery warning, what is wrong with the locators, the foot pedal, the connections config and what each
 // connection target cannot match in the set, the devices connected, and the QR codes that bring the iPad and the band's phones onto the right pages.
 
-export function Setup({ snapshot, connected }: { snapshot: Snapshot | null; connected: boolean }) {
+export function Setup({
+  snapshot,
+  connected,
+  dismissedPower = null,
+  onDismissPower = () => {},
+}: {
+  snapshot: Snapshot | null;
+  connected: boolean;
+  dismissedPower?: PowerWarningLevel | null;
+  onDismissPower?(warning: PowerWarningLevel): void;
+}) {
+  const warning = snapshot && powerWarning(snapshot.power);
+  const powerShown = warning !== null && warning !== dismissedPower;
   return (
     <main className="setup">
       <h1>Setup</h1>
       {snapshot ? (
         <>
-          <PowerWarning power={snapshot.power} />
-          {!connected && <Reconnecting />}
+          {(!connected || powerShown) && (
+            <div className="page-top">
+              {!connected && <Reconnecting />}
+              {powerShown && <PowerWarning power={snapshot.power} onDismiss={onDismissPower} />}
+            </div>
+          )}
           <p className={`live-status ${snapshot.live}`}>
             {snapshot.live === 'connected' ? 'Live connected' : 'Live not connected'}
           </p>

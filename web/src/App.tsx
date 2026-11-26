@@ -5,6 +5,8 @@ import { CHARTS_API, controls, isSetupPage, pageRole, type Role } from '../../sr
 import { activeSong } from '../../src/shared/safe-mode.ts';
 import type { SetCharts } from '../../src/shared/set-manifest.ts';
 import type { DeviceHello } from '../../src/shared/devices.ts';
+import type { BandMessage } from '../../src/shared/messages.ts';
+import { powerWarning, type PowerWarningLevel } from '../../src/shared/power.ts';
 import type { ProducerSnapshot, Snapshot } from '../../src/shared/snapshot.ts';
 import { AutoLockTip } from './AutoLockTip.tsx';
 import { watchBattery, type BatteryNavigator } from './battery.ts';
@@ -20,6 +22,7 @@ import {
   readChordNames,
   readClientId,
   readDeviceName,
+  readDismissedMessages,
   readDisplay,
   readFontSize,
   readLeaderView,
@@ -29,6 +32,8 @@ import {
   storeCapo,
   storeChordNames,
   storeDeviceName,
+  storeDismissedMessage,
+  watchDismissedMessages,
   storeDisplay,
   storeFontSize,
   storeLeaderView,
@@ -52,10 +57,12 @@ import { FadeOutButton } from './FadeOutButton.tsx';
 import { FontSizePicker } from './FontSizePicker.tsx';
 import { JumpTargets } from './JumpTargets.tsx';
 import { LeaderViewSwitcher } from './LeaderViewSwitcher.tsx';
+import { MessageBanner } from './MessageBanner.tsx';
 import { LiveNotConnected, NowPlaying, Reconnecting } from './NowPlaying.tsx';
 import { PartPicker } from './PartPicker.tsx';
 import { PlayFromStartButton } from './PlayFromStartButton.tsx';
 import { PowerWarning } from './PowerWarning.tsx';
+import { ProducerMessages } from './ProducerMessages.tsx';
 import { RefreshButton } from './RefreshButton.tsx';
 import { SafeModeToggle } from './SafeModeToggle.tsx';
 import { SectionControls } from './SectionControls.tsx';
@@ -151,11 +158,29 @@ export function App() {
   // Every page but the setup screen says hello on each socket, so the producer's Devices panel lists
   // it. The setup screen is the laptop's own, not a device on the stage.
   const hello: DeviceHello | null = setup ? null : { kind: 'hello', client: clientId, name: deviceName.trim() || defaultDeviceName(role, part), battery };
-  const { snapshot, connected, send } = useServer(socketPath, hello);
+  const { snapshot, connected, send, message } = useServer(socketPath, hello);
+  // The IDs of the producer's messages this device dismissed, stored on every dismiss and read again
+  // when another tab of the page stores one. A dismissed message stays hidden when the hub sends it
+  // again, and a newer one, with a new ID, shows.
+  const [dismissed, setDismissed] = useState<readonly string[]>(() => readDismissedMessages(deviceStorage(), role));
+  const onDismissMessage = useCallback(
+    (id: string) => {
+      setDismissed((held) => [...held, id]);
+      storeDismissedMessage(deviceStorage(), role, id);
+    },
+    [role],
+  );
+  useEffect(() => watchDismissedMessages(window, deviceStorage(), role, setDismissed), [role]);
+  const shownMessage = message !== null && !dismissed.includes(message.id) ? message : null;
+  // Held in the page's memory alone, not the device's storage as a dismissed message is: a reload
+  // shows the battery warning again.
+  const [dismissedPower, setDismissedPower] = useState<PowerWarningLevel | null>(null);
+  const warningNow = snapshot ? powerWarning(snapshot.power) : null;
+  if (dismissedPower !== null && dismissedPower !== warningNow) setDismissedPower(null);
   // Only the view-only page draws the chart view, so only it fetches the charts.
   const charts = useCharts(role === 'viewer' && !setup, snapshot?.chartRevision, connected);
 
-  if (setup) return <Setup snapshot={snapshot} connected={connected} />;
+  if (setup) return <Setup snapshot={snapshot} connected={connected} dismissedPower={dismissedPower} onDismissPower={setDismissedPower} />;
   if (!snapshot) return <p className="status">Connecting to the server.</p>;
   return (
     <Page
@@ -183,6 +208,10 @@ export function App() {
       clientId={clientId}
       deviceName={deviceName}
       onDeviceName={onDeviceName}
+      message={shownMessage}
+      onDismissMessage={onDismissMessage}
+      dismissedPower={dismissedPower}
+      onDismissPower={setDismissedPower}
     />
   );
 }
@@ -197,7 +226,8 @@ function deviceStorage(): DeviceStorage | undefined {
 }
 
 // The leader page, the producer page or the view-only page, once the server has sent a snapshot. The
-// producer page is the leader page plus the Connections panel, from the producer's own snapshot. The
+// producer page is the leader page plus the Connections, Devices and Message the band panels, from the
+// producer's own snapshot. The producer's message, when there is one, opens every page it reaches. The
 // view-only page opens on the band member's part picker, and with a part it shows the chart view in
 // place of the now-playing panel and the setlist, with the display picker after the part picker, and,
 // in the chords over lyrics display, the chord names picker after it. With no display the chart view
@@ -227,6 +257,10 @@ export function Page({
   clientId = '',
   deviceName = '',
   onDeviceName = () => {},
+  message = null,
+  onDismissMessage = () => {},
+  dismissedPower = null,
+  onDismissPower = () => {},
 }: {
   role: Role;
   snapshot: Snapshot | ProducerSnapshot;
@@ -261,6 +295,11 @@ export function Page({
   clientId?: string;
   deviceName?: string;
   onDeviceName?(name: string): void;
+  // The producer's message to this device, or null for none or one the device dismissed.
+  message?: BandMessage | null;
+  onDismissMessage?(id: string): void;
+  dismissedPower?: PowerWarningLevel | null;
+  onDismissPower?(warning: PowerWarningLevel): void;
 }) {
   // The panel does not wait for a set: the connections are not Live's. A pick does, since it is kept
   // for the set, and the server drops one while it has read none.
@@ -268,33 +307,44 @@ export function Page({
     <>
       <ConnectionsPanel connections={snapshot.connections} problems={snapshot.connectionProblems} connected={connected} setKnown={snapshot.set !== null} send={send} />
       <DevicesPanel devices={snapshot.devices} producer={{ ownClient: clientId, connected, send }} />
+      <ProducerMessages devices={snapshot.devices} ownClient={clientId} connected={connected} send={send} />
     </>
   );
-  // The name field: after the pickers and the Auto-Lock tip on the view-only page, under the Devices
-  // panel on the producer page, and last on the leader's Setlist page.
+  // The name field: after the pickers and the Auto-Lock tip on the view-only page, under the Message
+  // the band panel on the producer page, and last on the leader's Setlist page.
   const nameField = <DeviceNameField name={deviceName} placeholder={defaultDeviceName(role, part)} onName={onDeviceName} />;
 
+  const messageBanner = <MessageBanner message={message} onDismiss={onDismissMessage} />;
   // The playback Mac's battery warning, at the top of the leader's and producer's pages, never the
-  // band's.
-  const powerBanner = role !== 'viewer' && <PowerWarning power={snapshot.power} />;
+  // band's, and not at the warning the page dismissed.
+  const warning = powerWarning(snapshot.power);
+  const powerShown = role !== 'viewer' && warning !== null && warning !== dismissedPower;
   const picker = role === 'viewer' && <PartPicker part={part} onPart={onPart} />;
   // After the pickers, on the view-only page only.
   const autoLockTip = role === 'viewer' && tip && <AutoLockTip onShown={onTipShown} />;
 
   // The leader page opens on the stage status line, which also says the server is out of reach.
-  // Every other page shows the Reconnecting banner for that.
+  // Every other page shows the Reconnecting banner for that. Either one comes first in the page's top
+  // layer, ahead of the producer's message and then the battery warning, so neither covers it.
   const stageStatusLine = role === 'leader' && <StageStatusLine snapshot={snapshot} connected={connected} />;
   const reconnecting = !connected && role !== 'leader' && <Reconnecting />;
+  const pageTop = (stageStatusLine || reconnecting || message || powerShown) && (
+    <div className="page-top">
+      {reconnecting}
+      {stageStatusLine}
+      {messageBanner}
+      {powerShown && <PowerWarning power={snapshot.power} onDismiss={onDismissPower} />}
+    </div>
+  );
+  const leaderPage = role === 'leader' ? 'leader-page' : undefined;
 
   if (!snapshot.set || snapshot.set.songs.length === 0) {
     return (
-      <main>
-        {powerBanner}
+      <main className={leaderPage}>
+        {pageTop}
         {picker}
         {autoLockTip}
         {role === 'viewer' && nameField}
-        {reconnecting}
-        {stageStatusLine}
         {controls(role) && (
           <div className="leader-mode-bar">
             <SafeModeToggle safeMode={snapshot.safeMode} available={connected} send={send} />
@@ -328,6 +378,7 @@ export function Page({
     const shownDisplay = display ?? defaultDisplay(part);
     return (
       <main className="chart-page" style={style}>
+        {pageTop}
         {picker}
         <DisplayPicker display={shownDisplay} onDisplay={onDisplay} />
         {shownDisplay === 'chords-over-lyrics' && <ChordNamesPicker chordNames={chordNames} onChordNames={onChordNames} />}
@@ -335,7 +386,6 @@ export function Page({
         <FontSizePicker fontSize={fontSize} onFontSize={onFontSize} />
         {autoLockTip}
         {nameField}
-        {reconnecting}
         {live === 'not-connected' && <LiveNotConnected />}
         <ChartView
           set={snapshot.set}
@@ -357,9 +407,8 @@ export function Page({
 
   if (role === 'leader' && leaderView === 'timeline') {
     return (
-      <main className="timeline-page">
-        {powerBanner}
-        {stageStatusLine}
+      <main className="timeline-page leader-page">
+        {pageTop}
         <TimelineView
           set={snapshot.set}
           snapshot={snapshot}
@@ -373,13 +422,11 @@ export function Page({
   }
 
   return (
-    <main>
-      {powerBanner}
+    <main className={leaderPage}>
+      {pageTop}
       {picker}
       {autoLockTip}
       {role === 'viewer' && nameField}
-      {reconnecting}
-      {stageStatusLine}
       {controlsLive && (
         <div className="leader-mode-bar">
           <SafeModeToggle safeMode={safeMode} available={connected} send={send} />
@@ -481,8 +528,14 @@ function useCharts(enabled: boolean, revision: number | undefined, connected: bo
 
 // The leader's and producer's socket paths carry the secret from the page's own path. The hello, when
 // there is one, goes on every socket and again on each change.
-function useServer(socketPath: string, hello: DeviceHello | null): { snapshot: Snapshot | ProducerSnapshot | null; connected: boolean; send(command: PageCommand): void } {
+function useServer(
+  socketPath: string,
+  hello: DeviceHello | null,
+): { snapshot: Snapshot | ProducerSnapshot | null; connected: boolean; send(command: PageCommand): void; message: BandMessage | null } {
   const [snapshot, setSnapshot] = useState<Snapshot | ProducerSnapshot | null>(null);
+  // The device's active message from the producer, kept while the connection is down, as the
+  // snapshot is, until the hub answers the next hello.
+  const [message, setMessage] = useState<BandMessage | null>(null);
   const [connected, setConnected] = useState(false);
   const connection = useRef<ServerConnection | null>(null);
 
@@ -493,6 +546,7 @@ function useServer(socketPath: string, hello: DeviceHello | null): { snapshot: S
       url: `${protocol}//${location.host}${socketPath}`,
       onSnapshot: setSnapshot,
       onStatus: setConnected,
+      onMessage: setMessage,
       visibility: document,
     });
     connection.current = opened;
@@ -510,7 +564,7 @@ function useServer(socketPath: string, hello: DeviceHello | null): { snapshot: S
 
   const send = useCallback((command: PageCommand) => connection.current?.send(command), []);
 
-  return { snapshot, connected, send };
+  return { snapshot, connected, send, message };
 }
 
 // The device's battery for its hello, watched while enabled.

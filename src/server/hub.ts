@@ -4,10 +4,12 @@ import { WebSocket, WebSocketServer } from 'ws';
 import { parseCommand, parseConnectionCommand, parseDeviceCommand, type Command, type ConnectionCommand } from '../shared/command.ts';
 import { parseHello, RELOAD, type Device } from '../shared/devices.ts';
 import { HEARTBEAT, HEARTBEAT_MS } from '../shared/heartbeat.ts';
+import { isMessageFrame, messageFrame } from '../shared/messages.ts';
 import { controls, leaderSocketPath, producerSocketPath, SOCKET_PATHS, type Role } from '../shared/routes.ts';
 import type { ConnectionsPart, ProducerSnapshot, Snapshot } from '../shared/snapshot.ts';
 import { realClock, type Clock } from './clock.ts';
 import { createDeviceRegistry } from './devices.ts';
+import { createMessageBoard } from './messages.ts';
 
 // Sends the full snapshot on connect and on every change, pacing position-only changes (below). The
 // snapshot is small, so no diffs. Viewers and leaders get the playback snapshot; producers get it plus
@@ -27,6 +29,13 @@ import { createDeviceRegistry } from './devices.ts';
 //
 // A frame for one socket alone, such as a reload, cannot be coalesced: each waits its turn on that
 // socket, ahead of the next snapshot, so it is never dropped and never queues a snapshot behind it.
+// A message frame is the one exception: a device shows one message at a time, so a newer message
+// frame replaces one still waiting, and a stale message never shows before its replacement.
+//
+// The producer's messages (messages.ts) go to each socket that said hello and that a message reaches,
+// by the socket's role and the client ID of its hello. Every hello is answered with the device's
+// active message, or a frame that clears it, so a page shows the right one after a reload, a
+// reconnect or a wake, and after a Clear it missed while it was away.
 //
 // Every socket may introduce itself with a hello (devices.ts), the view-only one included, and the
 // hub keeps the devices that did in its registry. The socket's role goes in the registry, never one
@@ -41,8 +50,8 @@ import { createDeviceRegistry } from './devices.ts';
 // secret: no secret, a wrong one, the other role's secret, or the secret in a query string is
 // refused, as is any other path. A refused page cannot send a command, and no view-only socket sits
 // under a page that draws the leader's controls. Only a producer socket's messages are read as a
-// connection or device command too, so a leader's Arm, Disarm, Fire again, button run, Reload or Clear
-// offline is dropped.
+// connection or device command too, so a leader's Arm, Disarm, Fire again, button run, Reload, Clear
+// offline, message or Clear of the messages is dropped.
 
 // Minimum interval between position-only broadcasts on the server's clock (~20 Hz).
 export const POSITION_BROADCAST_MS = 50;
@@ -60,6 +69,8 @@ type Encoded = { playback: string; producer: string };
 
 type ClientState = {
   role: Role;
+  // The client ID of the socket's last hello, or null before one.
+  client: string | null;
   inFlight: boolean;
   // Frames for this socket alone, sent in order ahead of the next snapshot.
   frames: string[];
@@ -81,6 +92,7 @@ export function startHub(
   sockets.shouldHandle = (request) => roleOf(request) !== null;
 
   const devices = createDeviceRegistry<WebSocket>();
+  const messages = createMessageBoard();
   // The newest published state, which a change to the devices encodes again.
   let published = initial;
   // The newest published snapshots, and the last ones broadcast across connected sockets.
@@ -138,15 +150,24 @@ export function startHub(
     });
   };
 
-  // Sends a frame to every open socket of the device with this client ID. A frame already waiting on
-  // a socket is not queued twice.
+  // Queues a frame for the socket, ahead of the next snapshot. A frame already waiting is not queued
+  // twice, and a message frame replaces one still waiting.
+  const queue = (socket: WebSocket, state: ClientState, frame: string) => {
+    if (isMessageFrame(frame)) state.frames = state.frames.filter((waiting) => !isMessageFrame(waiting));
+    if (!state.frames.includes(frame)) state.frames.push(frame);
+    pump(socket, state);
+  };
+
+  // Sends a frame to every open socket of the device with this client ID.
   const sendToDevice = (client: string, frame: string) => {
     for (const socket of devices.sockets(client)) {
       const state = clients.get(socket);
-      if (!state) continue;
-      if (!state.frames.includes(frame)) state.frames.push(frame);
-      pump(socket, state);
+      if (state) queue(socket, state, frame);
     }
+  };
+
+  const sendActiveMessage = (socket: WebSocket, state: ClientState) => {
+    if (state.client !== null) queue(socket, state, messageFrame(messages.activeFor(state.client, state.role)));
   };
 
   const devicesChanged = () => hub.publish(published.snapshot, published.connections);
@@ -165,6 +186,7 @@ export function startHub(
     if (!role) return;
     const state: ClientState = {
       role,
+      client: null,
       inFlight: false,
       frames: [],
       dirty: false,
@@ -179,7 +201,9 @@ export function startHub(
     socket.on('message', (data) => {
       const hello = parseHello(data);
       if (hello) {
+        state.client = hello.client;
         if (devices.hello(socket, role, hello)) devicesChanged();
+        sendActiveMessage(socket, state);
         return;
       }
       // A view-only connection never controls anything. Its other messages are dropped unread, and
@@ -199,6 +223,14 @@ export function startHub(
       const deviceCommand = parseDeviceCommand(data);
       if (deviceCommand?.kind === 'reload') sendToDevice(deviceCommand.client, RELOAD);
       else if (deviceCommand?.kind === 'clear-offline' && devices.clearOffline()) devicesChanged();
+      else if (deviceCommand?.kind === 'message') {
+        const sent = messages.send(deviceCommand.text, deviceCommand.to);
+        for (const [other, otherState] of clients) {
+          if (otherState.client !== null && messages.activeFor(otherState.client, otherState.role)?.id === sent.id) queue(other, otherState, messageFrame(sent));
+        }
+      } else if (deviceCommand?.kind === 'clear-messages' && messages.clear()) {
+        for (const [other, otherState] of clients) sendActiveMessage(other, otherState);
+      }
     });
     deliver(socket, state);
   });

@@ -1,3 +1,4 @@
+import { messageTarget, messageText, type MessageTarget } from './messages.ts';
 import { END_TOGGLES, type EndToggle, type SectionAddress } from './snapshot.ts';
 
 // What the leader's page sends the server. Only a control connection's commands reach the core.
@@ -76,7 +77,11 @@ export type DeviceCommand =
   // Reload the pages of the device with this client ID.
   | { kind: 'reload'; client: string }
   // Forget every device that is offline.
-  | { kind: 'clear-offline' };
+  | { kind: 'clear-offline' }
+  // Show this text as a banner on the devices it targets, in place of each one's active message.
+  | { kind: 'message'; text: string; to: MessageTarget }
+  // Take every active message off every device.
+  | { kind: 'clear-messages' };
 
 // What a page sends: a leader page sends a Command, a producer page any of the three.
 export type PageCommand = Command | ConnectionCommand | DeviceCommand;
@@ -107,8 +112,13 @@ export function parseDeviceCommand(data: unknown): DeviceCommand | null {
     return null;
   }
   if (typeof value !== 'object' || value === null) return null;
-  const { kind, client } = value as Record<string, unknown>;
+  const { kind, client, text, to } = value as Record<string, unknown>;
   if (kind === 'reload' && typeof client === 'string') return { kind, client };
-  if (kind === 'clear-offline') return { kind };
+  if (kind === 'clear-offline' || kind === 'clear-messages') return { kind };
+  if (kind === 'message') {
+    const kept = messageText(text);
+    const target = messageTarget(to);
+    return kept === null || target === null ? null : { kind, text: kept, to: target };
+  }
   return null;
 }

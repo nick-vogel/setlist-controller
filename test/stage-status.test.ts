@@ -158,13 +158,13 @@ const STATUS_LINE = /<section class="stage-status[^"]*" aria-label="Stage status
 describe('the pages that pin the stage status line', () => {
   it('opens the leader page, before the view switcher and the now-playing panel', () => {
     const markup = page('leader');
-    expect(markup).toMatch(new RegExp(`^<main>${STATUS_LINE.source}`));
+    expect(markup).toMatch(new RegExp(`^<main class="leader-page"><div class="page-top">${STATUS_LINE.source}`));
     expect(markup.search(STATUS_LINE)).toBeLessThan(markup.indexOf('leader-mode-bar'));
     expect(markup.search(STATUS_LINE)).toBeLessThan(markup.indexOf('aria-label="Now playing"'));
   });
 
   it("opens the leader's timeline view, and the leader page with no set yet", () => {
-    expect(page('leader', {}, { leaderView: 'timeline' })).toMatch(new RegExp(`^<main class="timeline-page">${STATUS_LINE.source}`));
+    expect(page('leader', {}, { leaderView: 'timeline' })).toMatch(new RegExp(`^<main class="timeline-page leader-page"><div class="page-top">${STATUS_LINE.source}`));
     expect(text(page('leader', { set: null, now: null }))).toMatch(/^Waiting for Live/);
   });
 
@@ -173,8 +173,7 @@ describe('the pages that pin the stage status line', () => {
     expect(page('viewer')).not.toMatch(STATUS_LINE);
   });
 
-  // The banner is fixed over the top of the page, where the line is pinned, so on the leader page it
-  // would cover the line. The line says it once, in its place.
+  // The line and the banner share the top of the page, so the leader page says it once, in the line.
   it('says the server is out of reach in the line on the leader page, and in the banner on every other page', () => {
     const count = (markup: string) => text(markup).split('Reconnecting to the server.').length - 1;
     for (const extra of [{}, { leaderView: 'timeline' as const }]) {
@@ -192,11 +191,11 @@ describe('the pages that pin the stage status line', () => {
 describe("the stage status line's stylesheet", () => {
   const stylesheet = readStylesheet(resolve(import.meta.dirname, '../web/src/styles.css'));
   const bar: Element = { tag: 'section', classes: ['stage-status', 'sticky', 'stage-status-active'] };
-  const onLeader = (...elements: Element[]): Element[] => [{ tag: 'html' }, { tag: 'body' }, { tag: 'div' }, { tag: 'main' }, ...elements];
+  const onLeader = (...elements: Element[]): Element[] => [{ tag: 'html' }, { tag: 'body' }, { tag: 'div' }, { tag: 'main', classes: ['leader-page'] }, { tag: 'div', classes: ['page-top'] }, ...elements];
 
-  it('holds the line to the top of the screen while the page scrolls', () => {
-    expect(stylesheet.value(onLeader(bar), 'position')).toBe('sticky');
-    expect(stylesheet.value(onLeader(bar), 'top')).toBe('0');
+  it('holds the line to the top of the screen in the top layer', () => {
+    expect(stylesheet.value(onLeader(), 'position')).toBe('fixed');
+    expect(stylesheet.value(onLeader(), 'inset')).toBe('0 0 auto');
   });
 
   it('stays one line tall: nothing wraps, and a long name is cut short', () => {
@@ -215,8 +214,4 @@ describe("the stage status line's stylesheet", () => {
     expect(stylesheet.value(onLeader(lost, { tag: 'span', classes: ['stage-status-message'] }), 'color')).toBe(stylesheet.value(banner, 'color'));
   });
 
-  it('sits under the reconnecting banner, which is fixed over the top of the page', () => {
-    const banner = stylesheet.value(onLeader({ tag: 'p', classes: ['server-lost'] }), 'z-index');
-    expect(Number(stylesheet.value(onLeader(bar), 'z-index'))).toBeLessThan(Number(banner));
-  });
 });

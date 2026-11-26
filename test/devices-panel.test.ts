@@ -7,7 +7,7 @@ import { UNKNOWN_POWER } from '../src/shared/power.ts';
 import type { ProducerSnapshot } from '../src/shared/snapshot.ts';
 import { Page } from '../web/src/App.tsx';
 import { DevicesPanel } from '../web/src/DevicesPanel.tsx';
-import { readStylesheet, type Element } from './css.ts';
+import { contrast, readStylesheet, type Element } from './css.ts';
 
 // The Devices panel as the producer page and the setup screen draw it, and each page's device name
 // field. A static render presses no button: that Reload reloads the one device and Clear offline
@@ -137,20 +137,6 @@ describe("the Devices panel's stylesheet", () => {
     }
     throw new Error(`No rule sets ${property} on ${JSON.stringify(path.at(-1))} or its ancestors`);
   };
-  const luminance = (hex: string) => {
-    const channels = /^#([0-9a-f]{2})([0-9a-f]{2})([0-9a-f]{2})$/i.exec(hex.length === 4 ? hex.replace(/[0-9a-f]/gi, '$&$&') : hex);
-    if (!channels) throw new Error(`Not a hex colour: ${hex}`);
-    const [r = 0, g = 0, b = 0] = channels.slice(1).map((channel) => {
-      const value = Number.parseInt(channel, 16) / 255;
-      return value <= 0.03928 ? value / 12.92 : ((value + 0.055) / 1.055) ** 2.4;
-    });
-    return 0.2126 * r + 0.7152 * g + 0.0722 * b;
-  };
-  const contrast = (a: string, b: string) => {
-    const [light = 0, dark = 0] = [luminance(a), luminance(b)].sort((x, y) => y - x);
-    return (light + 0.05) / (dark + 0.05);
-  };
-
   // WCAG 2.1 AA asks 4.5:1 of normal text, and the row's 18px text at weight 400 is normal text.
   it("keeps every line of an offline row at 4.5:1 or more on the row's own surface, with no opacity over it", () => {
     const offline = row(['device', 'offline']);
