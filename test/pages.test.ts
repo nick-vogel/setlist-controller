@@ -1478,7 +1478,7 @@ describe('the server connection', () => {
   });
 
   it('shows the line over the top of the page, so nothing under it moves', () => {
-    const line: Element[] = [{ tag: 'html' }, { tag: 'body' }, { tag: 'div' }, { tag: 'main' }, { tag: 'p', classes: ['server-lost'] }];
+    const line: Element[] = [{ tag: 'html' }, { tag: 'body' }, { tag: 'div' }, { tag: 'main' }, { tag: 'div', classes: ['page-top'] }];
     expect(stylesheet.value(line, 'position')).toBe('fixed');
     // Over the chart view's pinned strip, held to the same place at the top of the screen.
     const strip: Element[] = [{ tag: 'html' }, { tag: 'body' }, { tag: 'div' }, { tag: 'main', classes: ['chart-page'] }, { tag: 'section', classes: ['chart-strip'] }];

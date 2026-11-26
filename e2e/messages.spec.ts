@@ -128,3 +128,73 @@ test('the banner holds to the top of a page scrolled down', async ({ browser }) 
   await expect.poll(() => producer.evaluate(() => window.scrollY)).toBeGreaterThan(200);
   await expect.poll(async () => (await banner(producer).boundingBox())?.y).toBe(0);
 });
+
+async function topmostAtCentre(page: Page, selector: string): Promise<string | null> {
+  return page.evaluate((target) => {
+    const box = document.querySelector(target)?.getBoundingClientRect();
+    if (!box) return null;
+    const hit = document.elementFromPoint(box.left + box.width / 2, box.top + box.height / 2);
+    return hit?.closest('.message-banner, .server-lost, .stage-status')?.classList[0] ?? null;
+  }, selector);
+}
+
+test('a message that comes or goes moves nothing on the leader page, and nothing at the top of the page covers its controls', async ({ browser, page }) => {
+  e2e = await startE2eRig();
+  const producer = await device(browser, e2e.producerUrl);
+  await page.goto(e2e.leaderUrl);
+  await expect(page.getByText('Intro').first()).toBeVisible();
+  const countIn = page.getByRole('button', { name: /Count in/ }).first();
+  const top = async () => (await countIn.boundingBox())?.y;
+  const before = await top();
+  const line = await page.getByRole('region', { name: 'Stage status' }).boundingBox();
+  const firstUnder = await page.evaluate(() => Math.min(...[...document.querySelectorAll('main > :not(.page-top)')].map((element) => element.getBoundingClientRect().top)));
+  expect(line!.y + line!.height).toBeLessThanOrEqual(firstUnder);
+
+  await panel(producer).getByLabel('All devices').check();
+  await panel(producer).getByRole('button', { name: 'Repeat chorus' }).click();
+  await expect(banner(page)).toContainText('Repeat chorus');
+  expect(await top()).toBe(before);
+
+  await banner(page).getByRole('button', { name: 'Dismiss' }).click();
+  await expect(banner(page)).toHaveCount(0);
+  expect(await top()).toBe(before);
+});
+
+test("the banner and the leader's stage status line cover neither each other, at the top of the page or scrolled down", async ({ browser, page }) => {
+  e2e = await startE2eRig();
+  const producer = await device(browser, e2e.producerUrl);
+  await page.goto(e2e.leaderUrl);
+  await expect(page.getByText('Intro').first()).toBeVisible();
+  await sendMessage(producer, 'All devices', 'Watch leader');
+  await expect(banner(page)).toBeVisible();
+
+  expect(await topmostAtCentre(page, '.stage-status')).toBe('stage-status');
+  expect(await topmostAtCentre(page, '.message-banner')).toBe('message-banner');
+  await page.evaluate(() => window.scrollTo(0, document.body.scrollHeight));
+  await expect.poll(() => page.evaluate(() => window.scrollY)).toBeGreaterThan(100);
+  expect(await topmostAtCentre(page, '.stage-status')).toBe('stage-status');
+  expect(await topmostAtCentre(page, '.message-banner')).toBe('message-banner');
+});
+
+test("the banner covers no phone's Reconnecting banner, at the top of the page or scrolled down", async ({ page }) => {
+  const proxied = await startProxiedE2eRig({ playing: false, position: 0 });
+  e2e = proxied;
+  const producer = await proxied.rig.connectProducer();
+  await page.goto(proxied.viewerUrl);
+  await expect(page.getByText('Intro').first()).toBeVisible();
+  await expect.poll(async () => (await proxied.rig.devices()).length).toBe(1);
+  producer.send({ kind: 'message', text: 'Hold after this song', to: 'all' });
+  await expect(banner(page)).toContainText('Hold after this song');
+
+  proxied.proxy.drop();
+  await expect(page.getByText('Reconnecting to the server.')).toBeVisible();
+  expect(await topmostAtCentre(page, '.server-lost')).toBe('server-lost');
+  expect(await topmostAtCentre(page, '.message-banner')).toBe('message-banner');
+  // The view-only page with no part is shorter than a phone's screen, so here it gets room to scroll.
+  await page.addStyleTag({ content: 'main { padding-bottom: 150vh; }' });
+  await page.evaluate(() => window.scrollTo(0, document.body.scrollHeight));
+  await expect.poll(() => page.evaluate(() => window.scrollY)).toBeGreaterThan(0);
+  expect(await topmostAtCentre(page, '.server-lost')).toBe('server-lost');
+  expect(await topmostAtCentre(page, '.message-banner')).toBe('message-banner');
+  producer.close();
+});

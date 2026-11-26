@@ -40,15 +40,17 @@ const MESSAGE = { id: 'm1', text: 'Hold after this song' };
 
 const page = (props: object) => renderToStaticMarkup(createElement(Page, { role: 'viewer', snapshot: SNAPSHOT, connected: true, send: () => {}, ...props }));
 
-// The opening tag of the first element inside the page's main, and the banner's text and button.
+// The opening tag of the first element inside the page's main, the signals in its top layer in order,
+// and the banner's text and button.
 const firstInMain = (markup: string) => /<main[^>]*>(<[^>]*>)/.exec(markup)?.[1] ?? null;
+const inPageTop = (markup: string) => [.../<div class="page-top">(.*?)<\/div><\/div>/.exec(markup)?.[1]?.matchAll(/<(?:p|section|div) class="(server-lost|stage-status|message-banner)[ "]/g) ?? []].map(([, name]) => name);
 const banner = (markup: string) => {
   const found = /<div class="message-banner" role="alert"><p class="message-banner-text">([^<]*)<\/p><button[^>]*>([^<]*)<\/button><\/div>/.exec(markup);
   return found ? { text: found[1], button: found[2] } : null;
 };
 
 describe("the producer's message on a page", () => {
-  it('opens every page it reaches, ahead of the battery warning, the pickers and the stage status line, and is gone with no message', () => {
+  it('opens every page it reaches in the top layer, ahead of the battery warning and the pickers and after the stage status line, and is gone with no message', () => {
     const variants = {
       'view-only, no part': page({ message: MESSAGE }),
       'view-only chart page': page({ message: MESSAGE, part: 'Keys' }),
@@ -58,7 +60,8 @@ describe("the producer's message on a page", () => {
       'no set yet': page({ message: MESSAGE, snapshot: { ...SNAPSHOT, set: null } }),
     };
     for (const [variant, markup] of Object.entries(variants)) {
-      expect(firstInMain(markup), variant).toBe('<div class="message-banner" role="alert">');
+      expect(firstInMain(markup), variant).toBe('<div class="page-top">');
+      expect(inPageTop(markup).at(-1), variant).toBe('message-banner');
       expect(banner(markup), variant).toEqual({ text: 'Hold after this song', button: 'Dismiss' });
     }
     expect(banner(page({ message: null, part: 'Keys' }))).toBeNull();
@@ -110,7 +113,7 @@ describe("the producer's message panel", () => {
 
 describe("the message banner's stylesheet", () => {
   const stylesheet = readStylesheet(resolve(import.meta.dirname, '../web/src/styles.css'));
-  const path: Element[] = [{ tag: 'html' }, { tag: 'body' }, { tag: 'div' }, { tag: 'main' }, { tag: 'div', classes: ['message-banner'] }];
+  const path: Element[] = [{ tag: 'html' }, { tag: 'body' }, { tag: 'div' }, { tag: 'main' }, { tag: 'div', classes: ['page-top'] }, { tag: 'div', classes: ['message-banner'] }];
 
   // WCAG 2.1 AA asks 4.5:1 of normal text.
   it('keeps its text and its Dismiss button at 4.5:1 or more on their own surfaces', () => {
@@ -120,11 +123,16 @@ describe("the message banner's stylesheet", () => {
     expect(contrast(stylesheet.value(button, 'color')!, stylesheet.value(button, 'background')!)).toBeGreaterThanOrEqual(4.5);
   });
 
-  it('draws over the chart strip, the stage status line and the Reconnecting banner where they meet at the top of the page', () => {
-    const above = Number(stylesheet.value(path, 'z-index'));
-    const strip = Number(stylesheet.value([{ tag: 'html' }, { tag: 'main' }, { tag: 'div', classes: ['chart-strip'] }], 'z-index'));
-    const status = Number(stylesheet.value([{ tag: 'html' }, { tag: 'main' }, { tag: 'div', classes: ['stage-status', 'sticky'] }], 'z-index'));
-    const reconnecting = Number(stylesheet.value([{ tag: 'html' }, { tag: 'main' }, { tag: 'p', classes: ['server-lost'] }], 'z-index'));
-    expect(above).toBeGreaterThan(Math.max(strip, status, reconnecting));
+  it("comes after the page's connection signal in the top layer, which takes no room in the page", () => {
+    for (const markup of [page({ message: MESSAGE, connected: false }), page({ message: MESSAGE, role: 'leader' }), page({ message: MESSAGE, role: 'leader', leaderView: 'timeline' })]) {
+      expect(inPageTop(markup)).toEqual([markup.includes('server-lost') ? 'server-lost' : 'stage-status', 'message-banner']);
+    }
+    const layer: Element[] = [{ tag: 'html' }, { tag: 'body' }, { tag: 'div' }, { tag: 'main' }, { tag: 'div', classes: ['page-top'] }];
+    expect(stylesheet.value(layer, 'position')).toBe('fixed');
+    expect(stylesheet.value(layer, 'flex-direction')).toBe('column');
+    for (const signal of [{ tag: 'div', classes: ['message-banner'] }, { tag: 'p', classes: ['server-lost'] }, { tag: 'section', classes: ['stage-status', 'sticky'] }]) {
+      expect(stylesheet.value([...layer, signal], 'position'), signal.classes[0]).toBeUndefined();
+      expect(stylesheet.value([...layer, signal], 'z-index'), signal.classes[0]).toBeUndefined();
+    }
   });
 });

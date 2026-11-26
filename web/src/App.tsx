@@ -305,20 +305,27 @@ export function Page({
   const autoLockTip = role === 'viewer' && tip && <AutoLockTip onShown={onTipShown} />;
 
   // The leader page opens on the stage status line, which also says the server is out of reach.
-  // Every other page shows the Reconnecting banner for that.
+  // Every other page shows the Reconnecting banner for that. Either one comes first in the page's top
+  // layer, ahead of the producer's message, so the message never covers it.
   const stageStatusLine = role === 'leader' && <StageStatusLine snapshot={snapshot} connected={connected} />;
   const reconnecting = !connected && role !== 'leader' && <Reconnecting />;
+  const pageTop = (stageStatusLine || reconnecting || message) && (
+    <div className="page-top">
+      {reconnecting}
+      {stageStatusLine}
+      {messageBanner}
+    </div>
+  );
+  const leaderPage = role === 'leader' ? 'leader-page' : undefined;
 
   if (!snapshot.set || snapshot.set.songs.length === 0) {
     return (
-      <main>
-        {messageBanner}
+      <main className={leaderPage}>
+        {pageTop}
         {powerBanner}
         {picker}
         {autoLockTip}
         {role === 'viewer' && nameField}
-        {reconnecting}
-        {stageStatusLine}
         {controls(role) && (
           <div className="leader-mode-bar">
             <SafeModeToggle safeMode={snapshot.safeMode} available={connected} send={send} />
@@ -352,7 +359,7 @@ export function Page({
     const shownDisplay = display ?? defaultDisplay(part);
     return (
       <main className="chart-page" style={style}>
-        {messageBanner}
+        {pageTop}
         {picker}
         <DisplayPicker display={shownDisplay} onDisplay={onDisplay} />
         {shownDisplay === 'chords-over-lyrics' && <ChordNamesPicker chordNames={chordNames} onChordNames={onChordNames} />}
@@ -360,7 +367,6 @@ export function Page({
         <FontSizePicker fontSize={fontSize} onFontSize={onFontSize} />
         {autoLockTip}
         {nameField}
-        {reconnecting}
         {live === 'not-connected' && <LiveNotConnected />}
         <ChartView
           set={snapshot.set}
@@ -382,10 +388,9 @@ export function Page({
 
   if (role === 'leader' && leaderView === 'timeline') {
     return (
-      <main className="timeline-page">
-        {messageBanner}
+      <main className="timeline-page leader-page">
+        {pageTop}
         {powerBanner}
-        {stageStatusLine}
         <TimelineView
           set={snapshot.set}
           snapshot={snapshot}
@@ -399,14 +404,12 @@ export function Page({
   }
 
   return (
-    <main>
-      {messageBanner}
+    <main className={leaderPage}>
+      {pageTop}
       {powerBanner}
       {picker}
       {autoLockTip}
       {role === 'viewer' && nameField}
-      {reconnecting}
-      {stageStatusLine}
       {controlsLive && (
         <div className="leader-mode-bar">
           <SafeModeToggle safeMode={safeMode} available={connected} send={send} />

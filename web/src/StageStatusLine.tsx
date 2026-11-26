@@ -2,7 +2,7 @@ import { stageStatus, type StageSnapshot } from './stage-status.ts';
 
 // The stage status line: one line pinned to the top of the leader page while it scrolls. On the
 // leader page it also says the server is out of reach, in the Reconnecting banner's colours, in
-// place of the banner, which would cover it. Not sticky, it is the module that the configurable
+// place of the banner, so the page says it once. Not sticky, it is the module that the configurable
 // layout (setlist-controller#7) puts on the producer and view-only pages.
 export function StageStatusLine({ snapshot, connected, sticky = true }: { snapshot: StageSnapshot; connected: boolean; sticky?: boolean }) {
   const status = stageStatus(snapshot, connected);
