@@ -51,7 +51,10 @@ Approved by Nick on 2026-11-26 for this branch, not findings:
 
 Added in this review:
 - **A send or Clear and the position pacing:** `messagesChanged` sends producer sockets `latest`, which carries the newest published position, at once. Playback sockets keep their held position until the trailing flush, and `broadcasted.producer` is rebuilt at the broadcast position so a later publish compares correctly. This is the recorded mechanism (hub header, `src/server/hub.ts:38-41`, "at once and outside the position pacing"), and it stays; see Reviewed and Dismissed.
-- **Where the active list sits (finding 1):** open, Nick to pick Option A or Option C below. Until he picks, no remediation touches finding 1.
+- **Where the active list sits (finding 1):** Nick picked Option A on 2026-11-26 ("As you recommend"): `<ProducerMessages />` goes before `<DevicesPanel />`, and the active list goes after the Send and Clear row, so nothing above the panel's controls grows on a send or a Clear.
+
+## Remediation scope
+Nick 2026-11-26: remediate all four Confirmed findings. Finding 1 takes Option A, with its zero-shift e2e test.
 
 ## Confirmed Issues
 
