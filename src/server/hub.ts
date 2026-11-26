@@ -63,6 +63,7 @@ type ClientState = {
   inFlight: boolean;
   // Frames for this socket alone, sent in order ahead of the next snapshot.
   frames: string[];
+  dirty: boolean;
   lastSent: string | null;
 };
 
@@ -100,12 +101,23 @@ export function startHub(
   };
 
   // Sends the socket its next frame, else the newest snapshot for its role when it has not had it,
-  // once nothing is in flight on it. Each send's callback delivers again, so a socket that was busy
-  // gets the one newest snapshot when it is free.
+  // once nothing is in flight on it. A send's callback sends again only for a waiting frame or a
+  // broadcast that found the socket busy, so a socket that was busy gets the one newest snapshot
+  // when it is free, and a position held for the trailing flush stays held.
   const deliver = (socket: WebSocket, state: ClientState) => {
+    if (closed || socket.readyState !== WebSocket.OPEN) return;
+    if (state.inFlight) {
+      state.dirty = true;
+      return;
+    }
+    pump(socket, state);
+  };
+
+  const pump = (socket: WebSocket, state: ClientState) => {
     if (closed || socket.readyState !== WebSocket.OPEN || state.inFlight) return;
     let payload = state.frames.shift();
     if (payload === undefined) {
+      state.dirty = false;
       payload = forRole(latest, state.role);
       if (payload === state.lastSent) return;
       state.lastSent = payload;
@@ -118,7 +130,7 @@ export function startHub(
     socket.send(payload, (error) => {
       state.inFlight = false;
       if (closed || error || socket.readyState !== WebSocket.OPEN) return;
-      deliver(socket, state);
+      if (state.frames.length > 0 || state.dirty) pump(socket, state);
     });
   };
 
@@ -129,7 +141,7 @@ export function startHub(
       const state = clients.get(socket);
       if (!state) continue;
       if (!state.frames.includes(frame)) state.frames.push(frame);
-      deliver(socket, state);
+      pump(socket, state);
     }
   };
 
@@ -151,6 +163,7 @@ export function startHub(
       role,
       inFlight: false,
       frames: [],
+      dirty: false,
       lastSent: null,
     };
     clients.set(socket, state);

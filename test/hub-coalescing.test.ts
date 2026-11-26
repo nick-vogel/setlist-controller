@@ -488,6 +488,32 @@ describe('a client that received a held position', () => {
     return { clock, hub, existing, existingCount, producer, midWindow };
   }
 
+  it('holds a position published while the send before it is in flight until the trailing flush', async () => {
+    const clock = manualClock();
+    const http = createServer();
+    const hub = startHub(http, { snapshot: snap(0), connections: noProblems }, { leader: 'l', producer: 'p' }, () => {}, () => {}, clock);
+    await new Promise<void>((done) => http.listen(0, '127.0.0.1', done));
+    const viewer = await connect(`ws://127.0.0.1:${(http.address() as AddressInfo).port}${SOCKET_PATHS.viewer}`);
+    stopHub = async () => {
+      viewer.close();
+      await hub.close();
+      await new Promise<void>((done) => http.close(() => done()));
+    };
+    await viewer.snapshot((snapshot) => snapshot.position === 0);
+
+    clock.advance(POSITION_BROADCAST_MS);
+    hub.publish(snap(1), noProblems);
+    hub.publish(snap(2), noProblems);
+    await viewer.snapshot((snapshot) => snapshot.position === 1);
+    await viewer.flush();
+    await viewer.flush();
+    expect(viewer.received.map((snapshot) => snapshot.position)).toEqual([0, 1]);
+
+    clock.advance(POSITION_BROADCAST_MS);
+    await viewer.snapshot((snapshot) => snapshot.position === 2);
+    expect(viewer.received.map((snapshot) => snapshot.position)).toEqual([0, 1, 2]);
+  });
+
   it('is brought back to the broadcast position when the position reverts to it before the trailing flush', async () => {
     const { clock, hub, existing, existingCount, midWindow } = await heldWindow();
     hub.publish(snap(10), noProblems);
