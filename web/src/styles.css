@@ -15,11 +15,11 @@ body {
   color: #aaa;
 }
 
-/* The playback Mac's battery warning, at the top of the leader, producer and setup pages: amber at
-   or below 80% on battery, red at or below 30%, in dark text on the colour so it reads from across
-   the stage. */
+/* The playback Mac's battery warning, last in the top layer of the leader, producer and setup pages:
+   amber at or below 80% on battery, red at or below 30%, in dark text on the colour so it reads from
+   across the stage. */
 .power-warning {
-  margin: 0 0 1rem;
+  margin: 0;
   padding: 0.75rem 1rem;
   border-radius: 0.5rem;
   font-size: 1.25rem;
@@ -36,9 +36,9 @@ body {
 }
 
 /* The top of every page: the page's connection signal, the Reconnecting banner or the leader's stage
-   status line, and under it the producer's message. Fixed over the top of the page and the chart
-   view's pinned strip, so nothing under it moves when either comes or goes, and the message never
-   covers the connection signal. */
+   status line, then the producer's message, then the playback Mac's battery warning. Fixed over the
+   top of the page and the chart view's pinned strip, so nothing under it moves when any of them
+   comes or goes, and none covers another. */
 .page-top {
   position: fixed;
   inset: 0 0 auto;

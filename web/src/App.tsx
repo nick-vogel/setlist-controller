@@ -6,6 +6,7 @@ import { activeSong } from '../../src/shared/safe-mode.ts';
 import type { SetCharts } from '../../src/shared/set-manifest.ts';
 import type { DeviceHello } from '../../src/shared/devices.ts';
 import type { BandMessage } from '../../src/shared/messages.ts';
+import { powerWarning } from '../../src/shared/power.ts';
 import type { ProducerSnapshot, Snapshot } from '../../src/shared/snapshot.ts';
 import { AutoLockTip } from './AutoLockTip.tsx';
 import { watchBattery, type BatteryNavigator } from './battery.ts';
@@ -305,21 +306,22 @@ export function Page({
   const messageBanner = <MessageBanner message={message} onDismiss={onDismissMessage} />;
   // The playback Mac's battery warning, at the top of the leader's and producer's pages, never the
   // band's.
-  const powerBanner = role !== 'viewer' && <PowerWarning power={snapshot.power} />;
+  const powerShown = role !== 'viewer' && powerWarning(snapshot.power) !== null;
   const picker = role === 'viewer' && <PartPicker part={part} onPart={onPart} />;
   // After the pickers, on the view-only page only.
   const autoLockTip = role === 'viewer' && tip && <AutoLockTip onShown={onTipShown} />;
 
   // The leader page opens on the stage status line, which also says the server is out of reach.
   // Every other page shows the Reconnecting banner for that. Either one comes first in the page's top
-  // layer, ahead of the producer's message, so the message never covers it.
+  // layer, ahead of the producer's message and then the battery warning, so neither covers it.
   const stageStatusLine = role === 'leader' && <StageStatusLine snapshot={snapshot} connected={connected} />;
   const reconnecting = !connected && role !== 'leader' && <Reconnecting />;
-  const pageTop = (stageStatusLine || reconnecting || message) && (
+  const pageTop = (stageStatusLine || reconnecting || message || powerShown) && (
     <div className="page-top">
       {reconnecting}
       {stageStatusLine}
       {messageBanner}
+      {powerShown && <PowerWarning power={snapshot.power} />}
     </div>
   );
   const leaderPage = role === 'leader' ? 'leader-page' : undefined;
@@ -328,7 +330,6 @@ export function Page({
     return (
       <main className={leaderPage}>
         {pageTop}
-        {powerBanner}
         {picker}
         {autoLockTip}
         {role === 'viewer' && nameField}
@@ -396,7 +397,6 @@ export function Page({
     return (
       <main className="timeline-page leader-page">
         {pageTop}
-        {powerBanner}
         <TimelineView
           set={snapshot.set}
           snapshot={snapshot}
@@ -412,7 +412,6 @@ export function Page({
   return (
     <main className={leaderPage}>
       {pageTop}
-      {powerBanner}
       {picker}
       {autoLockTip}
       {role === 'viewer' && nameField}

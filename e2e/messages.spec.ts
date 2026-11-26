@@ -1,5 +1,6 @@
 import { expect, test, type Browser, type Page } from '@playwright/test';
-import { startE2eRig, startProxiedE2eRig, type E2eRig, type ProxiedE2eRig } from './rig.ts';
+import { manualPowerSource } from '../src/server/power.ts';
+import { SET, startE2eRig, startProxiedE2eRig, type E2eRig, type ProxiedE2eRig } from './rig.ts';
 
 let e2e: E2eRig | ProxiedE2eRig | undefined;
 
@@ -134,7 +135,7 @@ async function topmostAtCentre(page: Page, selector: string): Promise<string | n
     const box = document.querySelector(target)?.getBoundingClientRect();
     if (!box) return null;
     const hit = document.elementFromPoint(box.left + box.width / 2, box.top + box.height / 2);
-    return hit?.closest('.message-banner, .server-lost, .stage-status')?.classList[0] ?? null;
+    return hit?.closest('.message-banner, .server-lost, .stage-status, .power-warning')?.classList[0] ?? null;
   }, selector);
 }
 
@@ -223,4 +224,49 @@ test('a Dismiss on the producer page leaves the message on a leader page in the 
   await banner(leader).getByRole('button', { name: 'Dismiss' }).click();
 
   await expect(banner(otherTab)).toHaveCount(0);
+});
+
+test("the battery warning joins the top of the leader page under the banner, and Count in stays where it was as either comes or goes", async ({ browser, page }) => {
+  const power = manualPowerSource({ source: 'ac', percent: 100 });
+  e2e = await startE2eRig({}, SET, { power });
+  const producer = await device(browser, e2e.producerUrl);
+  await page.goto(e2e.leaderUrl);
+  await expect(page.getByText('Intro').first()).toBeVisible();
+  const countIn = page.getByRole('button', { name: /Count in/ }).first();
+  const top = async () => (await countIn.boundingBox())?.y;
+  const before = await top();
+  const warning = page.locator('.power-warning');
+
+  power.set({ source: 'battery', percent: 80 });
+  await expect(warning).toBeVisible();
+  expect(await top()).toBe(before);
+
+  await sendMessage(producer, 'All devices', 'Watch leader');
+  await expect(banner(page)).toBeVisible();
+  expect(await top()).toBe(before);
+  for (const signal of ['stage-status', 'message-banner', 'power-warning']) expect(await topmostAtCentre(page, `.${signal}`)).toBe(signal);
+
+  power.set({ source: 'ac', percent: 80 });
+  await expect(warning).toHaveCount(0);
+  expect(await top()).toBe(before);
+});
+
+test("the setup screen's battery warning and Reconnecting banner move nothing on the screen, and neither covers the other", async ({ page }) => {
+  const power = manualPowerSource({ source: 'ac', percent: 100 });
+  const proxied = await startProxiedE2eRig({}, SET, { power });
+  e2e = proxied;
+  await page.goto(proxied.setupUrl);
+  const live = page.locator('.live-status');
+  await expect(live).toHaveText('Live connected');
+  const top = async () => (await live.boundingBox())?.y;
+  const before = await top();
+
+  power.set({ source: 'battery', percent: 30 });
+  await expect(page.locator('.power-warning')).toBeVisible();
+  expect(await top()).toBe(before);
+
+  proxied.proxy.drop();
+  await expect(page.getByText('Reconnecting to the server.')).toBeVisible();
+  expect(await top()).toBe(before);
+  for (const signal of ['server-lost', 'power-warning']) expect(await topmostAtCentre(page, `.${signal}`)).toBe(signal);
 });

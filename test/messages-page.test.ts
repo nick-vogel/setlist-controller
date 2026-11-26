@@ -44,7 +44,8 @@ const page = (props: object) => renderToStaticMarkup(createElement(Page, { role:
 // The opening tag of the first element inside the page's main, the signals in its top layer in order,
 // and the banner's text and button.
 const firstInMain = (markup: string) => /<main[^>]*>(<[^>]*>)/.exec(markup)?.[1] ?? null;
-const inPageTop = (markup: string) => [.../<div class="page-top">(.*?)<\/div><\/div>/.exec(markup)?.[1]?.matchAll(/<(?:p|section|div) class="(server-lost|stage-status|message-banner)[ "]/g) ?? []].map(([, name]) => name);
+const inPageTop = (markup: string) =>
+  markup.includes('<div class="page-top">') ? [...markup.matchAll(/<(?:p|section|div) class="(server-lost|stage-status|message-banner|power-warning)[ "]/g)].map(([, name]) => name) : [];
 const banner = (markup: string) => {
   const found = /<div class="message-banner" role="alert"><p class="message-banner-text">([^<]*)<\/p><button[^>]*>([^<]*)<\/button><\/div>/.exec(markup);
   return found ? { text: found[1], button: found[2] } : null;
@@ -62,7 +63,7 @@ describe("the producer's message on a page", () => {
     };
     for (const [variant, markup] of Object.entries(variants)) {
       expect(firstInMain(markup), variant).toBe('<div class="page-top">');
-      expect(inPageTop(markup).at(-1), variant).toBe('message-banner');
+      expect(inPageTop(markup), variant).toContain('message-banner');
       expect(banner(markup), variant).toEqual({ text: 'Hold after this song', button: 'Dismiss' });
     }
     expect(banner(page({ message: null, part: 'Keys' }))).toBeNull();
@@ -124,14 +125,18 @@ describe("the message banner's stylesheet", () => {
     expect(contrast(stylesheet.value(button, 'color')!, stylesheet.value(button, 'background')!)).toBeGreaterThanOrEqual(4.5);
   });
 
-  it("comes after the page's connection signal in the top layer, which takes no room in the page", () => {
+  it("comes after the page's connection signal and ahead of the battery warning in the top layer, which takes no room in the page", () => {
+    const onBattery = { ...SNAPSHOT, power: { source: 'battery' as const, percent: 20 } };
     for (const markup of [page({ message: MESSAGE, connected: false }), page({ message: MESSAGE, role: 'leader' }), page({ message: MESSAGE, role: 'leader', leaderView: 'timeline' })]) {
       expect(inPageTop(markup)).toEqual([markup.includes('server-lost') ? 'server-lost' : 'stage-status', 'message-banner']);
     }
+    expect(inPageTop(page({ message: MESSAGE, role: 'leader', snapshot: onBattery }))).toEqual(['stage-status', 'message-banner', 'power-warning']);
+    expect(inPageTop(page({ message: MESSAGE, role: 'producer', connected: false, snapshot: onBattery }))).toEqual(['server-lost', 'message-banner', 'power-warning']);
+    expect(inPageTop(page({ role: 'producer', snapshot: onBattery }))).toEqual(['power-warning']);
     const layer: Element[] = [{ tag: 'html' }, { tag: 'body' }, { tag: 'div' }, { tag: 'main' }, { tag: 'div', classes: ['page-top'] }];
     expect(stylesheet.value(layer, 'position')).toBe('fixed');
     expect(stylesheet.value(layer, 'flex-direction')).toBe('column');
-    for (const signal of [{ tag: 'div', classes: ['message-banner'] }, { tag: 'p', classes: ['server-lost'] }, { tag: 'section', classes: ['stage-status', 'sticky'] }]) {
+    for (const signal of [{ tag: 'div', classes: ['message-banner'] }, { tag: 'p', classes: ['server-lost'] }, { tag: 'section', classes: ['stage-status', 'sticky'] }, { tag: 'p', classes: ['power-warning', 'urgent'] }]) {
       expect(stylesheet.value([...layer, signal], 'position'), signal.classes[0]).toBeUndefined();
       expect(stylesheet.value([...layer, signal], 'z-index'), signal.classes[0]).toBeUndefined();
     }

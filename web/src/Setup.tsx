@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import type { Device } from '../../src/shared/devices.ts';
 import { SETUP_API, SETUP_CONNECTIONS_API, SETUP_DEVICES_API, SETUP_PEDAL_API, SETUP_REFRESH_API, SETUP_REFUSED } from '../../src/shared/routes.ts';
 import type { ConnectionsStatus, JoinLink, PedalStatus, SetupInfo } from '../../src/shared/setup.ts';
+import { powerWarning } from '../../src/shared/power.ts';
 import type { Snapshot } from '../../src/shared/snapshot.ts';
 import { NowPlaying, Reconnecting } from './NowPlaying.tsx';
 import { ConnectionsSetup } from './ConnectionsSetup.tsx';
@@ -20,8 +21,12 @@ export function Setup({ snapshot, connected }: { snapshot: Snapshot | null; conn
       <h1>Setup</h1>
       {snapshot ? (
         <>
-          <PowerWarning power={snapshot.power} />
-          {!connected && <Reconnecting />}
+          {(!connected || powerWarning(snapshot.power) !== null) && (
+            <div className="page-top">
+              {!connected && <Reconnecting />}
+              <PowerWarning power={snapshot.power} />
+            </div>
+          )}
           <p className={`live-status ${snapshot.live}`}>
             {snapshot.live === 'connected' ? 'Live connected' : 'Live not connected'}
           </p>
