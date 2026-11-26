@@ -558,7 +558,7 @@ describe('a client that received a held position', () => {
       await new Promise<void>((done) => http.close(() => done()));
     };
     await viewer.snapshot((snapshot) => snapshot.position === 0);
-    viewer.send({ kind: 'hello', client: 'keys', name: 'Keys', battery: null });
+    viewer.send({ kind: 'hello', client: 'keys', name: 'Keys', battery: null, dismissed: [] });
     await viewer.flush();
     await producer.snapshot((snapshot) => snapshot.devices.length === 1);
     await expect.poll(() => viewer.messages).toEqual([null]);
@@ -569,6 +569,40 @@ describe('a client that received a held position', () => {
     producer.send({ kind: 'message', text: 'Repeat chorus', to: 'all' });
     await producer.flush();
     await expect.poll(() => viewer.messages.length).toBe(2);
+    await viewer.flush();
+    await viewer.flush();
+    expect(viewer.received.map((snapshot) => snapshot.position)).toEqual([0, 1]);
+
+    clock.advance(POSITION_BROADCAST_MS);
+    await viewer.snapshot((snapshot) => snapshot.position === 2);
+    expect(viewer.received.map((snapshot) => snapshot.position)).toEqual([0, 1, 2]);
+  });
+
+  it("holds a position published while the send before it is in flight past a Dismiss, which changes no playback socket's snapshot", async () => {
+    const clock = manualClock();
+    const http = createServer();
+    const hub = startHub(http, { snapshot: snap(0), connections: noProblems }, { leader: 'l', producer: 'p' }, () => {}, () => {}, clock);
+    await new Promise<void>((done) => http.listen(0, '127.0.0.1', done));
+    const base = `ws://127.0.0.1:${(http.address() as AddressInfo).port}`;
+    const viewer = await connect(`${base}${SOCKET_PATHS.viewer}`);
+    const producer = await connect<ProducerSnapshot>(`${base}${producerSocketPath('p')}`);
+    stopHub = async () => {
+      viewer.close();
+      producer.close();
+      await hub.close();
+      await new Promise<void>((done) => http.close(() => done()));
+    };
+    await viewer.snapshot((snapshot) => snapshot.position === 0);
+    viewer.send({ kind: 'hello', client: 'keys', name: 'Keys', battery: null, dismissed: [] });
+    producer.send({ kind: 'message', text: 'Repeat chorus', to: 'all' });
+    await expect.poll(() => viewer.messages.at(-1)?.text).toBe('Repeat chorus');
+    await producer.snapshot((snapshot) => snapshot.activeMessages[0]?.shownBy.length === 1);
+
+    clock.advance(POSITION_BROADCAST_MS);
+    hub.publish(snap(1), noProblems);
+    hub.publish(snap(2), noProblems);
+    viewer.send({ kind: 'dismissed', id: viewer.messages.at(-1)!.id });
+    await producer.snapshot((snapshot) => snapshot.activeMessages[0]?.dismissedBy.length === 1);
     await viewer.flush();
     await viewer.flush();
     expect(viewer.received.map((snapshot) => snapshot.position)).toEqual([0, 1]);

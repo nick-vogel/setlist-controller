@@ -5,6 +5,8 @@ import { isClientId } from './devices.ts';
 // it. The hub keeps the active message for each device (src/server/messages.ts) and sends it on its
 // own frame, ahead of the next snapshot. A device keeps the IDs it dismissed in its own storage
 // (web/src/device-settings.ts), so a message it dismissed stays hidden across reloads and reconnects.
+// It tells the hub of each Dismiss, and its hello carries the stored IDs, so the producer page sees
+// which devices dismissed each message.
 
 // The hub makes each ID, new for every send, so an ID a device dismissed never names a later message,
 // even after a server restart.
@@ -18,9 +20,10 @@ export type MessageTarget = 'all' | 'viewers' | string[];
 // An active message as the producer's snapshot carries it: who it reaches (for chosen devices, those
 // a newer chosen message has not replaced it on; a newer message to the view-only devices covers a
 // chosen view-only device without taking it off), when it was sent in milliseconds on the server's wall
-// clock, and the client IDs of the devices in the hub's registry that show it, an offline one when it
-// comes back. A device shows one message at a time, so no device is in two lists.
-export type ActiveMessage = BandMessage & { to: MessageTarget; sent: number; shownBy: string[] };
+// clock, the client IDs of the devices in the hub's registry that show it, an offline one when it
+// comes back, and those of them that dismissed it. A device shows one message at a time, so no device
+// is in two lists.
+export type ActiveMessage = BandMessage & { to: MessageTarget; sent: number; shownBy: string[]; dismissedBy: string[] };
 
 // The longest message text the hub keeps. A longer one is cut, never refused, as a device name is.
 export const MAX_MESSAGE_TEXT = 120;

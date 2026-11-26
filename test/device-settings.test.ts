@@ -15,7 +15,6 @@ import {
   readDeviceName,
   readDismissedMessages,
   storeDismissedMessage,
-  MAX_DISMISSED_MESSAGES,
   watchDeviceName,
   watchDismissedMessages,
   readChordNames,
@@ -38,7 +37,7 @@ import {
   type Display,
   type Part,
 } from '../web/src/device-settings.ts';
-import { parseHello } from '../src/shared/devices.ts';
+import { MAX_DISMISSED_MESSAGES, parseHello } from '../src/shared/devices.ts';
 
 // What a band member's device remembers between visits: their part, so the chart view opens again
 // after a reload.

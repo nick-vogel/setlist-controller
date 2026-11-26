@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef, useState, type CSSProperties } from 'react';
+import { useCallback, useEffect, useEffectEvent, useRef, useState, type CSSProperties } from 'react';
 import { nameKey } from '../../src/shared/match-name.ts';
 import type { PageCommand } from '../../src/shared/command.ts';
 import { CHARTS_API, controls, isSetupPage, pageRole, type Role } from '../../src/shared/routes.ts';
@@ -155,20 +155,22 @@ export function App() {
   const [tip] = useState(() => role === 'viewer' && !setup && !readTipShown(deviceStorage()));
   const onTipShown = useCallback(() => storeTipShown(deviceStorage()), []);
 
-  // Every page but the setup screen says hello on each socket, so the producer's Devices panel lists
-  // it. The setup screen is the laptop's own, not a device on the stage.
-  const hello: DeviceHello | null = setup ? null : { kind: 'hello', client: clientId, name: deviceName.trim() || defaultDeviceName(role, part), battery };
-  const { snapshot, connected, send, message } = useServer(socketPath, hello);
   // The IDs of the producer's messages this device dismissed, stored on every dismiss and read again
   // when another tab of the page stores one. A dismissed message stays hidden when the hub sends it
-  // again, and a newer one, with a new ID, shows.
+  // again, and a newer one, with a new ID, shows. The hello carries them, so the hub knows a Dismiss
+  // after a reload, and one tapped while the socket was down.
   const [dismissed, setDismissed] = useState<readonly string[]>(() => readDismissedMessages(deviceStorage(), role));
+  // Every page but the setup screen says hello on each socket, so the producer's Devices panel lists
+  // it. The setup screen is the laptop's own, not a device on the stage.
+  const hello: DeviceHello | null = setup ? null : { kind: 'hello', client: clientId, name: deviceName.trim() || defaultDeviceName(role, part), battery, dismissed };
+  const { snapshot, connected, send, message } = useServer(socketPath, hello);
   const onDismissMessage = useCallback(
     (id: string) => {
       setDismissed((held) => [...held, id]);
       storeDismissedMessage(deviceStorage(), role, id);
+      send({ kind: 'dismissed', id });
     },
-    [role],
+    [role, send],
   );
   useEffect(() => watchDismissedMessages(window, deviceStorage(), role, setDismissed), [role]);
   const shownMessage = message !== null && !dismissed.includes(message.id) ? message : null;
@@ -556,11 +558,19 @@ function useServer(
     };
   }, [socketPath]);
 
-  // Declared after the connection's effect, so a first hello reaches the connection it made.
-  const { client, name, battery } = hello ?? {};
+  // Declared after the connection's effect, so a first hello reaches the connection it made. A
+  // change to the dismissed IDs alone sends no hello, since each Dismiss goes on its own frame: the
+  // connection keeps it for the next socket.
+  const { client, name, battery, dismissed } = hello ?? {};
+  const latestHello = useEffectEvent(() => hello);
   useEffect(() => {
-    if (client !== undefined && name !== undefined && battery !== undefined) connection.current?.introduce({ kind: 'hello', client, name, battery });
+    const next = latestHello();
+    if (next) connection.current?.introduce(next);
   }, [client, name, battery, socketPath]);
+  useEffect(() => {
+    const next = latestHello();
+    if (next) connection.current?.keep(next);
+  }, [dismissed, socketPath]);
 
   const send = useCallback((command: PageCommand) => connection.current?.send(command), []);
 

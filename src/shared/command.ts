@@ -83,8 +83,25 @@ export type DeviceCommand =
   // Take every active message off every device.
   | { kind: 'clear-messages' };
 
-// What a page sends: a leader page sends a Command, a producer page any of the three.
-export type PageCommand = Command | ConnectionCommand | DeviceCommand;
+// A Dismiss of the message with this ID on the page that sends it. Every page role sends one, and the
+// hub marks the sending device dismissed for that message alone (setlist-controller#33).
+export type Dismissal = { kind: 'dismissed'; id: string };
+
+// What a page sends: every page a Dismissal, a leader page a Command, and a producer page any of them.
+export type PageCommand = Command | ConnectionCommand | DeviceCommand | Dismissal;
+
+// Null for anything that is not a well-formed Dismissal, so a bad message never throws.
+export function parseDismissal(data: unknown): Dismissal | null {
+  let value: unknown;
+  try {
+    value = JSON.parse(String(data));
+  } catch {
+    return null;
+  }
+  if (typeof value !== 'object' || value === null) return null;
+  const { kind, id } = value as Record<string, unknown>;
+  return kind === 'dismissed' && typeof id === 'string' ? { kind, id } : null;
+}
 
 // Null for anything that is not a well-formed connection command, so a bad message never throws.
 export function parseConnectionCommand(data: unknown): ConnectionCommand | null {

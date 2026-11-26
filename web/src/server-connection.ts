@@ -19,6 +19,9 @@ export type ServerConnection = {
   send(command: PageCommand): void;
   // Sets the hello each socket opens with, and sends it at once while the connection is open.
   introduce(hello: DeviceHello): void;
+  // Sets the hello each socket opens with, and sends nothing on the open one: a Dismiss already went
+  // on its own frame, and only a later socket needs its ID in the hello.
+  keep(hello: DeviceHello): void;
   // Closes the connection for good. Nothing reconnects after it.
   close(): void;
 };
@@ -162,6 +165,9 @@ export function connectToServer({ url, onSnapshot, onStatus, onReload = () => lo
     introduce(next) {
       hello = next;
       if (socket?.readyState === WebSocket.OPEN) socket.send(JSON.stringify(next));
+    },
+    keep(next) {
+      hello = next;
     },
     close() {
       visibility.removeEventListener('visibilitychange', wake);

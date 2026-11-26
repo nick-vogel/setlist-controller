@@ -1,5 +1,5 @@
 import { MAX_CAPO } from '../../src/shared/chart.ts';
-import { isClientId, ROLE_LABELS } from '../../src/shared/devices.ts';
+import { isClientId, MAX_DISMISSED_MESSAGES, ROLE_LABELS } from '../../src/shared/devices.ts';
 import { nameKey } from '../../src/shared/match-name.ts';
 import type { Role } from '../../src/shared/routes.ts';
 
@@ -323,10 +323,6 @@ export function defaultDeviceName(role: Role, part: Part | null): string {
 // each page role, as the client ID is: a message to All devices carries one ID to every device, so a
 // list for the browser would hide it on a page that never dismissed it.
 const DISMISSED_MESSAGES_KEY = 'setlist-controller.dismissed-messages';
-
-// The most dismissed IDs the device keeps. The hub holds one active message per device, so the newest
-// few are all that can come back.
-export const MAX_DISMISSED_MESSAGES = 20;
 
 // The stored IDs, or none: nothing stored, a value that is not a list, or no storage. An entry that is
 // not a string is left out.
