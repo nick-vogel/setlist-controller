@@ -59,5 +59,16 @@
     { "section": "Chorus", "occurrence": 2, "changes": [1, 2, 3, 4] },
     { "section": "Chorus", "occurrence": 3, "changes": [1, 2, 3, 4] },
     { "section": "Chorus", "occurrence": 4, "changes": [1, 2, 3, 4] }
+  ],
+  "Build My Life": [
+    { "section": "Verse 1", "occurrence": 1, "changes": [2.5, 4.5, 5.5] },
+    { "section": "Verse 2", "occurrence": 1, "changes": [2.5, 4.5, 5.5] },
+    { "section": "Chorus", "occurrence": 1, "changes": [2.5, 5, 7] },
+    { "section": "Verse 1", "occurrence": 2, "changes": [2.5, 4.5, 5.5] },
+    { "section": "Verse 2", "occurrence": 2, "changes": [2.5, 4.5, 5.5] },
+    { "section": "Chorus", "occurrence": 2, "changes": [2.5, 5, 7] },
+    { "section": "Chorus", "occurrence": 3, "changes": [2.5, 5, 7] },
+    { "section": "Chorus", "occurrence": 4, "changes": [2.5, 5, 7] },
+    { "section": "Chorus", "occurrence": 5, "changes": [2.5, 5, 7] }
   ]
 }
