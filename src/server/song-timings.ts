@@ -1,3 +1,4 @@
+import { isPad } from '../shared/count-in.ts';
 import { namesMatch } from '../shared/match-name.ts';
 import type { ManifestSong, SongDurations } from '../shared/set-manifest.ts';
 import { gapAfter, type NowPlaying, type SetList, type Snapshot, type Song, type SongTiming } from '../shared/snapshot.ts';
@@ -5,9 +6,8 @@ import { gapAfter, type NowPlaying, type SetList, type Snapshot, type Song, type
 // Each song's timing for the snapshot (SongTiming). A song the set manifest times takes the build's seconds, exact across
 // its tempo changes, as long as the manifest's beats still match Live's locators: a set moved by hand after the build is
 // timed by Live instead. Any other song is timed by its beats at Live's tempo the first time Live plays in it, once Live
-// has reported a tempo, and keeps that timing until the set changes. The first moment is the song's own tempo: later,
-// a pad at its end already plays at the next song's. A song Live has not played in has no timing: Live reports only the
-// tempo it plays now.
+// has reported a tempo, outside its Pad and Pad Out, which play at the next song's tempo, and keeps that timing until the
+// set changes. A song Live has not played in has no timing: Live reports only the tempo it plays now.
 
 // Live's song time is float32, so beats a hair apart are the same beats.
 const BEATS_EPSILON = 1e-3;
@@ -42,7 +42,7 @@ export function createSongTimer(): TimeSongs {
         timings[song.number] = kept;
         return;
       }
-      if (now?.song !== song.number || !playing || tempo === null) return;
+      if (now?.song !== song.number || !playing || tempo === null || isPad(song.sections[now.section]?.name ?? '')) return;
       const timing = tempoTiming(song, tempo);
       played.set(song.number, timing);
       timings[song.number] = timing;
