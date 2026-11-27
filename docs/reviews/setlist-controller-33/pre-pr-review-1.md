@@ -201,3 +201,26 @@ Tests added: 16 (messages 8, messages-hub 4, devices-panel 1, devices 1, hub-coa
 
 ## Verdict
 Ready to open a PR with follow-ups. No finding gates it. Recommended before the PR, in one remediation round: finding 1 with Option A (Nick, 2026-11-26), findings 2 and 3, and the comment batch. Needs Further Investigation A can become a follow-up issue if its test confirms it.
+
+## Remediation, 2026-11-26
+| Finding | Commit | Proof | Comments added | Verify verdict |
+| --- | --- | --- | --- | --- |
+| 1 (LOW) | `30ff22b` setlist-controller#33 pre-PR review 1 finding 1: the dismissal marks outlived the device registry | red to green: the new board test "forgets the mark of a device outside the list it is given" failed before the fix (`bass` and `ipad` still marked); `node docs/reviews/setlist-controller-33/repro/dismissed-marks-outlive-registry.mts` exit 1 (20000 marks) before, exit 0 (51 marks, evicted client not marked) after; `test/messages.test.ts`, `test/messages-hub.test.ts`, `test/hub-coalescing.test.ts`, `test/devices.test.ts` 81 passed | 0 new; 5 lines rewritten in the `active()` contract and the `Posted` comment, as the brief asks | fixed (one `pr-review-finder` disprove agent: shared computation core) |
+| 2 (LOW) | `cbca1db` setlist-controller#33 pre-PR review 1 finding 2: the rig check after a Clear matched a snapshot from before the send | red to green: with `repro/clear-ignored.mutation.patch` applied, "goes with its message ..." and the optional same-shape check in "shows a newer message that replaces one, and a Clear, at once" both fail (`expected [ { …(6) } ] to deeply equal []`); without it `test/messages-hub.test.ts` 20 of 20 pass | 0 | fixed (proved by execution) |
+| 3 (LOW) | `27cd26a` setlist-controller#33 pre-PR review 1 finding 3: the reconnect e2e test claimed a producer page's row it never reads | `pnpm build && pnpm exec playwright test e2e/messages.spec.ts -g "reconnecting reaches the producer"` 2 passed; with the `keep` effect removed from `web/src/App.tsx` it failed in both projects in two of three runs, and in webkit-ipad only in the first (Chromium races the mutant) | 0 | fixed (proved by execution) |
+| 4 (LOW, comment hygiene) | `bd4dfa6` setlist-controller#33 pre-PR review 1 finding 4: comments that no longer match the Dismiss code | each entry read against the code it describes; two `hub.ts` blocks rewrapped to the block width | n/a (text corrections only) | n/a (excluded from verify) |
+
+Typecheck after the last fix turned up `phone` possibly undefined in finding 3's e2e line; it now takes `(await proxied.rig.devices())[0]!`, the precedent in `e2e/chart.spec.ts:294`, folded into `27cd26a`.
+
+Checks at the remediated head: `pnpm lint` exit 0; `pnpm typecheck` exit 0; `pnpm vitest run --maxWorkers=2` 117 files, 3613 passed, 5 skipped; `pnpm test:e2e` 228 passed, 2 failed, the #36 `webkit-ipad` `page.goto` timeouts at `e2e/messages.spec.ts:60` and `e2e/stage-status.spec.ts:96`, and those files alone pass (36 and 10); the repro exit 0; `pnpm check:private --range origin/main..HEAD` exit 0. origin/main is still `4b48b4b`, so no merge.
+
+### Known regressions, deferred
+None.
+
+### Rework briefs
+None. The verify agent's lower-priority notes, recorded for the next round: (a) a client ID that holds sockets of two roles has a Dismiss from the role the registry does not hold for it pruned at the next `active()`, and marked again only by that role's next hello; no page does this, since each role has its own client ID (Approach decisions: a device is one browser for one page role). (b) The new board test covers the unlisted half; pruning for a listed device that a newer message covers has no test, and is invisible through `active()`. (c) The registry does not cap online rows, so the bound is the registry's size, as at base.
+
+## Approach decisions (remediation 1)
+- **Bounding the dismissal marks:** `active()` prunes each message's `dismissed` Set to its `shownBy` on every call. The hub's only caller passes `devices.list()`, and every new mark is followed by a call in the same handler, so the marks never outlive a registry row; a returning device marks itself again from its hello (Rule 1).
+- **A rig check after an action whose result equals an earlier snapshot:** poll the newest received snapshot (`expect.poll(() => panel.received.at(-1)?.activeMessages)`) instead of `snapshot()`, which matches any snapshot already received.
+- **Proxied e2e checks of a dismissal:** compare `dismissedBy` with the phone's client ID from `proxied.rig.devices()`, not a count.
