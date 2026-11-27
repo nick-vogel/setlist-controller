@@ -1,0 +1,13 @@
+diff --git a/src/server/hub.ts b/src/server/hub.ts
+index bcf7e93..bfff3ee 100644
+--- a/src/server/hub.ts
++++ b/src/server/hub.ts
+@@ -263,7 +263,7 @@ export function startHub(
+           if (now?.id !== before.get(other)?.id) queue(other, otherState, messageFrame(now));
+         }
+         messagesChanged();
+-      } else if (deviceCommand?.kind === 'clear-messages' && messages.clear()) {
++      } else if (deviceCommand?.kind === 'clear-messages' && false && messages.clear()) {
+         for (const [other, otherState] of clients) sendActiveMessage(other, otherState);
+         messagesChanged();
+       }
