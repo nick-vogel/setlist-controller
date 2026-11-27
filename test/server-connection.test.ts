@@ -197,7 +197,7 @@ it('keeps trying under 2 seconds apart for a whole minute while every try fails'
   connection.close();
 });
 
-const HELLO: DeviceHello = { kind: 'hello', client: 'phone', name: 'Keys', battery: 50 };
+const HELLO: DeviceHello = { kind: 'hello', client: 'phone', name: 'Keys', battery: 50, dismissed: [] };
 
 it('introduces the device on every socket it opens, the one after a drop included', () => {
   const connection = connectToServer({ url: 'ws://server/', onSnapshot: () => {}, visibility: new Visibility() });
@@ -221,6 +221,20 @@ it('sends a changed hello at once on the open socket', () => {
   connection.introduce({ ...HELLO, name: 'Keys 2' });
 
   expect(FakeSocket.all[0]!.sent.map((data) => (JSON.parse(data) as DeviceHello).name)).toEqual(['Keys', 'Keys 2']);
+  connection.close();
+});
+
+it('opens the next socket with a hello it was given to keep, and sends nothing on the open one, as a Dismiss leaves it', () => {
+  const connection = connectToServer({ url: 'ws://server/', onSnapshot: () => {}, visibility: new Visibility() });
+  connection.introduce(HELLO);
+  FakeSocket.all[0]!.accept();
+
+  connection.keep({ ...HELLO, dismissed: ['m1'] });
+  FakeSocket.all[0]!.closed();
+  vi.advanceTimersByTime(250);
+  FakeSocket.all[1]!.accept();
+
+  expect(FakeSocket.all.map((socket) => socket.sent.map((data) => (JSON.parse(data) as DeviceHello).dismissed))).toEqual([[[]], [['m1']]]);
   connection.close();
 });
 

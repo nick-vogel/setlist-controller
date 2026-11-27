@@ -98,8 +98,8 @@ describe("the producer's Devices panel", () => {
 describe("the producer's Devices panel, with the active messages", () => {
   it('marks each device with the message it shows, and no other device', () => {
     const activeMessages = [
-      { id: 'm2', text: 'Repeat chorus', to: 'viewers' as const, sent: 2, shownBy: ['phone', 'gone'] },
-      { id: 'm1', text: 'Hold after this song', to: 'all' as const, sent: 1, shownBy: ['ipad'] },
+      { id: 'm2', text: 'Repeat chorus', to: 'viewers' as const, sent: 2, shownBy: ['phone', 'gone'], dismissedBy: [] },
+      { id: 'm1', text: 'Hold after this song', to: 'all' as const, sent: 1, shownBy: ['ipad'], dismissedBy: [] },
     ];
     const markup = renderToStaticMarkup(createElement(Page, { role: 'producer', snapshot: { ...SNAPSHOT, devices: [SELF, PHONE, IPAD, GONE], activeMessages }, connected: true, send: () => {}, clientId: 'self' }));
 
@@ -108,6 +108,17 @@ describe("the producer's Devices panel, with the active messages", () => {
       ['Keys', ['Message: Repeat chorus']],
       ['Leader', ['Message: Hold after this song']],
       ['Drums', ['Message: Repeat chorus']],
+    ]);
+  });
+
+  it('marks a device that dismissed the message it shows as dismissed, and no other device that shows it', () => {
+    const activeMessages = [{ id: 'm1', text: 'Repeat chorus', to: 'all' as const, sent: 1, shownBy: ['phone', 'ipad'], dismissedBy: ['phone'] }];
+    const markup = renderToStaticMarkup(createElement(Page, { role: 'producer', snapshot: { ...SNAPSHOT, devices: [SELF, PHONE, IPAD], activeMessages }, connected: true, send: () => {}, clientId: 'self' }));
+
+    expect(rows(devicesSection(markup)!).map(({ name, text }) => [name, text.slice(4)])).toEqual([
+      ['Producer', []],
+      ['Keys', ['Message: Repeat chorus, dismissed']],
+      ['Leader', ['Message: Repeat chorus']],
     ]);
   });
 });

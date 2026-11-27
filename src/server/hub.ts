@@ -1,7 +1,7 @@
 import { timingSafeEqual } from 'node:crypto';
 import type { IncomingMessage, Server as HttpServer } from 'node:http';
 import { WebSocket, WebSocketServer } from 'ws';
-import { parseCommand, parseConnectionCommand, parseDeviceCommand, type Command, type ConnectionCommand } from '../shared/command.ts';
+import { parseCommand, parseConnectionCommand, parseDeviceCommand, parseDismissal, type Command, type ConnectionCommand } from '../shared/command.ts';
 import { parseHello, RELOAD, type Device } from '../shared/devices.ts';
 import { HEARTBEAT, HEARTBEAT_MS } from '../shared/heartbeat.ts';
 import { isMessageFrame, messageFrame, type ActiveMessage } from '../shared/messages.ts';
@@ -35,10 +35,12 @@ import { createMessageBoard } from './messages.ts';
 // The producer's messages (messages.ts) go to each socket that said hello and that a message reaches,
 // by the socket's role and the client ID of its hello. Every hello is answered with the device's
 // active message, or a frame that clears it, so a page shows the right one after a reload, a
-// reconnect or a wake, and after a Clear it missed while it was away. A send or a Clear goes to the
-// producer sockets alone as a new producer snapshot, at once and outside the position pacing: it
-// changes no playback socket's snapshot, so it must not flush a position held for the trailing flush
-// to one.
+// reconnect or a wake, and after a Clear it missed while it was away. Every socket that said hello may
+// send a Dismiss of the message it shows, and every hello carries the IDs the device dismissed, so the
+// producer page sees which devices dismissed each message (setlist-controller#33). A send, a Clear or a
+// Dismiss goes to the producer sockets alone as a new producer snapshot, at once and outside the
+// position pacing: it changes no playback socket's snapshot, so it must not flush a position held for
+// the trailing flush to one.
 //
 // Every socket may introduce itself with a hello (devices.ts), the view-only one included, and the
 // hub keeps the devices that did in its registry. The socket's role goes in the registry, never one
@@ -219,12 +221,22 @@ export function startHub(
       const hello = parseHello(data);
       if (hello) {
         state.client = hello.client;
-        if (devices.hello(socket, role, hello)) devicesChanged();
+        const listed = devices.hello(socket, role, hello);
+        const dismissed = messages.dismiss(hello.client, role, hello.dismissed);
+        // A publish for a changed row carries the dismissal too. A hello that changes no row, as a
+        // second tab's sends, needs messagesChanged: the publish would take it for a position-only change.
+        if (listed) devicesChanged();
+        else if (dismissed) messagesChanged();
         sendActiveMessage(socket, state);
         return;
       }
-      // A view-only connection never controls anything. Its other messages are dropped unread, and
-      // the connection stays open so the page keeps its view.
+      const dismissal = parseDismissal(data);
+      if (dismissal) {
+        if (state.client !== null && messages.dismiss(state.client, role, [dismissal.id])) messagesChanged();
+        return;
+      }
+      // A view-only connection never controls anything. Its messages but a hello and a Dismiss are
+      // dropped unread, and the connection stays open so the page keeps its view.
       if (!controls(role)) return;
       const command = parseCommand(data);
       if (command) {
@@ -331,10 +343,10 @@ function encode(snapshot: Snapshot, connections: ConnectionsPart, devices: Devic
 }
 
 // Everything in a snapshot, connections part and devices except intra-section playback progress
-// (position, and now's bar and fraction). The active messages are left out: a send or a Clear reaches
-// the producer sockets on its own (messagesChanged), and a change to a device's message comes with a
-// change to the devices. Two states with the same key differ only in where the
-// playhead sits inside the same song and section (or both outside any section with a known position).
+// (position, and now's bar and fraction). The active messages are left out: a send, a Clear or a
+// Dismiss reaches the producer sockets on its own (messagesChanged), and a change to a device's message
+// comes with a change to the devices. Two states with the same key differ only in where the playhead
+// sits inside the same song and section (or both outside any section with a known position).
 function nonPositionKey(snapshot: Snapshot, connections: ConnectionsPart, devices: Device[]): string {
   const { position, now, ...rest } = snapshot;
   const section = now ? { song: now.song, section: now.section, next: now.next, bars: now.bars } : null;

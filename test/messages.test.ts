@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { createMessageBoard } from '../src/server/messages.ts';
-import { parseDeviceCommand } from '../src/shared/command.ts';
+import { parseDeviceCommand, parseDismissal } from '../src/shared/command.ts';
 import { messageFrame, readMessageFrame } from '../src/shared/messages.ts';
 
 // The producer's message commands, the frame that carries a device its message, and the hub's board
@@ -45,6 +45,16 @@ describe("the producer's message command", () => {
 
   it('reads Clear as a command of its own', () => {
     expect(parseDeviceCommand(JSON.stringify({ kind: 'clear-messages' }))).toEqual({ kind: 'clear-messages' });
+  });
+});
+
+describe("a page's Dismiss", () => {
+  it('is read with the ID of the message it dismissed, and refused with no ID or another kind', () => {
+    expect(parseDismissal(JSON.stringify({ kind: 'dismissed', id: 'm1' }))).toEqual({ kind: 'dismissed', id: 'm1' });
+    for (const value of [{ kind: 'dismissed' }, { kind: 'dismissed', id: 7 }, { kind: 'message', id: 'm1' }, null]) {
+      expect(parseDismissal(JSON.stringify(value)), JSON.stringify(value)).toBeNull();
+    }
+    expect(parseDismissal('not json')).toBeNull();
   });
 });
 
@@ -129,9 +139,9 @@ describe("the board's active messages, as the producer page lists them", () => {
     messages.send('Watch leader', ['keys', 'ipad']);
 
     expect(messages.active([])).toEqual([
-      { id: 'm3', text: 'Watch leader', to: ['keys', 'ipad'], sent: 3000, shownBy: [] },
-      { id: 'm2', text: 'Repeat chorus', to: 'viewers', sent: 2000, shownBy: [] },
-      { id: 'm1', text: 'Hold after this song', to: 'all', sent: 1000, shownBy: [] },
+      { id: 'm3', text: 'Watch leader', to: ['keys', 'ipad'], sent: 3000, shownBy: [], dismissedBy: [] },
+      { id: 'm2', text: 'Repeat chorus', to: 'viewers', sent: 2000, shownBy: [], dismissedBy: [] },
+      { id: 'm1', text: 'Hold after this song', to: 'all', sent: 1000, shownBy: [], dismissedBy: [] },
     ]);
   });
 
@@ -189,5 +199,111 @@ describe("the board's active messages, as the producer page lists them", () => {
       ['Repeat chorus', ['keys']],
       ['Hold after this song', ['ipad']],
     ]);
+  });
+});
+
+describe('a Dismiss on the board', () => {
+  const devices = [
+    { client: 'keys', role: 'viewer' },
+    { client: 'bass', role: 'viewer' },
+    { client: 'ipad', role: 'leader' },
+  ] as const;
+  const dismissedBy = (messages: ReturnType<typeof board>) => messages.active(devices).map(({ text, dismissedBy }) => [text, dismissedBy]);
+
+  it('marks the device that dismissed the message it shows, and no other device that shows it', () => {
+    const messages = board();
+    const sent = messages.send('Repeat chorus', 'all');
+
+    expect(messages.dismiss('keys', 'viewer', [sent.id])).toBe(true);
+
+    expect(dismissedBy(messages)).toEqual([['Repeat chorus', ['keys']]]);
+  });
+
+  it('reports no change for a Dismiss the device already sent, as a second tab of its page sends', () => {
+    const messages = board();
+    const sent = messages.send('Repeat chorus', 'all');
+    messages.dismiss('keys', 'viewer', [sent.id]);
+
+    expect(messages.dismiss('keys', 'viewer', [sent.id])).toBe(false);
+    expect(dismissedBy(messages)).toEqual([['Repeat chorus', ['keys']]]);
+  });
+
+  it('ignores an ID that is not active on that device, so a page cannot mark a message it never showed', () => {
+    const messages = board();
+    const old = messages.send('Watch leader', ['keys']);
+    const toIpad = messages.send('Hold after this song', ['ipad']);
+    messages.send('Repeat chorus', 'viewers');
+
+    expect(messages.dismiss('keys', 'viewer', [old.id, toIpad.id, 'unknown'])).toBe(false);
+    expect(messages.dismiss('bass', 'leader', [toIpad.id])).toBe(false);
+
+    expect(dismissedBy(messages)).toEqual([
+      ['Repeat chorus', []],
+      ['Hold after this song', []],
+      ['Watch leader', []],
+    ]);
+  });
+
+  it('takes a Dismiss from a producer page for a message chosen for it, and none for a message to all', () => {
+    const messages = board();
+    const toAll = messages.send('Hold after this song', 'all');
+    expect(messages.dismiss('panel', 'producer', [toAll.id])).toBe(false);
+
+    const chosen = messages.send('Watch leader', ['panel']);
+    expect(messages.dismiss('panel', 'producer', [chosen.id])).toBe(true);
+
+    expect(messages.active([{ client: 'panel', role: 'producer' }]).map(({ text, dismissedBy }) => [text, dismissedBy])).toEqual([
+      ['Watch leader', ['panel']],
+      ['Hold after this song', []],
+    ]);
+  });
+
+  it('marks the device by the message among its stored IDs that it shows, as a hello carries them', () => {
+    const messages = board();
+    const old = messages.send('Watch leader', ['ipad']);
+    const sent = messages.send('Hold after this song', ['ipad']);
+
+    expect(messages.dismiss('ipad', 'leader', [old.id, sent.id])).toBe(true);
+
+    expect(dismissedBy(messages)).toEqual([['Hold after this song', ['ipad']]]);
+  });
+
+  it('leaves a newer message that replaces the dismissed one shown and not dismissed', () => {
+    const messages = board();
+    const first = messages.send('Watch leader', ['keys', 'bass']);
+    messages.dismiss('keys', 'viewer', [first.id]);
+    messages.dismiss('bass', 'viewer', [first.id]);
+
+    messages.send('Repeat chorus', ['keys']);
+    expect(dismissedBy(messages)).toEqual([
+      ['Repeat chorus', []],
+      ['Watch leader', ['bass']],
+    ]);
+
+    messages.send('Repeat bridge', 'viewers');
+    expect(dismissedBy(messages)).toEqual([['Repeat bridge', []], ['Repeat chorus', []], ['Watch leader', []]]);
+  });
+
+  it('forgets the mark of a device outside the list it is given, so the marks stay as few as the devices listed', () => {
+    const messages = board();
+    const sent = messages.send('Repeat chorus', 'all');
+    for (const { client, role } of devices) messages.dismiss(client, role, [sent.id]);
+
+    expect(messages.active([devices[0]]).map(({ dismissedBy }) => dismissedBy)).toEqual([['keys']]);
+
+    expect(dismissedBy(messages)).toEqual([['Repeat chorus', ['keys']]]);
+    expect(messages.dismiss('bass', 'viewer', [sent.id])).toBe(true);
+    expect(dismissedBy(messages)).toEqual([['Repeat chorus', ['keys', 'bass']]]);
+  });
+
+  it('forgets every dismissal on Clear, so the same ID never marks a device again', () => {
+    const messages = board();
+    const sent = messages.send('Repeat chorus', 'all');
+    messages.dismiss('keys', 'viewer', [sent.id]);
+
+    messages.clear();
+
+    expect(messages.dismiss('keys', 'viewer', [sent.id])).toBe(false);
+    expect(messages.active(devices)).toEqual([]);
   });
 });

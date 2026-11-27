@@ -137,9 +137,9 @@ describe("the producer's message panel, with the active messages", () => {
 
   it('lists each active message with its text, its target and when it was sent, for every target kind', () => {
     const markup = active([
-      { id: 'm3', text: 'Watch leader', to: ['ipad', 'keys'], sent: at(9, 43), shownBy: ['keys'] },
-      { id: 'm2', text: 'Repeat chorus', to: 'viewers', sent: at(9, 42), shownBy: [] },
-      { id: 'm1', text: 'Hold after this song', to: 'all', sent: at(9, 41), shownBy: [] },
+      { id: 'm3', text: 'Watch leader', to: ['ipad', 'keys'], sent: at(9, 43), shownBy: ['keys'], dismissedBy: [] },
+      { id: 'm2', text: 'Repeat chorus', to: 'viewers', sent: at(9, 42), shownBy: [], dismissedBy: [] },
+      { id: 'm1', text: 'Hold after this song', to: 'all', sent: at(9, 41), shownBy: [], dismissedBy: [] },
     ]);
 
     expect(listed(markup)).toEqual([
@@ -150,13 +150,13 @@ describe("the producer's message panel, with the active messages", () => {
   });
 
   it('counts the chosen devices that Clear offline took off the list, since a name is no longer known', () => {
-    const markup = active([{ id: 'm1', text: 'Watch leader', to: ['keys', 'gone', 'lost'], sent: at(9, 41), shownBy: [] }]);
+    const markup = active([{ id: 'm1', text: 'Watch leader', to: ['keys', 'gone', 'lost'], sent: at(9, 41), shownBy: [], dismissedBy: [] }]);
 
     expect(listed(markup)[0]?.[1]).toBe('To Keys, View only; 2 devices no longer listed');
   });
 
   it('names this producer page itself where another producer page chose it', () => {
-    const markup = active([{ id: 'm1', text: 'Watch leader', to: ['self', 'keys'], sent: at(9, 41), shownBy: ['self', 'keys'] }]);
+    const markup = active([{ id: 'm1', text: 'Watch leader', to: ['self', 'keys'], sent: at(9, 41), shownBy: ['self', 'keys'], dismissedBy: [] }]);
 
     expect(listed(markup)[0]?.[1]).toBe('To Producer, Producer; Keys, View only');
   });
@@ -164,7 +164,7 @@ describe("the producer's message panel, with the active messages", () => {
   it('shows the no-message line in place of the list, and only while no message is active', () => {
     expect(active([])).toContain('No active message.');
     expect(active([])).not.toContain('message-active-list');
-    const one = active([{ id: 'm1', text: 'Watch leader', to: ['keys'], sent: at(9, 41), shownBy: ['keys'] }]);
+    const one = active([{ id: 'm1', text: 'Watch leader', to: ['keys'], sent: at(9, 41), shownBy: ['keys'], dismissedBy: [] }]);
     expect(one).not.toContain('No active message.');
     expect(one).toContain('message-active-list');
   });

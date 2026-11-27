@@ -1,11 +1,11 @@
 import { describe, expect, it } from 'vitest';
 import { createDeviceRegistry, MAX_OFFLINE_DEVICES } from '../src/server/devices.ts';
-import { parseHello, type DeviceHello } from '../src/shared/devices.ts';
+import { MAX_DISMISSED_MESSAGES, parseHello, type DeviceHello } from '../src/shared/devices.ts';
 
 // The hub's registry of the devices that introduced themselves, by client ID, and the hello that
 // introduces one. The hub's own use of it, over real sockets, is in devices-hub.test.ts.
 
-const hello = (client: string, name: string, battery: number | null = null): DeviceHello => ({ kind: 'hello', client, name, battery });
+const hello = (client: string, name: string, battery: number | null = null): DeviceHello => ({ kind: 'hello', client, name, battery, dismissed: [] });
 
 function registry() {
   let time = 1_000;
@@ -31,6 +31,16 @@ describe('a hello', () => {
     for (const battery of [undefined, 42.5, -1, 101, '80']) {
       expect(parseHello(JSON.stringify({ kind: 'hello', client: 'a1', name: 'Keys', battery }))?.battery, String(battery)).toBeNull();
     }
+  });
+
+  it('carries the IDs of the messages the device dismissed, as many as a page stores, and none for a list it cannot read', () => {
+    const read = (dismissed: unknown) => parseHello(JSON.stringify({ kind: 'hello', client: 'a1', name: 'Keys', battery: null, dismissed }))?.dismissed;
+    const ids = Array.from({ length: MAX_DISMISSED_MESSAGES + 5 }, (_, index) => `m${index}`);
+
+    expect(read(['m1', 'm2'])).toEqual(['m1', 'm2']);
+    expect(read(ids)).toEqual(ids.slice(-MAX_DISMISSED_MESSAGES));
+    expect(read(['m1', 7, null])).toEqual(['m1']);
+    for (const dismissed of [undefined, 'm1', { m1: true }]) expect(read(dismissed), String(dismissed)).toEqual([]);
   });
 
   it('is refused with no client ID, a client ID of other characters, a blank name, or another kind', () => {

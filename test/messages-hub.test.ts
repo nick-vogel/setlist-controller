@@ -5,9 +5,10 @@ import type { ProducerSnapshot } from '../src/shared/snapshot.ts';
 import { loaded, startRig, type Client, type Rig } from './harness.ts';
 
 // The producer's messages to the band's devices over real sockets: who each one reaches, the one
-// active message per device, Clear, and the active message sent again on every hello. A message on a
-// congested link is in hub-coalescing.test.ts, beside the other slow-link cases. That a device hides
-// a message it dismissed is the page's work, in e2e/messages.spec.ts.
+// active message per device, Clear, the active message sent again on every hello, and a Dismiss as the
+// producer page sees it. A message or a Dismiss on a congested link is in hub-coalescing.test.ts,
+// beside the other slow-link cases. That a device hides a message it dismissed is the page's work, in
+// e2e/messages.spec.ts.
 
 let rig: Rig | undefined;
 
@@ -21,7 +22,7 @@ const SET: CuePoint[] = [
   { name: '1 - End', time: 16 },
 ];
 
-const hello = (client: string, name: string) => ({ kind: 'hello', client, name, battery: null });
+const hello = (client: string, name: string, dismissed: string[] = []) => ({ kind: 'hello', client, name, battery: null, dismissed });
 
 // The text of the last message frame the client received: the message, null for a clear, or
 // undefined before any.
@@ -30,8 +31,8 @@ const last = (client: { messages: (BandMessage | null)[] }) => {
   return message === undefined ? undefined : message === null ? null : message.text;
 };
 
-async function said<C extends Client | Client<ProducerSnapshot>>(client: C, id: string, name: string): Promise<C> {
-  client.send(hello(id, name));
+async function said<C extends Client | Client<ProducerSnapshot>>(client: C, id: string, name: string, dismissed: string[] = []): Promise<C> {
+  client.send(hello(id, name, dismissed));
   await client.flush();
   return client;
 }
@@ -236,7 +237,7 @@ describe("the producer page's active messages", () => {
     await panel.snapshot(lists([['Repeat bridge', ['keys'], ['keys']]]));
 
     panel.send({ kind: 'clear-messages' });
-    await panel.snapshot(lists([]));
+    await expect.poll(() => panel.received.at(-1)?.activeMessages).toEqual([]);
   });
 
   it('is in the first snapshot of a producer page that reconnects or reloads', async () => {
@@ -258,5 +259,66 @@ describe("the producer page's active messages", () => {
     await said(await rig!.connectViewer(), 'late', 'Drums');
 
     await panel.snapshot(lists([['Repeat chorus', ['late'], ['late']]]));
+  });
+});
+
+// The producer snapshot's active messages, each as [text, the devices that dismissed it].
+const dismissals = (expected: unknown[]) => (snapshot: ProducerSnapshot) =>
+  JSON.stringify(snapshot.activeMessages.map(({ text, dismissedBy }) => [text, dismissedBy])) === JSON.stringify(expected);
+
+// The ID of the last message the client received.
+const shownId = (client: { messages: (BandMessage | null)[] }) => client.messages.at(-1)?.id;
+
+describe('a Dismiss', () => {
+  it('from any page role shows on the producer page as dismissed by that device alone, at once', async () => {
+    const { panel, leader, keys } = await stage();
+    const booth = await said(await rig!.connectProducer(), 'booth', 'Booth');
+    panel.send({ kind: 'message', text: 'Watch leader', to: ['ipad', 'keys', 'bass', 'booth'] });
+    await expect.poll(() => [leader, keys, booth].map(last)).toEqual(Array(3).fill('Watch leader'));
+
+    keys.send({ kind: 'dismissed', id: shownId(keys) });
+    await panel.snapshot(dismissals([['Watch leader', ['keys']]]));
+
+    leader.send({ kind: 'dismissed', id: shownId(leader) });
+    booth.send({ kind: 'dismissed', id: shownId(booth) });
+    await panel.snapshot(dismissals([['Watch leader', ['ipad', 'keys', 'booth']]]));
+  });
+
+  it('tapped while the socket was down reaches the producer page in the hello of the next socket', async () => {
+    const { panel, keys } = await stage();
+    panel.send({ kind: 'message', text: 'Repeat chorus', to: 'viewers' });
+    await expect.poll(() => last(keys)).toBe('Repeat chorus');
+    const id = shownId(keys)!;
+
+    keys.close();
+    await said(await rig!.connectViewer(), 'keys', 'Keys', ['m-older', id]);
+
+    await panel.snapshot(dismissals([['Repeat chorus', ['keys']]]));
+  });
+
+  it("in a second tab's hello, which changes no device on the list, still shows at once", async () => {
+    const { panel, keys } = await stage();
+    panel.send({ kind: 'message', text: 'Repeat chorus', to: 'viewers' });
+    await expect.poll(() => last(keys)).toBe('Repeat chorus');
+
+    await said(await rig!.connectViewer(), 'keys', 'Keys', [shownId(keys)!]);
+
+    await panel.snapshot(dismissals([['Repeat chorus', ['keys']]]));
+  });
+
+  it('goes with its message when a newer message replaces it or a Clear takes it off', async () => {
+    const { panel, keys } = await stage();
+    panel.send({ kind: 'message', text: 'Repeat chorus', to: 'all' });
+    await expect.poll(() => last(keys)).toBe('Repeat chorus');
+    keys.send({ kind: 'dismissed', id: shownId(keys) });
+    await panel.snapshot(dismissals([['Repeat chorus', ['keys']]]));
+
+    panel.send({ kind: 'message', text: 'Repeat bridge', to: 'all' });
+    await panel.snapshot(dismissals([['Repeat bridge', []]]));
+
+    keys.send({ kind: 'dismissed', id: shownId(keys) });
+    await panel.snapshot(dismissals([['Repeat bridge', ['keys']]]));
+    panel.send({ kind: 'clear-messages' });
+    await expect.poll(() => panel.received.at(-1)?.activeMessages).toEqual([]);
   });
 });
