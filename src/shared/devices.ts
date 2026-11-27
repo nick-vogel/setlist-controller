@@ -29,8 +29,9 @@ export type DeviceHello = {
   dismissed: readonly string[];
 };
 
-// The most dismissed message IDs a device keeps, and so the most a hello carries. The hub holds one
-// active message per device, so the newest few are all that can come back.
+// The most dismissed message IDs a device keeps, and so the most of a hello's IDs the hub reads, the
+// newest last: the page's list in memory is not capped. The hub holds one active message per device,
+// so the newest few are all that can come back.
 export const MAX_DISMISSED_MESSAGES = 20;
 
 // One device on the producer page's Devices panel and the setup screen's.

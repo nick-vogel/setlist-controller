@@ -10,7 +10,8 @@ import { clockTime } from './clock-time.ts';
 // dismissed it says so on its row alone (setlist-controller#33). Each other online device has Reload,
 // which reloads that device's pages alone, and the panel has Clear offline, which forgets the offline
 // rows; the producer's own row has no Reload, since a reload of the page pressing it drops the panel.
-// The setup screen lists the devices with neither, since only the producer's socket may send them. Every button is disabled while the page is not connected.
+// The setup screen lists the devices with neither, since only the producer's socket may send them.
+// Every button is disabled while the page is not connected.
 export function DevicesPanel({
   devices,
   producer,

@@ -83,11 +83,13 @@ export type DeviceCommand =
   // Take every active message off every device.
   | { kind: 'clear-messages' };
 
-// A Dismiss of the message with this ID on the page that sends it. Every page role sends one, and the
-// hub marks the sending device dismissed for that message alone (setlist-controller#33).
+// A Dismiss of the message with this ID on the page that sends it. Every page that said hello sends
+// one; the setup screen sends none. The hub marks the sending device dismissed for that message alone
+// (setlist-controller#33).
 export type Dismissal = { kind: 'dismissed'; id: string };
 
-// What a page sends: every page a Dismissal, a leader page a Command, and a producer page any of them.
+// What a page sends: every page but the setup screen a Dismissal, a leader page a Command, and a
+// producer page any of them.
 export type PageCommand = Command | ConnectionCommand | DeviceCommand | Dismissal;
 
 // Null for anything that is not a well-formed Dismissal, so a bad message never throws.

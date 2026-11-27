@@ -35,12 +35,12 @@ import { createMessageBoard } from './messages.ts';
 // The producer's messages (messages.ts) go to each socket that said hello and that a message reaches,
 // by the socket's role and the client ID of its hello. Every hello is answered with the device's
 // active message, or a frame that clears it, so a page shows the right one after a reload, a
-// reconnect or a wake, and after a Clear it missed while it was away. Every socket may send a Dismiss
-// of the message it shows, and every hello carries the IDs the device dismissed, so the producer page
-// sees which devices dismissed each message (setlist-controller#33). A send, a Clear or a Dismiss goes
-// to the producer sockets alone as a new producer snapshot, at once and outside the position pacing: it
-// changes no playback socket's snapshot, so it must not flush a position held for the trailing flush
-// to one.
+// reconnect or a wake, and after a Clear it missed while it was away. Every socket that said hello may
+// send a Dismiss of the message it shows, and every hello carries the IDs the device dismissed, so the
+// producer page sees which devices dismissed each message (setlist-controller#33). A send, a Clear or a
+// Dismiss goes to the producer sockets alone as a new producer snapshot, at once and outside the
+// position pacing: it changes no playback socket's snapshot, so it must not flush a position held for
+// the trailing flush to one.
 //
 // Every socket may introduce itself with a hello (devices.ts), the view-only one included, and the
 // hub keeps the devices that did in its registry. The socket's role goes in the registry, never one
@@ -343,10 +343,10 @@ function encode(snapshot: Snapshot, connections: ConnectionsPart, devices: Devic
 }
 
 // Everything in a snapshot, connections part and devices except intra-section playback progress
-// (position, and now's bar and fraction). The active messages are left out: a send or a Clear reaches
-// the producer sockets on its own (messagesChanged), and a change to a device's message comes with a
-// change to the devices. Two states with the same key differ only in where the
-// playhead sits inside the same song and section (or both outside any section with a known position).
+// (position, and now's bar and fraction). The active messages are left out: a send, a Clear or a
+// Dismiss reaches the producer sockets on its own (messagesChanged), and a change to a device's message
+// comes with a change to the devices. Two states with the same key differ only in where the playhead
+// sits inside the same song and section (or both outside any section with a known position).
 function nonPositionKey(snapshot: Snapshot, connections: ConnectionsPart, devices: Device[]): string {
   const { position, now, ...rest } = snapshot;
   const section = now ? { song: now.song, section: now.section, next: now.next, bars: now.bars } : null;

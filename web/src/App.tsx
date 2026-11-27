@@ -529,7 +529,7 @@ function useCharts(enabled: boolean, revision: number | undefined, connected: bo
 }
 
 // The leader's and producer's socket paths carry the secret from the page's own path. The hello, when
-// there is one, goes on every socket and again on each change.
+// there is one, goes on every socket and again on each change of its client ID, name or battery.
 function useServer(
   socketPath: string,
   hello: DeviceHello | null,
@@ -559,8 +559,9 @@ function useServer(
   }, [socketPath]);
 
   // Declared after the connection's effect, so a first hello reaches the connection it made. A
-  // change to the dismissed IDs alone sends no hello, since each Dismiss goes on its own frame: the
-  // connection keeps it for the next socket.
+  // change to the dismissed IDs alone sends no hello, since each Dismiss goes on its own frame from the
+  // tab it was tapped in, and an ID from another tab or tapped while the socket was down reaches the
+  // hub in the next hello: the connection keeps it for the next socket.
   const { client, name, battery, dismissed } = hello ?? {};
   const latestHello = useEffectEvent(() => hello);
   useEffect(() => {
