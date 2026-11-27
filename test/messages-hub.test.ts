@@ -237,7 +237,7 @@ describe("the producer page's active messages", () => {
     await panel.snapshot(lists([['Repeat bridge', ['keys'], ['keys']]]));
 
     panel.send({ kind: 'clear-messages' });
-    await panel.snapshot(lists([]));
+    await expect.poll(() => panel.received.at(-1)?.activeMessages).toEqual([]);
   });
 
   it('is in the first snapshot of a producer page that reconnects or reloads', async () => {
@@ -319,6 +319,6 @@ describe('a Dismiss', () => {
     keys.send({ kind: 'dismissed', id: shownId(keys) });
     await panel.snapshot(dismissals([['Repeat bridge', ['keys']]]));
     panel.send({ kind: 'clear-messages' });
-    await panel.snapshot(dismissals([]));
+    await expect.poll(() => panel.received.at(-1)?.activeMessages).toEqual([]);
   });
 });
