@@ -46,7 +46,10 @@ Approved for this branch, not findings:
 3. The WebKit `page.goto` timeouts late in a full run are #36 (`e2e/messages.spec.ts:60`, `e2e/timeline.spec.ts:175`, `e2e/stage-status.spec.ts:96`). main fails the same way, and this branch does not make it worse (two failures at HEAD, as at main).
 
 Added in this review:
-- **Bounding the dismissal marks (finding 1):** Option A, recommended: `active()` drops each mark for a client that no longer shows the message, which bounds the marks by the device registry. A device the registry evicted marks itself again with the IDs in its next hello. Option B: keep the marks unbounded and record that the view-only socket's existing flood surface covers it. Nick picks.
+- **Bounding the dismissal marks (finding 1):** Nick picked Option A on 2026-11-26 ("Approve"): `active()` drops each mark for a client that no longer shows the message, which bounds the marks by the device registry. A device the registry evicted marks itself again with the IDs in its next hello.
+
+## Remediation scope
+Nick 2026-11-26: remediate all four Confirmed findings. Finding 1 takes Option A, with its board test. Needs Further Investigation A stays out of this round.
 
 ## Confirmed Issues
 
@@ -197,4 +200,4 @@ Tests added: 16 (messages 8, messages-hub 4, devices-panel 1, devices 1, hub-coa
 - **Likely reviewer asks:** why a view-only socket may send a frame the hub reads (Rule 4); whether the dismissal marks are bounded (finding 1); whether the e2e failures are this branch's (#36).
 
 ## Verdict
-Ready to open a PR with follow-ups. No finding gates it. Recommended before the PR, in one remediation round: finding 1 once Nick picks Option A or B, findings 2 and 3, and the comment batch. Needs Further Investigation A can become a follow-up issue if its test confirms it.
+Ready to open a PR with follow-ups. No finding gates it. Recommended before the PR, in one remediation round: finding 1 with Option A (Nick, 2026-11-26), findings 2 and 3, and the comment batch. Needs Further Investigation A can become a follow-up issue if its test confirms it.
