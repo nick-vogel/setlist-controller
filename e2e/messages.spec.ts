@@ -173,7 +173,7 @@ test("a Dismiss on a phone shows as dismissed on that phone's row alone at once,
   await expect(deviceRow(producer, 'Keys phone')).not.toContainText('Message:');
 });
 
-test('a Dismiss tapped while the phone is reconnecting reaches the producer page once the phone is back', async ({ page }) => {
+test('a Dismiss tapped while the phone is reconnecting reaches the producer once the phone is back', async ({ page }) => {
   const proxied = await startProxiedE2eRig({ playing: false, position: 0 });
   e2e = proxied;
   const producer = await proxied.rig.connectProducer();
@@ -189,7 +189,8 @@ test('a Dismiss tapped while the phone is reconnecting reaches the producer page
   await expect(banner(page)).toHaveCount(0);
   proxied.proxy.restore();
 
-  await expect.poll(() => producer.received.at(-1)?.activeMessages[0]?.dismissedBy.length, { timeout: 5000 }).toBe(1);
+  const phone = (await proxied.rig.devices())[0]!;
+  await expect.poll(() => producer.received.at(-1)?.activeMessages[0]?.dismissedBy, { timeout: 5000 }).toEqual([phone.client]);
   producer.close();
 });
 
