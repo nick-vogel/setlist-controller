@@ -26,12 +26,14 @@ export type MessageBoard = {
   // a page cannot mark a message it never showed. True when the mark is new.
   dismiss(client: string, role: Role, ids: readonly string[]): boolean;
   // Every active message, newest first, each with the devices of this list that show it and those of
-  // them that dismissed it.
+  // them that dismissed it. It forgets the mark of a device that is not in this list or does not show
+  // that message, so the marks stay as few as the devices listed; a device that comes back marks itself
+  // again with the IDs in its next hello.
   active(devices: readonly { client: string; role: Role }[]): ActiveMessage[];
 };
 
-// dismissed holds client IDs. A device that shows a newer message stays in it unseen, since active()
-// reads it only for the devices that show this message.
+// dismissed holds the client IDs of the devices that dismissed this message, until active() finds the
+// device no longer listed or no longer showing it.
 type Posted = { message: BandMessage; order: number; to: MessageTarget; sent: number; dismissed: Set<string> };
 
 // now is the wall clock, as the device registry's is, since the producer page shows the send time.
@@ -81,6 +83,8 @@ export function createMessageBoard(newId: () => string = randomUUID, now: () => 
         .sort((a, b) => b.order - a.order)
         .map(({ message, to, sent, dismissed }) => {
           const shownBy = devices.filter((device) => shownOn(device.client, device.role)?.message === message).map((device) => device.client);
+          const showing = new Set(shownBy);
+          for (const client of dismissed) if (!showing.has(client)) dismissed.delete(client);
           return {
             ...message,
             to: Array.isArray(to) ? to.filter((client) => chosen.get(client)?.message === message) : to,

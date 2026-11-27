@@ -284,6 +284,18 @@ describe('a Dismiss on the board', () => {
     expect(dismissedBy(messages)).toEqual([['Repeat bridge', []], ['Repeat chorus', []], ['Watch leader', []]]);
   });
 
+  it('forgets the mark of a device outside the list it is given, so the marks stay as few as the devices listed', () => {
+    const messages = board();
+    const sent = messages.send('Repeat chorus', 'all');
+    for (const { client, role } of devices) messages.dismiss(client, role, [sent.id]);
+
+    expect(messages.active([devices[0]]).map(({ dismissedBy }) => dismissedBy)).toEqual([['keys']]);
+
+    expect(dismissedBy(messages)).toEqual([['Repeat chorus', ['keys']]]);
+    expect(messages.dismiss('bass', 'viewer', [sent.id])).toBe(true);
+    expect(dismissedBy(messages)).toEqual([['Repeat chorus', ['keys', 'bass']]]);
+  });
+
   it('forgets every dismissal on Clear, so the same ID never marks a device again', () => {
     const messages = board();
     const sent = messages.send('Repeat chorus', 'all');
